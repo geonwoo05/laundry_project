@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_register.css">
+    <title>세탁신청</title>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+    <div class='container'>
+        <form class='register_form'>
+            <div class='register_box_logo'>
+                <h5 class='top'>회원가입</h5>
+            </div>
+            <div class='regi_box_phone'>
+                <h5 class='text_style'>이메일 주소</h5>
+                <div>
+                    <input type="tel" maxlength='13' class='find_Id_box_pw'>
+                    <button class='textCheck'>중복체크</button>
+                </div>
+            </div>
+
+            <div class='register_box_pw'>
+                <h5 class='text_style'>비밀번호 *</h5>
+                <input type="password" maxlength='15'>
+            </div>
+            <div class='register_box_pw'>
+                <h5 class='text_style'>비밀번호 확인 *</h5>
+                <input type="password" maxlength='15'>
+            </div>
+            <div class=''>
+                <p class='pw_text'>대소문자, 숫자, 특수문자를 포함해서 8~15자 이상</p>
+            </div>
+
+            <div class='register_box_pw'>
+                <h5 class='text_style'>이름</h5>
+                <input type="text" >
+            </div>
+            <div class='register_box_pw'>
+                <h5 class='text_style'>주소</h5>
+                <input type="text" >
+            </div>
+            <div class='register_box_pw'>
+                <h5 class='text_style'>상세주소</h5>
+                <input type="text" >
+            </div>
+
+            <div class='regi_box_phone'>
+                <h5 class='text_style'>휴대폰번호</h5>
+                <div>
+                    <input type="tel" maxlength='13' class='find_Id_box_pw'>
+                    <button class='textCheck'>발송</button>
+                </div>
+                <div class='regi_box_phone_check' >
+                    <input type="text" class='find_Id_box_pw'>
+                    <button class='textCheck '>확인</button>
+                </div>
+            </div>
+
+            <div class='regi_box_phone'>
+                <h5 class='text_style'>추천인코드</h5>
+                <div>
+                    <input type="tel" maxlength='13' class='find_Id_box_pw'>
+                    <button class='textCheck'>확인</button>
+                </div>
+            </div>
+            
+            <div class='find_id_button'>
+                <a href="#">가입하기</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+</html>

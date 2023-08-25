@@ -1,0 +1,7 @@
+header{
+    width: 100%;
+    text-align: left;
+}
+header .logo{
+    margin: 2rem 0 2rem 1rem;
+}
