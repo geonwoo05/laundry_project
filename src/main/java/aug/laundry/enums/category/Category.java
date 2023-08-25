@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@Component
 public enum Category {
     COMMON("일반", CategoryType_COMMON.getJson()),
     CLOTHES("의류", CategoryType_CLOTHES.getJson()),
