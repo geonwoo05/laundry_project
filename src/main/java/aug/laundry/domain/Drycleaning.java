@@ -13,6 +13,7 @@ public class Drycleaning {
     private Long ordersDetailId;
     private String drycleaningRequest;
     private String drycleaningCategory;
+    private char drycleaningPossibility;
 
     public Drycleaning() {
     }
