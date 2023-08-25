@@ -13,6 +13,7 @@ public class Repair {
     private Long ordersDetailId;
     private String repairRequest;
     private String repairCategory;
+    private char repairPossibility;
 
     public Repair() {
     }
