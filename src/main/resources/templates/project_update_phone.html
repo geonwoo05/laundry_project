@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_update_phone.css">
+    <title>Document</title>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+    <div class='container'>
+        <div class='intro'>변경할 전화번호를 입력해주세요.</div> 
+        <form action="#" method="get">
+            <input type="tel" name="phone" id="phone" placeholder='휴대폰 번호 입력'>
+            <button type='button'>인증번호 발송</button>    
+            <input type="tel" name="phoneCheck" id="phoneCheck" placeholder='인증번호 입력'>
+            <button type='button'>인증번호 확인</button>
+            <input type="submit" value="변경하기">
+        </form>
+    </div>
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+</html>
