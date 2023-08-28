@@ -1,0 +1,70 @@
+body{
+    height: calc(100vh - clamp(4rem, 3vw, 5rem) - 2rem);
+}
+
+.container > form{
+    text-align: center;
+    width: 100%;
+}
+
+form h3{
+    text-align: left;
+    margin: 1rem 0
+}
+
+.searchbox{
+    display: flex;
+    height: auto;
+    border: 2px solid var(--main-color);
+    border-radius: var(--border-radius);
+    padding: 0 0.5rem;
+    width: 100%;
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    height: 2.7rem;
+}
+.searchbox2{
+    border: 2px solid var(--main-color);
+    width: 100%;
+    font-size: 1.1rem;
+    height: 2.7rem;
+    outline: none;
+    border-radius: var(--border-radius);
+    padding-left: 1.5rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.searchbox svg{
+    width: 2rem;
+    margin: 0;
+    fill: var(--main-color);
+}
+
+
+.input{
+    width: 100%;
+    font-size: 1.1rem;
+    margin: 0;
+    text-align: left;
+    padding-left: 1rem;
+    color: #666;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.container form button{
+    height: 3rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--main-color);
+    color: white;
+}
+
+input[type=submit]{
+    bottom: 4.5rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    position: fixed;
+}

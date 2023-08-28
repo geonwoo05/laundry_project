@@ -38,6 +38,7 @@
     border-radius: var(--border-radius);
     position: relative;
     padding: 0.5rem;
+    padding-left: 1rem;
     box-shadow: 2px 2px 5px rgb(185, 185, 185);
     margin-bottom: 1rem;
 }

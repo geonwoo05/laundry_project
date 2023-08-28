@@ -51,4 +51,19 @@ public class HtmlConnectTestController {
         return "project_search_password";
     }
 
+    @GetMapping("/test/9")
+    public String http9() {
+        return "project_order_confirm";
+    }
+
+    @GetMapping("/test/10")
+    public String http10() {
+        return "project_update_address";
+    }
+
+    @GetMapping("/test/11")
+    public String http11() {
+        return "project_update_phone";
+    }
+
 }
