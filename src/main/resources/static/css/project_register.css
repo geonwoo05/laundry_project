@@ -1,6 +1,12 @@
 body{
     margin-bottom: clamp(8rem, 3vw, 9rem); /* 푸터의 height 만큼 margin을 주어야지 스크롤이 가능하다. */
 }
+
+.container{
+    width: 100%;
+    min-width: 310px;
+}
+
 input{
     border: none;
     border-bottom: 1px solid #dadada;
@@ -135,4 +141,36 @@ div[class^=register_box] input{
 }
 .text_style{
     font-size: 1rem;
+}
+
+.phone_check_input{
+    display: none;
+}
+
+.phone_check_input input{
+    background-color: #fff;
+}
+
+#register_postcode{
+    width: 40%;
+    height: 2.5rem;
+
+}
+
+.searchAddressBtn{
+    width: 20%;
+    height: 2.5rem;
+    background-color: var(--main-color-hover);
+    color: #fff;
+    border-radius: var(--border-radius);
+    margin-left: 1rem;
+}
+
+#register_detailAddress{
+    width: 58%;
+}
+
+#register_extraAddress{
+    width: 40%;
+    background-color: #fff;
 }
