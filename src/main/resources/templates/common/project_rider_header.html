@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_rider.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class='container'>
+        <aside th:fragment="rider_header">
+            <div class='rider_header'>
+                <div class='ride_head'>배달</div><br>
+                <div class='ride_txt'>
+                    <div>오늘 배달 건수 : </div>
+                    <div class='ride_num'>0건</div>
+                </div>
+            </div>
+            <div class='select_category'>
+                <ul>
+                    <li class='active'>대기중(10)</li>
+                    <li>진행중(16)</li>
+                    <li>완료(7)</li>
+                </ul>
+            </div>
+        </aside>
+        
+    </div>
+</body>
+</html>

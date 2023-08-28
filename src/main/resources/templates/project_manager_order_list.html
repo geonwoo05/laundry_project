@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_manager_order_list.css">
+    <title>세탁신청</title>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+
+    <div class='container'>
+        <aside th:replace="~{/common/project_manager_order_header :: manager_header}"></aside>
+
+        <div class='res_box'>
+            <div class='order_box' onclick="location.href='#'">
+                <div class='date_status'>
+                    <p class='date_text'>8월 23일(수) 주문</p>
+                    <p class='status'>빠른세탁</p>
+                </div>
+                <div class='image_box'>
+                    <p class='status_text'>주문번호 : 100002</p>
+                </div>
+            </div>
+            <div class='order_box' onclick="location.href='#'">
+                <div class='date_status'>
+                    <p class='date_text'>8월 23일(수) 주문</p>
+                    <p class='status'></p>
+                </div>
+                <div class='image_box'>
+                    <p class='status_text'>주문번호 : 100003</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+</html>
