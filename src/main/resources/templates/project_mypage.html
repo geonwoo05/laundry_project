@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_mypage.css">
+    <title>Document</title>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+    
+    <div class='container'>
+        <h2 class='title'>개인정보변경</h2>
+        <ul class='mypageList'>
+            <a href=''>
+                <li>
+                    <div>
+                        <div>이름</div><br>
+                        <p>박보검</p>
+                    </div>
+                    <div></div>
+                </li>
+            </a>
+            <a href=''>
+                <li>
+                    <div>
+                        <div>주소</div><br>
+                        <p>서울특별시 서대문구 대현동</p>
+                    </div>
+                    <div>▶</div>
+                </li>
+            </a>
+            <a href=''>
+                <li>
+                    <div>
+                        <div>전화번호</div><br>
+                        <p>010-0000-0000</p>
+                    </div>
+                    <div>▶</div>
+                </li>
+            </a>
+            <a href=''>
+                <li class='mypage_rest_btn'>
+                    <div>로그아웃</div>
+                    <div></div>
+                </li>
+            </a>
+            <a href=''>
+                <li class='mypage_rest_btn'>
+                    <div>탈퇴하기</div>
+                    <div></div>
+                </li>
+            </a>
+        </ul>
+    </div>
+
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+</html>
