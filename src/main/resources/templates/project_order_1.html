@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_order_1.css">
+    <title>세탁신청</title>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+    <div class='container'>
+        <form action="#" method="get">
+            <h2>옵션</h2>
+            <div class='option'>
+                <input type="radio" name="option" id="slow" hidden>
+                <label for="slow" class='slowLabel select'>
+                    <span class='span'>일반세탁</span>
+                    <span class='spandetails'>정해진 시간에 배송되요.</span>
+                </label>
+                <input type="radio" name="option" id="fast" hidden>
+                <label for="fast" class='fastLabel'>
+                    <span class='span'>빠른세탁</span>
+                    <span class='spandetails'>세탁이 완료되면 바로 배송되요.</span>
+                </label>
+            </div>
+            <h2>일정</h2>
+            <div class='option'>
+                <div class='title'>
+                    <h3>수거일</h3>
+                    <button type='button'>변경</button>
+                </div>
+                <span class='dateTime'>08/22 (화) 23:00</span>
+
+            </div>
+            <h2>종류</h2>
+            <div class='option'>
+                <button class='optionbox' type='button'>
+                    <div class='optionbox_title'>
+                        <h3>드라이클리닝</h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class='svg'><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>
+                    </div>
+                    <input type="checkbox" name="service" id="drycleaning" hidden>
+                </button>
+                <button class='optionbox' type='button'>
+                    <div class='optionbox_title'>
+                        <h3>생활빨레</h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class='svg'><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>
+                    </div>
+                    <input type="checkbox" name="service" id="common_laundry" hidden>
+                </button>
+                <button class='optionbox' type='button'>
+                    <div class='optionbox_title'>
+                        <h3>수선</h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class='svg'><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>
+                    </div>
+                    <input type="checkbox" name="service" id="sew" hidden>
+                </button>
+            </div>
+            <input type="submit" value="다음">
+        </form>
+        
+    </div>
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+
+<script>
+    // 일반 세탁, 빠른세탁 선택시 border 변경 로직
+    let options = document.querySelectorAll('.option')[0];
+    let labels = document.querySelectorAll('.option label');
+    options.addEventListener('click', function(event) {
+
+        if (event.target.tagName === 'INPUT' && event.target.type === 'radio') {
+            labels.forEach(label => {
+                label.classList.remove('select');
+            });
+            
+            let addLabel = document.querySelector(`label[for="${event.target.id}"]`);
+            addLabel.classList.add('select');
+        }
+    });
+
+    let checkboxs = document.querySelectorAll('.optionbox input[type=checkbox]');
+    let boxs = document.querySelectorAll('.optionbox');
+
+    boxs.forEach(button => {
+        button.addEventListener('click', function(event) {
+
+            let inputNode = button.querySelector('input[type="checkbox"]');
+            if (inputNode) {
+                inputNode.click();
+            }
+
+        });
+    });
+</script>
+</html>
