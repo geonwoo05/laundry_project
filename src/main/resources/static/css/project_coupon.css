@@ -54,6 +54,14 @@
     box-shadow: 2px 2px 5px rgb(185, 185, 185) inset;
 }
 
+.couponRadio{
+    display: flex;
+}
+
+.couponRadio label svg{
+    width: 1.5rem;
+}
+
 .couponPrice{
     width: 100%;
     display: block;
@@ -93,4 +101,14 @@
     font-size: x-small;
     margin-bottom: 1rem;
     color: rgb(183, 185, 187);
+}
+
+body{
+    margin-bottom: clamp(9rem, 3vw, 10rem); /* 푸터의 height 만큼 margin을 주어야지 스크롤이 가능하다. */
+}
+input[type=submit]{
+    bottom: 4.5rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    position: fixed;
 }
