@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_manager_order_detail.css">
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+    
+    <div class='container'>
+        <form action="#" method="get">
+            <h2>주문정보</h2>
+            <table class='orderOption'>
+                <tr>
+                    <th class='content'>주문번호</th>
+                    <td class='content'>1000002</td>
+                </tr>
+                <tr>
+                    <th class='content'>요청사항</th>
+                </tr>
+            </table>
+            <div class='info'>
+                <span class='content'>요청사항에 대한 내용</span>
+            </div>
+            <hr class='bighr'>
+            <h4 class='laundry'>생활빨래</h4>
+            <table>
+                <tr>
+                    <th class='content'>세탁무게</th>
+                    <td class='content laundry_result'>
+                        <input type="number" name="laundryWeight" id="laundryWeight">
+                        <span>kg</span>
+                    </td>
+                </tr>
+            </table>
+            <h4>드라이클리닝</h4>
+            <table>
+                <tr>
+                    <th class='content'>소분류 이름</th>
+                    <td class='content drycleaning_result'>
+                        <div>
+                            <input type="radio" name="d_result" id="pos">
+                            <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
+                            <label for="pos">가능</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="d_result" id="impos">
+                            <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
+                            <label for="impos">불가능</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class='reason'>
+                        <input type="text" name="reason" id="reason" placeholder='불가능한 사유를 적어주세요.'>
+                    </th>
+                </tr>
+                <tr>
+                    <th class='content'>소분류 이름</th>
+                    <td class='content drycleaning_result'>
+                        <div>
+                            <input type="radio" name="d_result" id="pos">
+                            <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
+                            <label for="pos">가능</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="d_result" id="impos">
+                            <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
+                            <label for="impos">불가능</label>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+            <hr>
+            <h4>수선</h4>
+            <table>
+                <tr>
+                    <th class='content'>소분류 이름</th>
+                    <td class='content drycleaning_result'>
+                        <div>
+                            <input type="radio" name="d_result" id="pos">
+                            <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
+                            <label for="pos">가능</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="d_result" id="impos">
+                            <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
+                            <label for="impos">불가능</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class='reason'>
+                        <input type="text" name="reason" id="reason" placeholder='불가능한 사유를 적어주세요.'>
+                    </th>
+                </tr>
+                <tr>
+                    <th class='content'>소분류 이름</th>
+                    <td class='content drycleaning_result'>
+                        <div>
+                            <input type="radio" name="d_result" id="pos">
+                            <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
+                            <label for="pos">가능</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="d_result" id="impos">
+                            <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
+                            <label for="impos">불가능</label>
+                        </div>
+                    </td>
+                </tr>
+                
+            </table>
+
+            <div class='fixbox'>
+                <input type="submit" value="검수완료">
+            </div>
+        </form>
+    </div>
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+<script>
+    function toogleRadio(element) {
+        const radio = element.previousElementSibling;
+        if (!radio.checked){
+            radio.checked = !radio.checked;
+        }
+    }
+    
+</script>
+</html>

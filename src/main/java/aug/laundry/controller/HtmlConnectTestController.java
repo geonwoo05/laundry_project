@@ -100,4 +100,46 @@ public class HtmlConnectTestController {
     public String http19() {
         return "project_pickup_location";
     }
+
+    @GetMapping("/test/20")
+    public String http20() {
+        return "project_mypage";
+    }
+
+    @GetMapping("/test/21")
+    public String http21() {
+        return "project_mypage_list";
+    }
+
+    @GetMapping("/test/22")
+    public String http22() {
+        return "project_rider_list_on_call";
+    }
+    @GetMapping("/test/23")
+    public String http23() {
+        return "project_rider_using_list";
+    }
+    @GetMapping("/test/24")
+    public String http24() {
+        return "project_rider_complete";
+    }
+
+    @GetMapping("/test/25")
+    public String http25() {
+        return "project_rider_read_more";
+    }
+
+    @GetMapping("/test/26")
+    public String http26() {
+        return "project_manager_order_list";
+    }
+    @GetMapping("/test/27")
+    public String http27() {
+        return "project_manager_order_list_complete";
+    }
+
+    @GetMapping("/test/28")
+    public String http28() {
+        return "project_manager_order_detail";
+    }
 }
