@@ -66,4 +66,38 @@ public class HtmlConnectTestController {
         return "project_update_phone";
     }
 
+    @GetMapping("/test/12")
+    public String http12() {
+        return "project_order_1";
+    }
+
+    @GetMapping("/test/13")
+    public String http13() {
+        return "project_order_2_1";
+    }
+    @GetMapping("/test/14")
+    public String http14() {
+        return "project_order_2_2";
+    }
+    @GetMapping("/test/15")
+    public String http15() {
+        return "project_point";
+    }
+    @GetMapping("/test/16")
+    public String http16() {
+        return "project_use_point";
+    }
+    @GetMapping("/test/17")
+    public String http17() {
+        return "project_use_coupon";
+    }
+    @GetMapping("/test/18")
+    public String http18() {
+        return "project_order_view";
+    }
+
+    @GetMapping("/test/19")
+    public String http19() {
+        return "project_pickup_location";
+    }
 }
