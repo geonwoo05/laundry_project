@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -15,10 +17,12 @@ public class EnumDao {
 
     // 하위 카테고리를 JSON 형식으로 반환
     public String getJson(Category category) throws JsonProcessingException {
-        return objectMapperFactory.getObjectMapper().writeValueAsString(category.getJson(category.getTitle()));
+        return objectMapperFactory.getObjectMapper().writeValueAsString(category.getChildCategories());
     }
 
-    public Long getPrice(String title) {
-        return Category.getClazz(title).get(title);
+    // 오버로딩된 getJson
+    public String getJson(Map<String, Long> category) throws JsonProcessingException {
+        return objectMapperFactory.getObjectMapper().writeValueAsString(category);
     }
+
 }
