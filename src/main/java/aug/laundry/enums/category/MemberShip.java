@@ -11,13 +11,10 @@ public class MemberShip {
     }
 
     public Long apply(Long price) {
-        CategoryPriceCalculator categoryPriceCalculator;
         if (this.check) {
-            categoryPriceCalculator = CategoryPriceCalculator.PASS;
-            return categoryPriceCalculator.calculate(price);
+            return CategoryPriceCalculator.PASS.calculate(price);
         } else {
-            categoryPriceCalculator = CategoryPriceCalculator.COMMON;
-            return categoryPriceCalculator.calculate(price);
+            return CategoryPriceCalculator.COMMON.calculate(price);
         }
     }
 }
