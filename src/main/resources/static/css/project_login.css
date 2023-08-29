@@ -114,3 +114,9 @@ input:focus{
     margin: 0;
     border-radius: var(--border-radius);
 }
+
+.login_naver{
+    background-image: url("/images/btnG_축약형.png");
+    background: no-repeat;
+    background-size: cover;
+}
