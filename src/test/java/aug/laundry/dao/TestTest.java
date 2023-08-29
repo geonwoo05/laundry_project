@@ -27,6 +27,8 @@ class TestTest {
     void test(){
         int result = testDao.find();
         Assertions.assertThat(result).isEqualTo(2);
+
+
     }
 
     @Test
