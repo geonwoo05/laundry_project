@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="/css/project_login.css">
     <title>세탁신청</title>
     <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+    <script></script>
+
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
-
     <div class='container'>
         <form class='login_form'>
             <div class='login_logo'>
@@ -36,12 +37,11 @@
                 <div><a href="#">비밀번호 찾기</a></div>
             </div>
             <div class='login_social_login'>
-                <button class='login_naver'> 네이버 로그인</button>
+                <button type="button" class="login_naver" onclick="location.href='https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=1zyMGeTLflNJkh2bmICN&state=1234&redirect_uri=http://localhost:8080/login/naver_callback'">네이버 로그인</button>
                 <button class='login_kakao'> 카카오 로그인</button>
             </div>
         </form>
     </div>
-
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
 </html>
