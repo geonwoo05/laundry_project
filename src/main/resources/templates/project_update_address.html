@@ -7,28 +7,25 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_update_address.css">
+    <script src="/js/project_update_address.js"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <title>Document</title>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
-
     <div class='container'>
-        <form action="" method='get'>
-
-            <h3>주소</h3>
-            <input type="hidden" name="zipcode">
-            <a href='#' class='searchbox'>
-                <input type="hidden" name="address" id="address" disabled>
-                <span class='input'>도로명, 건물명 또는 지번 검색</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
-            </a>
-            <h3>상세 주소</h3>
-            <input type="text" name="addressDetails" id="addressDetails" placeholder='건물, 아파트 동/호수 입력' class='searchbox2'>
-            <input type="submit" value="저장하기">
-
+        <form action="/test/10" method='post'>
+            <div class='searchAddress_box'>
+                <h3 class='text_style'>주소</h3>
+                <input type="text" id="zipcode" placeholder="우편번호" disabled>
+                <button type="button" onclick="findAddress()" class='searchAddressBtn'>검색</button><br>
+                <input type="text" id="searchAddressValue" placeholder="주소" disabled><br>
+                <input type="text" id="detailAddress" placeholder="상세주소 (예: 세탁아파트 101동 101호)"><br>
+                <input type="text" id="extraAddress" placeholder="참고항목" disabled>
+                <input type="submit" value="저장하기">
+            </div>
         </form>
     </div>
-
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
 </html>
