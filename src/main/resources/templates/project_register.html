@@ -44,8 +44,10 @@
             </div>
             <div class='register_box_pw'>
                 <h5 class='text_style'>주소</h5>
-                <input type="text" id="register_postcode" placeholder="우편번호">
-                <button onclick="sample6_execDaumPostcode(event)" class='searchAddressBtn'>검색</button>
+                <div class="zipcode-container">
+                    <input type="text" id="register_postcode" placeholder="우편번호">
+                    <button onclick="sample6_execDaumPostcode(event)" class='searchAddressBtn'>검색</button>
+                </div>
                 <input type="text" id="register_address" placeholder="주소"><br>
                 <input type="text" id="register_detailAddress" placeholder="상세주소 (예: 세탁아파트 101동 101호)">
                 <input type="text" id="register_extraAddress" placeholder="참고항목" disabled>

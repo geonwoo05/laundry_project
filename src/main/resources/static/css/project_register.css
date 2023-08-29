@@ -159,7 +159,7 @@ div[class^=register_box] input{
 
 .searchAddressBtn{
     width: 20%;
-    height: 2.5rem;
+    height: 3rem;
     background-color: var(--main-color-hover);
     color: #fff;
     border-radius: var(--border-radius);
