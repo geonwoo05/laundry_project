@@ -23,6 +23,8 @@ public class Orders {
     private Integer ordersPayStatus;
     private Long riderId;
     private Long quickRiderId;
+    private String ordersPickupDate;
+    private String ordersReturnDate;
 
     public Orders() {
     }
