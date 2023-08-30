@@ -12,10 +12,24 @@
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
     <div class='container'>
-        <aside th:replace="~{/common/project_rider_header :: rider_header}"></aside>
+<!--        <aside th:replace="~{/common/project_rider_header :: rider_header}"></aside>-->
+            <div class='rider_header'>
+                <div class='ride_head'>배달</div><br>
+                <div class='ride_txt'>
+                    <div class='ch'>대기중인 배달 건수 : </div>
+                    <div class='ride_num'>0건</div>
+                </div>
+            </div>
+            <div class='select_category'>
+                <ul>
+                    <a href="/list/wait"><li class='active'>대기중(10)</li></a>
+                    <a href="/list/accept"><li>진행중(16)</li></a>
+                    <a href="/list/finish"><li>완료(7)</li></a>
+                </ul>
+            </div>
             <div class='delivery_list'>
                 <ul>
-                    <a href='./riderReadMore.html'>
+                    <a href='/test/25'>
                         <li>
                             <span class='order_num'>주문번호 : qweqwe1591</span>
                             <span class='delivery_address'>서울특별시 서대문구 대현동 777-8 508동 116호</span>
