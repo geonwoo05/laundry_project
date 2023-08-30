@@ -138,9 +138,9 @@ input[type=radio]:checked + .custom-radio {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #a0a0a0;
-    fill: #a0a0a0;
-    
+    color: var(--gray);
+    fill: var(--gray);
+
 }
 .more span{
     margin: 0;
@@ -153,8 +153,8 @@ input[type=radio]:checked + .custom-radio {
 }
 
 .content{
-    color: #5f5f5f;
-    fill: #5f5f5f;
+    color: var(--gray);
+    fill: var(--gray);
 }
 
 body{
@@ -162,7 +162,7 @@ body{
 }
 input[type=submit]{
     width: calc(100% - 2rem);
-    
+
 }
 
 .fixbox{
@@ -174,4 +174,24 @@ input[type=submit]{
     position: fixed;
     background-color: white;
     text-align: center;
+}
+
+.address{
+    display: inline;
+    margin: 0;
+}
+.detail_info{
+    width: 100%;
+    margin-top: -1rem;
+    padding-left: 1rem;
+}
+
+.detailcontent{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+}
+.detailcontent *, .detailcontent{
+    font-size: 0.9rem;
 }
