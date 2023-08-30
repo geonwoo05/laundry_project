@@ -38,7 +38,8 @@
             </div>
             <div class='login_social_login'>
                 <button type="button" class="login_naver" onclick="location.href='https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=1zyMGeTLflNJkh2bmICN&state=1234&redirect_uri=http://localhost:8080/login/naver_callback'">네이버 로그인</button>
-                <button class='login_kakao'> 카카오 로그인</button>
+                <button type="button" class='login_kakao' onclick="location.href='https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6ceec1b5aece169e4582fd82601abd44&redirect_uri=http://localhost:8080/kakaoLogin'"> 카카오 로그인</button>
+                <span th:text="${body}"></span>
             </div>
         </form>
     </div>

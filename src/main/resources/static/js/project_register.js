@@ -32,7 +32,7 @@ function sample6_execDaumPostcode(event) {
                             extraAddr = ' (' + extraAddr + ')';
                         }
                         // 조합된 참고항목을 해당 필드에 넣는다.
-                        document.querySelector("#register_extraAddress").value = extraAddr;
+                        document.querySelector("#register_extraAddress").value = '';
 
                     } else {
                         document.querySelector("#register_extraAddress").value = '';
@@ -40,7 +40,7 @@ function sample6_execDaumPostcode(event) {
 
                     // 우편번호와 주소 정보를 해당 필드에 넣는다.
                     document.querySelector('#register_postcode').value = data.zonecode;
-                    document.querySelector("#register_address").value = addr;
+                    document.querySelector("#register_address").value = addr + extraAddr;
                     // 커서를 상세주소 필드로 이동한다.
                     document.querySelector("#register_detailAddress").focus();
                 }

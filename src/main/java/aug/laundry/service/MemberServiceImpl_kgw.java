@@ -2,15 +2,16 @@ package aug.laundry.service;
 
 import aug.laundry.dao.MemberMapper;
 import aug.laundry.dto.MemberDto;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -111,6 +112,10 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
             throw new Exception("callback 처리중 예외사항이 발생 하였습니다. ");
         }
     }
+
+
+
+
 
 
 }
