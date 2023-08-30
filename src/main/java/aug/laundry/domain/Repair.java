@@ -14,6 +14,7 @@ public class Repair {
     private String repairRequest;
     private String repairCategory;
     private char repairPossibility;
+    private String repairNotReason;
 
     public Repair() {
     }
