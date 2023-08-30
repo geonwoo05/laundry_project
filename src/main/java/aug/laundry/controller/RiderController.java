@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/list/*")
+@RequestMapping("/ride/*")
 public class RiderController {
 
     @GetMapping("wait")
