@@ -21,12 +21,16 @@
             <h4>주문내용</h4>
             <table class='orderOption'>
                 <tr>
-                    <th class='content'>선택사항</th>
-                    <td class='content'>빠른세탁</td>
+                    <th class='content' >선택사항</th>
+                    <td class='content' th:if="${info.containsKey('빠른세탁') ? '빠른세탁' : '일반세탁'}">일반세탁</td>
                 </tr>
                 <tr>
                     <th class='content'>세탁옵션</th>
-                    <td class='content'>드라이클리닝, 생활빨래, 수선</td>
+                    <td class="content">
+                        <span th:utext="${info.containsKey('드라이클리닝')} ? '드라이클리닝, ' : ''"></span>
+                        <span th:utext="${info.containsKey('생활빨래')} ? '생활빨래, ' : ''"></span>
+                        <span th:utext="${info.containsKey('수선')} ? '수선' : ''"></span>
+                    </td>
                     <input type="hidden" name="laundryOptioin">
                 </tr>
             </table>
