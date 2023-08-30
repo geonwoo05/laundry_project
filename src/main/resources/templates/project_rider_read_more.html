@@ -57,7 +57,7 @@
 
 
             <div class='drive_information'>
-                <p>주문번호</p>
+                <p class="aa">주문번호</p>
                     <input type="text" name="" id="orderNum" value='qweqwe1591' readonly>
                 <br>
                 <p>주소</p>
@@ -94,7 +94,7 @@
 			var chktraffic = [];
 			var resultdrawArr = [];
 			var resultMarkerArr = [];
-
+document.querySelector('.aa').innerHTML = '1';
 			function initTmap() {
 				map = new Tmapv2.Map("map_div", {
 					center : new Tmapv2.LatLng(37.54882398563218, 126.99276886231617),
@@ -104,14 +104,18 @@
 					zoomControl : true,
 					scrollwheel : true
 				});
-
+				document.querySelector('.aa').innerHTML = '2';
+				alert(navigator == true)
+				alert(navigator.geolocation == true)
+				navigator.geolocation.getCurrentPosition((position) => {
 				marker_s = new Tmapv2.Marker(
-						{
-							position : new Tmapv2.LatLng(37.5605672, 126.9433486),
+                    {
+							position : new Tmapv2.LatLng(position.coords.latitude, position.coords.longitude),
 							icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
 							iconSize : new Tmapv2.Size(24, 38),
 							map : map
 						});
+                    });
 
 				marker_e = new Tmapv2.Marker(
 						{
