@@ -105,13 +105,15 @@
 					scrollwheel : true
 				});
 
+				navigator.geolocation.getCurrentPosition((position) => {
 				marker_s = new Tmapv2.Marker(
-						{
-							position : new Tmapv2.LatLng(37.5605672, 126.9433486),
+                    {
+							position : new Tmapv2.LatLng(position.coords.latitude, position.coords.longitude),
 							icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
 							iconSize : new Tmapv2.Size(24, 38),
 							map : map
 						});
+                    });
 
 				marker_e = new Tmapv2.Marker(
 						{
