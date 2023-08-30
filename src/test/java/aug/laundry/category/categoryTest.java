@@ -30,4 +30,9 @@ public class categoryTest {
         // 해당 카테고리의 하위카테고리 JSON으로 받아오기 (매개변수 : Category)
         System.out.println(enumDao.getJson(Category.BEDDING));
     }
+
+    @Test
+    void MapperTest() {
+
+    }
 }

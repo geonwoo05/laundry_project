@@ -21,26 +21,28 @@
                 <div>0장</div>
                 <a href='#'><span>새 쿠폰 추가 ▶</span></a>
             </div>
+            <div class='nonCoupon'>
+                <input type="radio" name="couponNum" id="couponEmpty" hidden checked>
+                <span class='custom-radio'></span>
+                <label for="couponEmpty">적용 안함</label>
+            </div>
             <ul class='couponList'>
                 <li class='coupon'>
                     <div class='couponRadio'>
                         <span class='couponPrice'>5,000원 할인</span>
                         <input type="radio" name="couponNum" id="couponNum1" hidden>
-                        <label for="couponNum1">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class='svg'><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>
-                        </label>
+                        <span class='custom-radio'></span>
+                        <label for="couponNum1"></label>
                     </div>
                     <span class='couponTitle'>[신규회원] 5,000원 할인 쿠폰</span>
                     <div class='couponDate'>
                         <span class='couponExpireCount'>3일 남음</span>
                         <span class='couponExpireDate'>2023.08.31 23:59까지</span>
                     </div>
-                    <div class='empty'></div>
                 </li>
-                
+
                 <li class='coupon noncoupon'>
                     <span>등록된 쿠폰이 없습니다.</span>
-                    <div class='empty'></div>
                 </li>
             </ul>
             <div class='cuponNote'>
