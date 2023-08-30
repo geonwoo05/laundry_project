@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum CategoryOption {
 
+    QUICK_LAUNDRY("빠른세탁"),
     COMMON_LAUNDRY("생활빨래"),
     DRYCLEANING("드라이클리닝"),
     REPAIR("수선");

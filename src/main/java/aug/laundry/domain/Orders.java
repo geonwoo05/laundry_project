@@ -17,7 +17,6 @@ public class Orders {
     private String ordersInfo;
     private String ordersRequest;
     private Integer ordersPay;
-    private Long quickLaundryId;
     private String ordersPickup;
     private Integer ordersExpectedPrice;
     private Integer ordersFinalPrice;

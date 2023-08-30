@@ -1,16 +1,44 @@
-    <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="aug.laundry.dao.Mapper.LaundryMapper">
+<mapper namespace="aug.laundry.dao.LaundryMapper">
 
-    <select id="find" resultType="int">
-        select seq_admin_id.nextval
-        from dual
+
+    <select id="isQuick" resultType="Integer">
+        SELECT Q.ORDERS_DETAIL_ID as isQuick
+        FROM ORDERS_DETAIL O
+        LEFT JOIN QUICK_LAUNDRY Q ON (O.ORDERS_DETAIL_ID = Q.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+    <select id="isDry" resultType="Integer">
+        SELECT D.ORDERS_DETAIL_ID as isDry
+        FROM ORDERS_DETAIL O
+        LEFT JOIN DRYCLEANING D ON (O.ORDERS_DETAIL_ID = D.ORDERS_DETAIL_ID)
+
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="isCommon" resultType="Integer">
+        SELECT C.ORDERS_DETAIL_ID as isCommon
+        FROM ORDERS_DETAIL O
+        LEFT JOIN COMMON_LAUNDRY C ON (O.ORDERS_DETAIL_ID = C.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
     </select>
 
 
+    <select id="isRepair" resultType="Integer">
+        SELECT R.ORDERS_DETAIL_ID as isRepair
+        FROM ORDERS_DETAIL O
+        LEFT JOIN REPAIR R ON (O.ORDERS_DETAIL_ID = R.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
+    </select>
 
-
+    <select id="getCoupon" resultType="aug.laundry.domain.CouponList">
+        SELECT COUPON_LIST_ID, MEMBER_ID, COUPON_ID, COUPON_LIST_CREATE_DATE, COUPON_LIST_STATUS, ORDERS_ID, COUPON_END_DATE
+        FROM COUPON_LIST
+        WHERE MEMBER_ID = #{memberId}
+        ORDER BY COUPON_LIST_ID DESC
+    </select>
 
 
 
