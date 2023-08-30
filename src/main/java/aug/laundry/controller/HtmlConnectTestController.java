@@ -3,8 +3,13 @@ package aug.laundry.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequiredArgsConstructor
@@ -141,5 +146,17 @@ public class HtmlConnectTestController {
     @GetMapping("/test/28")
     public String http28() {
         return "project_manager_order_detail";
+    }
+
+    @GetMapping("/device")
+    public void deviceCheck(HttpServletRequest request, HttpServletResponse response) {
+        Device device = DeviceUtils.getCurrentDevice(request);
+        if (device.isMobile()) {
+            log.info("휴대폰 유저");
+        } else if (device.isTablet()) {
+            log.info("태블릿 유저");
+        } else {
+            log.info("컴퓨터 유저");
+        }
     }
 }
