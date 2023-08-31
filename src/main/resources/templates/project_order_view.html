@@ -51,7 +51,7 @@
             </tr>
         </table>
         <table class='additional'>
-            <tr>
+            <tr th:if="${!dryList.isEmpty()}">
                 <th class='content'>드라이클리닝</th>
 <!--                <td class='content'>+ 100,000원</td>-->
             </tr>
@@ -61,50 +61,49 @@
                     <tr th:each="dry : ${dryList}">
                         <th class='detailcontent'>
                             <span th:text="${dry.drycleaningCategory.getTitle()}" class='content_name'>와이셔츠</span>
-
-                            <span th:text="'가능'" th:if="${dry.drycleaningPossibility} == 'Y'"  class='content_status_pos'>가능</span>
+                            <th:block th:if="${dry.drycleaningPossibility} == 'Y'">
+                                <span th:text="'가능'" class='content_status_pos'>가능</span>
+                            </th:block>
 
                             <th:block th:if="${dry.drycleaningPossibility} == 'N'">
                                 <span th:text="'불가능'" class='content_status_impos'>불가능</span>
                                 <span th:text="| : ${dry.drycleaningNotReason}|" class='content_reason'>: 사유사유사유사유</span>
                             </th:block>
                         </th>
-                        <td th:text="|+ ${{dry.drycleaningPrice}}원|" class='detailcontent'>+ 10,000원</td>
+                            <td th:if="${dry.drycleaningPossibility} == 'Y'" th:text="|+ ${{dry.drycleaningPrice}}원|" class='detailcontent'>+ 10,000원</td>
+                            <td th:if="${dry.drycleaningPossibility} == 'N'" class='detailcontent'>+ 0원</td>
                     </tr>
+
                     </th:block>
-<!--                    <tr>-->
-<!--                        <th class='detailcontent'>-->
-<!--                            <span class='content_name'>운동화 세탁</span>-->
-<!--                            <span class='content_status_impos'>불가능</span>-->
-<!--                            <span class='content_reason'>: 사유사유사유사유</span>-->
-<!--                        </th>-->
-<!--                        <td class='detailcontent'>+ 0원</td>-->
-<!--                    </tr>-->
                 </table>
             </tr>
         </table>
+
         <table class='additional'>
-            <tr>
+            <tr th:if="${!repairList.isEmpty()}">
                 <th class='content'>수선</th>
-                <td class='content'>+ 100,000원</td>
+                <!--                <td class='content'>+ 100,000원</td>-->
             </tr>
-                <tr class='details'>
+            <tr class='details'>
                 <table class='detail_info'>
-                    <tr>
-                        <th class='detailcontent'>
-                            <span class='content_name'>양말 구멍 수선</span>
-                            <span class='content_status_pos'>가능</span>
-                        </th>
-                        <td class='detailcontent'>+ 10,000원</td>
-                    </tr>
-                    <tr>
-                        <th class='detailcontent'>
-                            <span class='content_name'>운동화 세탁</span>
-                            <span class='content_status_impos'>불가능</span>
-                            <span class='content_reason'>: 사유사유사유사유</span>
-                        </th>
-                        <td class='detailcontent'>+ 0원</td>
-                    </tr>
+                    <th:block th:if="${!repairList.isEmpty()}">
+                        <tr th:each="repair : ${repairList}">
+                            <th class='detailcontent'>
+                                <span th:text="${repair.repairCategory.getTitle()}" class='content_name'>와이셔츠</span>
+                                <th:block th:if="${repair.repairPossibility} == 'Y'">
+                                    <span th:text="'가능'" class='content_status_pos'>가능</span>
+                                </th:block>
+
+                                <th:block th:if="${repair.repairPossibility} == 'N'">
+                                    <span th:text="'불가능'" class='content_status_impos'>불가능</span>
+                                    <span th:text="| : ${repair.repairNotReason}|" class='content_reason'>: 사유사유사유사유</span>
+                                </th:block>
+                            </th>
+                            <td th:if="${repair.repairPossibility} == 'Y'" th:text="|+ ${{repair.repairPrice}}원|" class='detailcontent'>+ 10,000원</td>
+                            <td th:if="${repair.repairPossibility} == 'N'" class='detailcontent'>+ 0원</td>
+                        </tr>
+
+                    </th:block>
                 </table>
             </tr>
         </table>

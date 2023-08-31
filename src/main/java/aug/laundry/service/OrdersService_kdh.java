@@ -2,8 +2,10 @@ package aug.laundry.service;
 
 import aug.laundry.dao.orders.OrdersDao;
 import aug.laundry.domain.Drycleaning;
+import aug.laundry.domain.Repair;
 import aug.laundry.dto.DrycleaningResponseDto;
 import aug.laundry.dto.OrdersResponseDto;
+import aug.laundry.dto.RepairResponseDto;
 import aug.laundry.enums.category.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,5 +44,24 @@ public class OrdersService_kdh {
         }
 
     }
+
+    public List<RepairResponseDto> findRepairByOrdersId(Long ordersId){
+
+        List<Repair> repairList = ordersDao.findRepairByOrdersId(ordersId);
+
+        if(repairList.isEmpty()){
+            return Collections.EMPTY_LIST;
+        } else {
+            return repairList.stream()
+                    .map(repair -> new RepairResponseDto(
+                            Category.valueOf(repair.getRepairCategory()),
+                            repair.getRepairPossibility(),
+                            repair.getRepairNotReason(),
+                            Category.valueOf(repair.getRepairCategory()).getPrice()
+                    )).collect(Collectors.toList());
+        }
+    }
+
+
 
 }

@@ -2,6 +2,7 @@ package aug.laundry.controller;
 
 import aug.laundry.dto.DrycleaningResponseDto;
 import aug.laundry.dto.OrdersResponseDto;
+import aug.laundry.dto.RepairResponseDto;
 import aug.laundry.service.OrdersService_kdh;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +35,14 @@ public class OrdersController_kdh {
     public String payOrder(@PathVariable Long ordersId, Model model){
 
         OrdersResponseDto ordersResponseDto = ordersServiceKdh.findByOrdersId(ordersId);
-        List<DrycleaningResponseDto> dryList =
-                ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
+        List<DrycleaningResponseDto> dryList = ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
+        List<RepairResponseDto> repairList = ordersServiceKdh.findRepairByOrdersId(ordersId);
+
         log.info("dryList={}", dryList);
+        log.info("repairList={}", repairList);
         model.addAttribute("order", ordersResponseDto);
         model.addAttribute("dryList", dryList);
+        model.addAttribute("repairList", repairList);
 
         return "project_order_view";
     }
