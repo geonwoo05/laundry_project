@@ -1,12 +1,13 @@
 package aug.laundry.enums.category;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-
+@Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Category {
 
