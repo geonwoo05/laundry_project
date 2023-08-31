@@ -1,5 +1,6 @@
 package aug.laundry.controller;
 
+import aug.laundry.dto.DrycleaningResponseDto;
 import aug.laundry.dto.OrdersResponseDto;
 import aug.laundry.service.OrdersService_kdh;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -28,12 +30,15 @@ public class OrdersController_kdh {
         return "";
     }
 
-    @GetMapping("/{orderId}/payment")
-    public String payOrder(@PathVariable Long orderId, Model model){
+    @GetMapping("/{ordersId}/payment")
+    public String payOrder(@PathVariable Long ordersId, Model model){
 
-        OrdersResponseDto ordersResponseDto = ordersServiceKdh.findByOrdersId(orderId);
-
+        OrdersResponseDto ordersResponseDto = ordersServiceKdh.findByOrdersId(ordersId);
+        List<DrycleaningResponseDto> dryList =
+                ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
+        log.info("dryList={}", dryList);
         model.addAttribute("order", ordersResponseDto);
+        model.addAttribute("dryList", dryList);
 
         return "project_order_view";
     }
