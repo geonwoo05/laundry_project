@@ -14,8 +14,6 @@ import java.util.HashMap;
 public interface MemberService_kgw {
     public MemberDto selectOne(Long memberId);
 
-    public void naverLogin(HttpServletRequest request, Model model);
-
 
 
 
