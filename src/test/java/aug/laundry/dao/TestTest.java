@@ -23,6 +23,9 @@ class TestTest {
     @Autowired
     private MemberMapper memberMapper;
 
+    @Autowired
+    private LoginMapper loginMapper;
+
     @Test
     void test(){
         int result = testDao.find();
@@ -37,7 +40,11 @@ class TestTest {
         MemberDto memberDto = memberService.selectOne(memberId);
         System.out.println(memberDto);
 
+    }
 
-
+    @Test
+    void checkSocialId(){
+        int res = loginMapper.checkSocialId("i5R4qxWWVIPTeMh3K74_NQwoIkGvd4xT7930Uc9qUgE");
+        System.out.println(res);
     }
 }

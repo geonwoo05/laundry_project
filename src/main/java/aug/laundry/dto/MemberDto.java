@@ -2,10 +2,11 @@ package aug.laundry.dto;
 
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
-import java.util.Date;
 
 @Data
+@Component
 public class MemberDto {
 
     private Long memberId;
@@ -25,6 +26,10 @@ public class MemberDto {
     private String memberMyInviteCode;
     private String memberAddressDetails;
     private String memberInviteCode;
+
+    // 기본 생성자 추가
+    public MemberDto() {
+    }
 
     public MemberDto(Long memberId, String memberAccount, String memberPassword, String memberName, String memberPhone, Integer memberZipcode, String memberAddress, String memberCreateDate, String memberSocial, Long subscriptionId, String subscriptionExpireDate, Long gradeId, String memberRecentlyDate, char memberDeleteStatus, String memberMyInviteCode, String memberAddressDetails, String memberInviteCode) {
         this.memberId = memberId;
