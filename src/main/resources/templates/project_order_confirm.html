@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_order_confirm.css">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="/js/project_order_confirm.js"></script>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
@@ -53,7 +55,7 @@
             <table>
                 <tr>
                     <th>주소</th>
-                    <td><a href="#" class='change'>변경</a></td>
+                    <td><a href="#" class='change' id="changeAddress">변경</a></td>
                 </tr>
             </table>
             <span class='content' th:text="${address.memberAddress}"></span>
@@ -199,34 +201,4 @@
     </div>
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
-<script>
-
-
-    // 공동현관 비밀번호 radio 버튼 연동
-    function toogleRadio(element) {
-        const radio = element.previousElementSibling;
-        if (!radio.checked){
-            radio.checked = !radio.checked;
-        }
-    }
-
-    let couponBtn = document.querySelector('#selectCoupon');
-
-    couponBtn.addEventListener('click', function(){
-        var param = '?'
-        + 'takeDate=' + document.querySelector('input[name=takeDate]').value + '&'
-        + 'deliveryDate=' + document.querySelector('input[name=deliveryDate]').value + '&'
-        + 'zipcode=' + document.querySelector('input[name=zipcode]').value + '&'
-        + 'address=' + document.querySelector('input[name=address]').value + '&'
-        + 'coupon=' + document.querySelector('input[name=coupon]').value + '&'
-        + 'address=' + document.querySelector('input[name=address]').value + '&'
-        + 'isPw=' + document.querySelector('input[name=isPw]').value + '&'
-        + 'password=' + document.querySelector('input[name=password]').value + '&'
-
-
-        location.href = '/members/1/coupons/select' + param;
-    })
-
-    
-</script>
 </html>
