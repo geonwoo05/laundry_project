@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -35,14 +36,14 @@ public class OrdersController_kdh {
     public String payOrder(@PathVariable Long ordersId, Model model){
 
         OrdersResponseDto ordersResponseDto = ordersServiceKdh.findByOrdersId(ordersId);
-        List<DrycleaningResponseDto> dryList = ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
-        List<RepairResponseDto> repairList = ordersServiceKdh.findRepairByOrdersId(ordersId);
+        Map<String, Object> dryMap = ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
+        Map<String, Object> repairMap = ordersServiceKdh.findRepairByOrdersId(ordersId);
 
-        log.info("dryList={}", dryList);
-        log.info("repairList={}", repairList);
+        log.info("dryMap={}", dryMap);
+        log.info("repairMap={}", repairMap);
         model.addAttribute("order", ordersResponseDto);
-        model.addAttribute("dryList", dryList);
-        model.addAttribute("repairList", repairList);
+        model.addAttribute("dryMap", dryMap);
+        model.addAttribute("repairMap", repairMap);
 
         return "project_order_view";
     }
