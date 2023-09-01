@@ -8,19 +8,6 @@
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_rider.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-        window.addEventListener('load', function() {
-
-                $(document).ready(function () {
-                    $(".order-link").click(function (e) {
-                        e.preventDefault(); // 기본 동작 중단
-                        var ordersId = $(this).data("ordersId"); // data-ordersId 값을 읽어옴
-                        var url = "/ride/ordersId/" + ordersId;
-                        window.location.href = url;
-                    });
-                });
-        });
-    </script>
     <title>Document</title>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
@@ -43,9 +30,9 @@
         </div>
             <div class='delivery_list'>
                 <ul>
-<!--                    <a th:href="@{/orders/{ordersId}/ride/{rideId}(ordersId=${order.ordersId})}" href='#' onclick="goToOrderInfo();">-->
-                    <th:block th:each="a : ${orderList}">
-                    <a th:href="@{/ride/orders/{ordersId}(ordersId=${a})}" >
+<!--                    <th:block th:each="list : ${orderList}">-->
+<!--                    <a th:href="@{/ride/orders/{ordersId}(ordersId=${list.ordersId})}" >-->
+                    <a href="#">
                         <li>
                             <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" value="18">18</span>
                             <span class='delivery_address'>서울특별시 서대문구 대현동 777-8 508동 116호</span>

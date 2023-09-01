@@ -1,10 +1,10 @@
 package aug.laundry.controller;
 
-import aug.laundry.domain.CouponList;
+import aug.laundry.dao.rider.RiderMapper;
 import aug.laundry.domain.Orders;
-import aug.laundry.service.LaundryService;
 import aug.laundry.service.RiderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -12,18 +12,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 //@RequestMapping("/ride/*")
 public class RiderController {
+
+    private RiderService riderService;
 
     @GetMapping("/ride/wait")
     public String waitList(Model model) {
@@ -32,8 +31,9 @@ public class RiderController {
 
     @GetMapping("/ride/accept")
     public String acceptList(Model model) {
-        List<Long> list = Arrays.asList(1L,2L,3L,4L,5L);
-        model.addAttribute("orderList", list);
+        System.out.println(riderService.getClass());
+//        List<Orders> list = riderService.OrderList();
+//        model.addAttribute("orderList", list);
         return "project_rider_using_list";
     }
 
@@ -55,7 +55,7 @@ public class RiderController {
         orders.setOrdersDate("2023/08/31");
         orders.setOrdersAddress("제주도");
         orders.setOrdersAddressDetails("108동 505호");
-        
+
         map.put("a",orders);
         map.put("storeId", storeId);
         return map;
