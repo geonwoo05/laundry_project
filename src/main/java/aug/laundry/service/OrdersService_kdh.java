@@ -1,6 +1,7 @@
 package aug.laundry.service;
 
 import aug.laundry.dao.orders.OrdersDao;
+import aug.laundry.dao.point.PointDao;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.DrycleaningResponseDto;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class OrdersService_kdh {
 
     private final OrdersDao ordersDao;
+    private final PointDao pointDao;
 
     public OrdersResponseDto findByOrdersId(Long ordersId){
         OrdersResponseDto ordersResponseDto = ordersDao.findByOrdersId(ordersId);
@@ -123,6 +125,10 @@ public class OrdersService_kdh {
                         repair.getRepairNotReason(),
                         Category.valueOf(repair.getRepairCategory()).getPrice()
                 )).collect(Collectors.toList());
+    }
+
+    public Integer findPointByMemberId(Long memberId){
+        return pointDao.findByMemberId(memberId);
     }
 
 

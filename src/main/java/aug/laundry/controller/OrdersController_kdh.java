@@ -39,11 +39,14 @@ public class OrdersController_kdh {
         Map<String, Object> dryMap = ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
         Map<String, Object> repairMap = ordersServiceKdh.findRepairByOrdersId(ordersId);
 
+        Integer point = ordersServiceKdh.findPointByMemberId(1L);  // 1L수정해야함
+
         log.info("dryMap={}", dryMap);
         log.info("repairMap={}", repairMap);
         model.addAttribute("order", ordersResponseDto);
         model.addAttribute("dryMap", dryMap);
         model.addAttribute("repairMap", repairMap);
+        model.addAttribute("point", point);
 
         return "project_order_view";
     }
