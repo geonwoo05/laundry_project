@@ -3,32 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="aug.laundry.dao.LaundryMapper">
 
-
-    <select id="isQuick" resultType="Integer">
-        SELECT Q.ORDERS_DETAIL_ID as isQuick
+    <select id="firstInfo" resultType="aug.laundry.dto.OrderInfo">
+        SELECT Q.ORDERS_DETAIL_ID as isQuick, COALESCE(C.ORDERS_DETAIL_ID,0) as isDry, COALESCE(D.ORDERS_DETAIL_ID,0) as isCommon, COALESCE(R.ORDERS_DETAIL_ID, 0) as isRepair
         FROM ORDERS_DETAIL O
         LEFT JOIN QUICK_LAUNDRY Q ON (O.ORDERS_DETAIL_ID = Q.ORDERS_DETAIL_ID)
-        WHERE MEMBER_ID = #{memberId}
-    </select>
-    <select id="isDry" resultType="Integer">
-        SELECT D.ORDERS_DETAIL_ID as isDry
-        FROM ORDERS_DETAIL O
-        LEFT JOIN DRYCLEANING D ON (O.ORDERS_DETAIL_ID = D.ORDERS_DETAIL_ID)
-
-        WHERE MEMBER_ID = #{memberId}
-    </select>
-
-    <select id="isCommon" resultType="Integer">
-        SELECT C.ORDERS_DETAIL_ID as isCommon
-        FROM ORDERS_DETAIL O
         LEFT JOIN COMMON_LAUNDRY C ON (O.ORDERS_DETAIL_ID = C.ORDERS_DETAIL_ID)
-        WHERE MEMBER_ID = #{memberId}
-    </select>
-
-
-    <select id="isRepair" resultType="Integer">
-        SELECT R.ORDERS_DETAIL_ID as isRepair
-        FROM ORDERS_DETAIL O
+        LEFT JOIN DRYCLEANING D ON (O.ORDERS_DETAIL_ID = D.ORDERS_DETAIL_ID)
         LEFT JOIN REPAIR R ON (O.ORDERS_DETAIL_ID = R.ORDERS_DETAIL_ID)
         WHERE MEMBER_ID = #{memberId}
     </select>
@@ -40,6 +20,11 @@
         ORDER BY COUPON_LIST_ID DESC
     </select>
 
+    <select id="getAddress" resultType="aug.laundry.dto.Address">
+        SELECT MEMBER_ADDRESS, MEMBER_ADDRESS_DETAILS
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+    </select>
 
 
 
