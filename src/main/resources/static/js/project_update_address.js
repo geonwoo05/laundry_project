@@ -1,4 +1,39 @@
-function findAddress() {
+window.addEventListener('load', function(){
+
+    let button_addressChange = document.querySelector('#button_addressChange');
+    let detailAddress = document.querySelector('#detailAddress');
+    let addressCheckRes = document.querySelector('#addressCheckRes');
+
+    detailAddress.addEventListener('keyup', function(){
+
+        let errors = document.querySelectorAll('.errors');
+
+        if(addressCheckRes.value=='2' && detailAddress.value!=''){
+            errors[0].textContent='';
+            addressCheckRes.value='1';
+            button_addressChange.disabled = true;
+        }
+        if(addressCheckRes.value=='1'){
+            button_addressChange.disabled=false;
+        }
+    });
+
+    button_addressChange.addEventListener('click', function(){
+        let detailAddress = document.querySelector('#detailAddress');
+        let errors = document.querySelectorAll('.errors');
+        let searchAddressValue = document.querySelector('#searchAddressValue');
+
+
+        if(searchAddressValue.value==''){
+            errors[0].textContent = '주소를 검색해주세요';
+            button_addressChange.disabled = true;
+            return;
+        }
+    });
+});
+
+function sample6_execDaumPostcode() {
+
             new daum.Postcode({
                 oncomplete: function(data) {
                     // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -7,6 +42,8 @@ function findAddress() {
                     // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
                     var addr = ''; // 주소 변수
                     var extraAddr = ''; // 참고항목 변수
+                    let addressCheckRes = document.querySelector('#addressCheckRes');
+                    let errors = document.querySelectorAll('.errors');
 
                     //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
                     if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
@@ -31,17 +68,19 @@ function findAddress() {
                             extraAddr = ' (' + extraAddr + ')';
                         }
                         // 조합된 참고항목을 해당 필드에 넣는다.
-                        document.getElementById("extraAddress").value = extraAddr;
+                        document.querySelector("#extraAddress").value = extraAddr;
 
                     } else {
-                        document.getElementById("extraAddress").value = '';
+                        document.querySelector("#extraAddress").value = '';
                     }
 
                     // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                    document.getElementById('zipcode').value = data.zonecode;
-                    document.getElementById("searchAddressValue").value = addr;
+                    document.querySelector('#zipcode').value = data.zonecode;
+                    document.querySelector("#searchAddressValue").value = addr + extraAddr;
+                    addressCheckRes.value = '2';
+                    errors[0].textContent='상세주소를 입력해주세요';
                     // 커서를 상세주소 필드로 이동한다.
-                    document.getElementById("detailAddress").focus();
+//                    document.querySelector("#detailAddress").focus();
                 }
             }).open();
         }

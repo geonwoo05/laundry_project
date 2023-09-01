@@ -19,25 +19,25 @@
                 <li>
                     <div>
                         <div>이름</div><br>
-                        <p>박보검</p>
+                        <p th:text="${userName }"></p>
                     </div>
                     <div></div>
                 </li>
             </a>
-            <a href=''>
+            <a href='/members/{memberId}/address/update'>
                 <li>
                     <div>
                         <div>주소</div><br>
-                        <p>서울특별시 서대문구 대현동</p>
+                        <p th:text="${userAddress }"></p>
                     </div>
                     <div>▶</div>
                 </li>
             </a>
-            <a href=''>
+            <a href='/members/{memberId}/phone/update'>
                 <li>
                     <div>
                         <div>전화번호</div><br>
-                        <p>010-0000-0000</p>
+                        <p th:text="${userPhone }"></p>
                     </div>
                     <div>▶</div>
                 </li>
@@ -48,7 +48,7 @@
                     <div></div>
                 </li>
             </a>
-            <a href=''>
+            <a href='/members/{memberId}/unregister'>
                 <li class='mypage_rest_btn'>
                     <div>탈퇴하기</div>
                     <div></div>

@@ -28,6 +28,9 @@
     color: black;
     float: left;
     font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .mypageList li div div{
     font-size: large;

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="aug.laundry.dao.mypage.MypageMapper">
+
+    <select id="findByNameAndPass" resultType="aug.laundry.dto.MypageDto">
+        SELECT member_name, to_char(subscription_expire_date, 'yy/MM/dd') as subscription_expire_date
+        FROM MEMBER
+        WHERE member_id=#{memberId}
+    </select>
+
+    <select id="findByName" resultType="String">
+        SELECT MEMBER_NAME
+        FROM MEMBER
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="findByInviteCode" resultType="String">
+        SELECT MEMBER_MY_INVITE_CODE
+        FROM MEMBER
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="findByInfo" resultType="aug.laundry.dto.MypageDto">
+        SELECT MEMBER_NAME, MEMBER_PHONE, MEMBER_ZIPCODE, MEMBER_ADDRESS, MEMBER_ADDRESS_DETAILS,
+        SUBSCRIPTION_ID, SUBSCRIPTION_EXPIRE_DATE, GRADE_ID, MEMBER_MY_INVITE_CODE
+        FROM MEMBER
+        WHERE member_id = #{memberId}
+    </select>
+
+    <update id="updateAddress">
+        UPDATE MEMBER
+        SET MEMBER_ZIPCODE = #{memberZipcode}, MEMBER_ADDRESS = #{memberAddress}, MEMBER_ADDRESS_DETAILS = #{memberAddressDetails}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+
+    <update id="updatePhone">
+        UPDATE MEMBER
+        SET MEMBER_PHONE = #{memberPhone}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+    
+    <update id="unregister">
+        UPDATE MEMBER
+        SET MEMBER_DELETE_STATUS = 'Y'
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+</mapper>
