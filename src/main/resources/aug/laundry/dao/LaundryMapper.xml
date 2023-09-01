@@ -13,15 +13,19 @@
         WHERE MEMBER_ID = #{memberId}
     </select>
 
-    <select id="getCoupon" resultType="aug.laundry.domain.CouponList">
-        SELECT COUPON_LIST_ID, MEMBER_ID, COUPON_ID, COUPON_LIST_CREATE_DATE, COUPON_LIST_STATUS, ORDERS_ID, COUPON_END_DATE
+    <select id="getCoupon" resultType="aug.laundry.dto.MyCoupon">
+        SELECT COUPON_LIST_ID, TO_CHAR(COUPON_PRICE, '999,999,999') as couponPrice, COUPON_NAME, TO_CHAR(COUPON_END_DATE, 'YYYY-MM-DD HH24:mm') as couponEndDate, CASE WHEN COUPON_END_DATE IS NULL THEN '무제한 사용가능'
+                                                                                                                                WHEN (COUPON_END_DATE - SYSDATE) >= 1 THEN ROUND(COUPON_END_DATE - SYSDATE) || '일 남음'
+                                                                                                                                ELSE ROUND(TRUNC((COUPON_END_DATE - SYSDATE) * 24)) || '시간 남음'
+                                                                                                                                END AS remainingTime
         FROM COUPON_LIST
+        JOIN COUPON ON (COUPON_LIST.COUPON_ID = COUPON.COUPON_ID)
         WHERE MEMBER_ID = #{memberId}
-        ORDER BY COUPON_LIST_ID DESC
+        ORDER BY COUPON_END_DATE
     </select>
 
     <select id="getAddress" resultType="aug.laundry.dto.Address">
-        SELECT MEMBER_ADDRESS, MEMBER_ADDRESS_DETAILS
+        SELECT MEMBER_ZIPCODE, MEMBER_ADDRESS, MEMBER_ADDRESS_DETAILS
         FROM MEMBER
         WHERE MEMBER_ID = #{memberId}
     </select>

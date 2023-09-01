@@ -3,6 +3,7 @@ package aug.laundry.dao;
 import aug.laundry.controller.LaundryController;
 import aug.laundry.domain.CouponList;
 import aug.laundry.dto.Address;
+import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.OrderInfo;
 import aug.laundry.enums.category.CategoryOption;
 import aug.laundry.service.LaundryServiceImpl;
@@ -32,7 +33,7 @@ public class LaundryRepository {
         return laundryMapper.firstInfo(memberId);
     }
 
-    public List<CouponList> getCoupon(Long memberId) {
+    public List<MyCoupon> getCoupon(Long memberId) {
         return laundryMapper.getCoupon(memberId);
     }
 
