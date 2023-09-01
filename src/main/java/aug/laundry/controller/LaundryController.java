@@ -31,7 +31,7 @@ public class LaundryController {
     private final LaundryService laundryService;
 
     @GetMapping("/laundry/order")
-    public String order(Model model) {
+    public String order(Model model, HttpServletRequest request) {
         OrderInfo info = laundryService.firstInfo(1L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
         List<MyCoupon> coupon = laundryService.getCoupon(1L); // 내가 보유한 쿠폰
         Address address = laundryService.getAddress(1L); // 주소 가져오기
