@@ -47,8 +47,15 @@ public class OrdersController_kdh {
         model.addAttribute("dryMap", dryMap);
         model.addAttribute("repairMap", repairMap);
         model.addAttribute("point", point);
+        model.addAttribute("memberId", 1L);
 
         return "project_order_view";
+    }
+
+    @GetMapping("/members/{memberId}/coupons")
+    public String coupons(@PathVariable Long memberId){
+
+        return "project_order_view_coupon";
     }
 
 }
