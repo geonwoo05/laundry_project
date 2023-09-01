@@ -201,10 +201,6 @@
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
 <script>
 
-    let url = new URL(window.location.href)
-    console.log(url)
-    console.log(url.search)
-
 
     // 공동현관 비밀번호 radio 버튼 연동
     function toogleRadio(element) {
@@ -217,7 +213,8 @@
     let couponBtn = document.querySelector('#selectCoupon');
 
     couponBtn.addEventListener('click', function(){
-        var param = '?' + 'takeDate=' + document.querySelector('input[name=takeDate]').value + '&'
+        var param = '?'
+        + 'takeDate=' + document.querySelector('input[name=takeDate]').value + '&'
         + 'deliveryDate=' + document.querySelector('input[name=deliveryDate]').value + '&'
         + 'zipcode=' + document.querySelector('input[name=zipcode]').value + '&'
         + 'address=' + document.querySelector('input[name=address]').value + '&'

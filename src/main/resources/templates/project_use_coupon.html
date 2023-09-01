@@ -30,9 +30,9 @@
                     <li class='coupon' th:each="item : ${coupon}">
                         <div class='couponRadio'>
                             <span class='couponPrice' th:text="${item.couponPrice} + '원 할인'">5,000원 할인</span>
-                            <input type="radio" name="couponNum" id="couponNum1" hidden th:value="${item.couponListId}">
+                            <input type="radio" name="couponNum" th:id="couponNum + ${item.couponListId}" hidden th:value="${item.couponListId}">
                             <span class='custom-radio'></span>
-                            <label for="couponNum1"></label>
+                            <label th:for="couponNum + ${item.couponListId}"></label>
                         </div>
                         <span class='couponTitle' th:text="${item.couponName}">[신규회원] 5,000원 할인 쿠폰</span>
                         <div class='couponDate'>
