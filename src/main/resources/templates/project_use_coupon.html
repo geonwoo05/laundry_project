@@ -14,7 +14,7 @@
 <body>
     
     <div class='container'>
-        <form action="#" method="get">
+        <form action="/laundry/order" method="get">
             <div class='middelHead'>쿠폰</div>
             <div class='cupon'>
                 <div>보유쿠폰</div>
@@ -27,20 +27,19 @@
                 <label for="couponEmpty">적용 안함</label>
             </div>
             <ul class='couponList'>
-                <li class='coupon'>
-                    <div class='couponRadio'>
-                        <span class='couponPrice'>5,000원 할인</span>
-                        <input type="radio" name="couponNum" id="couponNum1" hidden>
-                        <span class='custom-radio'></span>
-                        <label for="couponNum1"></label>
-                    </div>
-                    <span class='couponTitle'>[신규회원] 5,000원 할인 쿠폰</span>
-                    <div class='couponDate'>
-                        <span class='couponExpireCount'>3일 남음</span>
-                        <span class='couponExpireDate'>2023.08.31 23:59까지</span>
-                    </div>
-                </li>
-
+                    <li class='coupon' th:each="item : ${coupon}">
+                        <div class='couponRadio'>
+                            <span class='couponPrice' th:text="${item.couponPrice} + '원 할인'">5,000원 할인</span>
+                            <input type="radio" name="couponNum" id="couponNum1" hidden th:value="${item.couponListId}">
+                            <span class='custom-radio'></span>
+                            <label for="couponNum1"></label>
+                        </div>
+                        <span class='couponTitle' th:text="${item.couponName}">[신규회원] 5,000원 할인 쿠폰</span>
+                        <div class='couponDate'>
+                            <span class='couponExpireCount' th:text="${item.remainingTime}">3일 남음</span>
+                            <span class='couponExpireDate' th:text="${item.couponEndDate}">2023.08.31 23:59까지</span>
+                        </div>
+                    </li>
                 <li class='coupon noncoupon'>
                     <span>등록된 쿠폰이 없습니다.</span>
                 </li>
@@ -53,10 +52,23 @@
                     <li>- 쿠폰 만료일은 수거일 기준으로 적용됩니다.</li>
                 </ul>
             </div>
-            <input type="submit" value="적용하기">
+            <button id="submit" type="button">적용하기</button>
         </form>
     </div>
 
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
+<script>
+
+    let submitBtn = document.querySelector('#submit');
+    submitBtn.addEventListener('click', function(event){
+        event.preventDefault();
+        let radio = document.querySelector('input[name=couponNum]:checked');
+        let radioText = radio.name + '=' + radio.value; // 키=값 형식으로 쿼리파라미터 변환
+
+        let params = new URL(window.location.href);
+        location.href = "/laundry/order" + params.search + radioText; // params.search는 ? 뒤에 쿼리파라미터 문자열그대로 반환해줌
+    })
+
+</script>
 </html>

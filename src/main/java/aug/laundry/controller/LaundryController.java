@@ -3,6 +3,7 @@ package aug.laundry.controller;
 import aug.laundry.domain.CouponList;
 import aug.laundry.dto.Address;
 import aug.laundry.dto.DateForm;
+import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.OrderInfo;
 import aug.laundry.enums.category.CategoryOption;
 import aug.laundry.service.LaundryService;
@@ -14,11 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.lang.model.element.ModuleElement;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +32,11 @@ public class LaundryController {
 
     @GetMapping("/laundry/order")
     public String order(Model model) {
-        OrderInfo info = laundryService.firstInfo(63L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
-        List<CouponList> coupon = laundryService.getCoupon(63L); // 내가 보유한 쿠폰
+        OrderInfo info = laundryService.firstInfo(1L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
+        List<MyCoupon> coupon = laundryService.getCoupon(1L); // 내가 보유한 쿠폰
+        Address address = laundryService.getAddress(1L); // 주소 가져오기
         DateForm dateForm = new DateForm();
 
-        Address address = laundryService.getAddress(63L);
 
         model.addAttribute("quickLaundry", info.getIsQuick());
         model.addAttribute("info", getJoin(info.getIsDry(), info.getIsCommon(), info.getIsRepair()));
@@ -54,7 +54,10 @@ public class LaundryController {
     }
 
     @GetMapping("/members/{memberId}/coupons/select")
-    public String selectCoupon(@PathVariable Long memberId) {
+    public String selectCoupon(@PathVariable Long memberId, Model model, String takeDate) {
+        List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
+        model.addAttribute("memberId", memberId);
+        model.addAttribute("coupon", getCoupon);
 
         return "project_use_coupon";
     }
