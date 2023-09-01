@@ -299,4 +299,9 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         return formattedNumber;
     }
 
+    public MemberDto login(String memberAccount){
+        MemberDto memberDto = loginMapper.login(memberAccount);
+        return memberDto;
+    }
+
 }

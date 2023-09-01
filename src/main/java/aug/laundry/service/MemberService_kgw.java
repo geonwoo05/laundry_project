@@ -14,6 +14,11 @@ import java.util.HashMap;
 public interface MemberService_kgw {
     public MemberDto selectOne(Long memberId);
 
+    public int checkId(String memberAccount);
+
+    public Integer registerUser(MemberDto memberDto);
+
+
 
 
 

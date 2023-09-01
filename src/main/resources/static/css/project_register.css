@@ -167,10 +167,11 @@ div[class^=register_box] input{
 }
 
 #register_detailAddress{
-    width: 58%;
+    width: 100%;
 }
 
 #register_extraAddress{
+    display: none;
     width: 40%;
     background-color: #fff;
 }

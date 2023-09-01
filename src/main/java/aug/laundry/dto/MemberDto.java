@@ -4,18 +4,41 @@ package aug.laundry.dto;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 
 @Data
 @Component
 public class MemberDto {
 
     private Long memberId;
+
+    @NotBlank(message = "memberAccount is required")
     private String memberAccount;
+
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[@#$%^&+=!]).{8,15}$", message = "비밀번호는 대소문자, 숫자, 특수문자를 포함한 8~15자여야 합니다.")
     private String memberPassword;
+
+    @NotBlank(message = "memberName is required")
     private String memberName;
+
+    @NotBlank(message = "memberPhone is required")
     private String memberPhone;
+
+    @NotNull(message = "memberZipcode is required")
+    @Min(value = 0)
+    @Min(value = 99999)
     private Integer memberZipcode;
+
+    @NotBlank(message = "memberAddress is required")
     private String memberAddress;
+
+    @NotBlank(message = "memberAddressDetails is required")
+    private String memberAddressDetails;
+
     private String memberCreateDate;
     private String memberSocial;
     private Long subscriptionId;
@@ -24,7 +47,6 @@ public class MemberDto {
     private String memberRecentlyDate;
     private char memberDeleteStatus;
     private String memberMyInviteCode;
-    private String memberAddressDetails;
     private String memberInviteCode;
 
     // 기본 생성자 추가
