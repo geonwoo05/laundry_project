@@ -2,7 +2,9 @@ package aug.laundry.controller;
 
 import aug.laundry.dto.AddressRequestDto;
 import aug.laundry.dto.MemberDto;
+import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.MypageDto;
+import aug.laundry.service.LaundryService;
 import aug.laundry.service.MemberService_kgw;
 import aug.laundry.service.MypageService_osc;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -27,6 +30,7 @@ public class MypageController_osc {
 
   private final MypageService_osc mypageService;
   private final MemberService_kgw memberService;
+  private final LaundryService laundryService;
 
   @GetMapping("/{memberId}/mypage")
   public String MypageMain(@PathVariable Long memberId, Model model){
@@ -63,7 +67,11 @@ public class MypageController_osc {
   }
 
   @GetMapping("{memberId}/coupons")
-  public String MypageCouponList(@PathVariable Long memberId){
+  public String MypageCouponList(@PathVariable Long memberId, Model model){
+    List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
+    log.info(getCoupon.toString());
+      model.addAttribute("memberId", memberId);
+      model.addAttribute("coupon", getCoupon);
     return "project_coupon";
   }
 
