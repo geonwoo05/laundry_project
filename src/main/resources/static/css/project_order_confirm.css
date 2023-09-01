@@ -195,3 +195,19 @@ input[type=submit]{
 .detailcontent *, .detailcontent{
     font-size: 0.9rem;
 }
+
+input[type=text]{
+    width: calc(100% - 2rem);
+    padding: 0.3rem 1rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    outline: none;
+    margin: 0.5rem 1rem;
+    font-size: 1rem;
+
+}
+
+.addressDetails{
+    margin: 0;
+}
