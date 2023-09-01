@@ -14,25 +14,25 @@
 
 <div class='container'>
     <form action="#" method="get">
-        <h2>12월 15일(수) 주문</h2>
+        <h2 th:text="${order.ordersDate}">12월 15일(수) 주문</h2>
         <hr>
         <h4>기본사항</h4>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>주문번호</span>
-            <span class='basicinfoContent'>10101010101010L</span>
+            <span th:text="${order.ordersId}" class='basicinfoContent'>10101010101010L</span>
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>일정</span>
-            <span class='basicinfoContent'>수거 : 2023/08/23(화) 23시</span>
-            <span class='basicinfoContent'>반납 : 2023/08/24(수) 07시</span>
+            <span th:text="${order.ordersPickupDate}" class='basicinfoContent'>수거 : 2023/08/23(화) 23시</span>
+            <span th:text="${order.ordersReturnDate}" class='basicinfoContent'>반납 : 2023/08/24(수) 07시</span>
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>주소</span>
-            <span class='basicinfoContent'>서울특별시 서대문구 대현동</span>
+            <span th:text="${order.ordersAddress + ' ' + order.ordersAddressDetails}" class='basicinfoContent'>서울특별시 서대문구 대현동</span>
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>요청사항</span>
-            <span class='basicinfoContent_div'>빡빡 깨끗하게 세탁해서 보내주세요.</span>
+            <span th:text="${order.ordersRequest}" class='basicinfoContent_div'>빡빡 깨끗하게 세탁해서 보내주세요.</span>
         </div>
         <hr>
         <h4>검수 청구 정산서</h4>
@@ -45,58 +45,65 @@
                 <th class='content'>빠른세탁</th>
                 <td class='content'>+ 4,000원</td>
             </tr>
-            <tr>
-                <th class='content'>생활빨래 2.7kg</th>
-                <td class='content'>+ 4,000원</td>
+            <tr th:if="${order.commonLaundryWeight != null}">
+                <th th:text="|생활빨래 ${order.commonLaundryWeight}L|" class='content'>생활빨래 2.7kg</th>
+                <td th:text="|+ ${{order.commonLaundryPrice}}원|" class='content'>+ 4,000원</td>
             </tr>
         </table>
         <table class='additional'>
-            <tr>
+            <tr th:if="${!dryMap.get('dryList').isEmpty()}">
                 <th class='content'>드라이클리닝</th>
-                <td class='content'>+ 100,000원</td>
+<!--                <td class='content'>+ 100,000원</td>-->
             </tr>
             <tr class='details'>
                 <table class='detail_info'>
-                    <tr>
+                    <th:block th:if="${!dryMap.get('dryList').isEmpty()}">
+                    <tr th:each="dry : ${dryMap.get('dryList')}">
                         <th class='detailcontent'>
-                            <span class='content_name'>와이셔츠</span>
-                            <span class='content_status_pos'>가능</span>
+                            <span th:text="${dry.drycleaningCategory.getTitle()}" class='content_name'>와이셔츠</span>
+                            <th:block th:if="${dry.drycleaningPossibility} == 'Y'">
+                                <span th:text="'가능'" class='content_status_pos'>가능</span>
+                            </th:block>
+
+                            <th:block th:if="${dry.drycleaningPossibility} == 'N'">
+                                <span th:text="'불가능'" class='content_status_impos'>불가능</span>
+                                <span th:text="| : ${dry.drycleaningNotReason}|" class='content_reason'>: 사유사유사유사유</span>
+                            </th:block>
                         </th>
-                        <td class='detailcontent'>+ 10,000원</td>
+                            <td th:if="${dry.drycleaningPossibility} == 'Y'" th:text="|+ ${{dry.drycleaningPrice}}원|" class='detailcontent'>+ 10,000원</td>
+                            <td th:if="${dry.drycleaningPossibility} == 'N'" class='detailcontent'>+ 0원</td>
                     </tr>
-                    <tr>
-                        <th class='detailcontent'>
-                            <span class='content_name'>운동화 세탁</span>
-                            <span class='content_status_impos'>불가능</span>
-                            <span class='content_reason'>: 사유사유사유사유</span>
-                        </th>
-                        <td class='detailcontent'>+ 0원</td>
-                    </tr>
+
+                    </th:block>
                 </table>
             </tr>
         </table>
+
         <table class='additional'>
-            <tr>
+            <tr th:if="${!repairMap.get('repairList').isEmpty()}">
                 <th class='content'>수선</th>
-                <td class='content'>+ 100,000원</td>
+                <!--                <td class='content'>+ 100,000원</td>-->
             </tr>
             <tr class='details'>
                 <table class='detail_info'>
-                    <tr>
-                        <th class='detailcontent'>
-                            <span class='content_name'>양말 구멍 수선</span>
-                            <span class='content_status_pos'>가능</span>
-                        </th>
-                        <td class='detailcontent'>+ 10,000원</td>
-                    </tr>
-                    <tr>
-                        <th class='detailcontent'>
-                            <span class='content_name'>운동화 세탁</span>
-                            <span class='content_status_impos'>불가능</span>
-                            <span class='content_reason'>: 사유사유사유사유</span>
-                        </th>
-                        <td class='detailcontent'>+ 0원</td>
-                    </tr>
+                    <th:block th:if="${!repairMap.get('repairList').isEmpty()}">
+                        <tr th:each="repair : ${repairMap.get('repairList')}">
+                            <th class='detailcontent'>
+                                <span th:text="${repair.repairCategory.getTitle()}" class='content_name'>와이셔츠</span>
+                                <th:block th:if="${repair.repairPossibility} == 'Y'">
+                                    <span th:text="'가능'" class='content_status_pos'>가능</span>
+                                </th:block>
+
+                                <th:block th:if="${repair.repairPossibility} == 'N'">
+                                    <span th:text="'불가능'" class='content_status_impos'>불가능</span>
+                                    <span th:text="| : ${repair.repairNotReason}|" class='content_reason'>: 사유사유사유사유</span>
+                                </th:block>
+                            </th>
+                            <td th:if="${repair.repairPossibility} == 'Y'" th:text="|+ ${{repair.repairPrice}}원|" class='detailcontent'>+ 10,000원</td>
+                            <td th:if="${repair.repairPossibility} == 'N'" class='detailcontent'>+ 0원</td>
+                        </tr>
+
+                    </th:block>
                 </table>
             </tr>
         </table>
@@ -109,7 +116,7 @@
             </tr>
         </table>
         <div class='point'>
-            <input type="text" name="point" id="point" placeholder='보유 포인트 : 400P'>
+            <input type="text" name="point" id="point" th:placeholder="|보유 포인트 : ${#numbers.formatDecimal(point,3,'COMMA',0,'COMMA')}P|" placeholder='보유 포인트 : 400P'>
             <button type='button' class='pointbtn'>전부사용</button>
         </div>
 
@@ -137,17 +144,17 @@
                 <th class='content'>배송비</th>
                 <td class='content'>+ 3,000원</td>
             </tr>
-            <tr>
-                <th class='content'>생활빨래 2.7kg</th>
-                <td class='content'>+ 27,000원</td>
+            <tr th:if="${order.commonLaundryWeight != null}">
+                <th th:text="|생활빨래 ${order.commonLaundryWeight}L|" class='content'>생활빨래 2.7kg</th>
+                <td th:text="|+ ${{order.commonLaundryPrice}}원|" class='content'>+ 27,000원</td>
             </tr>
-            <tr>
+            <tr th:if="${!dryMap.get('dryList').isEmpty()}">
                 <th class='content'>드라이클리닝</th>
-                <td class='content'>+ 20,000원</td>
+                <td th:text="|+ ${#numbers.formatDecimal(dryMap.get('totalDryPrice'),3,'COMMA',0,'COMMA')}원|" class='content'>+ 20,000원</td>
             </tr>
-            <tr>
+            <tr th:if="${!repairMap.get('repairList').isEmpty()}">
                 <th class='content'>수선</th>
-                <td class='content'>+ 100,000원</td>
+                <td th:text="|+ ${#numbers.formatDecimal(repairMap.get('totalRepairPrice'),3,'COMMA',0,'COMMA')}원|" class='content'>+ 20,000원</td>
             </tr>
             <tr>
                 <th class='content'>포인트</th>

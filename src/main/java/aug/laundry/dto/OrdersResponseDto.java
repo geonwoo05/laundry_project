@@ -3,6 +3,8 @@ package aug.laundry.dto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 @Getter
 @Setter
@@ -17,5 +19,7 @@ public class OrdersResponseDto {
     private String ordersAddressDetails;
     private String ordersRequest;
     private Double commonLaundryWeight;
+    @NumberFormat(pattern = "###,###")
+    private Long commonLaundryPrice;
 
 }

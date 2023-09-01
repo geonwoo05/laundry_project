@@ -7,9 +7,12 @@ import aug.laundry.dao.ObjectMapperFactory;
 import aug.laundry.dto.DateForm;
 import aug.laundry.enums.category.Category;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -52,5 +55,31 @@ public class categoryTest {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
         LocalDateTime with = LocalDateTime.now().with(LocalTime.of(23, 0));
         System.out.println("with = " + with);
+    }
+
+    @Test
+    @DisplayName("Enum 카테고리에 카테고리 title과 같은값이 있어야한다")
+    void valueOfTest(){
+        //given
+        Category category = Arrays.stream(Category.values())
+                .filter(x -> x.getTitle().equals("와이셔츠"))
+                .findAny().orElse(null);
+        //when
+        String title = category.getTitle();
+        //then
+        Assertions.assertThat(title).isEqualTo("와이셔츠");
+    }
+
+    @Test
+    @DisplayName("Enum 카테고리에 카테고리 title과 같은값이 없으니 Null이다")
+    void valueOfTest2(){
+        //given
+        Category category = Arrays.stream(Category.values())
+                .filter(x -> x.getTitle().equals("카테고리없음"))
+                .findAny().orElse(null);
+        //when
+
+        //then
+        Assertions.assertThat(category).isNull();
     }
 }
