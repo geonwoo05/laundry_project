@@ -1,7 +1,10 @@
 package aug.laundry.category;
 
 import aug.laundry.dao.EnumDao;
+import aug.laundry.dao.LaundryMapper;
+import aug.laundry.dao.LaundryRepository;
 import aug.laundry.dao.ObjectMapperFactory;
+import aug.laundry.dto.DateForm;
 import aug.laundry.enums.category.Category;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.assertj.core.api.Assertions;
@@ -10,11 +13,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class categoryTest {
 
     @Autowired
     private final EnumDao enumDao = new EnumDao(new ObjectMapperFactory());
+
+    @Autowired
+    private LaundryRepository laundryRepository;
 
     @Test
     public void categoryTest() throws JsonProcessingException {
@@ -36,8 +45,16 @@ public class categoryTest {
     }
 
     @Test
-    void MapperTest() {
+    public void mapperTest() {
+    }
 
+    @Test
+    public void dateTimeTest() {
+        DateForm dateForm = new DateForm();
+        System.out.println("dateForm = " + dateForm);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+        LocalDateTime with = LocalDateTime.now().with(LocalTime.of(23, 0));
+        System.out.println("with = " + with);
     }
 
     @Test

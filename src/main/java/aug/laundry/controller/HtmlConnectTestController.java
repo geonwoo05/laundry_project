@@ -112,9 +112,8 @@ public class HtmlConnectTestController {
     }
 
     @GetMapping("/test/22")
-    public String http22() {
-        return "project_rider_list_on_call";
-    }
+    public String http22() { return "project_rider_list_on_call"; }
+
     @GetMapping("/test/23")
     public String http23() {
         return "project_rider_using_list";

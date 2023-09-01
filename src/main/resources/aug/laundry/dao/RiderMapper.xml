@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="aug.laundry.dao.RiderMapper">
+
+<!-- 수락 받기 전 배달 리스트   -->
+    <select id="waitRiderList" resultType="aug.laundry.domain.orders">
+        select orders_pay_status, orders_id, orders_address ||' '||orders_address_details as orders_address, orders_date, orders_pay_Status
+        from orders where quick_rider_id is null and orders_pay_status in (2, 10)
+    </select>
+<!--수락 받기 전 배달 리스트 수-->
+    <select id="nonDriveCnt" resultType="Integer">
+        select count(*) from orders where quick_rider_id is null
+    </select>
+
+
+<!--  수락받은 대기중 배달 리스트  -->
+    <select id="acceptRiderList" resultMap="">
+        select orders_pay_status, orders_id, orders_address ||' '||orders_address_details as orders_address, orders_date, orders_pay_Status
+        from orders
+        where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = #{memberId}) and orders_pay_status in(3, 10)
+    </select>
+
+<!--  수락받은 대기중 배달 리스트 갯수  -->
+    <select id="" resultMap="">
+        select count(*) from orders where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = #{memberId}) and orders_pay_status in (3, 10)
+    </select>
+
+<!--  완료 배달 리스트 -->
+    <select id="finishRiderList" resultMap="">
+        select orders_pay_status, orders_id, orders_address ||' '||orders_address_details as orders_address, orders_date, orders_pay_Status
+        from orders where quick_rider_id = (select quick_rider_id from quick_rider
+        where quick_rider_name = #{memberId}) and orders_pay_status in (4, 11)
+    </select>
+
+<!-- 완료 배달 리스트 총 수-->
+    <select id="" resultMap="">
+        select count(*) from orders where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = #{memberId}) and orders_pay_status = 11
+    </select>
+
+<!--  주문 상세보기  -->
+<!--  일단 진행중 쿼리만 추출  -->
+    <select id="orderInfo" resultMap="aug.laundry.domain.orders">
+        SELECT
+        o.orders_pay_status, -- 이 값을 통해 버튼 다르게 보여주기 (2 = 수락버튼)
+        o.orders_id,
+        o.orders_address || ' ' || o.orders_address_details AS address,
+        o.orders_date,
+        o.orders_request,
+        o.orders_pickup,
+        o.orders_info,
+        ql.quick_laundry_take_time
+        --,ql.quick_laundry_take_date
+        FROM
+        orders o
+        INNER JOIN
+        orders_detail od ON o.orders_id = od.orders_id
+        INNER JOIN
+        quick_laundry ql ON od.orders_detail_id = ql.orders_detail_id
+        WHERE
+        o.orders_pay_status in(3, 4, 11, 12) and o.orders_id = #{ordersId} and o.quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바')
+    </select>
+
+<!--  배달기사가 배정되어 orders테이블에 rider_id 업데이트  -->
+    <update id="updateOrderRider">
+        update orders set quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = #{memberId}) where orders_id = #{ordersId}
+    </update>
+
+<!--  그리고 orders_pay_status 변경(변경 될때마다 사용)  -->
+    <update id="updateOrderStatus">
+        update orders set orders_pay_status = orders_pay_status+1 where orders_id = #{ordersId}
+    </update>
+</mapper>

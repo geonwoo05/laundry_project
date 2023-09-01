@@ -35,7 +35,7 @@
     justify-content: space-between;
 }
 .select_category li {
-    width: 33%; 
+    width: 100%;
     height: 3rem; 
     background-color: var(--main-font-color);
 
@@ -73,7 +73,6 @@
 .order_num{
     font-size: small;
     color: red;
-    width: 100%;
     text-align: left;
 }
 .delivery_list ul li span{
