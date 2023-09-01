@@ -10,18 +10,22 @@ window.addEventListener('load', function(){
     let couponBtn = document.querySelector('#selectCoupon');
 
     couponBtn.addEventListener('click', function(){
-        var param = '?'
-        + 'takeDate=' + document.querySelector('input[name=takeDate]').value + '&'
-        + 'deliveryDate=' + document.querySelector('input[name=deliveryDate]').value + '&'
-        + 'zipcode=' + document.querySelector('input[name=zipcode]').value + '&'
-        + 'address=' + document.querySelector('input[name=address]').value + '&'
-        + 'coupon=' + document.querySelector('input[name=coupon]').value + '&'
-        + 'address=' + document.querySelector('input[name=address]').value + '&'
-        + 'isPw=' + document.querySelector('input[name=isPw]').value + '&'
-        + 'password=' + document.querySelector('input[name=password]').value + '&'
-
-
-        location.href = '/members/1/coupons/select' + param;
+//        var param = '?'
+//        + 'takeDate=' + document.querySelector('input[name=takeDate]').value + '&'
+//        + 'deliveryDate=' + document.querySelector('input[name=deliveryDate]').value + '&'
+//        + 'zipcode=' + document.querySelector('input[name=zipcode]').value + '&'
+//        + 'address=' + document.querySelector('input[name=address]').value + '&'
+//        + 'coupon=' + document.querySelector('input[name=coupon]').value + '&'
+//        + 'address=' + document.querySelector('input[name=address]').value + '&'
+//        + 'isPw=' + document.querySelector('input[name=isPw]').value + '&'
+//        + 'password=' + document.querySelector('input[name=password]').value + '&'
+//
+//
+//        location.href = '/members/1/coupons/select' + param;
+        var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
+//        var newWindow = window.open('', '_blank');
+//        newWindow.location.href = '/members/1/coupons/select'
+        window.open('/members/1/coupons/select', '_blank')
     })
 
     let changeAddress = document.querySelector('#changeAddress');
@@ -33,6 +37,9 @@ window.addEventListener('load', function(){
 
 })
 
+function coupon(){
+}
+
 function searchAddress(){
     new daum.Postcode({
         oncomplete: function(data) {
@@ -42,8 +49,7 @@ function searchAddress(){
             // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
             var addr = ''; // 주소 변수
             var extraAddr = ''; // 참고항목 변수
-            let addressCheckRes = document.querySelector('#addressCheckRes');
-            let errors = document.querySelectorAll('.errors');
+
 
             //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
             if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
@@ -68,21 +74,17 @@ function searchAddress(){
                     extraAddr = ' (' + extraAddr + ')';
                 }
                 // 조합된 참고항목을 해당 필드에 넣는다.
-                document.querySelector("#extraAddress").value = extraAddr;
 
-            } else {
-                document.querySelector("#extraAddress").value = '';
             }
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
             document.querySelector('#zipcode').value = data.zonecode;
-            document.querySelector("#searchAddressValue").value = addr + extraAddr;
-            addressCheckRes.value = '2';
-            errors[0].textContent='상세주소를 입력해주세요';
+            document.querySelector("#addressInput").value = addr + extraAddr;
+            document.querySelector("#address").textContent = addr + extraAddr;
             // 커서를 상세주소 필드로 이동한다.
 //                    document.querySelector("#detailAddress").focus();
         }
     }).open();
 
-}
+} // 주소 API
 

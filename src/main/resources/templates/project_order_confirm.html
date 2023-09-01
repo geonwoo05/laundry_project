@@ -58,17 +58,16 @@
                     <td><a href="#" class='change' id="changeAddress">변경</a></td>
                 </tr>
             </table>
-            <span class='content' th:text="${address.memberAddress}"></span>
-            <input type="hidden" name="zipcode" th:value="${address.zipcode}">
-            <input type="hidden" name="address" th:value="${address.memberAddress}">
-            <table>
+            <span class='content' th:text="${address.memberAddress}" id="address"></span>
+            <input type="hidden" name="zipcode" th:value="${address.zipcode}" id="zipcode">
+            <input type="hidden" name="address" th:value="${address.memberAddress}" id="addressInput">
+            <table class='addressDetails'>
                 <tr>
                     <th class='content'>상세주소</th>
                     <td></td>
                 </tr>
             </table>
-            <span class='content' th:text="${address.memberAddressDetails}"></span>
-            <input type="hidden" name="addressDetails" th:value="${address.memberAddressDetails}">
+            <input type="text" name="addressDetails" th:value="${address.memberAddressDetails}" placeholder='OO아파트 101동 101호'>
             <hr>
             <table>
                 <tr>

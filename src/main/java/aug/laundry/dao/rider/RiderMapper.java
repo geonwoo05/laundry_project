@@ -12,7 +12,7 @@ public interface RiderMapper {
     List<Orders> orderList(String status);
 
     List<Map<String, Integer>> orderListCnt();
-    Orders orderInfo(Orders orders);
+    List<Orders> orderInfo(Orders orders);
 
     int updateOrderRider(Orders orders);
 
