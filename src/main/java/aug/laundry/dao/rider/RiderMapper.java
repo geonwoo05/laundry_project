@@ -4,15 +4,15 @@ import org.apache.ibatis.annotations.Mapper;
 import aug.laundry.domain.Orders;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RiderMapper {
 
-    List<Orders> orderList();
+    List<Orders> orderList(String status);
 
-    int orderListCnt();
-
-    List<Orders> orderInfo(Orders orders);
+    List<Map<String, Integer>> orderListCnt();
+    Orders orderInfo(Orders orders);
 
     int updateOrderRider(Orders orders);
 

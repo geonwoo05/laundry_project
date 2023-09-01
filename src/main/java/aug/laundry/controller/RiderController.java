@@ -1,6 +1,5 @@
 package aug.laundry.controller;
 
-import aug.laundry.dao.rider.RiderMapper;
 import aug.laundry.domain.Orders;
 import aug.laundry.service.RiderService;
 import lombok.RequiredArgsConstructor;
@@ -22,23 +21,34 @@ import java.util.*;
 //@RequestMapping("/ride/*")
 public class RiderController {
 
-    private RiderService riderService;
+    private final RiderService riderService;
 
     @GetMapping("/ride/wait")
     public String waitList(Model model) {
+        List<Map<String, Integer>> cnt = riderService.orderListCnt();
+        model.addAttribute("cnt", cnt);
         return "project_rider_list_on_call";
     }
 
     @GetMapping("/ride/accept")
     public String acceptList(Model model) {
-        System.out.println(riderService.getClass());
-//        List<Orders> list = riderService.OrderList();
-//        model.addAttribute("orderList", list);
+        List<Orders> orderList = riderService.OrderList("진행중");
+        List<Map<String, Integer>> cnt = riderService.orderListCnt();
+
+        model.addAttribute("orderList", orderList);
+        model.addAttribute("cnt", cnt);
+
         return "project_rider_using_list";
     }
 
     @GetMapping("/ride/finish")
     public String finishList(Model model) {
+        List<Orders> orderList = riderService.OrderList("완료");
+        List<Map<String, Integer>> cnt = riderService.orderListCnt();
+
+        model.addAttribute("orderList", orderList);
+        model.addAttribute("cnt", cnt);
+
         return "project_rider_complete";
     }
 
