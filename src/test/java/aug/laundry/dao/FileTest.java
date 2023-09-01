@@ -28,8 +28,8 @@ public class FileTest {
     public void fileSaveTest() {
         FileUploadDto file = new FileUploadDto();
         file.setId(4L);
-        file.setImageStoreName("imageTest3");
-        file.setImageUploadName("imageTest3");
+        file.setImageStoreName("imageTest5");
+        file.setImageUploadName("imageTest5");
         file.setTableType(FileUploadType.INSPECTION.getTableType());
 
         int res = fileUploadMapper.saveImage(file);

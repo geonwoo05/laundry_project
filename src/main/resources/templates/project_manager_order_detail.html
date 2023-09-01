@@ -13,112 +13,107 @@
 <body>
     
     <div class='container'>
-        <form action="#" method="get">
+        <form action="/admin/write" method="post">
+            <input type="text" th:value="${info['orderInfo'].ordersId}" name="ordersId">
+            <input type="text" th:value="${info['orderInfo'].inspectionId}" name="inspectionId">
+            <input type="text" value="9" name="adminId">
             <h2>주문정보</h2>
             <table class='orderOption'>
                 <tr>
                     <th class='content'>주문번호</th>
-                    <td class='content'>1000002</td>
+                    <td class='content' th:text="${info['orderInfo'].ordersId}"></td>
                 </tr>
                 <tr>
                     <th class='content'>요청사항</th>
                 </tr>
             </table>
             <div class='info'>
-                <span class='content'>요청사항에 대한 내용</span>
+                <span class='content' th:text="${info['orderInfo'].ordersRequest}"></span>
             </div>
             <hr class='bighr'>
-            <h4 class='laundry'>생활빨래</h4>
-            <table>
+
+            <h4 class='laundry' th:if="${info['commonLaundryInfo'] != null }">생활빨래</h4>
+            <table th:if="${info['commonLaundryInfo'] != null }">
                 <tr>
                     <th class='content'>세탁무게</th>
                     <td class='content laundry_result'>
-                        <input type="number" name="laundryWeight" id="laundryWeight">
+                        <input type="text" name="commonLaundryId" th:value="${info['commonLaundryInfo'].commonLaundryId}">
+                        <input type="text" name="commonLaundryWeight" id="laundryWeight">
                         <span>kg</span>
                     </td>
                 </tr>
             </table>
-            <h4>드라이클리닝</h4>
-            <table>
-                <tr>
-                    <th class='content'>소분류 이름</th>
-                    <td class='content drycleaning_result'>
-                        <div>
-                            <input type="radio" name="d_result" id="pos">
-                            <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
-                            <label for="pos">가능</label>
-                        </div>
-                        <div>
-                            <input type="radio" name="d_result" id="impos">
-                            <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
-                            <label for="impos">불가능</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th class='reason'>
-                        <input type="text" name="reason" id="reason" placeholder='불가능한 사유를 적어주세요.'>
-                    </th>
-                </tr>
-                <tr>
-                    <th class='content'>소분류 이름</th>
-                    <td class='content drycleaning_result'>
-                        <div>
-                            <input type="radio" name="d_result" id="pos">
-                            <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
-                            <label for="pos">가능</label>
-                        </div>
-                        <div>
-                            <input type="radio" name="d_result" id="impos">
-                            <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
-                            <label for="impos">불가능</label>
-                        </div>
-                    </td>
-                </tr>
 
-            </table>
-            <hr>
-            <h4>수선</h4>
-            <table>
+            <h4 th:if="${info['drycleaningInfo'] != null}">드라이클리닝</h4>
+            <table th:if="${info['drycleaningInfo'] != null}" th:each="dry, dryIndex : ${info['drycleaningInfo']}">
+                <input type="text" th:value="${dry.drycleaningId}" th:name="|drycleaningList[${dryIndex.index}].drycleaningId|">
                 <tr>
-                    <th class='content'>소분류 이름</th>
+                    <th class='content' th:text="${dry.drycleaningCategory}"></th>
                     <td class='content drycleaning_result'>
-                        <div>
-                            <input type="radio" name="d_result" id="pos">
+                        <div onchange="hiddenInput(this)" th:id="|dpos${dryIndex.index}b|">
+                            <input type="radio" th:name="|drycleaningList[${dryIndex.index}].drycleaningPossibility|" th:id="|dpos${dryIndex.index}|" value="Y">
                             <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
-                            <label for="pos">가능</label>
+                            <label th:for="|dpos${dryIndex.index}|">가능</label>
                         </div>
-                        <div>
-                            <input type="radio" name="d_result" id="impos">
+                        <div onchange="showInput(this)" th:id="|idpos${dryIndex.index}b|">
+                            <input type="radio" th:name="|drycleaningList[${dryIndex.index}].drycleaningPossibility|" th:id="|idpos${dryIndex.index}|" value="N">
                             <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
-                            <label for="impos">불가능</label>
+                            <label th:for="|idpos${dryIndex.index}|">불가능</label>
                         </div>
                     </td>
+                <tr>
+                <tr>
+                    <th class='content'>요청사항</th>
                 </tr>
                 <tr>
+                    <th class='reason' th:text="${dry.drycleaningRequest}"/>
+                </tr>
+                <tr class='selectD' th:id="|dpos${dryIndex.index}box|">
                     <th class='reason'>
-                        <input type="text" name="reason" id="reason" placeholder='불가능한 사유를 적어주세요.'>
+                        <input type="text" th:name="|drycleaningList[${dryIndex.index}].drycleaningNotReason|" id="reason" placeholder='불가능한 사유를 적어주세요.'>
                     </th>
                 </tr>
+            </table>
+
+            <hr>
+            <h4 th:if="${info['repairInfo'] != null}">수선</h4>
+            <table th:if="${info['repairInfo'] != null}" th:each="repair, repairIndex : ${info['repairInfo']}">
+                <input type="text" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
                 <tr>
-                    <th class='content'>소분류 이름</th>
+                    <th class='content' th:text="${repair.repairCategory}">소분류 이름</th>
                     <td class='content drycleaning_result'>
-                        <div>
-                            <input type="radio" name="d_result" id="pos">
-                            <span class="custom-radio" id='poss' onclick='toogleRadio(this)'></span>
-                            <label for="pos">가능</label>
+                        <div onchange="rhiddenInput(this)" th:id="|rpos${repairIndex.index}b|">
+                            <input type="radio" th:name="|repairList[${repairIndex.index}].repairPossibility|" th:id="|rpos${repairIndex.index}|" value="Y">
+                            <span class="custom-radio" id='poss2' onclick='toogleRadio(this)'></span>
+                            <label th:for="|rpos${repairIndex.index}|">가능</label>
                         </div>
-                        <div>
-                            <input type="radio" name="d_result" id="impos">
-                            <span class="custom-radio" id='imposs' onclick='toogleRadio(this)'></span>
-                            <label for="impos">불가능</label>
+                        <div onchange="rshowInput(this)" th:id="|irpos${repairIndex.index}b|">
+                            <input type="radio" th:name="|repairList[${repairIndex.index}].repairPossibility|" th:id="|rimpos${repairIndex.index}|" value="N">
+                            <span class="custom-radio" id='imposs2' onclick='toogleRadio(this)'></span>
+                            <label th:for="|rimpos${repairIndex.index}|">불가능</label>
                         </div>
                     </td>
                 </tr>
-                
+                <tr>
+                    <th class='content'>요청사항</th>
+                </tr>
+                <tr>
+                    <th class='reason' th:text="${repair.repairRequest}"/>
+                </tr>
+                <tr class="selectR" th:id="|rpos${repairIndex.index}box|">
+                    <th class='reason'>
+                        <input type="text" th:name="|repairList[${repairIndex.index}].repairNotReason|" id="reason" placeholder='불가능한 사유를 적어주세요.'>
+                    </th>
+                </tr>
             </table>
+
+            <!-- 사진 -->
+            <div id="imagePreview">
+                <input type='file' id='btnUpload' multiple='multiple'/>
+            </div>
 
             <div class='fixbox'>
+                <h3>검수 이미지 추가</h3>
                 <input type="submit" value="검수완료">
             </div>
         </form>
@@ -131,7 +126,47 @@
         if (!radio.checked){
             radio.checked = !radio.checked;
         }
+
     }
-    
+
+    function showInput(element) {
+        const reasonBox = document.querySelectorAll(".selectD");
+        console.log("showInput");
+        for(let i=0; i<reasonBox.length; i++) {
+            if(element.id+"ox" == "i"+reasonBox[i].id) {
+                reasonBox[i].style.display='block';
+            }
+        }
+    }
+
+    function hiddenInput(element) {
+        const reasonBox = document.querySelectorAll(".selectD");
+        console.log("hiddenInput");
+        for(let i=0; i<reasonBox.length; i++) {
+            if(element.id+"ox" == reasonBox[i].id) {
+                reasonBox[i].style.display='none';
+            }
+        }
+    }
+
+    function rshowInput(element) {
+        const repairBox = document.querySelectorAll(".selectR");
+        console.log("rshowInput");
+        for(let i=0; i<repairBox.length; i++) {
+            if(element.id+"ox" == "i"+repairBox[i].id) {
+                repairBox[i].style.display='block';
+            }
+        }
+    }
+
+    function rhiddenInput(element) {
+        const repairBox = document.querySelectorAll(".selectR");
+        console.log("rhiddenInput");
+        for(let i=0; i<repairBox.length; i++) {
+            if(element.id+"ox" == repairBox[i].id) {
+                repairBox[i].style.display='none';
+            }
+        }
+    }
 </script>
 </html>
