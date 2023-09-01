@@ -13,7 +13,15 @@
 <body>
 
 <div class='container'>
-    <div class='mypage_nickname'>o o o님 <div>PASS</div></div>
+    <div class='mypage_nickname'>
+        <th:block th:if="${userPass!=null}">
+            <span th:text="${userName}+'님'"></span>
+            <div th:text="${userPass}">Pass</div>
+        </th:block>
+        <th:block th:if="${userPass==null}">
+            <span th:text="${userName}+'님'"></span>
+        </th:block>
+    </div>
     <ul>
         <a href='#'>
             <li class='mypagePass'>PASS
@@ -23,19 +31,19 @@
             <span>▶</span>
 
         </a>
-        <a href=''>
+        <a href='/members/{memberId}/coupons'>
             <li>쿠폰</li>
             <span>▶</span>
         </a>
-        <a href=''>
+        <a href='/members/{memberId}/points'>
             <li>포인트</li>
             <span>▶</span>
         </a>
-        <a href=''>
+        <a href='/members/{memberId}/update'>
             <li>내정보 설정</li>
             <span>▶</span>
         </a>
-        <a href=''>
+        <a href='/members/{memberId}/invite'>
             <li>친구초대</li>
             <span>▶</span>
         </a>
