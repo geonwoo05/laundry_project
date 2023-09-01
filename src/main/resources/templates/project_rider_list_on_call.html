@@ -80,9 +80,9 @@
             </div>
             <div class='select_category'>
                 <ul>
-                    <a href="/ride/wait"><li class='active'>대기중(10)</li></a>
-                    <a href="/ride/accept"><li>진행중(16)</li></a>
-                    <a href="/ride/finish"><li>완료(7)</li></a>
+                    <a href="/ride/wait"><li class='active'>대기중(0)</li></a>
+                    <a href="/ride/accept"><li th:text="${'진행중(' + cnt[0]['RESULT']} + ')'">진행중(16)</li></a>
+                    <a href="/ride/finish"><li th:text="${'완료(' + cnt[1]['RESULT']} + ')'">완료(7)</li></a>
                 </ul>
             </div>
             <div class='delivery_list'>

@@ -1,22 +1,19 @@
 package aug.laundry.service;
 
-import aug.laundry.dao.rider.RiderMapper;
 import aug.laundry.domain.Orders;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
-public class RiderService {
+public interface RiderService {
 
-    private RiderMapper riderMapper;
+    List<Orders> OrderList(String status);
 
-    public List<Orders> OrderList(){
-        System.out.println("Service");
-        return riderMapper.orderList();
-    }
+    List<Map<String, Integer>> orderListCnt();
+
+    List<Orders> orderInfo(Orders orders);
+
 
 }

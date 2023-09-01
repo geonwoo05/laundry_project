@@ -6,12 +6,28 @@
     <select id="orderList" resultType="aug.laundry.domain.Orders">
         select orders_pay_status, orders_id, orders_address ||' '||orders_address_details as orders_address, orders_date
         from orders
-        where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바') and orders_pay_status in(3, 4, 11, 12)
+        where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바')
+        <if test="status == '진행중'">
+            and orders_pay_status in(3, 4, 11, 12)
+        </if>
+        <if test="status == '완료'">
+            and orders_pay_status in(5, 13)
+        </if>
     </select>
 
-    <select id="orderListCnt" resultType="int">
-        select count(*) from orders where quick_rider_id is null
+    <select id="orderListCnt" resultType="map">
+        select 'waitCnt' as query_name, count(*) as result
+        from orders
+        where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바')
+            and orders_pay_status in (3, 4, 10, 11)
+        union all
+        select 'CompleteCnt' as query_name, count(*) as result
+        from orders
+        where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바')
+            and orders_pay_status in (5, 12)
     </select>
+
+
 
 
 <!--  일단 진행중 쿼리만 추출  -->
@@ -37,7 +53,7 @@
 
 <!--  배달기사가 배정되어 orders테이블에 rider_id 업데이트  -->
     <update id="updateOrderRider">
-        update orders set quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = #{memberId}) where orders_id = #{ordersId}
+        update orders set quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바') where orders_id = #{ordersId}
     </update>
 
 <!--  그리고 orders_pay_status 변경(변경 될때마다 사용)  -->
