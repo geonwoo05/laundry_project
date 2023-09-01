@@ -32,11 +32,11 @@ public class LaundryController {
 
     @GetMapping("/laundry/order")
     public String order(Model model) {
-        OrderInfo info = laundryService.firstInfo(1L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
-        List<CouponList> coupon = laundryService.getCoupon(1L); // 내가 보유한 쿠폰
+        OrderInfo info = laundryService.firstInfo(63L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
+        List<CouponList> coupon = laundryService.getCoupon(63L); // 내가 보유한 쿠폰
         DateForm dateForm = new DateForm();
 
-        Address address = laundryService.getAddress(1L);
+        Address address = laundryService.getAddress(63L);
 
         model.addAttribute("quickLaundry", info.getIsQuick());
         model.addAttribute("info", getJoin(info.getIsDry(), info.getIsCommon(), info.getIsRepair()));
