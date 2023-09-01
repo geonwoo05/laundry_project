@@ -15,20 +15,20 @@
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
     <div class='container'>
-        <form class='login_form'>
+        <form class='login_form' method="post" action="/login">
             <div class='login_logo'>
                 로고자리
             </div>
             <div class='login_box_id'>
-                <h5>이메일 주소</h5>
-                <input type="email" placeholder='예) email@naver.com'>
+                <h5>아이디</h5>
+                <input type="text   " placeholder='예) email@naver.com' name="memberAccount">
             </div>
             <div class='login_box_pw'>
                 <h5>비밀번호</h5>
-                <input type="password" maxlength='15'>
+                <input type="password" maxlength='15' name="memberPassworld">
             </div>
             <div class='login_button'>
-                <a href="#">로그인</a>
+                <input type="submit" value="로그인">
             </div>
             
             <div class='login_look'>

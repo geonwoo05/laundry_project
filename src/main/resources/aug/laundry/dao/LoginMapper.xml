@@ -15,6 +15,10 @@
         insert into SOCIAL_UNIQUE_NUM(SOCIAL_UID, MEMBER_ID) VALUES (#{id}, SEQ_MEMBER_ID.CURRVAL)
     </insert>
 
+    <select id="login" resultType="aug.laundry.dto.MemberDto">
+        select * from member where MEMBER_ACCOUNT = #{memberAccount}
+    </select>
+
 
 
 
