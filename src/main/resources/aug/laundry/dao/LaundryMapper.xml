@@ -20,7 +20,7 @@
                                                                                                                                 END AS remainingTime
         FROM COUPON_LIST
         JOIN COUPON ON (COUPON_LIST.COUPON_ID = COUPON.COUPON_ID)
-        WHERE MEMBER_ID = #{memberId}
+        WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_STATUS = 1
         ORDER BY COUPON_END_DATE
     </select>
 
