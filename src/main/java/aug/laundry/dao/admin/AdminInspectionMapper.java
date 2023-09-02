@@ -3,9 +3,11 @@ package aug.laundry.dao.admin;
 import aug.laundry.domain.CommonLaundry;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Orders;
+import aug.laundry.domain.Repair;
 import aug.laundry.dto.AdminInspectionDto;
 import aug.laundry.dto.RepairInfoDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,6 +27,9 @@ public interface AdminInspectionMapper {
     //수선
     List<RepairInfoDto> getRepairInfo(Long orderDetailId);
 
-
-
+    int updateCommon(CommonLaundry commonLaundry);
+    int updateRepair(Repair repair);
+    int updateDrycleaning(Drycleaning drycleaning);
+    int updateInspectionStatus(@Param("ordersId") Long ordersId, @Param("adminId")Long adminId);
+    int updateOrderStatus(Long ordersId);
 }

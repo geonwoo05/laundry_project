@@ -3,12 +3,18 @@ package aug.laundry.service;
 import aug.laundry.dao.admin.AdminInspectionDao;
 import aug.laundry.domain.CommonLaundry;
 import aug.laundry.domain.Drycleaning;
+import aug.laundry.domain.Repair;
 import aug.laundry.dto.AdminInspectionDto;
+import aug.laundry.dto.DrycleaningListDto;
 import aug.laundry.dto.RepairInfoDto;
+import aug.laundry.dto.RepairListDto;
 import aug.laundry.enums.category.Category;
+import aug.laundry.enums.fileUpload.FileUploadType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +26,7 @@ import java.util.Map;
 public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ksh{
 
     private final AdminInspectionDao adminInspectionDao;
+    private final FileUploadService_ksh fileUpload;
 
     @Override
     public List<AdminInspectionDto> getInspectionList() {
@@ -32,7 +39,7 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
     }
 
     @Override
-    public Map<String, Object> getInspectionDetail(Long ordersId) {
+    public Map<String, Object> getInspectionDetail(Long ordersId){
 
         Map<String, Object> detailInfo = new HashMap<>();
 
@@ -72,4 +79,32 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
 
         return detailInfo;
     }
+
+    @Transactional
+    @Override
+    public int updateInspectionResult(AdminInspectionDto adminInfo, CommonLaundry commonLaundry, Long adminId,
+                                      List<Drycleaning> drycleanings, List<Repair> repairs, List<MultipartFile> files) throws Exception {
+        // 검수 저장
+
+        int res = 0;
+
+        adminInspectionDao.updateCommon(commonLaundry);
+        if(repairs.size()>0) {
+            for (Repair repair : repairs) {
+                adminInspectionDao.updateRepair(repair);
+            }
+        }
+        if(drycleanings.size()>0) {
+            for (Drycleaning drycleaning : drycleanings) {
+                adminInspectionDao.updateDrycleaning(drycleaning);
+            }
+        }
+        adminInspectionDao.updateInspectionStatus(adminInfo.getOrdersId(), adminId);
+        adminInspectionDao.updateOrderStatus(adminInfo.getOrdersId());
+
+        fileUpload.saveFile(files, adminInfo.getInspectionId(), FileUploadType.INSPECTION);
+
+        return res;
+    }
+
 }

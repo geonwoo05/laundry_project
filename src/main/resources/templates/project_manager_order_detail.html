@@ -13,7 +13,7 @@
 <body>
     
     <div class='container'>
-        <form action="/admin/write" method="post">
+        <form th:action="@{'/admin/9/' + ${info['orderInfo'].ordersId}}" method="post" enctype="multipart/form-data">
             <input type="text" th:value="${info['orderInfo'].ordersId}" name="ordersId">
             <input type="text" th:value="${info['orderInfo'].inspectionId}" name="inspectionId">
             <input type="text" value="9" name="adminId">
@@ -109,7 +109,7 @@
 
             <!-- 사진 -->
             <div id="imagePreview">
-                <input type='file' id='btnUpload' multiple='multiple'/>
+                <input type='file' id='btnUpload' multiple='multiple' name="files"/>
             </div>
 
             <div class='fixbox'>

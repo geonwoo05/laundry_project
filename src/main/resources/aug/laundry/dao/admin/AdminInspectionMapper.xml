@@ -51,4 +51,34 @@
         WHERE od.orders_detail_id = #{orderDetailId}
     </select>
 
+    <update id="updateCommon">
+        UPDATE common_laundry
+        SET common_laundry_weight = #{commonLaundryWeight}
+        WHERE common_laundry_id = #{commonLaundryId}
+    </update>
+
+    <update id="updateRepair">
+        UPDATE repair
+        SET repair_possibility = #{repairPossibility}, repair_not_reason = #{repairNotReason}
+        WHERE repair_id = #{repairId}
+    </update>
+
+    <update id="updateDrycleaning">
+            UPDATE drycleaning
+            SET drycleaning_possibility = #{drycleaningPossibility}, drycleaning_not_reason = #{drycleaningNotReason}
+            WHERE drycleaning_id = #{drycleaningId}
+    </update>
+
+    <update id="updateInspectionStatus">
+        UPDATE inspection
+        SET admin_id = #{adminId}, inspection_status = 'Y'
+        WHERE orders_id = #{ordersId}
+    </update>
+
+    <update id="updateOrderStatus">
+        UPDATE orders
+        SET orders_status = 6
+        WHERE orders_id = #{ordersId}
+    </update>
+
 </mapper>
