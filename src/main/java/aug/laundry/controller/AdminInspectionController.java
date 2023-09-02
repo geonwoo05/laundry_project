@@ -26,7 +26,6 @@ import java.util.Map;
 public class AdminInspectionController {
 
     private final AdminInspectionService_ksh adminInspectionService_ksh;
-    private final FileUploadService_ksh fileUploadService;
 
     @GetMapping("/admin")
     public String getInspectionList(Model model) {
@@ -44,38 +43,30 @@ public class AdminInspectionController {
         return "/project_manager_order_list_complete";
     }
 
-    @GetMapping("/admin/{ordersId}")
-    public String getInspectionDetail(@PathVariable("ordersId") Long ordersId, Model model) {
+    @GetMapping("/admin/{adminId}/{ordersId}")
+    public String getInspectionDetail(@PathVariable("adminId") Long adminId,
+                                      @PathVariable("ordersId") Long ordersId, Model model) {
 
         model.addAttribute("info", adminInspectionService_ksh.getInspectionDetail(ordersId));
 
         return "/project_manager_order_detail";
     }
 
-    @PostMapping("/admin/write")
-    public String writeInsepctionResult(AdminInspectionDto adminInfo,
-                                        CommonLaundry commonLaundry,
-                                        Long adminId,
+    @PostMapping("/admin/{adminId}/{ordersId}")
+    public String writeInsepctionResult(AdminInspectionDto adminInfo, CommonLaundry commonLaundry,
+                                        @PathVariable("adminId") Long adminId, @PathVariable("ordersId") Long ordersId,
                                         @ModelAttribute(value = "DrycleaningListDto") DrycleaningListDto drycleanings,
                                         @ModelAttribute(value = "RepairListDto") RepairListDto repairs,
                                         List<MultipartFile> files) {
-        List<Drycleaning> list = drycleanings.getDrycleaningList();
-
-        for (Drycleaning drycleaning : list) {
-            log.info("drycleaning={}", drycleaning.getDrycleaningNotReason());
+        try{
+            adminInspectionService_ksh.updateInspectionResult(adminInfo, commonLaundry, adminId,
+                    drycleanings.getDrycleaningList(), repairs.getRepairList(), files);
+        }catch(Exception e){
+            // 예외처리
+            log.info("exception={}", e);
         }
 
-        Map<String, Object> inspectionInsert = new HashMap<>();
-        inspectionInsert.put("adminInfo", adminInfo);
-        inspectionInsert.put("commonLaundry", commonLaundry);
-        inspectionInsert.put("drycleanings", drycleanings);
-        inspectionInsert.put("repairs", repairs);
-        inspectionInsert.put("files", files);
-
-
-        // 이미지업로드
-        // fileUploadService.saveFile(files, adminInfo.getInspectionId(), FileUploadType.INSPECTION);
-
+        // 다시 등록되지않게 처리하기
         return "redirect:/admin";
     }
 }
