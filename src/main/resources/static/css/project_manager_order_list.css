@@ -150,3 +150,6 @@
     color: white;
     background-color: var(--main-color);
 }
+.hidden{
+    display: none;
+}

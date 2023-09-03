@@ -86,10 +86,10 @@ public class AdminInspectionController {
 
         AdminInspectionDto orderInfo = adminInspectionService_ksh.getOrderSearchInfo(ordersId, status);
         if(orderInfo != null) {
-            searchOrder.put("success", "검색을 성공했습니다.");
+            searchOrder.put("res", "success");
             searchOrder.put("orderInfo", orderInfo);
         }else {
-            searchOrder.put("fail", "찾으시는 주문번호가 존재하지 않습니다.");
+            searchOrder.put("res", "fail");
         }
         log.info("search test");
 
