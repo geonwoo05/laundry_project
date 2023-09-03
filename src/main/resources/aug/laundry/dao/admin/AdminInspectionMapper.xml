@@ -51,6 +51,15 @@
         WHERE od.orders_detail_id = #{orderDetailId}
     </select>
 
+    <select id="getOrderSearchInfo" resultType="aug.laundry.dto.AdminInspectionDto">
+        SElECT o.orders_id, to_char(o.orders_date, 'yyyy-mm-dd') AS orders_date, q.quick_laundry_id
+        FROM orders o
+                 INNER JOIN orders_detail od ON o.orders_id = od.orders_id
+                 LEFT OUTER JOIN quick_laundry q ON od.orders_detail_id = q.orders_detail_id
+                 INNER JOIN inspection ins ON o.orders_id = ins.orders_id
+        WHERE o.orders_id = #{ordersId} AND o.orders_status = #{ordersStatus}
+    </select>
+
     <update id="updateCommon">
         UPDATE common_laundry
         SET common_laundry_weight = #{commonLaundryWeight}

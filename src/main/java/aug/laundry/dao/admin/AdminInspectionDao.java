@@ -58,4 +58,7 @@ public class AdminInspectionDao {
     public int updateOrderStatus(Long ordersId){
         return mapper.updateOrderStatus(ordersId);
     }
+    public AdminInspectionDto getOrderSearchInfo(Long ordersId, Long ordersStatus) {
+        return mapper.getOrderSearchInfo(ordersId, ordersStatus);
+    }
 }

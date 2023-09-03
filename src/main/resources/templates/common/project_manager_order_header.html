@@ -5,9 +5,41 @@
     <title>Title</title>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/project_manager_order_list.css">
+
 </head>
 <body>
   <aside class='res_box' th:fragment="manager_header">
+    <script>
+      window.addEventListener('load', function () {
+        const bthSearch = document.querySelector('#bthSearch');
+        const btnReset = document.querySelector('#btnReset');
+
+        bthSearch.addEventListener('click', searchEvent);
+
+        btnReset.addEventListener('click', function () {
+          const orderStatus = document.querySelector('#inspectionStatus').value;
+          if(orderStatus == 5) {
+            location.href='/admin';
+          } else {
+            location.href='/admin/complete';
+          }
+        });
+
+      });
+
+      function searchEvent() {
+        const orderIdSearch = document.querySelector('#orderIdSearch').value;
+        const orderStatus = document.querySelector('#inspectionStatus').value;
+
+        fetch(`/admin/searchOrder/${orderIdSearch}/${orderStatus}`)
+                .then(response => response.json())
+                .then(map =>
+                  console.log("fetch test=",map)
+                );
+      }
+
+    </script>
+
     <div class='select_category'>
       <ul>
         <li class='active'>
@@ -20,13 +52,14 @@
     </div>
 
     <div class='o_text_box1'>
-      <input type='text' class='searchbox' placeholder='주문번호 검색'>
-      <button type='button'>검색</button>
-      <button type='button' onclick="location.href='/admin'">초기화</button>
+      <input type='text' class='searchbox' id='orderIdSearch' placeholder='주문번호 검색'>
+      <button type='button' id="bthSearch">검색</button>
+      <button type='button' id="btnReset">초기화</button>
       <!--초기화는 전체검색으로 전환-->
       <!-- JAX로 검색할 것-->
     </div>
     <hr>
   </aside>
 </body>
+
 </html>

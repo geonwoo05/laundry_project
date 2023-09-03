@@ -32,24 +32,16 @@ public class AdminInspectionController {
 
         model.addAttribute("list", adminInspectionService_ksh.getInspectionList());
 
-        return "/project_manager_order_list";
-    }
-
-    @GetMapping("/admin/complete")
-    public String getInspectedList(Model model) {
-
-        model.addAttribute("list", adminInspectionService_ksh.getInspectedList());
-
-        return "/project_manager_order_list_complete";
+        return "project_manager_order_list";
     }
 
     @GetMapping("/admin/{adminId}/{ordersId}")
-    public String getInspectionDetail(@PathVariable("adminId") Long adminId,
+    public String viewInspectionDetail(@PathVariable("adminId") Long adminId,
                                       @PathVariable("ordersId") Long ordersId, Model model) {
 
         model.addAttribute("info", adminInspectionService_ksh.getInspectionDetail(ordersId));
 
-        return "/project_manager_order_detail";
+        return "project_manager_order_detail";
     }
 
     @PostMapping("/admin/{adminId}/{ordersId}")
@@ -68,5 +60,39 @@ public class AdminInspectionController {
 
         // 다시 등록되지않게 처리하기
         return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/complete")
+    public String getInspectedList(Model model) {
+
+        model.addAttribute("list", adminInspectionService_ksh.getInspectedList());
+
+        return "project_manager_order_list_complete";
+    }
+
+    @GetMapping("/admin/complete/{ordersId}")
+    public String viewInspectionCompleteDetail(@PathVariable("ordersId") Long ordersId, Model model) {
+
+        model.addAttribute("info", adminInspectionService_ksh.getInspectionDetail(ordersId));
+
+        return "project_manager_order_complete_detail";
+    }
+
+
+    @GetMapping("/admin/searchOrder/{ordersId}/{status}")
+    public @ResponseBody Map<String, Object> getSaerchOrder(@PathVariable("ordersId") Long ordersId,
+                                                            @PathVariable("status") Long status) {
+        Map<String, Object> searchOrder = new HashMap<>();
+
+        AdminInspectionDto orderInfo = adminInspectionService_ksh.getOrderSearchInfo(ordersId, status);
+        if(orderInfo != null) {
+            searchOrder.put("success", "검색을 성공했습니다.");
+            searchOrder.put("orderInfo", orderInfo);
+        }else {
+            searchOrder.put("fail", "찾으시는 주문번호가 존재하지 않습니다.");
+        }
+        log.info("search test");
+
+        return searchOrder;
     }
 }
