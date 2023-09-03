@@ -34,7 +34,10 @@ window.addEventListener('load', function(){
         searchAddress();
     })
 
-
+    let couponInput  = document.querySelector('input[name=coupon]');
+    couponInput.addEventListener('change', function(e){
+        console.log('onInput', e.target.value);
+    })
 })
 
 function coupon(){

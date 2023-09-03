@@ -4,7 +4,7 @@
 <mapper namespace="aug.laundry.dao.LaundryMapper">
 
     <select id="firstInfo" resultType="aug.laundry.dto.OrderInfo">
-        SELECT Q.ORDERS_DETAIL_ID as isQuick, COALESCE(C.ORDERS_DETAIL_ID,0) as isDry, COALESCE(D.ORDERS_DETAIL_ID,0) as isCommon, COALESCE(R.ORDERS_DETAIL_ID, 0) as isRepair
+        SELECT DISTINCT Q.ORDERS_DETAIL_ID as isQuick, COALESCE(C.ORDERS_DETAIL_ID,0) as isDry, COALESCE(D.ORDERS_DETAIL_ID,0) as isCommon, COALESCE(R.ORDERS_DETAIL_ID, 0) as isRepair
         FROM ORDERS_DETAIL O
         LEFT JOIN QUICK_LAUNDRY Q ON (O.ORDERS_DETAIL_ID = Q.ORDERS_DETAIL_ID)
         LEFT JOIN COMMON_LAUNDRY C ON (O.ORDERS_DETAIL_ID = C.ORDERS_DETAIL_ID)
@@ -30,6 +30,19 @@
         WHERE MEMBER_ID = #{memberId}
     </select>
 
+    <select id="getDry" resultType="string">
+        SELECT DRYCLEANING_CATEGORY
+        FROM ORDERS_DETAIL
+        JOIN DRYCLEANING ON (ORDERS_DETAIL.ORDERS_DETAIL_ID = DRYCLEANING.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="getRepair" resultType="string">
+        SELECT REPAIR_CATEGORY
+        FROM ORDERS_DETAIL
+        JOIN REPAIR ON (ORDERS_DETAIL.ORDERS_DETAIL_ID = REPAIR.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
+    </select>
 
 
 </mapper>
