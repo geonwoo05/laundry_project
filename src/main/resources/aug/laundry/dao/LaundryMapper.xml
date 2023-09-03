@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="aug.laundry.dao.LaundryMapper">
+
+    <select id="firstInfo" resultType="aug.laundry.dto.OrderInfo">
+        SELECT DISTINCT Q.ORDERS_DETAIL_ID as isQuick, COALESCE(C.ORDERS_DETAIL_ID,0) as isDry, COALESCE(D.ORDERS_DETAIL_ID,0) as isCommon, COALESCE(R.ORDERS_DETAIL_ID, 0) as isRepair
+        FROM ORDERS_DETAIL O
+        LEFT JOIN QUICK_LAUNDRY Q ON (O.ORDERS_DETAIL_ID = Q.ORDERS_DETAIL_ID)
+        LEFT JOIN COMMON_LAUNDRY C ON (O.ORDERS_DETAIL_ID = C.ORDERS_DETAIL_ID)
+        LEFT JOIN DRYCLEANING D ON (O.ORDERS_DETAIL_ID = D.ORDERS_DETAIL_ID)
+        LEFT JOIN REPAIR R ON (O.ORDERS_DETAIL_ID = R.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="getCoupon" resultType="aug.laundry.dto.MyCoupon">
+        SELECT COUPON_LIST_ID, TO_CHAR(COUPON_PRICE, '999,999,999') as couponPrice, COUPON_NAME, TO_CHAR(COUPON_END_DATE, 'YYYY-MM-DD HH24:mm') as couponEndDate, CASE WHEN COUPON_END_DATE IS NULL THEN '무제한 사용가능'
+                                                                                                                                WHEN (COUPON_END_DATE - SYSDATE) >= 1 THEN ROUND(COUPON_END_DATE - SYSDATE) || '일 남음'
+                                                                                                                                ELSE ROUND(TRUNC((COUPON_END_DATE - SYSDATE) * 24)) || '시간 남음'
+                                                                                                                                END AS remainingTime
+        FROM COUPON_LIST
+        JOIN COUPON ON (COUPON_LIST.COUPON_ID = COUPON.COUPON_ID)
+        WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_STATUS = 1
+        ORDER BY COUPON_END_DATE
+    </select>
+
+    <select id="getAddress" resultType="aug.laundry.dto.Address">
+        SELECT MEMBER_ZIPCODE, MEMBER_ADDRESS, MEMBER_ADDRESS_DETAILS
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="getDry" resultType="string">
+        SELECT DRYCLEANING_CATEGORY
+        FROM ORDERS_DETAIL
+        JOIN DRYCLEANING ON (ORDERS_DETAIL.ORDERS_DETAIL_ID = DRYCLEANING.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="getRepair" resultType="string">
+        SELECT REPAIR_CATEGORY
+        FROM ORDERS_DETAIL
+        JOIN REPAIR ON (ORDERS_DETAIL.ORDERS_DETAIL_ID = REPAIR.ORDERS_DETAIL_ID)
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+
+</mapper>

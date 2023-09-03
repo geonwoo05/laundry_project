@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_mypage.css">
+    <title>Document</title>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+
+<div class='container'>
+    <h2 class='title'>개인정보변경</h2>
+    <ul class='mypageList'>
+        <a href='/members/{memberId}/address/update'>
+            <div class='menuTitle'>주소</div>
+            <p class='menuContent' th:text="${userAddress }">서울특별시 서대문구 대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시대현동울특별시 서대문구 대현동울특별시 서대문구 대현동울특별시 서대문구 대현동</p>
+        </a>
+        <a href='/members/{memberId}/phone/update'>
+            <div class='menuTitle'>전화번호</div>
+            <p class='menuContent' th:text="${userPhone }">010-0000-0000</p>
+        </a>
+        <a href='' class='menuOne'>비밀번호 변경</a>
+        <a href='' class='menuOne'>로그아웃</a>
+        <a href='/members/{memberId}/unregister' class='menuOne out'>탈퇴하기</a>
+    </ul>
+</div>
+
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+</html>

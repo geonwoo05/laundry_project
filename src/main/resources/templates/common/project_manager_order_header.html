@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_manager_order_list.css">
+</head>
+<body>
+  <aside class='res_box' th:fragment="manager_header">
+    <div class='select_category'>
+      <ul>
+        <li class='active'>
+          <a href="/admin">검수대기</a>
+        </li>
+        <li>
+          <a href="/admin/complete">검수완료</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class='o_text_box1'>
+      <input type='text' class='searchbox' placeholder='주문번호 검색'>
+      <button type='button'>검색</button>
+      <button type='button' onclick="location.href='/admin'">초기화</button>
+      <!--초기화는 전체검색으로 전환-->
+      <!-- JAX로 검색할 것-->
+    </div>
+    <hr>
+  </aside>
+</body>
+</html>

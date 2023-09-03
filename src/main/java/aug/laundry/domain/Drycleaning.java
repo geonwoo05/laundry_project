@@ -14,7 +14,10 @@ public class Drycleaning {
     private String drycleaningRequest;
     private String drycleaningCategory;
     private char drycleaningPossibility;
+    private String drycleaningNotReason;
+
 
     public Drycleaning() {
     }
+
 }

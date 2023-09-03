@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_manager_order_list.css">
+    <title>세탁신청</title>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+    <div class='container'>
+        <aside th:replace="~{/common/project_manager_order_header :: manager_header}"></aside>
+
+        <div class='res_box'>
+            <div th:each="ins : ${list}" class='order_box' th:onclick="|location.href='@{/admin/9/{ordersId}(ordersId=${ins.ordersId})}'|">
+                <div class='date_status'>
+                    <p class='date_text' th:text="${ins.ordersDate}"></p>
+                    <p class='status' th:text="${ins.quickLaundryId!=null} ? '빠른세탁' : ''"></p>
+                </div>
+                <div class='image_box'>
+                    <p class='status_text' th:text="'주문번호 : '+${ins.ordersId}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+</html>
