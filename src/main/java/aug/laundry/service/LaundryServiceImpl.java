@@ -6,6 +6,7 @@ import aug.laundry.domain.CouponList;
 import aug.laundry.dto.Address;
 import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.OrderInfo;
+import aug.laundry.enums.category.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,16 @@ public class LaundryServiceImpl implements LaundryService{
     @Override
     public Address getAddress(Long memberId) {
         return laundryRepository.getAddress(memberId);
+    }
+
+    @Override
+    public List<Category> getDry(Long memberId) {
+        return laundryRepository.getDry(memberId);
+    }
+
+    @Override
+    public List<Category> getRepair(Long memberId) {
+        return laundryRepository.getRepair(memberId);
     }
 
 

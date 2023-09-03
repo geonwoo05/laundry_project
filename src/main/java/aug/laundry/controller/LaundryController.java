@@ -5,6 +5,7 @@ import aug.laundry.dto.Address;
 import aug.laundry.dto.DateForm;
 import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.OrderInfo;
+import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.CategoryOption;
 import aug.laundry.service.LaundryService;
 import lombok.Getter;
@@ -36,7 +37,18 @@ public class LaundryController {
         List<MyCoupon> coupon = laundryService.getCoupon(1L); // 내가 보유한 쿠폰
         Address address = laundryService.getAddress(1L); // 주소 가져오기
         DateForm dateForm = new DateForm();
-
+        if (info.getIsDry() != 0) {
+            List<Category> getDry = laundryService.getDry(1L);
+            model.addAttribute("dry", getDry);
+            Long dryTotalPrice = getDry.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
+            model.addAttribute("dryTotalPrice", dryTotalPrice);
+        }
+        if (info.getIsRepair() != 0) {
+            List<Category> getRepair = laundryService.getRepair(1L);
+            model.addAttribute("repair", getRepair);
+            Long repairTotalPrice = getRepair.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
+            model.addAttribute("repairTotalPrice", repairTotalPrice);
+        }
 
         model.addAttribute("quickLaundry", info.getIsQuick());
         model.addAttribute("info", getJoin(info.getIsDry(), info.getIsCommon(), info.getIsRepair()));
@@ -45,11 +57,8 @@ public class LaundryController {
         model.addAttribute("address", address);
         model.addAttribute("coupon", coupon);
         model.addAttribute("couponCount", coupon.size());
-        System.out.println("address = " + address);
-        System.out.println("dateForm = " + dateForm);
-        System.out.println("coupon = " + coupon);
-        System.out.println("coupon.size() = " + coupon.size());
-        System.out.println("info = " + info);
+
+
         return "project_order_confirm";
     }
 
