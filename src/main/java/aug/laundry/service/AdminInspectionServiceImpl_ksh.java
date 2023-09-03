@@ -80,6 +80,11 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
         return detailInfo;
     }
 
+    @Override
+    public AdminInspectionDto getOrderSearchInfo(Long ordersId, Long ordersStatus) {
+        return adminInspectionDao.getOrderSearchInfo(ordersId, ordersStatus);
+    }
+
     @Transactional
     @Override
     public int updateInspectionResult(AdminInspectionDto adminInfo, CommonLaundry commonLaundry, Long adminId,
@@ -88,13 +93,15 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
 
         int res = 0;
 
-        adminInspectionDao.updateCommon(commonLaundry);
-        if(repairs.size()>0) {
+        if(commonLaundry.getCommonLaundryId() != null) {
+            adminInspectionDao.updateCommon(commonLaundry);
+        }
+        if(repairs != null) {
             for (Repair repair : repairs) {
                 adminInspectionDao.updateRepair(repair);
             }
         }
-        if(drycleanings.size()>0) {
+        if(drycleanings != null) {
             for (Drycleaning drycleaning : drycleanings) {
                 adminInspectionDao.updateDrycleaning(drycleaning);
             }

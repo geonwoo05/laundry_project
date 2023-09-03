@@ -11,12 +11,12 @@
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
-
     <div class='container'>
+        <input type="text" value="6" id="inspectionStatus">
         <aside th:replace="~{/common/project_manager_order_header :: manager_header}"></aside>
 
         <div class='res_box'>
-            <div th:each="ins : ${list}" class='order_box' onclick="location.href='#'">
+            <div th:each="ins : ${list}" class='order_box' th:onclick="|location.href='@{/admin/complete/{ordersId}(ordersId=${ins.ordersId})}'|">
                 <div class='date_status'>
                     <p class='date_text' th:text="${ins.ordersDate}"></p>
                     <p class='status' th:text="${ins.quickLaundryId!=null} ? '빠른세탁' : ''"></p>

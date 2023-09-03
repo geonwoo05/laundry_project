@@ -15,9 +15,7 @@ import java.util.List;
 public interface AdminInspectionMapper {
 
     List<AdminInspectionDto> getInspectionList();
-
     List<AdminInspectionDto> getInspectedList();
-
     // 주문정보조회
     AdminInspectionDto getOrderInfo(Long ordersId);
     // 생활빨래
@@ -26,7 +24,7 @@ public interface AdminInspectionMapper {
     List<Drycleaning> getDrycleaningInfo(Long orderDetailId);
     //수선
     List<RepairInfoDto> getRepairInfo(Long orderDetailId);
-
+    AdminInspectionDto getOrderSearchInfo(@Param("ordersId") Long ordersId,@Param("ordersStatus") Long ordersStatus);
     int updateCommon(CommonLaundry commonLaundry);
     int updateRepair(Repair repair);
     int updateDrycleaning(Drycleaning drycleaning);

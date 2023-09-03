@@ -6,6 +6,7 @@ import aug.laundry.domain.Repair;
 import aug.laundry.dto.AdminInspectionDto;
 import aug.laundry.dto.DrycleaningListDto;
 import aug.laundry.dto.RepairListDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,8 @@ public interface AdminInspectionService_ksh {
     List<AdminInspectionDto> getInspectedList();
 
     Map<String, Object> getInspectionDetail(Long ordersId);
+
+    AdminInspectionDto getOrderSearchInfo(Long ordersId, Long ordersStatus);
 
     int updateInspectionResult(AdminInspectionDto adminInfo, CommonLaundry commonLaundry, Long adminId,
                                List<Drycleaning> drycleanings, List<Repair> repairs, List<MultipartFile> files) throws Exception;
