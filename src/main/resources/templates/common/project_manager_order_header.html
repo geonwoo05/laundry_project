@@ -33,11 +33,32 @@
 
         fetch(`/admin/searchOrder/${orderIdSearch}/${orderStatus}`)
                 .then(response => response.json())
-                .then(map =>
-                  console.log("fetch test=",map)
-                );
+                .then(map => searchResult(map));
       }
 
+      function searchResult(map) {
+        const resBox = document.querySelector('#resBox');
+        const orderStatus = document.querySelector('#inspectionStatus').value;
+        const orderInfo = map.orderInfo;
+        const res = map.res;
+
+        if(res === 'success') {
+          const url = orderStatus == 5 ? '/admin/9/'+orderInfo.ordersId : '/admin/complete/'+orderInfo.ordersId;
+          const quick = orderInfo.quickLaundryId!=null ? '빠른세탁' : '';
+          resBox.innerHTML='<div class="order_box" onclick="location.href=\''+url+'\'">'
+                    + '<div class="date_status">'
+                    + '<p class="date_text">'+orderInfo.ordersDate+'</p>'
+                    + '<p class="status">'+quick+'</p>'
+                    + '</div>'
+                    + '<div class="image_box">'
+                    + '<p class="status_text">주문번호 : ' + orderInfo.ordersId + '</p>'
+                    + '</div>'
+                    + '</div>';
+        } else {
+          resBox.innerHTML= '찾으시는 주문번호가 존재하지 않습니다.';
+        }
+        console.log("search", map.orderInfo);
+      }
     </script>
 
     <div class='select_category'>

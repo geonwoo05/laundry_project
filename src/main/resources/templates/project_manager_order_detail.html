@@ -14,9 +14,9 @@
     
     <div class='container'>
         <form th:action="@{'/admin/9/' + ${info['orderInfo'].ordersId}}" method="post" enctype="multipart/form-data">
-            <input type="text" th:value="${info['orderInfo'].ordersId}" name="ordersId">
-            <input type="text" th:value="${info['orderInfo'].inspectionId}" name="inspectionId">
-            <input type="text" value="9" name="adminId">
+            <input type="text" class="hidden" th:value="${info['orderInfo'].ordersId}" name="ordersId">
+            <input type="text" class="hidden" th:value="${info['orderInfo'].inspectionId}" name="inspectionId">
+            <input type="text" value="9" name="adminId" class="hidden" >
             <h2>주문정보</h2>
             <table class='orderOption'>
                 <tr>
@@ -37,7 +37,7 @@
                 <tr>
                     <th class='content'>세탁무게</th>
                     <td class='content laundry_result'>
-                        <input type="text" name="commonLaundryId" th:value="${info['commonLaundryInfo'].commonLaundryId}">
+                        <input type="text" class="hidden" name="commonLaundryId" th:value="${info['commonLaundryInfo'].commonLaundryId}">
                         <input type="text" name="commonLaundryWeight" id="laundryWeight">
                         <span>kg</span>
                     </td>
@@ -46,7 +46,7 @@
 
             <h4 th:if="${info['drycleaningInfo'] != null}">드라이클리닝</h4>
             <table th:if="${info['drycleaningInfo'] != null}" th:each="dry, dryIndex : ${info['drycleaningInfo']}">
-                <input type="text" th:value="${dry.drycleaningId}" th:name="|drycleaningList[${dryIndex.index}].drycleaningId|">
+                <input type="text" class="hidden" th:value="${dry.drycleaningId}" th:name="|drycleaningList[${dryIndex.index}].drycleaningId|">
                 <tr>
                     <th class='content' th:text="${dry.drycleaningCategory}"></th>
                     <td class='content drycleaning_result'>
@@ -66,11 +66,12 @@
                     <th class='content'>요청사항</th>
                 </tr>
                 <tr>
-                    <th class='reason' th:text="${dry.drycleaningRequest}"/>
+                    <th th:text="${dry.drycleaningRequest}"/>
                 </tr>
-                <tr class='selectD' th:id="|dpos${dryIndex.index}box|">
-                    <th class='reason'>
-                        <input type="text" th:name="|drycleaningList[${dryIndex.index}].drycleaningNotReason|" id="reason" placeholder='불가능한 사유를 적어주세요.'>
+
+                <tr >
+                    <th class='reason selectD' th:id="|dpos${dryIndex.index}box|">
+                        <input type="text" th:name="|drycleaningList[${dryIndex.index}].drycleaningNotReason|" class="reason1" placeholder='불가능한 사유를 적어주세요.'>
                     </th>
                 </tr>
             </table>
@@ -78,7 +79,7 @@
             <hr>
             <h4 th:if="${info['repairInfo'] != null}">수선</h4>
             <table th:if="${info['repairInfo'] != null}" th:each="repair, repairIndex : ${info['repairInfo']}">
-                <input type="text" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
+                <input type="text" class="hidden" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
                 <tr>
                     <th class='content' th:text="${repair.repairCategory}">소분류 이름</th>
                     <td class='content drycleaning_result'>
@@ -98,11 +99,11 @@
                     <th class='content'>요청사항</th>
                 </tr>
                 <tr>
-                    <th class='reason' th:text="${repair.repairRequest}"/>
+                    <th th:text="${repair.repairRequest}"/>
                 </tr>
-                <tr class="selectR" th:id="|rpos${repairIndex.index}box|">
-                    <th class='reason'>
-                        <input type="text" th:name="|repairList[${repairIndex.index}].repairNotReason|" id="reason" placeholder='불가능한 사유를 적어주세요.'>
+                <tr >
+                    <th class='reason selectR' th:id="|rpos${repairIndex.index}box|">
+                        <input type="text" th:name="|repairList[${repairIndex.index}].repairNotReason|" class="reason1" placeholder='불가능한 사유를 적어주세요.'>
                     </th>
                 </tr>
             </table>
@@ -113,7 +114,6 @@
             </div>
 
             <div class='fixbox'>
-                <h3>검수 이미지 추가</h3>
                 <input type="submit" value="검수완료">
             </div>
         </form>
