@@ -1,9 +1,12 @@
 package aug.laundry.dao.mypage;
 
+import aug.laundry.dto.MyPointDto;
 import aug.laundry.dto.MypageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @Slf4j
@@ -31,4 +34,6 @@ public class MypageDao {
   public int unregister(Long memberId) { return mypageMapper.unregister(memberId); }
 
   public int updatePassword(Long memberId, String memberPassword){ return mypageMapper.updatePassword(memberId, memberPassword); }
+
+  public List<MyPointDto> getPoint(Long memberId){ return mypageMapper.getPoint(memberId); }
 }

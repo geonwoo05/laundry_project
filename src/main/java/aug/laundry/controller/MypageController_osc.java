@@ -1,9 +1,6 @@
 package aug.laundry.controller;
 
-import aug.laundry.dto.AddressRequestDto;
-import aug.laundry.dto.MemberDto;
-import aug.laundry.dto.MyCoupon;
-import aug.laundry.dto.MypageDto;
+import aug.laundry.dto.*;
 import aug.laundry.service.LaundryService;
 import aug.laundry.service.MemberService_kgw;
 import aug.laundry.service.MypageService_osc;
@@ -70,17 +67,18 @@ public class MypageController_osc {
   public String MypageCouponList(@PathVariable Long memberId, Model model){
     List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
 
-    LocalDate day = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
-    String sysdate = day.format(formatter);
-
       model.addAttribute("memberId", memberId);
       model.addAttribute("coupon", getCoupon);
     return "project_coupon";
   }
 
   @GetMapping("{memberId}/points")
-  public String MypagePointsList(@PathVariable Long memberId){
+  public String MypagePointsList(@PathVariable Long memberId, Model model){
+    List<MyPointDto> getPoint = mypageService.getPoint(memberId);
+
+    model.addAttribute("memberId", memberId);
+    model.addAttribute("point", getPoint);
+
     return "project_point";
   }
 
