@@ -1,5 +1,6 @@
 package aug.laundry.dao.rider;
 
+import aug.laundry.domain.Rider;
 import org.apache.ibatis.annotations.Mapper;
 import aug.laundry.domain.Orders;
 
@@ -12,11 +13,11 @@ public interface RiderMapper {
     List<Orders> orderList(String status);
 
     List<Map<String, Integer>> orderListCnt();
-    List<Orders> orderInfo(Orders orders);
+    Orders orderInfo(Long ordersId);
 
     int updateOrderRider(Orders orders);
 
     int updateOrderStatus(Orders orders);
 
-
+    Rider riderInfo(String riderName);
 }

@@ -1,6 +1,7 @@
 package aug.laundry.controller;
 
 import aug.laundry.domain.Orders;
+import aug.laundry.domain.Rider;
 import aug.laundry.service.RiderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -26,7 +28,22 @@ public class RiderController {
     @GetMapping("/ride/wait")
     public String waitList(Model model) {
         List<Map<String, Integer>> cnt = riderService.orderListCnt();
+        List<Orders> orderList = riderService.OrderList("대기중");
+        Rider riderInfo = riderService.riderInfo("스크류바");
+
+//        List<Orders> orderList = new ArrayList<>();
+
+//        for(Orders area : list){
+//            if(area.getOrdersAddress().contains(riderInfo.getWorkingArea())){
+//                orderList.add(area);
+//            }
+//        }
+//        System.out.println(orderList);
+
+        model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
+        model.addAttribute("riderInfo",riderInfo);
+
         return "project_rider_list_on_call";
     }
 
@@ -63,7 +80,8 @@ public class RiderController {
         Orders orders = new Orders();
         orders.setOrdersId(1234L);
         orders.setOrdersDate("2023/08/31");
-        orders.setOrdersAddress("제주도");
+//        orders.setOrdersAddress("서울시 서대문구 홍은동 454");
+        orders.setOrdersAddress("서울시 강북구 번동 657");
         orders.setOrdersAddressDetails("108동 505호");
 
         map.put("a",orders);
@@ -83,8 +101,24 @@ public class RiderController {
     }
 
     @GetMapping("/ride/orders/{ordersId}")
-    public String orderInfo(Model model) {
+    public String orderInfo(@PathVariable("ordersId") Long ordersId, Model model) {
+        Orders info = riderService.orderInfo(ordersId);
+        System.out.println(info);
+        model.addAttribute("info", info);
         return "project_rider_read_more";
+    }
+
+    @PostMapping("/ride/assign/{ordersId}")
+    public String orderCheck(@PathVariable("ordersId") Long ordersId, Model model){
+        Orders orders = new Orders();
+        orders.setOrdersId(ordersId);
+
+        int res = riderService.updateOrderRider(orders);
+        int res2 = riderService.updateOrderStatus(orders);
+        System.out.println(res);
+        System.out.println(res2);
+
+        return "redirect:/ride/accept";
     }
 
 

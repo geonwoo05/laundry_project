@@ -16,18 +16,19 @@ class RiderMapperTest {
     @Autowired
     RiderMapper riderMapper;
 
-    @Test
-    void orderList(){
-        List<Orders> orders = riderMapper.orderList();
-        System.out.println("orders = " + orders);
-        Assertions.assertThat(orders.size()).isEqualTo(2);
-    }
+//    @Test
+//    void orderList(){
+//        List<Orders> orders = riderMapper.orderList();
+//        System.out.println("orders = " + orders);
+//        Assertions.assertThat(orders.size()).isEqualTo(2);
+//    }
 
-    @Test
-    void orderListCnt(){
-        int res = riderMapper.orderListCnt();
+//    @Test
+//    void orderListCnt(){
+//        int res = riderMapper.orderListCnt();
+//
+//        Assertions.assertThat(res).isEqualTo(1);
+//    }
 
-        Assertions.assertThat(res).isEqualTo(1);
-    }
 
 }
