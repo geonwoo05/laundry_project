@@ -1,10 +1,13 @@
 package aug.laundry.service;
 
 import aug.laundry.dao.mypage.MypageDao;
+import aug.laundry.dto.MyPointDto;
 import aug.laundry.dto.MypageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -48,6 +51,11 @@ public class MypageServiceImpl_osc implements MypageService_osc {
   @Override
   public int updatePassword(Long memberId, String memberPassword) {
     return mypageDao.updatePassword(memberId, memberPassword);
+  }
+
+  @Override
+  public List<MyPointDto> getPoint(Long memberId) {
+    return mypageDao.getPoint(memberId);
   }
 
 }
