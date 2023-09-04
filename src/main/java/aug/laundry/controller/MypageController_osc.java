@@ -69,7 +69,11 @@ public class MypageController_osc {
   @GetMapping("{memberId}/coupons")
   public String MypageCouponList(@PathVariable Long memberId, Model model){
     List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
-    log.info(getCoupon.toString());
+
+    LocalDate day = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
+    String sysdate = day.format(formatter);
+
       model.addAttribute("memberId", memberId);
       model.addAttribute("coupon", getCoupon);
     return "project_coupon";
@@ -148,7 +152,8 @@ public class MypageController_osc {
   @PostMapping("{memberId}/phone/update")
   public String phoneUpdate(@PathVariable Long memberId, HttpServletRequest request){
 
-    String memberPhone = request.getParameter("phone");
+    String requestPhone = request.getParameter("phone");
+    String memberPhone = requestPhone.replace("-","");
 
     if(memberPhone!=null){
       int res = mypageService.updatePhone(memberId, memberPhone);
@@ -169,4 +174,22 @@ public class MypageController_osc {
       return "redirect:/";
     }
   }
+
+  @GetMapping("{memberId}/password/update")
+  public  String passwordUpdate(@PathVariable Long memberId){
+    return "project_change_password";
+  }
+
+  @PostMapping("{memberId}/password/update")
+  public String passwordUpdate(@PathVariable Long memberId, HttpServletRequest request){
+    String memberPassword = request.getParameter("userPw");
+    if(memberPassword!=null){
+      mypageService.updatePassword(memberId, memberPassword);
+      return "redirect:/members/{memberId}/update";
+    } else {
+      return "redirect:/members/{memberId}/password/update";
+    }
+  }
+
+
 }

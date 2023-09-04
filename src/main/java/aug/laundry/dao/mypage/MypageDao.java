@@ -29,4 +29,6 @@ public class MypageDao {
   public int updatePhone(Long memberId, String memberPhone){ return mypageMapper.updatePhone(memberId, memberPhone); }
 
   public int unregister(Long memberId) { return mypageMapper.unregister(memberId); }
+
+  public int updatePassword(Long memberId, String memberPassword){ return mypageMapper.updatePassword(memberId, memberPassword); }
 }

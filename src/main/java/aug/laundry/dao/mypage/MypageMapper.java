@@ -21,4 +21,6 @@ public interface MypageMapper {
   public int updatePhone(@Param("memberId") Long memberId, @Param("memberPhone") String memberPhone);
 
   public int unregister(Long memberId);
+
+  public int updatePassword(@Param("memberId") Long memberId, @Param("memberPassword") String memberPassword);
 }

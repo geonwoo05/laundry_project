@@ -47,7 +47,8 @@ sendSmsBtn.addEventListener('click',function(e){
 
     e.preventDefault();
 
-    let phonenumber = document.querySelector('#phone').value;
+    let number = document.querySelector('#phone').value;
+    let phonenumber = number.replace(/-/gi,'');
     let phoneCheckRes = document.querySelector('#phoneCheckRes');
     let button_phoneChange = document.querySelector('#button_phoneChange');
 
@@ -79,3 +80,11 @@ function phone_check(memberPhone){
 
 	return regEx.test(memberPhone);
 };
+
+function phoneNum(){
+    let num = document.querySelector('#phone');
+
+    if (num.value.length == 3 || num.value.length == 8){
+        num.value += "-";
+    }
+}
