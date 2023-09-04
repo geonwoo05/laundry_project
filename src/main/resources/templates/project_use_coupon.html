@@ -28,7 +28,8 @@
             <ul class='couponList'>
                     <li class='coupon' th:each="item : ${coupon}">
                         <div class='couponRadio'>
-                            <span class='couponPrice' th:text="${item.couponPrice} + '원 할인'">5,000원 할인</span>
+                            <span class='couponPrice' th:text="${#numbers.formatInteger(item.couponPrice, 3, 'COMMA')} + '원 할인'">5,000원 할인</span>
+                            <span hidden class="couponPriceValue" th:text="${item.couponPrice}"></span>
                             <input type="radio" name="couponNum" th:id="couponNum + ${item.couponListId}" hidden th:value="${item.couponListId}">
                             <span class='custom-radio'></span>
                             <label th:for="couponNum + ${item.couponListId}"></label>
@@ -65,9 +66,15 @@
         if (radio.id == 'couponEmpty'){
             opener.document.querySelector('.couponName').textContent = '선택안함';
             opener.document.querySelector('input[name=coupon]').value = '';
+            opener.document.querySelector('.couponPrice').innerHTML = '- 0원';
         } else {
             opener.document.querySelector('.couponName').textContent = radio.parentElement.parentElement.children.item(1).textContent;
             opener.document.querySelector('input[name=coupon]').value = radio.value;
+            opener.document.querySelector('.couponPrice').innerHTML = '- ' + Number(radio.parentElement.children.item(1).textContent).toLocaleString() + '원';
+            var total = opener.document.querySelector('#total');
+            total.value = Number(total.value) - Number(radio.parentElement.children.item(1).textContent);
+            opener.document.querySelector('#totalTd').innerHTML = Number(total.value).toLocaleString() + '원';
+
         }
         window.close();
     })

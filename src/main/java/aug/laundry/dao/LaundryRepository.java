@@ -2,11 +2,13 @@ package aug.laundry.dao;
 
 import aug.laundry.controller.LaundryController;
 import aug.laundry.domain.CouponList;
+import aug.laundry.domain.Orders;
 import aug.laundry.dto.Address;
 import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.OrderInfo;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.CategoryOption;
+import aug.laundry.enums.category.Pass;
 import aug.laundry.service.LaundryServiceImpl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +29,6 @@ public class LaundryRepository {
     private final LaundryMapper laundryMapper;
 
     public OrderInfo firstInfo(Long memberId) {
-//        Map<String, Integer> map = new ConcurrentHashMap<>();
-//        if (Objects.nonNull(laundryMapper.isQuick(memberId))) map.put(CategoryOption.QUICK_LAUNDRY.getTitle(), 1);
-//        if (Objects.nonNull(laundryMapper.isCommon(memberId))) map.put(CategoryOption.COMMON_LAUNDRY.getTitle(), 1);
-//        if (Objects.nonNull(laundryMapper.isDry(memberId))) map.put(CategoryOption.DRYCLEANING.getTitle(), 1);
-//        if (Objects.nonNull(laundryMapper.isRepair(memberId))) map.put(CategoryOption.REPAIR.getTitle(), 1);
         return laundryMapper.firstInfo(memberId);
     }
 
@@ -50,5 +47,26 @@ public class LaundryRepository {
 
     public List<Category> getRepair(Long memberId) {
         return laundryMapper.getRepair(memberId).stream().map(x -> Category.valueOf(x)).collect(Collectors.toList());
+    }
+
+    public Pass isPass(Long memberId) {
+        return laundryMapper.isPass(memberId) == null ? Pass.COMMON : Pass.PASS;
+    }
+
+    public boolean validCoupon(Long memberId, Long couponListId) {
+        CouponList couponList = laundryMapper.validCoupon(memberId, couponListId);
+        if (couponList == null || couponList.getMemberId() != memberId || couponList.getCouponListId() != couponListId || couponList.getCouponListStatus() != 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public Integer useCoupon(Long memberId, Long couponListId) {
+        return laundryMapper.useCoupon(memberId, couponListId);
+    }
+
+
+    public Integer insert(Orders orders) {
+        return laundryMapper.insert(orders);
     }
 }

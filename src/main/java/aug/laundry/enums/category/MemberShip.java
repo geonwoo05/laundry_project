@@ -1,17 +1,19 @@
 package aug.laundry.enums.category;
 
+import lombok.Getter;
 import lombok.Setter;
 
 @Setter
+@Getter
 public class MemberShip {
-    private boolean check;
+    private Pass check;
 
-    public MemberShip(boolean check) {
+    public MemberShip(Pass check) {
         this.check = check;
     }
 
     public Long apply(Long price) {
-        if (this.check) {
+        if (this.check == Pass.PASS) {
             return CategoryPriceCalculator.PASS.calculate(price);
         } else {
             return CategoryPriceCalculator.COMMON.calculate(price);
