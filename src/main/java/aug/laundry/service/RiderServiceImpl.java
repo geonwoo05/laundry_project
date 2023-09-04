@@ -2,6 +2,7 @@ package aug.laundry.service;
 
 import aug.laundry.dao.rider.RiderMapper;
 import aug.laundry.domain.Orders;
+import aug.laundry.domain.Rider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,22 @@ public class RiderServiceImpl implements RiderService{
     }
 
     @Override
-    public List<Orders> orderInfo(Orders orders) {
-        return riderMapper.orderInfo(orders);
+    public Orders orderInfo(Long ordersId) {
+        return riderMapper.orderInfo(ordersId);
+    }
+
+    @Override
+    public int updateOrderRider(Orders orders) {
+        return riderMapper.updateOrderRider(orders);
+    }
+
+    @Override
+    public int updateOrderStatus(Orders orders) {
+        return riderMapper.updateOrderStatus(orders);
+    }
+
+    @Override
+    public Rider riderInfo(String riderName) {
+        return riderMapper.riderInfo(riderName);
     }
 }
