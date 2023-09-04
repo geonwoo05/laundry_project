@@ -1,6 +1,20 @@
 window.addEventListener('load', function(){
- var IMP = window.IMP;
- IMP.init("imp05521551");
+
+    let couponBtn = document.querySelector('#selectCoupon');
+
+
+    couponBtn.addEventListener('click', function(){
+        var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
+            window.open('/orders/members/1/coupons', '_blank');
+    })
+
+
+
+
+
+
+    var IMP = window.IMP;
+    IMP.init("imp05521551");
 });
 
 function requestPay() {

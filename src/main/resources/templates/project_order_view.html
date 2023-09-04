@@ -39,9 +39,9 @@
         <hr>
         <h4>검수 청구 정산서</h4>
         <table>
-            <tr>
+            <tr th:if="${delivery.deliveryStatus}">
                 <th class='content'>배송비</th>
-                <td class='content'>+ 3,000원</td>
+                <td th:text="|+ ${#numbers.formatDecimal(delivery.delivery.getPrice(),3,'COMMA',0,'COMMA')}원|" class='content'>+ 3,000원</td>
             </tr>
             <tr th:if="${quickLaundry.quickLaundryStatus}">
                 <th class='content'>빠른세탁</th>
@@ -128,19 +128,22 @@
                 <td></td>
             </tr>
         </table>
-        <button type="button" th:onclick="|location.href='@{/orders/members/{memberId}/coupons(memberId=${memberId})}'|" class='coupon' id="selectCoupon">
-            <span class='couponName content'>쿠폰이름</span>
+<!--        th:onclick="|location.href='@{/orders/members/{memberId}/coupons(memberId=${memberId})}'|"-->
+        <button type="button"  class='coupon' id="selectCoupon">
+            <span class='couponName content'>적용안함</span>
             <svg xmlns="http://www.w3.org/2000/svg" style='rotate: 180deg;' viewBox="0 0 512 512"><path d="M290.5 51.8C283.3 39.5 270.2 32 256 32s-27.3 7.5-34.5 19.8l-216 368c-7.3 12.4-7.3 27.7-.2 40.1S25.7 480 40 480H472c14.3 0 27.6-7.7 34.7-20.1s7-27.8-.2-40.1l-216-368z"/></svg>
         </button>
         <input type="hidden" name="coupon">
+        <input type="hidden" name="couponPrice">
+
 
         <hr class='bighr'>
 
         <h4>결제 금액</h4>
         <table>
-            <tr>
+            <tr th:if="${delivery.deliveryStatus}">
                 <th class='content'>배송비</th>
-                <td class='content'>+ 3,000원</td>
+                <td th:text="|+ ${#numbers.formatDecimal(delivery.delivery.getPrice(),3,'COMMA',0,'COMMA')}원|" class='content'>+ 3,000원</td>
             </tr>
             <tr th:if="${quickLaundry.quickLaundryStatus}">
                 <th class='content'>빠른세탁</th>
@@ -165,6 +168,10 @@
             <tr>
                 <th class='content'>쿠폰</th>
                 <td class='content discount'>- 3,000원</td>
+            </tr>
+            <tr th:if="${totalPriceWithPassApplied != null}">
+                <th class='content'>패스할인</th>
+                <td th:text="|- ${#numbers.formatDecimal(totalPrice - totalPriceWithPassApplied,3,'COMMA',0,'COMMA')}원|" class='content discount'>- 3,000원</td>
             </tr>
         </table>
         <table class='totalPrice'>
