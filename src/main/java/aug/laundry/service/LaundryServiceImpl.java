@@ -1,16 +1,21 @@
 package aug.laundry.service;
 
-import aug.laundry.controller.LaundryController;
 import aug.laundry.dao.LaundryRepository;
-import aug.laundry.domain.CouponList;
+import aug.laundry.domain.Orders;
 import aug.laundry.dto.Address;
 import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.OrderInfo;
+import aug.laundry.dto.OrderPost;
 import aug.laundry.enums.category.Category;
+import aug.laundry.enums.category.Delivery;
+import aug.laundry.enums.category.MemberShip;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -43,6 +48,47 @@ public class LaundryServiceImpl implements LaundryService{
     @Override
     public List<Category> getRepair(Long memberId) {
         return laundryRepository.getRepair(memberId);
+    }
+
+    @Override
+    public MemberShip isPass(Long memberId) {
+        return new MemberShip(laundryRepository.isPass(memberId));
+    }
+
+    @Transactional
+    @Override
+    public void update(Long memberId, Long couponListId, OrderPost orderPost) {
+        boolean validCoupon = laundryRepository.validCoupon(memberId, couponListId); // 쿠폰 유효성 검사
+        if (validCoupon) laundryRepository.useCoupon(memberId, couponListId); // 쿠폰 업데이트
+
+        Orders orders = new Orders();
+        orders.setMemberId(memberId);
+        orders.setOrdersAddress(orderPost.getAddress());
+        orders.setOrdersAddressDetails(orderPost.getAddressDetails());
+        orders.setOrdersPickup(orderPost.getLocation());
+        orders.setOrdersPickupDate(getDateString(orderPost.getTakeDate()));
+        orders.setOrdersReturnDate(getDateString(orderPost.getDeliveryDate()));
+        orders.setOrdersInfo(orderPost.getIsPw().equals("O") ? orderPost.getPassword() : null);
+        orders.setOrdersRequest(orders.getOrdersRequest());
+        Long expectedPrice = 0L;
+        MemberShip memberShip = new MemberShip(laundryRepository.isPass(memberId));
+        OrderInfo orderInfo = laundryRepository.firstInfo(memberId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선
+
+        // 빠른배송 or 일반배송
+        expectedPrice += orderInfo.getIsQuick() != null && orderInfo.getIsQuick() != 0 ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice();
+        if (orderInfo.getIsCommon() != 0) expectedPrice += memberShip.apply(Category.BASIC.getPrice());
+        if (orderInfo.getIsDry() != 0) expectedPrice += memberShip.apply(laundryRepository.getDry(memberId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
+        if (orderInfo.getIsRepair() != 0) expectedPrice += memberShip.apply(laundryRepository.getRepair(memberId).stream().map(x -> x.getPrice()).reduce((a,b) -> a + b).get());
+        orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100);
+        orders.setOrdersStatus(2);
+        System.out.println("최종 orders = " + orders);
+        Integer result = laundryRepository.insert(orders);
+        System.out.println("성공!");
+    }
+
+    public String getDateString(LocalDateTime dateTime) {
+        String date = dateTime.toString();
+        return date.substring(0, date.indexOf(":") + 3).replaceAll("T", " ");
     }
 
 
