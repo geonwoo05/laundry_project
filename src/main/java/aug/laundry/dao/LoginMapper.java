@@ -11,4 +11,6 @@ public interface LoginMapper {
 
     public int registerSocialNumber(String id);
 
+    public MemberDto login(String memberAccount);
+
 }

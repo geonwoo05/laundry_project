@@ -37,3 +37,12 @@ input[type=submit]{
     width: calc(100% - 2rem);
     position: fixed;
 }
+
+.errors{
+    text-align: center;
+    color: red;
+    margin-bottom: 1rem;
+}
+.errorsborder{
+    border: 2px solid rgb(255, 114, 114);
+}

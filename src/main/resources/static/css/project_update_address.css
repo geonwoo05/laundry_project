@@ -68,4 +68,12 @@ input:focus{
     background-color: #fff;
     font-size: 1.2rem;
 }
+.errors{
+    text-align: center;
+    color: red;
+    margin-bottom: 1rem;
+}
+.errorsborder{
+    border: 2px solid rgb(255, 114, 114);
+}
 

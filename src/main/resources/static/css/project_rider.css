@@ -64,7 +64,7 @@
 }
 .delivery_list ul li .delivery_address{
     font-size: medium;
-    margin-top: 0.5rem;
+
     height: 2.5rem;
     overflow: hidden;
     text-overflow: ellipsis;

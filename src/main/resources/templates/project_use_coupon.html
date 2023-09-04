@@ -6,11 +6,10 @@
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
-    <link rel="stylesheet" href="/css/project_coupon.css">
+    <link rel="stylesheet" href="/css/project_use_coupon.css">
 
     <title>Document</title>
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
 <body>
     
     <div class='container'>
@@ -30,9 +29,9 @@
                     <li class='coupon' th:each="item : ${coupon}">
                         <div class='couponRadio'>
                             <span class='couponPrice' th:text="${item.couponPrice} + '원 할인'">5,000원 할인</span>
-                            <input type="radio" name="couponNum" id="couponNum1" hidden th:value="${item.couponListId}">
+                            <input type="radio" name="couponNum" th:id="couponNum + ${item.couponListId}" hidden th:value="${item.couponListId}">
                             <span class='custom-radio'></span>
-                            <label for="couponNum1"></label>
+                            <label th:for="couponNum + ${item.couponListId}"></label>
                         </div>
                         <span class='couponTitle' th:text="${item.couponName}">[신규회원] 5,000원 할인 쿠폰</span>
                         <div class='couponDate'>
@@ -57,17 +56,20 @@
     </div>
 
 </body>
-<footer th:replace="~{/common/project_footer :: footer}"> </footer>
 <script>
 
     let submitBtn = document.querySelector('#submit');
     submitBtn.addEventListener('click', function(event){
         event.preventDefault();
         let radio = document.querySelector('input[name=couponNum]:checked');
-        let radioText = radio.name + '=' + radio.value; // 키=값 형식으로 쿼리파라미터 변환
-
-        let params = new URL(window.location.href);
-        location.href = "/laundry/order" + params.search + radioText; // params.search는 ? 뒤에 쿼리파라미터 문자열그대로 반환해줌
+        if (radio.id == 'couponEmpty'){
+            opener.document.querySelector('.couponName').textContent = '선택안함';
+            opener.document.querySelector('input[name=coupon]').value = '';
+        } else {
+            opener.document.querySelector('.couponName').textContent = radio.parentElement.parentElement.children.item(1).textContent;
+            opener.document.querySelector('input[name=coupon]').value = radio.value;
+        }
+        window.close();
     })
 
 </script>

@@ -71,3 +71,70 @@ document.querySelector('#sendSmsBtn').addEventListener('click',function(){
     	})
 
 })
+
+
+function idcheck(){
+    let memberAccount = document.querySelector("#member_account").value;
+    let checkMsg = document.querySelector('#checkMsg');
+    if(memberAccount == null || memberAccount == ''){
+        checkMsg.style.color = 'red';
+        checkMsg.innerHTML = "아이디를 입력해주세요.";
+    }else{
+        fetch('/id/check/' + memberAccount)
+            .then(response => response.json())
+            .then(map => {
+                console.log(map);
+                if(map.res > 0){
+                    checkMsg.style.color = 'red';
+                    checkMsg.innerHTML = map.msg;
+                }else{
+                    checkMsg.style.color = '#3CB371';
+                    checkMsg.innerHTML = map.msg;
+                }
+            })
+    }
+}
+
+function passwordCheck(){
+    let password = document.querySelector('.password-input').value;
+    let passwordCheckMsg = document.querySelector('.passwordCheck1');
+
+    // 문자열이 8~15자인 경우
+    let regex1 = /^.{8,15}$/;
+
+    // 대소문자, 숫자, 특수문자가 적어도 하나 이상 존재하는 경우
+    let regex2 = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!]).*$/;
+
+    if(regex1.test(password)){
+        if(regex1.test(password) && regex2.test(password)){
+            passwordCheckMsg.style.color = '#3CB371';
+            passwordCheckMsg.innerHTML = '사용가능한 비밀번호입니다.';
+        }else{
+            passwordCheckMsg.style.color = 'red';
+            passwordCheckMsg.innerHTML = '대소문자, 숫자, 특수문자가 적어도 하나씩 있어야 합니다.';
+        }
+
+    }else{
+        passwordCheckMsg.style.color = 'red';
+        passwordCheckMsg.innerHTML = '비밀번호는 8~15자 사이로 정해주세요.';
+    }
+
+    // 비밀번호 -> 비밀번호 확인 -> 비밀번호 순으로 입력할 경우 대비
+    passwordValidation()
+}
+
+function passwordValidation(){
+    let password = document.querySelector('.password-input').value;
+    let passwordCheckInput = document.querySelector('.password-check-input').value;
+    let passwordCheckMsg = document.querySelector('.passwordCheck2');
+
+    if(password === passwordCheckInput){
+        passwordCheckMsg.style.color = '#3CB371';
+        passwordCheckMsg.innerHTML = '비밀번호가 일치합니다.';
+    }else{
+        passwordCheckMsg.style.color = 'red';
+        passwordCheckMsg.innerHTML = '비밀번호가 일치하지 않습니다.';
+    }
+
+
+}

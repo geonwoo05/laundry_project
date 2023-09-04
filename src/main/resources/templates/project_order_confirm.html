@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_order_confirm.css">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="/js/project_order_confirm.js"></script>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
@@ -53,20 +55,19 @@
             <table>
                 <tr>
                     <th>주소</th>
-                    <td><a href="#" class='change'>변경</a></td>
+                    <td><a href="#" class='change' id="changeAddress">변경</a></td>
                 </tr>
             </table>
-            <span class='content' th:text="${address.memberAddress}"></span>
-            <input type="hidden" name="zipcode" th:value="${address.zipcode}">
-            <input type="hidden" name="address" th:value="${address.memberAddress}">
-            <table>
+            <span class='content' th:text="${address.memberAddress}" id="address"></span>
+            <input type="hidden" name="zipcode" th:value="${address.zipcode}" id="zipcode">
+            <input type="hidden" name="address" th:value="${address.memberAddress}" id="addressInput">
+            <table class='addressDetails'>
                 <tr>
                     <th class='content'>상세주소</th>
                     <td></td>
                 </tr>
             </table>
-            <span class='content' th:text="${address.memberAddressDetails}"></span>
-            <input type="hidden" name="addressDetails" th:value="${address.memberAddressDetails}">
+            <input type="text" name="addressDetails" th:value="${address.memberAddressDetails}" placeholder='OO아파트 101동 101호'>
             <hr>
             <table>
                 <tr>
@@ -127,21 +128,15 @@
             <table class='additional dry' th:if="${infoPrice.isDry != 0}">
                 <tr>
                     <th class='content'>드라이클리닝</th>
-                    <td class='content'>+ 100,000원</td>
+                    <td class='content' th:text="'+ ' + ${#numbers.formatInteger(dryTotalPrice, 3, 'COMMA')} + '원'"></td>
                 </tr>
                 <tr class='details'>
                     <table class='detail_info'>
-                        <tr>
+                        <tr th:each="item : ${dry}">
                             <th class='detailcontent'>
-                                <span class='content_name'>와이셔츠</span>
+                                <span class='content_name' th:text=${item.title}></span>
                             </th>
-                            <td class='detailcontent'>+ 10,000원</td>
-                        </tr>
-                        <tr>
-                            <th class='detailcontent'>
-                                <span class='content_name'>운동화 세탁</span>
-                            </th>
-                            <td class='detailcontent'>+ 0원</td>
+                            <td class='detailcontent' th:text="'+ ' + ${#numbers.formatInteger(item.price, 3, 'COMMA')} + '원'"></td>
                         </tr>
                     </table>
                 </tr>
@@ -150,24 +145,18 @@
                 <span>펼쳐보기</span>
                 <svg xmlns="http://www.w3.org/2000/svg" style='rotate: 180deg;' viewBox="0 0 512 512"><path d="M290.5 51.8C283.3 39.5 270.2 32 256 32s-27.3 7.5-34.5 19.8l-216 368c-7.3 12.4-7.3 27.7-.2 40.1S25.7 480 40 480H472c14.3 0 27.6-7.7 34.7-20.1s7-27.8-.2-40.1l-216-368z"/></svg>
             </button>
-            <table class='additional repair'>
+            <table class='additional repair' th:if="${infoPrice.isRepair != 0}">
                 <tr>
                     <th class='content'>수선</th>
-                    <td class='content'>+ 150,000원</td>
+                    <td class='content' th:text="'+ ' + ${#numbers.formatInteger(repairTotalPrice, 3, 'COMMA')} + '원'"></td>
                 </tr>
                 <tr class='details'>
                     <table class='detail_info'>
-                        <tr>
+                        <tr th:each="item : ${repair}">
                             <th class='detailcontent'>
-                                <span class='content_name'>와이셔츠</span>
+                                <span class='content_name' th:text="${item.title}"></span>
                             </th>
-                            <td class='detailcontent'>+ 10,000원</td>
-                        </tr>
-                        <tr>
-                            <th class='detailcontent'>
-                                <span class='content_name'>운동화 세탁</span>
-                            </th>
-                            <td class='detailcontent'>+ 0원</td>
+                            <td class='detailcontent' th:text="'+ ' + ${#numbers.formatInteger(item.price, 3, 'COMMA')} + '원'"></td>
                         </tr>
                     </table>
                 </tr>
@@ -199,37 +188,4 @@
     </div>
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
-<script>
-
-    let url = new URL(window.location.href)
-    console.log(url)
-    console.log(url.search)
-
-
-    // 공동현관 비밀번호 radio 버튼 연동
-    function toogleRadio(element) {
-        const radio = element.previousElementSibling;
-        if (!radio.checked){
-            radio.checked = !radio.checked;
-        }
-    }
-
-    let couponBtn = document.querySelector('#selectCoupon');
-
-    couponBtn.addEventListener('click', function(){
-        var param = '?' + 'takeDate=' + document.querySelector('input[name=takeDate]').value + '&'
-        + 'deliveryDate=' + document.querySelector('input[name=deliveryDate]').value + '&'
-        + 'zipcode=' + document.querySelector('input[name=zipcode]').value + '&'
-        + 'address=' + document.querySelector('input[name=address]').value + '&'
-        + 'coupon=' + document.querySelector('input[name=coupon]').value + '&'
-        + 'address=' + document.querySelector('input[name=address]').value + '&'
-        + 'isPw=' + document.querySelector('input[name=isPw]').value + '&'
-        + 'password=' + document.querySelector('input[name=password]').value + '&'
-
-
-        location.href = '/members/1/coupons/select' + param;
-    })
-
-    
-</script>
 </html>

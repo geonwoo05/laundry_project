@@ -5,6 +5,7 @@ import aug.laundry.domain.CouponList;
 import aug.laundry.dto.Address;
 import aug.laundry.dto.MyCoupon;
 import aug.laundry.dto.OrderInfo;
+import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.CategoryOption;
 import aug.laundry.service.LaundryServiceImpl;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -40,5 +42,13 @@ public class LaundryRepository {
 
     public Address getAddress(Long memberId) {
         return laundryMapper.getAddress(memberId);
+    }
+
+    public List<Category> getDry(Long memberId) {
+        return laundryMapper.getDry(memberId).stream().map(x -> Category.valueOf(x)).collect(Collectors.toList());
+    }
+
+    public List<Category> getRepair(Long memberId) {
+        return laundryMapper.getRepair(memberId).stream().map(x -> Category.valueOf(x)).collect(Collectors.toList());
     }
 }

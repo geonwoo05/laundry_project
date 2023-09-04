@@ -39,6 +39,20 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
         return memberDto;
     }
 
+    public int checkId(String memberAccount){
+        int res = memberMapper.checkId(memberAccount);
+
+        return res;
+    }
+
+    public Integer registerUser(MemberDto memberDto){
+        Integer res = memberMapper.registerUser(memberDto);
+        System.out.println(res);
+        return res;
+    }
+
+
+
 
 
 }

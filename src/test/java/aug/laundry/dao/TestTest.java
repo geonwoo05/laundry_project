@@ -47,4 +47,10 @@ class TestTest {
         int res = loginMapper.checkSocialId("i5R4qxWWVIPTeMh3K74_NQwoIkGvd4xT7930Uc9qUgE");
         System.out.println(res);
     }
+
+    @Test
+    void checkId(){
+        int res = memberMapper.checkId("rlarjsdn531@naver.com");
+        System.out.println(res);
+    }
 }

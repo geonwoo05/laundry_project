@@ -5,38 +5,37 @@
 }
 
 .mypageList{
-    padding: 0px;
-}
-.mypageList a {
     width: 100%;
+    padding: 0;
 }
-.mypageList li {
-    margin-bottom: 1rem;
-    width: 95%;
-    height: 4rem;
-    margin-left:0.5rem ;
+
+.mypageList a{
+    width: 100%;
+    min-height: 5rem;
     border-bottom: 1px solid rgb(224, 213, 213);
-    position: relative;
+    display: block;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-.mypageList li div:first-child {
-    display: inline-block;
-    float: left;
-}
-.mypageList li div:first-child p{
-    margin-top: 0.5rem;
-    font-size: small;
-    color: black;
-    float: left;
-    font-size: 1rem;
-}
-.mypageList li div div{
+
+.menuTitle{
+    width: 100%;
     font-size: large;
+    margin: 0.5rem 0;
 }
-.mypageList li div:last-child {
-    float: right;
-    margin-top: 1rem;
-    width: 10%;
+.menuContent{
+    margin: 0.5rem 0 1rem 0;
+    line-height: 1.5rem;
 }
-.mypage_rest_btn div:first-child{
-    margin-top: 1rem;
+
+.menuOne{
+    font-size: 1.3rem;
 }
+
+.out{
+    color: red;
+}
+
+

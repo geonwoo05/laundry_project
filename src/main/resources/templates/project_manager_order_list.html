@@ -11,29 +11,11 @@
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
-
     <div class='container'>
+        <input type="text" value="5" class="hidden" id="inspectionStatus">
         <aside th:replace="~{/common/project_manager_order_header :: manager_header}"></aside>
 
-        <div class='res_box'>
-            <div class='order_box' onclick="location.href='#'">
-                <div class='date_status'>
-                    <p class='date_text'>8월 23일(수) 주문</p>
-                    <p class='status'>빠른세탁</p>
-                </div>
-                <div class='image_box'>
-                    <p class='status_text'>주문번호 : 100002</p>
-                </div>
-            </div>
-            <div class='order_box' onclick="location.href='#'">
-                <div class='date_status'>
-                    <p class='date_text'>8월 23일(수) 주문</p>
-                    <p class='status'></p>
-                </div>
-                <div class='image_box'>
-                    <p class='status_text'>주문번호 : 100003</p>
-                </div>
-            </div>
+        <div class='res_box' id="resBox">
         </div>
     </div>
 

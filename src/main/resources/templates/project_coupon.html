@@ -21,19 +21,23 @@
             <a href='#'><span>새 쿠폰 추가 ▶</span></a>
         </div>
         <ul class='couponList'>
-            <li class='coupon'>
-                <span class='couponPrice'>5,000원 할인</span>
-                <span class='couponTitle'>[신규회원] 5,000원 할인 쿠폰</span>
+            <th:block th:if="${not #lists.isEmpty(coupon)}">
+            <li class='coupon' th:each="item : ${coupon}">
+                <span class='couponPrice' th:text="${item.couponPrice}+'원 할인'">5,000원 할인</span>
+                <span class='couponTitle' th:text="${item.couponName}">[신규회원] 5,000원 할인 쿠폰</span>
                 <div class='couponDate'>
-                    <span class='couponExpireCount'>3일 남음</span>
-                    <span class='couponExpireDate'>2023.08.31 23:59까지</span>
+                    <span class='couponExpireCount' th:text="${item.remainingTime}">3일 남음</span>
+                    <span class='couponExpireDate' th:text="${item.couponEndDate}">2023.08.31 23:59까지</span>
                 </div>
                 <div class='empty'></div>
             </li>
+            </th:block>
+            <th:block th:if="${#lists.isEmpty(coupon)}">
             <li class='coupon noncoupon'>
                 <span>등록된 쿠폰이 없습니다.</span>
                 <div class='empty'></div>
             </li>
+            </th:block>
         </ul>
         <div class='cuponNote'>
             <ul>

@@ -57,7 +57,6 @@ public class SendSmsService_kgw {
                 .url(requestURL)
                 .post(RequestBody.create(MediaType.parse("application/json"), jsonMessage))
                 .build();
-        System.out.println("doPost");
 
         Response response = client.newCall(request).execute();
         //출력

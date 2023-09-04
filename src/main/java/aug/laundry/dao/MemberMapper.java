@@ -9,6 +9,12 @@ import java.util.List;
 @Mapper
 public interface MemberMapper {
     public MemberDto selectOne(Long memberId);
+    public int checkId(String memberAccount);
+    public Integer registerUser(MemberDto memberDto);
+
+
+
+
 
 
 

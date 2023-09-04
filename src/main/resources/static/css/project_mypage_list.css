@@ -5,6 +5,13 @@
     margin-left: 1rem;
     position: relative;
 }
+.mypage_nickname span{
+    font-size: 2rem;
+    font-weight: bold;
+    display: inline-block;
+    position: relative;
+}
+
 .mypage_nickname div{
     font-size: medium;
     border: 1px solid black;
