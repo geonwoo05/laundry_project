@@ -4,6 +4,7 @@ import aug.laundry.domain.CommonLaundry;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.AdminInspectionDto;
+import aug.laundry.dto.Criteria;
 import aug.laundry.dto.DrycleaningListDto;
 import aug.laundry.dto.RepairListDto;
 import org.apache.ibatis.annotations.Param;
@@ -17,9 +18,9 @@ import java.util.Map;
 
 @Service
 public interface AdminInspectionService_ksh {
-    List<AdminInspectionDto> getInspectionList();
+    List<AdminInspectionDto> getInspectionList(Criteria cri, Long orderStatus);
 
-    List<AdminInspectionDto> getInspectedList();
+    int getTotalCount(Long ordersStatus);
 
     Map<String, Object> getInspectionDetail(Long ordersId);
 

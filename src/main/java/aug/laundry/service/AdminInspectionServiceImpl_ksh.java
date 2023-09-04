@@ -4,10 +4,7 @@ import aug.laundry.dao.admin.AdminInspectionDao;
 import aug.laundry.domain.CommonLaundry;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Repair;
-import aug.laundry.dto.AdminInspectionDto;
-import aug.laundry.dto.DrycleaningListDto;
-import aug.laundry.dto.RepairInfoDto;
-import aug.laundry.dto.RepairListDto;
+import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.fileUpload.FileUploadType;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +26,13 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
     private final FileUploadService_ksh fileUpload;
 
     @Override
-    public List<AdminInspectionDto> getInspectionList() {
-        return adminInspectionDao.getInspectionList();
+    public List<AdminInspectionDto> getInspectionList(Criteria cri, Long orderStatus) {
+        return adminInspectionDao.getInspectionList(cri, orderStatus);
     }
 
     @Override
-    public List<AdminInspectionDto> getInspectedList() {
-        return adminInspectionDao.getInspectedList();
+    public int getTotalCount(Long ordersStatus) {
+        return adminInspectionDao.getTotalCount(ordersStatus);
     }
 
     @Override

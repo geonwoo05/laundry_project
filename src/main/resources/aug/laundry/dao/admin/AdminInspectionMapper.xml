@@ -3,22 +3,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="aug.laundry.dao.admin.AdminInspectionMapper">
     <select id="getInspectionList" resultType="aug.laundry.dto.AdminInspectionDto">
-        SElECT o.orders_id, to_char(o.orders_date, 'yyyy-mm-dd') AS orders_date, q.quick_laundry_id
-        FROM orders o
-                 INNER JOIN orders_detail od ON o.orders_id = od.orders_id
-                 LEFT OUTER JOIN quick_laundry q ON od.orders_detail_id = q.orders_detail_id
-        WHERE o.orders_status=5
-        ORDER BY o.orders_date DESC
+        SELECT orders_id, orders_date, quick_laundry_id FROM(
+            SELECT ROWNUM rn, t.*
+            from(SElECT o.orders_id, to_char(o.orders_date, 'yyyy-mm-dd') AS orders_date, q.quick_laundry_id
+                 FROM orders o
+                          INNER JOIN orders_detail od ON o.orders_id = od.orders_id
+                          LEFT OUTER JOIN quick_laundry q ON od.orders_detail_id = q.orders_detail_id
+                 WHERE o.orders_status=#{orderStatus}
+                 ORDER BY o.orders_date DESC) t
+        )WHERE rn BETWEEN #{cri.startNo} and #{cri.endNo}
     </select>
 
-    <select id="getInspectedList" resultType="aug.laundry.dto.AdminInspectionDto">
-        SElECT o.orders_id, to_char(o.orders_date, 'yyyy-mm-dd') AS orders_date, q.quick_laundry_id
-        FROM orders o
-                 INNER JOIN orders_detail od ON o.orders_id = od.orders_id
-                 LEFT OUTER JOIN quick_laundry q ON od.orders_detail_id = q.orders_detail_id
-                 LEFT JOIN inspection i ON o.orders_id = i.orders_id
-        WHERE o.orders_status=6
-        ORDER BY o.orders_date DESC
+    <select id="getTotalCount" resultType="int">
+        SELECT count(*) FROM orders WHERE orders_status = #{ordersStatus}
     </select>
 
     <select id="getOrderInfo" resultType="aug.laundry.dto.AdminInspectionDto">
