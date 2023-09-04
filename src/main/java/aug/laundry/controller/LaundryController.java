@@ -1,5 +1,6 @@
 package aug.laundry.controller;
 
+import aug.laundry.commom.SessionConstant;
 import aug.laundry.domain.CouponList;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
@@ -12,18 +13,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/laundry")
 public class LaundryController {
 
     private final LaundryService laundryService;
@@ -34,9 +38,10 @@ public class LaundryController {
         dataBinder.addValidators(orderPostValidator);
     }
 
-    @GetMapping("/laundry/order")
+    @GetMapping("/order")
     public String order(Model model, HttpServletRequest request) {
         MemberShip memberShip = laundryService.isPass(1L); // 패스 여부
+
         Long totalPrice = 3000L; // 배송비
         Long discount = 0L;
         OrderInfo info = laundryService.firstInfo(1L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
@@ -82,9 +87,7 @@ public class LaundryController {
         return "project_order_confirm";
     }
 
-
-
-    @PostMapping("/laundry/order")
+    @PostMapping("/order")
     public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model) {
 
         System.out.println("orderPost = " + orderPost);
@@ -99,8 +102,16 @@ public class LaundryController {
         return "redirect:/";
     }
 
-    @GetMapping("/members/{memberId}/coupons/select")
-    public String selectCoupon(@PathVariable Long memberId, Model model, String takeDate) {
+    @GetMapping("/order/pickup")
+    public String pickupLocation() {
+        return "project_pickup_location";
+    }
+
+    @GetMapping("/order/coupons/select")
+    public String selectCoupon(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
+        memberId = 1L;
+        if (memberId == null) return "redirect:/login";
+
         List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
         model.addAttribute("memberId", memberId);
         model.addAttribute("coupon", getCoupon);

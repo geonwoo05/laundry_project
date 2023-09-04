@@ -26,11 +26,15 @@ window.addEventListener('load', function(){
 
     })
 
-    let couponBtn = document.querySelector('#selectCoupon');
-
-    couponBtn.addEventListener('click', function(){
+    document.querySelector('#changeLocation').addEventListener('click', function(){
         var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
-        window.open('/members/1/coupons/select', '_blank')
+        window.open('/laundry/order/pickup', '_blank')
+    })
+
+
+    document.querySelector('#selectCoupon').addEventListener('click', function(){
+        var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
+        window.open('/laundry/order/coupons/select', '_blank')
     })
 
     let changeAddress = document.querySelector('#changeAddress');

@@ -73,11 +73,11 @@
             <table>
                 <tr>
                     <th>수거 / 배송 위치</th>
-                    <td><a href='#' class='change'>변경</a></td>
+                    <td><a class='change' id="changeLocation">변경</a></td>
                 </tr>
             </table>
-            <div class='location content' th:id="location" th:text="${location == null ? '문 앞' : location}">문 앞</div>
-            <input type='hidden' name='location' th:value="${location == null ? '문 앞' : location}">
+            <div class='location content' th:id="location">문 앞</div>
+            <input type='hidden' name='location' value="문 앞">
             <hr>
             <table>
                 <tr>
