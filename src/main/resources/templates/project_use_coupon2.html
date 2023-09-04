@@ -29,6 +29,7 @@
                     <li class='coupon' th:each="item : ${coupon}">
                         <div class='couponRadio'>
                             <span class='couponPrice' th:text="${item.couponPrice} + '원 할인'">5,000원 할인</span>
+                            <span hidden class="couponPriceValue" th:text="${item.couponPrice}"></span>
                             <input type="radio" name="couponNum" th:id="couponNum + ${item.couponListId}" hidden th:value="${item.couponListId}">
                             <span class='custom-radio'></span>
                             <label th:for="couponNum + ${item.couponListId}"></label>
@@ -68,7 +69,11 @@
         } else {
             opener.document.querySelector('.couponName').textContent = radio.parentElement.parentElement.children.item(1).textContent;
             opener.document.querySelector('input[name=coupon]').value = radio.value;
-            opener.document.querySelector('input[name=couponPrice]').value = radio.parentElement.children.item(1).textContent;
+            opener.document.querySelector('input[name=couponPrice]').value = Number(radio.parentElement.children.item(1).textContent);
+
+            let couponRow = opener.document.querySelector('.coupon-row');
+            couponRow.style.display = '';
+            couponRow.querySelector('.content.discount').textContent = '- ' + Number(radio.parentElement.children.item(1).textContent);
         }
         window.close();
     })

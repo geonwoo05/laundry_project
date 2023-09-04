@@ -161,13 +161,13 @@
                 <th class='content'>수선</th>
                 <td th:text="|+ ${#numbers.formatDecimal(repairMap.get('totalRepairPrice'),3,'COMMA',0,'COMMA')}원|" class='content'>+ 20,000원</td>
             </tr>
+            <tr class="coupon-row" style="display: none;">
+                <th class='content'>쿠폰</th>
+                <td class='content discount'>- 3,000원</td>
+            </tr>
             <tr id="pointRow">
                 <th class='content'>포인트</th>
                 <td id='pointValue' class='content discount'>- 3,000원</td>
-            </tr>
-            <tr>
-                <th class='content'>쿠폰</th>
-                <td class='content discount'>- 3,000원</td>
             </tr>
             <tr th:if="${totalPriceWithPassApplied != null}">
                 <th class='content'>패스할인</th>
@@ -207,6 +207,8 @@
         const pointValueDisplay = document.getElementById('pointValue');
         const pointRow = document.getElementById('pointRow');
         const allUseButton = document.querySelector('.pointbtn');
+
+
 
         var maxPoint = [[${point}]];
 
