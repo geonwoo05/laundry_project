@@ -52,7 +52,7 @@ public class OrderPostValidator implements Validator {
         if (order.getIsPw().equals("O") && (order.getPassword() == null || order.getPassword().equals(""))) {
             errors.reject("pw", "not exist Password");
         }
-        if (order.getIsPw().equals("X") && (order.getPassword() != null || !order.getPassword().equals(""))) {
+        if (order.getIsPw().equals("X") && (order.getPassword() != null && !order.getPassword().equals(""))) {
             errors.reject("pw", "invalid Password");
         }
 //

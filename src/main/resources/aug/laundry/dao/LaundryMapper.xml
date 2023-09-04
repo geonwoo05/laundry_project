@@ -64,8 +64,15 @@
 
     <insert id="insert">
         INSERT INTO ORDERS (ORDERS_ID, MEMBER_ID, ORDERS_DATE, ORDERS_ADDRESS, ORDERS_ADDRESS_DETAILS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE, ORDERS_INFO, ORDERS_REQUEST, ORDERS_EXPECTED_PRICE, ORDERS_STATUS)
-        VALUES (SEQ_ORDERS_ID.NEXTVAL, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup}, #{ordersPickupDate}, #{ordersReturnDate}, #{ordersInfo}, #{ordersRequest},#{ordersExpectedPrice}, 2)
+        VALUES (SEQ_ORDERS_ID.NEXTVAL, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup}, TO_DATE(#{ordersPickupDate}, 'yyyy-MM-dd HH24:mi') , TO_DATE(#{ordersReturnDate}, 'yyyy-MM-dd HH24:mi'), #{ordersInfo}, #{ordersRequest},#{ordersExpectedPrice}, 2)
     </insert>
+
+    <select id="getCouponDiscount">
+        SELECT COUPON_PRICE
+        FROM COUPON_LIST
+        JOIN COUPON ON (COUPON.COUPON_ID = COUPON_LIST.COUPON_ID)
+        WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_ID = #{couponListId}
+    </select>
 
 
 </mapper>

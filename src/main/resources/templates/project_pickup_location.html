@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_pickup_location.css">
+    <script src="/js/project_pickup_location.js"></script>
     <title>Document</title>
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
 <body>
     <div class='container'>
         <form action="#" method="get">
@@ -25,9 +25,9 @@
                     <label for="office">경비실</label>
                 </div>
                 <div class='box'>
-                    <input type="radio" name="location" id="mod">
+                    <input type="radio" name="location" id="exception">
                     <span class="custom-radio" id='mods' onclick='toogleRadio(this)'></span>
-                    <label for="mod">그 외</label>
+                    <label for="exception">그 외</label>
                 </div>
                 <textarea name="" id="" cols="30" rows="10" class='details'></textarea>
                 <input type="submit" value="저장">
@@ -35,15 +35,8 @@
         </form>
     </div>
 </body>
-<footer th:replace="~{/common/project_footer :: footer}"> </footer>
 <script>
-    // 수거/배송위치 radio연동
-    function toogleRadio(element) {
-        const radio = element.previousElementSibling;
-        if (!radio.checked){
-            radio.checked = !radio.checked;
-        }
-    }
+
     
 </script>
 </html>

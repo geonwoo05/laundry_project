@@ -60,8 +60,6 @@ span, .location{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    margin: 0.5rem 1rem;
-    width: 90%;
 }
 
 .coupon{
