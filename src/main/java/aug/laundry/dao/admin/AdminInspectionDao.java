@@ -5,6 +5,7 @@ import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.AdminInspectionDto;
+import aug.laundry.dto.Criteria;
 import aug.laundry.dto.RepairInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +20,11 @@ public class AdminInspectionDao {
 
     private final AdminInspectionMapper mapper;
 
-    public List<AdminInspectionDto> getInspectionList() {
-        return mapper.getInspectionList();
+    public List<AdminInspectionDto> getInspectionList(Criteria cri, Long orderStatus) {
+        return mapper.getInspectionList(cri, orderStatus);
     }
-
-    public List<AdminInspectionDto> getInspectedList() {
-        return mapper.getInspectedList();
+    public int getTotalCount(Long ordersStatus){
+        return mapper.getTotalCount(ordersStatus);
     }
 
     public AdminInspectionDto getOrderInfo(Long ordersId) {

@@ -5,6 +5,7 @@ import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.AdminInspectionDto;
+import aug.laundry.dto.Criteria;
 import aug.laundry.dto.RepairInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,8 +15,8 @@ import java.util.List;
 @Mapper
 public interface AdminInspectionMapper {
 
-    List<AdminInspectionDto> getInspectionList();
-    List<AdminInspectionDto> getInspectedList();
+    List<AdminInspectionDto> getInspectionList(@Param("cri") Criteria cri, @Param("orderStatus") Long orderStatus);
+    int getTotalCount(Long ordersStatus);
     // 주문정보조회
     AdminInspectionDto getOrderInfo(Long ordersId);
     // 생활빨래
