@@ -1,6 +1,7 @@
 package aug.laundry.service;
 
 import aug.laundry.domain.Orders;
+import aug.laundry.domain.Rider;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,13 @@ public interface RiderService {
 
     List<Map<String, Integer>> orderListCnt();
 
-    List<Orders> orderInfo(Orders orders);
+    Orders orderInfo(Long ordersId);
+
+    int updateOrderRider(Orders orders);
+
+    int updateOrderStatus(Orders orders);
+
+    Rider riderInfo(String riderName);
 
 
 }

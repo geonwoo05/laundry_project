@@ -6,6 +6,7 @@ import aug.laundry.dao.LaundryRepository;
 import aug.laundry.dao.ObjectMapperFactory;
 import aug.laundry.dto.DateForm;
 import aug.laundry.enums.category.Category;
+import aug.laundry.enums.zipcode.ZipCode_SEOUL;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +47,9 @@ public class categoryTest {
 
     @Test
     public void mapperTest() {
+
     }
+
 
     @Test
     public void dateTimeTest() {
