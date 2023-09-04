@@ -45,4 +45,17 @@
         SET MEMBER_DELETE_STATUS = 'Y'
         WHERE MEMBER_ID = #{memberId}
     </update>
+
+    <update id="updatePassword">
+        UPDATE MEMBER
+        SET MEMBER_PASSWORD = #{memberPassword}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+    
+    <select id="getPoint" resultType="aug.laundry.dto.MyPointDto">
+        SELECT POINT_ID, POINT_STACK, POINT_STACK_REASON, TO_CHAR(POINT_STACK_DATE, 'yy/MM/dd') as POINT_STACK_DATE, POINT_NOW
+        FROM POINT
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
 </mapper>

@@ -1,9 +1,12 @@
 package aug.laundry.dao.mypage;
 
 import aug.laundry.dto.MemberDto;
+import aug.laundry.dto.MyPointDto;
 import aug.laundry.dto.MypageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface MypageMapper {
@@ -21,4 +24,8 @@ public interface MypageMapper {
   public int updatePhone(@Param("memberId") Long memberId, @Param("memberPhone") String memberPhone);
 
   public int unregister(Long memberId);
+
+  public int updatePassword(@Param("memberId") Long memberId, @Param("memberPassword") String memberPassword);
+
+  public List<MyPointDto> getPoint(Long memberId);
 }

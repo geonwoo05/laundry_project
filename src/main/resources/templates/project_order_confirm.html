@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_order_confirm.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/project_order_confirm.js"></script>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
     
     <div class='container'>
-        <form action="#" method="get">
+        <form action="" method="post">
             <h2>주문정보</h2>
             <div class='info'>
                 <span class='content'>주의사항에 대한 내용</span>
@@ -46,8 +47,8 @@
                 </tr>
             </table>
             <div class='info'>
-                <span class='content' th:text="'수거 ' + ${dateTime.pickup}"></span>
-                <span class='content' th:text="'배송 ' + ${dateTime.returns}"></span>
+                <span class='content' th:text="'수거 ' + ${dateTime.pickup} + '시 부터'"></span>
+                <span class='content' th:text="'배송 ' + ${dateTime.returns} + '시 까지'"></span>
             </div>
             <input type="hidden" name="takeDate" th:value="${dateTime.pickup}">
             <input type="hidden" name="deliveryDate" th:value="${dateTime.returns}">
@@ -99,15 +100,17 @@
                 <div class='box'>
                     <input type="radio" name="isPw" id="O" value="O">
                     <span class="custom-radio" id='pwO' onclick='toogleRadio(this)'></span>
-                    <input type="text" name="password" id="password" placeholder='예) 1234'>
+                    <input type="text" name="password" id="password" placeholder='예) 1234' disabled>
                 </div>
                 <div class='box'>
                     <input type="radio" name="isPw" id="X" value="X">
                     <span class="custom-radio" id='pwX' onclick='toogleRadio(this)'></span>
                     <label for="X" class='content'>비밀번호 없음</label>
                 </div>
+                <div class='error disabled'></div>
             </div>
-
+            <h4>요청사항</h4>
+            <input type="text" name="request" id="request">
             <hr class='bighr'>
 
             <h4>결제 예상금액</h4>
@@ -121,8 +124,8 @@
                     <td class='content'>+ 3,000원</td>
                 </tr>
                 <tr th:if="${infoPrice.isCommon == 1}">
-                    <th class='content'>생활빨래</th>
-                    <td class='content'>+ 5,000원</td>
+                    <th class='content' th:text="${common.title} + ' 기준'"></th>
+                    <td class='content' th:text="'+ ' + ${#numbers.formatInteger(common.price, 3, 'COMMA')} + '원'">+ 5,000원</td>
                 </tr>
             </table>
             <table class='additional dry' th:if="${infoPrice.isDry != 0}">
@@ -141,10 +144,6 @@
                     </table>
                 </tr>
             </table>
-            <button class='more' id="dry" type='button' th:if="${infoPrice.isDry != 0}">
-                <span>펼쳐보기</span>
-                <svg xmlns="http://www.w3.org/2000/svg" style='rotate: 180deg;' viewBox="0 0 512 512"><path d="M290.5 51.8C283.3 39.5 270.2 32 256 32s-27.3 7.5-34.5 19.8l-216 368c-7.3 12.4-7.3 27.7-.2 40.1S25.7 480 40 480H472c14.3 0 27.6-7.7 34.7-20.1s7-27.8-.2-40.1l-216-368z"/></svg>
-            </button>
             <table class='additional repair' th:if="${infoPrice.isRepair != 0}">
                 <tr>
                     <th class='content'>수선</th>
@@ -161,23 +160,21 @@
                     </table>
                 </tr>
             </table>
-            <button class='more' id="repair" type='button'>
-                <span>펼쳐보기</span>
-                <svg xmlns="http://www.w3.org/2000/svg" style='rotate: 180deg;' viewBox="0 0 512 512"><path d="M290.5 51.8C283.3 39.5 270.2 32 256 32s-27.3 7.5-34.5 19.8l-216 368c-7.3 12.4-7.3 27.7-.2 40.1S25.7 480 40 480H472c14.3 0 27.6-7.7 34.7-20.1s7-27.8-.2-40.1l-216-368z"/></svg>
-            </button>
+
             <h4>예상 할인 금액</h4>
             <table>
-                <tr>
+                <tr th:if="${memberShip == 1}">
                     <th class='content'>패스</th>
-                    <td class='content'>- 4,000원</td>
+                    <td class='content'  th:text="'- ' + ${#numbers.formatInteger(discount, 3, 'COMMA')} + '원'">- 4,000원</td>
                 </tr>
                 <tr>
-                    <th class='content'>쿠폰</th>
-                    <td class='content'>- 3,000원</td>
+                    <th class='content' >쿠폰</th>
+                    <td class='content couponPrice'>- 0원</td>
                 </tr>
                 <tr>
                     <th class='content'>전체금액</th>
-                    <td class='content'>200,000원 + a</td>
+                    <td class='content' id="totalTd" th:text="${#numbers.formatInteger(totalPrice, 3, 'COMMA') + '원'}">200,000원</td>
+                    <input type="hidden" name="total" id="total" th:value="${totalPrice}">
                 </tr>
             </table>
             <div class='fixbox'>

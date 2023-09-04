@@ -1,8 +1,11 @@
 package aug.laundry.service;
 
 import aug.laundry.dto.MemberDto;
+import aug.laundry.dto.MyPointDto;
 import aug.laundry.dto.MypageDto;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface MypageService_osc {
@@ -16,4 +19,8 @@ public interface MypageService_osc {
   public int updatePhone(Long memberId, String memberPhone);
 
   public int unregister(Long memberId);
+
+  public int updatePassword(Long memberId, String memberPassword);
+
+  public List<MyPointDto> getPoint(Long memberId);
 }
