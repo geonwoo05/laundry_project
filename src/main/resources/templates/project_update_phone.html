@@ -14,7 +14,7 @@
 <body>
     <div class='container'>
         <div class='intro'>변경할 전화번호를 입력해주세요.</div> 
-        <form action="/members/{memberId}/phone/update" method="post" name="phoneChangeForm">
+        <form action="./update" method="post" name="phoneChangeForm">
             <input type="tel" name="phone" id="phone" placeholder='휴대폰 번호 입력' onkeypress="phoneNum()">
             <button type='button' id="sendSmsBtn">인증번호 발송</button>
             <div class="errors"></div>
