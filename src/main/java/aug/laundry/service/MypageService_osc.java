@@ -16,4 +16,6 @@ public interface MypageService_osc {
   public int updatePhone(Long memberId, String memberPhone);
 
   public int unregister(Long memberId);
+
+  public int updatePassword(Long memberId, String memberPassword);
 }

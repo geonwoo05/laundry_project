@@ -45,4 +45,13 @@
         SET MEMBER_DELETE_STATUS = 'Y'
         WHERE MEMBER_ID = #{memberId}
     </update>
+
+    <update id="updatePassword">
+        UPDATE MEMBER
+        SET MEMBER_PASSWORD = #{memberPassword}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+    
+    <select id="point"
+
 </mapper>

@@ -45,4 +45,9 @@ public class MypageServiceImpl_osc implements MypageService_osc {
     return mypageDao.unregister(memberId);
   }
 
+  @Override
+  public int updatePassword(Long memberId, String memberPassword) {
+    return mypageDao.updatePassword(memberId, memberPassword);
+  }
+
 }
