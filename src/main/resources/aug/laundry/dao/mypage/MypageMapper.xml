@@ -53,9 +53,15 @@
     </update>
     
     <select id="getPoint" resultType="aug.laundry.dto.MyPointDto">
-        SELECT POINT_ID, POINT_STACK, POINT_STACK_REASON, TO_CHAR(POINT_STACK_DATE, 'yy/MM/dd') as POINT_STACK_DATE, POINT_NOW
+        SELECT POINT_ID, POINT_STACK, POINT_STACK_REASON, TO_CHAR(POINT_STACK_DATE, 'yy-MM-dd HH24:MI')AS POINT_STACK_DATE, POINT_NOW
         FROM POINT
         WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="getPointNow" resultType="aug.laundry.dto.PointNowDto">
+        select point_now
+        from (select * from point order by point_id desc)
+        where <![CDATA[ROWNUM = 1]]> and member_id = #{memberId}
     </select>
 
 </mapper>
