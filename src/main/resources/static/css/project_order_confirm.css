@@ -101,7 +101,7 @@ span, .location{
     margin: 0;
 }
 .radioBox .box input[type=text]{
-    width: calc(100% - 32px - 4px - 21px);
+    width: 17rem;
     height: 2rem;
     padding: 1rem;
     border-radius: var(--border-radius);
@@ -110,6 +110,7 @@ span, .location{
 }
 .box label{
     width: calc(100% - 32px - 4px - 21px);
+    margin-left: 1rem;
 }
 
 input[type=radio] {
@@ -210,4 +211,12 @@ input[type=text]{
 
 .addressDetails{
     margin: 0;
+}
+
+.error{
+    color: red;
+    margin: 0.5rem 0 0 1rem;
+}
+.disabled{
+    display: none;
 }
