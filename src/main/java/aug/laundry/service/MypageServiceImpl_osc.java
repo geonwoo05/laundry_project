@@ -36,9 +36,15 @@ public class MypageServiceImpl_osc implements MypageService_osc {
   }
 
   @Override
-  public int updateAddress(Long memberId, String memberZipcode, String memberAddress, String memberAddressDetails) {
-    return mypageDao.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);
+  public int updateAddress(Long memberId, UpdateAddressDto updateAddressDto) {
+    return mypageDao.updateAddress(memberId, updateAddressDto);
   }
+
+//  @Override
+//  public int updateAddress(Long memberId, String memberZipcode, String memberAddress, String memberAddressDetails) {
+//    return mypageDao.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);
+//  }
+
 
   @Override
   public int updatePhone(Long memberId, UpdatePhoneDto updatePhoneDto) {
@@ -54,9 +60,16 @@ public class MypageServiceImpl_osc implements MypageService_osc {
   }
 
   @Override
-  public int updatePassword(Long memberId, String memberPassword) {
-    return mypageDao.updatePassword(memberId, memberPassword);
+  public int changePassword(Long memberId, ChangePasswordDto changePasswordDto) {
+    return mypageDao.changePassword(memberId, changePasswordDto);
   }
+
+//  @Override
+//  public int updatePassword(Long memberId, String memberPassword) {
+//    return mypageDao.updatePassword(memberId, memberPassword);
+//  }
+
+
 
   @Override
   public List<MyPointDto> getPoint(Long memberId) {
