@@ -49,4 +49,12 @@ public class OrdersDao {
         }
     }
 
+    public boolean isQuickLaundry(Long ordersId){
+        if(ordersMapper.findQuickLaundryByOrdersId(ordersId)==1){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
 }
