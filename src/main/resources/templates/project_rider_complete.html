@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_rider.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1"></script>
     <title>Document</title>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
@@ -36,7 +38,7 @@
                                 <span class='delivery_address' th:text="${list.ordersAddress + ' ' + list.ordersAddressDetails}">서울특별시 서대문구 대현동 777-8 508동 116호</span>
                                 <div class='space'>
                                     <span class='delivery_time' th:text="${list.ordersDate}">2023-08-26 18:57:11</span>
-                                    <span class='delivery_dis' th:text="${list.ordersPayStatus == 5 ? '배달완료' : ''}">배달완료</span>
+                                    <span class='delivery_dis' th:text="${list.ordersStatus}"></span>
                                 </div>
                             </li>
                         </a>
