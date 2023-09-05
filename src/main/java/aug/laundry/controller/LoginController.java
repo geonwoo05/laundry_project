@@ -21,16 +21,19 @@ public class LoginController {
     private final LoginService_kgw service;
 
     @GetMapping("/login/naver_callback")
-    public String naverLogin_callback(HttpServletRequest request, Model model) {
-        service.naverLogin(request, model);
+    public String naverLogin_callback(HttpServletRequest request, Model model, HttpSession session) {
+        service.naverLogin(request, model, session);
+        System.out.println("naverLogin =======");
+        System.out.println("naver sessionId : " + session.getAttribute("memberId"));
 
-        return "project_mypage";
+
+        return "redirect:/members/" + session.getAttribute("memberId") + "/mypage";
     }
     @RequestMapping(value = "/kakaoLogin", method = RequestMethod.GET)
-    public String kakaoLogin_Redirect(String code, Model model){
-        service.kakaoLogin(code);
+    public String kakaoLogin_Redirect(String code, Model model, HttpSession session){
+        service.kakaoProcess(code, session);
 
-        return "/test";
+        return "redirect:/members/" + session.getAttribute("memberId") + "/mypage";
 
 
     }
