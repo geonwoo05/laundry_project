@@ -68,7 +68,7 @@
 
                     console.log(position.coords.latitude);
                     console.log(position.coords.longitude);
-                    var searchOption = "2";
+                    var searchOption = "12";
 
                     var trafficInfochk = "N";
 
@@ -94,7 +94,7 @@
 
                      var resultData = response.features;
 
-                     var tDistance = (resultData[0].properties.totalDistance / 1000)
+                     var tDistance = "거리 : " + (resultData[0].properties.totalDistance / 1000)
                                  .toFixed(1) + "km";
                     console.log(tDistance);
                     $('.delivery_dis').eq(index).html(tDistance);
@@ -112,12 +112,10 @@
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
     <div class='container'>
-<!--        <aside th:replace="~{/common/project_rider_header :: rider_header}"></aside>-->
         <div class='rider_header'>
             <div class='ride_head'>배달</div><br>
             <div class='ride_txt'>
                 <div>진행중인 배달 건수 : </div>
-<!--                <div class='ride_num' th:text="${cnt}">0건</div>-->
                 <div class='ride_num' th:text="${cnt[0]['RESULT']} + '건'">0건</div>
             </div>
         </div>
@@ -136,8 +134,7 @@
                                 <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" th:text="${list.ordersId}">1119</span><br>
                                 <span class='delivery_address' th:text="${list.ordersAddress + ' ' + list.ordersAddressDetails}">서울특별시 서대문구 대현동 777-8 508동 116호</span>
                                 <div class='space'>
-<!--                                    <span class='delivery_time' th:text="${list.ordersPayStatus == 3 or ordersPayStatus == 11 ? '수거전' : (ordersPayStatus == 4 or ordersPayStatus == 12 ? '수거완료' : '수거전')}">수거전</span>-->
-                                    <span class='delivery_time' th:text="${list.ordersPayStatus == 3 ? '수거전' : '수거완료'}">수거전</span>
+                                    <span class='delivery_time' th:text="${list.ordersStatus}"></span>
                                     <span class='delivery_dis'>거리 : 1.2km</span>
                                 </div>
                             </li>
