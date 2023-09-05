@@ -66,6 +66,11 @@
         if (radio.id == 'couponEmpty'){
             opener.document.querySelector('.couponName').textContent = '선택안함';
             opener.document.querySelector('input[name=coupon]').value = '';
+
+
+            let couponRow = opener.document.querySelector('.coupon-row');
+            opener.document.querySelector('.content.discount').textContent=''
+            couponRow.style.display = 'none';
         } else {
             opener.document.querySelector('.couponName').textContent = radio.parentElement.parentElement.children.item(1).textContent;
             opener.document.querySelector('input[name=coupon]').value = radio.value;
@@ -73,7 +78,7 @@
 
             let couponRow = opener.document.querySelector('.coupon-row');
             couponRow.style.display = '';
-            couponRow.querySelector('.content.discount').textContent = '- ' + Number(radio.parentElement.children.item(1).textContent);
+            couponRow.querySelector('.content.discount').textContent = '- ' + Number(radio.parentElement.children.item(1).textContent).toLocaleString() + '원';
         }
         window.close();
     })

@@ -68,12 +68,20 @@ public class OrdersController_kdh {
 
         DeliveryResponseDto delivery = setDeliveryPrice(totalPrice, isQuickLaundry);
 
+        Long deliveryPrice = calcDeliveryPrice(isQuickLaundry, totalPrice);
+
+        Long totalPriceWithDeliveryPrice = deliveryPrice + totalPrice;
+
         boolean isPass = false;
         Long totalPriceWithPassApplied = null;
         if(pass == Pass.PASS){
             isPass = true;
             totalPriceWithPassApplied = memberShip.apply(totalPrice);
+            totalPriceWithDeliveryPrice = deliveryPrice + totalPriceWithPassApplied;
         }
+
+
+        model.addAttribute("totalPriceWithDeliveryPrice", totalPriceWithDeliveryPrice);
 
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("totalPriceWithPassApplied", totalPriceWithPassApplied);
@@ -92,6 +100,17 @@ public class OrdersController_kdh {
         model.addAttribute("delivery", delivery);
 
         return "project_order_view";
+    }
+
+
+    private static Long calcDeliveryPrice(boolean isQuickLaundry, Long totalPrice) {
+        Long deliveryPrice = null;
+        if(isQuickLaundry){
+            deliveryPrice = Delivery.COMMON_DELIVERY.getPrice() + Delivery.QUICK_DELIVERY.getPrice();
+        } else {
+            deliveryPrice = (totalPrice >=30000) ? 0L : Delivery.COMMON_DELIVERY.getPrice();
+        }
+        return deliveryPrice;
     }
 
     private static DeliveryResponseDto setDeliveryPrice(Long totalPrice, boolean isQuickLaundry) {
