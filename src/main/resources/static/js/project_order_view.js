@@ -12,22 +12,33 @@ window.addEventListener('load', function(){
 });
 
 function requestPay() {
-  var IMP = window.IMP;
-  IMP.request_pay(
-    {
-      pg: "inicis",
-      pay_method: "card",
-      merchant_uid: "merchant_test_155",
-      name: "결제테스트",
-      amount: 100,
-      buyer_email: "Iamport@chai.finance",
-      buyer_name: "구매자",
-      buyer_tel: "010-1234-5678",
-      m_redirect_url: "/test/1"
-      // ... (이하 코드 생략)
-    },
-    function (rsp) {
-      console.log(rsp);
+
+    let ordersId = document.querySelector('#ordersId').textContent;
+    let couponListId = document.querySelector('input[name=coupon]').value;
+    let couponPrice = document.querySelector('input[name=couponPrice]').value;
+    let pointPrice = document.querySelector('input[name=point]').value;
+
+
+    var IMP = window.IMP;
+    IMP.request_pay(
+      {
+        pg: "inicis",
+        pay_method: "card",
+        merchant_uid: "merchant_test_" + new Date(),
+        name: "결제테스트",
+        amount: 100,
+        buyer_email: "Iamport@chai.finance",
+        buyer_name: "구매자",
+        buyer_tel: "010-1234-5678",
+        m_redirect_url: "/orders/" + ordersId
+                        + "/payment/validation?"
+                        + "couponListId=" + couponListId
+                        + "&couponPrice=" + couponPrice
+                        + "&pointPrice=" + pointPrice
+          // ... (이하 코드 생략)
+      },
+        function (rsp) {
+          console.log(rsp);
 //                            if (rsp.success) {// 결제성공시 로직
 //                                        let data = {
 //                            				imp_uid:rsp.imp_uid,

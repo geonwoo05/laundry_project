@@ -80,6 +80,7 @@ public class OrdersController_kdh {
             totalPriceWithDeliveryPrice = deliveryPrice + totalPriceWithPassApplied;
         }
 
+        ordersServiceKdh.updateExpectedPriceByOrdersId(ordersId, totalPriceWithDeliveryPrice);
 
         model.addAttribute("totalPriceWithDeliveryPrice", totalPriceWithDeliveryPrice);
 
@@ -140,6 +141,10 @@ public class OrdersController_kdh {
 
         return "project_use_coupon2";
     }
+
+
+
+
 
 }
 
