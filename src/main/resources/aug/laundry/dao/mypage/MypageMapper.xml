@@ -46,7 +46,7 @@
         WHERE MEMBER_ID = #{memberId}
     </update>
 
-    <update id="updatePassword">
+    <update id="changePassword">
         UPDATE MEMBER
         SET MEMBER_PASSWORD = #{memberPassword}
         WHERE MEMBER_ID = #{memberId}
