@@ -7,7 +7,11 @@ window.addEventListener('load', function(){
     detailAddress.addEventListener('keyup', function(){
 
         let errors = document.querySelectorAll('.errors');
-
+        if(detailAddress.value==''){
+            errors[0].textContent='상세주소를 입력해주세요';
+            addressCheckRes.value = '2';
+            button_addressChange.disabled = true;
+        }
         if(addressCheckRes.value=='2' && detailAddress.value!=''){
             errors[0].textContent='';
             addressCheckRes.value='1';
@@ -26,6 +30,11 @@ window.addEventListener('load', function(){
 
         if(searchAddressValue.value==''){
             errors[0].textContent = '주소를 검색해주세요';
+            button_addressChange.disabled = true;
+            return;
+        }
+        if(searchAddressValue.value!='' && detailAddress.value==''){
+            errors[0].textContent = '상세주소를 입력해주세요';
             button_addressChange.disabled = true;
             return;
         }

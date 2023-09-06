@@ -21,5 +21,6 @@ public class OrdersResponseDto {
     private Double commonLaundryWeight;
     @NumberFormat(pattern = "###,###")
     private Long commonLaundryPrice;
+    private Long memberId;
 
 }

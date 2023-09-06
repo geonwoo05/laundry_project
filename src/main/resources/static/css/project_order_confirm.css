@@ -60,7 +60,6 @@ span, .location{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    margin: 0.5rem 1rem;
     width: 90%;
 }
 
@@ -97,11 +96,12 @@ span, .location{
     height: 3rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin: 0;
 }
 .radioBox .box input[type=text]{
-    width: calc(100% - 32px - 4px - 21px);
+    margin: 0;
+    width: calc(100% - 4rem);
     height: 2rem;
     padding: 1rem;
     border-radius: var(--border-radius);
@@ -109,7 +109,7 @@ span, .location{
     outline: none;
 }
 .box label{
-    width: calc(100% - 32px - 4px - 21px);
+    margin: 0;
 }
 
 input[type=radio] {
@@ -128,6 +128,7 @@ input[type=radio]:checked + .custom-radio {
     background-color: white;
     border: 2px solid #ccc;
     border-radius: 50%;
+    margin: 0 1rem;
 }
 
 .additional{
@@ -210,4 +211,29 @@ input[type=text]{
 
 .addressDetails{
     margin: 0;
+}
+
+.error{
+    color: red;
+    margin: 0.5rem 0 0 1rem;
+}
+.disabled{
+    display: none;
+}
+.calDisabled{
+    color: #ccc;
+}
+
+.subCal_location{
+    height: 3rem;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.calActive{
+    height: 21.5rem;
+}
+
+.title{
+    margin: 1rem;
 }

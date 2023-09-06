@@ -46,16 +46,28 @@
         WHERE MEMBER_ID = #{memberId}
     </update>
 
-    <update id="updatePassword">
+    <update id="changePassword">
         UPDATE MEMBER
         SET MEMBER_PASSWORD = #{memberPassword}
         WHERE MEMBER_ID = #{memberId}
     </update>
     
     <select id="getPoint" resultType="aug.laundry.dto.MyPointDto">
-        SELECT POINT_ID, POINT_STACK, POINT_STACK_REASON, TO_CHAR(POINT_STACK_DATE, 'yy/MM/dd') as POINT_STACK_DATE, POINT_NOW
+        SELECT POINT_ID, POINT_STACK, POINT_STACK_REASON, TO_CHAR(POINT_STACK_DATE, 'yy-MM-dd HH24:MI')AS POINT_STACK_DATE, POINT_NOW
         FROM POINT
         WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="getPointNow" resultType="aug.laundry.dto.PointNowDto">
+        select point_now
+        from (select * from point order by point_id desc)
+        where <![CDATA[ROWNUM = 1]]> and member_id = #{memberId}
+    </select>
+    
+    <select id="someCoupon" resultType="int">
+        SELECT COUNT(MEMBER_ID)
+        FROM COUPON_LIST
+        WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_STATUS = 1 AND (COUPON_END_DATE > SYSDATE OR COUPON_END_DATE IS NULL)
     </select>
 
 </mapper>

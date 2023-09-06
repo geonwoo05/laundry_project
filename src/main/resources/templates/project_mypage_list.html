@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_mypage_list.css">
+    <script src="/js/project_footer.js"></script>
     <title>Document</title>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
@@ -31,19 +32,19 @@
             <span>▶</span>
 
         </a>
-        <a href='/members/{memberId}/coupons'>
+        <a href='./coupons'>
             <li>쿠폰</li>
             <span>▶</span>
         </a>
-        <a href='/members/{memberId}/points'>
+        <a href='./points'>
             <li>포인트</li>
             <span>▶</span>
         </a>
-        <a href='/members/{memberId}/update'>
+        <a href='./update'>
             <li>내정보 설정</li>
             <span>▶</span>
         </a>
-        <a href='/members/{memberId}/invite'>
+        <a href='./invite'>
             <li>친구초대</li>
             <span>▶</span>
         </a>

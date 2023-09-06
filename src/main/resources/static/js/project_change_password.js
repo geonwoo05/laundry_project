@@ -38,7 +38,7 @@ window.addEventListener('load',function(){
          let regex2 = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!]).*$/;
 
         if(regex1.test(userPw.value) && regex2.test(userPw.value) && userPw.value!=null && userPwCheck.value!=null &&
-                userPw.value === userPwCheck.value){
+            userPw.value === userPwCheck.value){
             error.textContent = '';
             button_passwordChange.disabled = false;
         } else {

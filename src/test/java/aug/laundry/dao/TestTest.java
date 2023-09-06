@@ -53,4 +53,12 @@ class TestTest {
         int res = memberMapper.checkId("rlarjsdn531@naver.com");
         System.out.println(res);
     }
+
+    @Test
+    void loginTest(){
+        MemberDto member = new MemberDto();
+        member = loginMapper.login("rlarjsdn531@naver.com");
+        System.out.println(member);
+
+    }
 }

@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Service
 public interface LoginService_kgw {
 
-    public void naverLogin(HttpServletRequest request, Model model);
+    public void naverLogin(HttpServletRequest request, Model model, HttpSession session);
 
-    public void kakaoLogin(String code);
+    public void kakaoProcess(String code, HttpSession session);
 
     public int registerSocialUser(MemberDto memberDto);
 

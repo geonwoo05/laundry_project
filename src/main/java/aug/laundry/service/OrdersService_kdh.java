@@ -131,5 +131,9 @@ public class OrdersService_kdh {
         return pointDao.findByMemberId(memberId);
     }
 
+    public boolean isQuickLaundry(Long ordersId){
+        return ordersDao.isQuickLaundry(ordersId);
+    }
+
 
 }

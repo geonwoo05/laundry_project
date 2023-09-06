@@ -29,12 +29,12 @@ public class DateForm {
 
         if (localTime.isBefore(LocalTime.of(22, 0)) && localTime.isAfter(LocalTime.of(9, 0))) {
             // 09시 ~ 22시 1번
-            this.pickup = nowDate.with(LocalTime.of(23, 0)).format(dateTimeFormatter) + "시 부터";
-            this.returns = nowDate.plusDays(2).with(LocalTime.of(7, 0)).format(dateTimeFormatter) + "시 까지";
+            this.pickup = nowDate.with(LocalTime.of(23, 0)).format(dateTimeFormatter);
+            this.returns = nowDate.plusDays(2).with(LocalTime.of(7, 0)).format(dateTimeFormatter);
         } else {
             // 22시 ~ 09시 2번
-            this.pickup = nowDate.with(LocalTime.of(10, 0)).format(dateTimeFormatter) + "시 부터";
-            this.returns = nowDate.plusDays(2).with(LocalTime.of(18, 0)).format(dateTimeFormatter) + "시 까지";
+            this.pickup = nowDate.with(LocalTime.of(10, 0)).format(dateTimeFormatter);
+            this.returns = nowDate.plusDays(2).with(LocalTime.of(18, 0)).format(dateTimeFormatter);
         }
 
     }

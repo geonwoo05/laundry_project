@@ -17,4 +17,6 @@ public interface OrdersMapper {
 
     List<Repair> findRepairByOrdersId(Long ordersId);
 
+    int findQuickLaundryByOrdersId(Long ordersId);
+
 }
