@@ -18,6 +18,6 @@ public interface LoginService_kgw {
 
     public int registerSocialNumber(String id);
 
-    public MemberDto login(String memberAccount);
+    public MemberDto login(MemberDto memberDto, HttpSession session);
 
 }
