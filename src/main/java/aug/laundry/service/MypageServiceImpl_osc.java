@@ -81,5 +81,10 @@ public class MypageServiceImpl_osc implements MypageService_osc {
     return mypageDao.getPointNow(memberId);
   }
 
+  @Override
+  public int someCoupon(Long memberId) {
+    return mypageDao.someCoupon(memberId);
+  }
+
 
 }
