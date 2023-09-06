@@ -50,4 +50,10 @@
         WHERE ORDERS_ID = #{ordersId}
     </update>
 
+    <select id="findExpectedPriceByOrdersId" resultType="Long">
+        SELECT ORDERS_EXPECTED_PRICE
+        FROM ORDERS
+        WHERE ORDERS_ID = #{ordersId}
+    </select>
+
 </mapper>

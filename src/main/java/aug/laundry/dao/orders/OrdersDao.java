@@ -63,4 +63,8 @@ public class OrdersDao {
         return i;
     }
 
+    public Optional<Long> findExpectedPriceByOrdersId(Long ordersId){
+        return ordersMapper.findExpectedPriceByOrdersId(ordersId);
+    }
+
 }
