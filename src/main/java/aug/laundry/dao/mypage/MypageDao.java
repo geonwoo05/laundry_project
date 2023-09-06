@@ -49,4 +49,6 @@ public class MypageDao {
   public List<MyPointDto> getPoint(Long memberId){ return mypageMapper.getPoint(memberId); }
 
   public PointNowDto getPointNow(Long memberId){ return mypageMapper.getPointNow(memberId); }
+
+  public int someCoupon(Long memberId){ return mypageMapper.someCoupon(memberId); }
 }

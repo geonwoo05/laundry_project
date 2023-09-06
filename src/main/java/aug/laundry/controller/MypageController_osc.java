@@ -67,9 +67,11 @@ public class MypageController_osc {
   @GetMapping("{memberId}/coupons")
   public String MypageCouponList(@PathVariable Long memberId, Model model){
     List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
+    int someCoupon = mypageService.someCoupon(memberId);
 
       model.addAttribute("memberId", memberId);
       model.addAttribute("coupon", getCoupon);
+      model.addAttribute("someCoupon", someCoupon);
     return "project_coupon";
   }
 

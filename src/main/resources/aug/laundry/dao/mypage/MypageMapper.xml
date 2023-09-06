@@ -63,5 +63,11 @@
         from (select * from point order by point_id desc)
         where <![CDATA[ROWNUM = 1]]> and member_id = #{memberId}
     </select>
+    
+    <select id="someCoupon" resultType="int">
+        SELECT COUNT(MEMBER_ID)
+        FROM COUPON_LIST
+        WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_STATUS = 1 AND (COUPON_END_DATE > SYSDATE OR COUPON_END_DATE IS NULL)
+    </select>
 
 </mapper>

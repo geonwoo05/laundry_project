@@ -34,4 +34,6 @@ public interface MypageMapper {
   public List<MyPointDto> getPoint(Long memberId);
 
   public PointNowDto getPointNow(Long memberId);
+
+  public int someCoupon(Long memberId);
 }
