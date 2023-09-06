@@ -1,8 +1,10 @@
 package aug.laundry.controller;
 
 import aug.laundry.commom.SessionConstant;
+import aug.laundry.domain.Paymentinfo;
 import aug.laundry.dto.PaymentCheckRequestDto;
 import aug.laundry.service.OrdersService_kdh;
+import aug.laundry.service.PaymentService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -29,17 +31,28 @@ public class PaymentController {
     private String restApiSecret;
 
     private IamportClient iamportClient;
+    private PaymentService paymentService;
 
     @Autowired
-    public PaymentController() {
-        this.iamportClient = new IamportClient(restApi, restApiSecret);
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
     }
+
 
     @GetMapping("/orders/{ordersId}/payment/complete")
     public String complete(@PathVariable Long ordersId, @ModelAttribute PaymentCheckRequestDto payment,
                            @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId) throws IamportResponseException, IOException {
 
-        IamportResponse<Payment> paymentIamportResponse = iamportClient.paymentByImpUid(payment.getImp_uid());
+        iamportClient = new IamportClient(restApi, restApiSecret);
+        IamportResponse<Payment> irsp = iamportClient.paymentByImpUid(payment.getImp_uid());
+        Payment response = irsp.getResponse();
+
+        paymentService.savePaymentInfo(new Paymentinfo(
+                memberId, response.getImpUid(), response.getPayMethod(), response.getMerchantUid(),
+                response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
+        ));
+
+        paymentService.isValid(irsp, memberId, ordersId, payment);
 
         return "project_search_id_result";
     }
