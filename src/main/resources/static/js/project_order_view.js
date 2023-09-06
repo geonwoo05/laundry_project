@@ -18,7 +18,6 @@ function requestPay() {
     let couponPrice = document.querySelector('input[name=couponPrice]').value;
     let pointPrice = document.querySelector('input[name=point]').value;
 
-
     var IMP = window.IMP;
     IMP.request_pay(
       {
@@ -30,7 +29,7 @@ function requestPay() {
         buyer_email: "Iamport@chai.finance",
         buyer_name: "구매자",
         buyer_tel: "010-1234-5678",
-        m_redirect_url: "/orders/" + ordersId
+        m_redirect_url: "10.0.2.2:8080/orders/" + ordersId
                         + "/payment/validation?"
                         + "couponListId=" + couponListId
                         + "&couponPrice=" + couponPrice
