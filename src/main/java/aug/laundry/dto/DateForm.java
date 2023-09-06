@@ -15,9 +15,8 @@ import java.time.format.DateTimeFormatter;
 @ToString
 public class DateForm {
 
-    String pickup;
-
-    String returns;
+    private String pickup;
+    private String returns;
 
     public DateForm() {
         // 현재날짜 기준 18시 이전이라면 오늘 23시 수거, 18시 이후라면 다음날 23시 수거

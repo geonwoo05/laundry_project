@@ -220,20 +220,3 @@ input[type=text]{
 .disabled{
     display: none;
 }
-.calDisabled{
-    color: #ccc;
-}
-
-.subCal_location{
-    height: 3rem;
-    overflow: hidden;
-    transition: height 0.3s ease;
-}
-
-.calActive{
-    height: 21.5rem;
-}
-
-.title{
-    margin: 1rem;
-}
