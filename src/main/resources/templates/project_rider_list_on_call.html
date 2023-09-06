@@ -12,69 +12,7 @@
     <!-- STOMP -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-        window.addEventListener('load', function() {
-
-            // 주문 완료 메세지 받기
-            const socket = new SockJS('/websocket');
-            const stompClient = Stomp.over(socket);
-            stompClient.connect({}, function() {
-
-            const storeId = '63';
-                stompClient.subscribe('/topic/order-complete/'+storeId, function(message) {
-
-<!--                    const list = $(".delivery_list").length;-->
-<!--                    console.log(list);-->
-<!--                    if(list == listInfo.getWaitcount()) {-->
-<!--                        orderList();-->
-<!--                    }-->
-
-            const messageBody = JSON.parse(message.body);
-
-            const orders = messageBody.a;
-            const orderId = orders.ordersId;
-<!--  ------------------------------------------------------------------------------------------ -->
-
-const address = orders.ordersAddress;
-console.log(address);
-var parts = address.split(" ")[1];
-console.log(parts);
-
-const riderArea = $("#workingArea").val();
-
-<!--  ------------------------------------------------------------------------------------------ -->
-
-            $(".drive_none").hide();
-
-            var listItem = '' ;
-
-            if(orders == null){
-            listItem =`
-                    <li class='drive_none'>
-                        <span>현재 배달 요청이 없습니다!</span>
-                    </li>`;
-            }else if(riderArea === parts){
-            listItem = `
-                <a href='/ride/orders/19'>
-                    <li>
-                        <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >1119</span><br>
-                        <span class='delivery_address'>${orders.ordersAddress} ${orders.ordersAddressDetails}</span>
-                        <div class='space'>
-                            <span class='delivery_time'>${orders.ordersDate}</span>
-                            <span class='delivery_dis'>100km</span>
-                        </div>
-                    </li>
-                </a>`;
-            }
-            $("#orderList").append(listItem);
-
-
-
-
-                });
-            });
-        });
-    </script>
+    <script src="/js/rider_list_on.js"></script>
     <title>Document</title>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>

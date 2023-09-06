@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="aug.laundry.dao.payment.PaymentMapper">
+
+
+    <select id="findCouponByCouponListId" resultType="aug.laundry.dto.CouponCheckDto">
+        SELECT A.COUPON_LIST_STATUS, C.COUPON_PRICE
+        FROM COUPON_LIST A
+        INNER JOIN MEMBER B
+        ON A.MEMBER_ID = B.MEMBER_ID
+        INNER JOIN COUPON C
+        ON A.COUPON_ID = C.COUPON_ID
+        WHERE A.COUPON_LIST_ID = #{couponListId}
+    </select>
+
+
+
+</mapper>

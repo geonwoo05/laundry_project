@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel='stylesheet' href='/css/project_subscribe_choice.css'>
+
+    <!-- user-scalable 을 사용하지 않는 디바이스를 위해, maximun-scale/minimum-scale 설정을 하는 것입니다-->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+
+        window.addEventListener('click', function () {
+            // const btnPay = document.querySelector('#btnPay');
+            //
+            // btnPay.addEventListener('click', function (){
+            //
+            // });
+        });
+
+        // 결제
+        IMP.init('imp50315416');
+        // function requestPay() {
+        //     IMP.request_pay({
+        //          pg : "html5_inicis.INIBillTst", // 실제 계약 후에는 실제 상점아이디로 변경
+        //     pay_method : 'card', // 'card'만 지원됩니다.
+        //     merchant_uid: "order_monthly_0001", // 상점에서 관리하는 주문 번호
+        //     name : '최초인증결제',
+        //     amount : 0, // 결제창에 표시될 금액. 실제 승인이 이루어지지는 않습니다. (모바일에서는 가격이 표시되지 않음)
+        //     customer_uid : 'your-customer-unique-id', // 필수 입력.
+        //     buyer_email : 'iamport@siot.do',
+        //     buyer_name : '아임포트',
+        //     buyer_tel : '02-1234-1234',
+        //     m_redirect_url : '{모바일에서 결제 완료 후 리디렉션 될 URL}' // 예: https://www.my-service.com/payments/complete/mobile
+        //     }, /* callback */); // 리디렉션 방식의 경우 callback은 실행되지 않습니다.
+        //     // }, function (rsp) {
+        //     //     // callback
+        //     //     //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+        //     //     console.log("결제페이지 콜백", rsp);
+        //     // });
+        // }
+
+        function requestPay() {
+            IMP.request_pay({
+                pg : "kakaopay.TCSUBSCRIP", // 실제 계약 후에는 실제 상점아이디로 변경
+                pay_method : 'card', // 'card'만 지원됩니다.
+                merchant_uid: "order_monthly_0012", // 상점에서 관리하는 주문 번호
+                name : '최초인증결제',
+                amount : 0, // 결제창에 표시될 금액. 실제 승인이 이루어지지는 않습니다. (모바일에서는 가격이 표시되지 않음)
+                customer_uid : 'your-customer-unique-id', // 필수 입력.
+                m_redirect_url : '' // 모바일에서 결제 완료 후 리디렉션 될 URL 예: https://www.my-service.com/payments/complete/mobile
+            }, function(rsp) {
+                if ( rsp.success ) {
+                    fetch('/payments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            memberId: 1,
+                            selectMonth: 1,
+                            merchantUid: "order_monthly_0012",
+                            customerUid: "your-customer-unique-id",
+                            amount: 0,
+                            impUid: rsp.imp_uid
+                        }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("결제테스트");
+                            if (data.success) {
+                                // 성공할 경우
+                                window.location.href='/subscription/confirm'
+
+                                // fetch('/api/auth/logout')
+                                //     .then(response => response.json())
+                                //     .then(data => {
+                                //         if (data.success) {
+                                //             alert('구독신청이 완료되었습니다. 다시 로그인해주세요.');
+                                //             window.location.href = '/';
+                                //         }
+                                //     });
+                            } else {
+                                // 실패 처리
+                            }
+                        })
+                        .catch(error => {
+                            // 오류 처리
+                        });
+                }
+                else {
+                    let msg = '빌링키 발급 실패.\n';
+                    msg+=rsp.error_msg;
+                    alert(msg);
+                }
+            });
+        }
+        function selectSubscribe(month, price){
+            const btnPay = document.querySelector('#btnPay');
+            const priceS = (month * price).toLocaleString('ko-KR');
+            btnPay.classList.remove('hidden');
+            btnPay.innerText = month+'개월 ' + priceS;
+        }
+        function terms(){
+            console.log("이용약관표시");
+        }
+    </script>
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+<div class='container'>
+    <div class='subscribe-choice-title'>구독권 선택</div>
+
+    <div class='subscribe-right' onclick="selectSubscribe(1, 5900)">
+        <div>1개월</div>
+        <div>월 5900원</div>
+    </div>
+    <div class='subscribe-right' onclick="selectSubscribe(3, 4900)">
+        <div>3개월</div>
+        <div>월 4900원</div>
+
+    </div>
+    <div class='subscribe-right' onclick="selectSubscribe(6, 4500)">
+        <div>6개월</div>
+        <div>월 4500원</div>
+    </div>
+    <div class='subscribe-right' onclick="selectSubscribe(12, 4100)">
+        <div>12개월</div>
+        <div>월 4100원</div>
+    </div>
+
+    <!-- * 신규결제일경우에 표시 * -->
+    <div class='payment-container'>
+        <div>신규회원</div>
+        <div>첫 1개월 무료 적용</div>
+    </div>
+
+    <div class='price hidden' id="btnPay"></div>
+
+    <div class='view-terms-container'>
+        <div class='terms-check-container'>
+            <input type='radio' id='terms_check' value="Y">
+            <label for='terms_check'>이용약관에 동의합니다.</label>
+            <a class='view-terms' href='#' onclick="terms()">구독권 이용약관 보기</a>
+        </div>
+    </div>
+
+    <button class='pay' onclick="requestPay()" >
+        결제하기
+    </button>
+
+</div>
+</body>
+
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+
+</html>

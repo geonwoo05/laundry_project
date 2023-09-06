@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_mypage.css">
+    <script src="/js/project_footer.js"></script>
+    <script src="/js/project_mypage.js"></script>
     <title>Document</title>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
@@ -25,7 +27,7 @@
         </a>
         <a href='./password/update' class='menuOne'>비밀번호 변경</a>
         <a href='' class='menuOne'>로그아웃</a>
-        <a href='./unregister' class='menuOne out'>탈퇴하기</a>
+        <a href='#' class='menuOne out' id="unregist">탈퇴하기</a>
     </ul>
 </div>
 

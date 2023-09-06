@@ -49,4 +49,22 @@ public class OrdersDao {
         }
     }
 
+    public boolean isQuickLaundry(Long ordersId){
+        if(ordersMapper.findQuickLaundryByOrdersId(ordersId)==1){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    public int updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice){
+        int i = ordersMapper.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
+        log.info("updateExpectedPriceByOrdersId={}", i);
+        return i;
+    }
+
+    public Optional<Long> findExpectedPriceByOrdersId(Long ordersId){
+        return ordersMapper.findExpectedPriceByOrdersId(ordersId);
+    }
+
 }

@@ -21,12 +21,9 @@
         bthSearch.addEventListener('click', searchEvent);
 
         btnReset.addEventListener('click', function () {
-          const orderStatus = document.querySelector('#inspectionStatus').value;
-          if(orderStatus == 5) {
-            location.href='/admin';
-          } else {
-            location.href='/admin/complete';
-          }
+          document.querySelector('#resBox').innerHTML = '';
+          pageNo=1;
+          getList();
         });
       });
 
@@ -120,6 +117,7 @@
         } else {
           resBox.innerHTML= '찾으시는 주문번호가 존재하지 않습니다.';
         }
+        document.querySelector('#orderIdSearch').value='';
       }
     </script>
 

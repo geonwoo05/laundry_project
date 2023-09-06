@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/project_footer.css">
+    <link rel="stylesheet" href="/css/project_header.css">
+    <link rel="stylesheet" href="/css/project_main.css">
+</head>
+<header th:replace="~{/common/project_header :: header}"></header>
+<body>
+<div class='container'>
+    <div class='floor banner'>
+
+        <a href="#"><img src="#" alt=""></a>
+        <a href=""><img src="#" alt=""></a>
+        <a href="#"><img src="#" alt=""></a>
+    </div>
+    <div class='floor'>
+        <a href="#">현재 xxx님의 세탁물을 깨끗하게 세탁하고 있습니다.</a>
+    </div>
+    <div class='floor'>
+        <a href="#" class='laundry'>세탁신청</a>
+        <a href="#" class='use'>사용방법</a>
+    </div>
+    <div class='floor'>
+        <a href="#" class='pass'>패스 / 구독</a>
+        <a href="#" class='price'>가격표</a>
+    </div>
+    <div class='floor'>
+        <a href="#" class='friend'>
+            <span>친구추가</span>
+            <div class='inviteCoupon first'>
+                <span class='couponTitle'>POINT</span>
+                <span class='couponPrice'>
+                        <span>5,000</span>
+                        <div class='priceBox'>P</div>
+                    </span>
+                <div class='empty'></div>
+            </div>
+            <div class='inviteCoupon second'>
+                <span class='couponTitle'>POINT</span>
+                <span class='couponPrice'>
+                        <span>5,000</span>
+                        <div class='priceBox'>P</div>
+                    </span>
+                <div class='empty'></div>
+            </div>
+        </a>
+    </div>
+</div>
+</body>
+<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+<script>
+    
+</script>
+</html>

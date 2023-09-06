@@ -67,9 +67,11 @@ public class MypageController_osc {
   @GetMapping("{memberId}/coupons")
   public String MypageCouponList(@PathVariable Long memberId, Model model){
     List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
+    int someCoupon = mypageService.someCoupon(memberId);
 
       model.addAttribute("memberId", memberId);
       model.addAttribute("coupon", getCoupon);
+      model.addAttribute("someCoupon", someCoupon);
     return "project_coupon";
   }
 
@@ -124,19 +126,31 @@ public class MypageController_osc {
     return "project_update_address";
   }
 
+//  @PostMapping("{memberId}/address/update")
+//  public String addressUpdate(@PathVariable Long memberId, HttpServletRequest request){
+//
+//    String memberZipcode = request.getParameter("zipcode");
+//    String memberAddress = request.getParameter("searchAddressValue");
+//    String memberAddressDetails = request.getParameter("detailAddress");
+//
+//    if(memberZipcode!=null && memberAddress!=null && memberAddressDetails!=null){
+//      int res = mypageService.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);
+//      return "redirect:/members/{memberId}/update";
+//    } else {
+//      return "redirect:/members/{memberId}/update";
+//    }
+//  }
+
   @PostMapping("{memberId}/address/update")
-  public String addressUpdate(@PathVariable Long memberId, HttpServletRequest request){
+  public String addressUpdate(@PathVariable Long memberId, @Valid @ModelAttribute("addressUpdate") UpdateAddressDto addressDto, BindingResult bindingResult){
 
-    String memberZipcode = request.getParameter("zipcode");
-    String memberAddress = request.getParameter("searchAddressValue");
-    String memberAddressDetails = request.getParameter("detailAddress");
+    if(bindingResult.hasErrors()){
 
-    if(memberZipcode!=null && memberAddress!=null && memberAddressDetails!=null){
-      int res = mypageService.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);
-      return "redirect:/members/{memberId}/update";
-    } else {
-      return "redirect:/members/{memberId}/update";
+      return "project_update_address";
     }
+
+    mypageService.updateAddress(memberId, addressDto);
+    return "redirect:/members/{memberId}/update";
   }
 
   @GetMapping("{memberId}/phone/update")
@@ -160,23 +174,13 @@ public class MypageController_osc {
 
   @PostMapping("{memberId}/phone/update")
   public String phoneUpdate(@PathVariable Long memberId, @Valid @ModelAttribute("phone") UpdatePhoneDto updatePhoneDto, BindingResult bindingResult){
-    if (updatePhoneDto.getMemberPhone() == null) {
-      System.out.println("getMemberPhone is null");
-    } else {
-      updatePhoneDto.setMemberPhone(updatePhoneDto.getMemberPhone().replace("-",""));
-      System.out.println("updatePhoneDto = " + updatePhoneDto);
-    }
 
     if(bindingResult.hasErrors()){
-      log.info("에러");
-      System.out.println(bindingResult.getAllErrors());
-      System.out.println(updatePhoneDto.getMemberPhone());
       return "project_update_phone";
     }
 
-    System.out.println("updatePhoneDto = " + updatePhoneDto);
+    updatePhoneDto.setMemberPhone(updatePhoneDto.getMemberPhone().replace("-",""));
     mypageService.updatePhone(memberId, updatePhoneDto);
-    log.info("변경");
     return "redirect:/members/{memberId}/update";
   }
 
@@ -197,16 +201,27 @@ public class MypageController_osc {
     return "project_change_password";
   }
 
-  @PostMapping("{memberId}/password/update")
-  public String passwordUpdate(@PathVariable Long memberId, HttpServletRequest request){
-    String memberPassword = request.getParameter("userPw");
-    if(memberPassword!=null){
-      mypageService.updatePassword(memberId, memberPassword);
-      return "redirect:/members/{memberId}/update";
-    } else {
-      return "redirect:/members/{memberId}/password/update";
-    }
-  }
+//  @PostMapping("{memberId}/password/update")
+//  public String passwordUpdate(@PathVariable Long memberId, HttpServletRequest request){
+//    String memberPassword = request.getParameter("userPw");
+//    if(memberPassword!=null){
+//      mypageService.updatePassword(memberId, memberPassword);
+//      return "redirect:/members/{memberId}/update";
+//    } else {
+//      return "redirect:/members/{memberId}/password/update";
+//    }
+//  }
 
+  @PostMapping("{memberId}/password/update")
+  public String changePassword(@PathVariable Long memberId, @Valid @ModelAttribute("userPw") ChangePasswordDto changePasswordDto, BindingResult bindingResult){
+
+    if(bindingResult.hasErrors()){
+      return  "project_change_password";
+    }
+
+
+    mypageService.changePassword(memberId, changePasswordDto);
+    return "redirect:/members/{memberId}/update";
+  }
 
 }

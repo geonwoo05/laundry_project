@@ -16,9 +16,11 @@ public interface MypageMapper {
 
   public MypageDto findByInfo(Long memberId);
 
-  public int updateAddress(@Param("memberId") Long memberId, @Param("memberZipcode") String memberZipcode,
-                           @Param("memberAddress") String memberAddress, @Param("memberAddressDetails") String memberAddressDetails);
+//  public int updateAddress(@Param("memberId") Long memberId, @Param("memberZipcode") String memberZipcode,
+//                           @Param("memberAddress") String memberAddress, @Param("memberAddressDetails") String memberAddressDetails);
 
+  public int updateAddress(@Param("memberId") Long memberId, @Param("memberZipcode") String memberZipcode,
+                            @Param("memberAddress") String memberAddress, @Param("memberAddressDetails") String memberAddressDetails);
 
 //  public int updatePhone(@Param("memberId") Long memberId, @Param("memberPhone") String memberPhone);
 
@@ -26,9 +28,12 @@ public interface MypageMapper {
 
   public int unregister(Long memberId);
 
-  public int updatePassword(@Param("memberId") Long memberId, @Param("memberPassword") String memberPassword);
+//  public int updatePassword(@Param("memberId") Long memberId, @Param("memberPassword") String memberPassword);
 
+  public int changePassword(@Param("memberId") Long memberId, @Param("memberPassword") String memberPassword);
   public List<MyPointDto> getPoint(Long memberId);
 
   public PointNowDto getPointNow(Long memberId);
+
+  public int someCoupon(Long memberId);
 }

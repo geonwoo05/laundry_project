@@ -1,14 +1,14 @@
 package aug.laundry.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateAddressDto {
 
   @NotBlank
@@ -20,6 +20,4 @@ public class UpdateAddressDto {
   @NotBlank
   private String memberAddressDetails;
 
-  public UpdateAddressDto() {
-  }
 }

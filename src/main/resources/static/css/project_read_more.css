@@ -26,6 +26,10 @@
     border-radius: var(--border-radius);
     margin-top: 0.5rem;
 }
+.agree_zone #status4_btn{
+    border-radius: var(--border-radius);
+    margin-top: 0.5rem;
+}
 .line{
     width: 98%;
     height: 0.7rem;

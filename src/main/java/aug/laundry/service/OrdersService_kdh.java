@@ -11,6 +11,7 @@ import aug.laundry.enums.category.Category;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
 import java.util.*;
@@ -22,6 +23,7 @@ public class OrdersService_kdh {
 
     private final OrdersDao ordersDao;
     private final PointDao pointDao;
+
 
     public OrdersResponseDto findByOrdersId(Long ordersId){
         OrdersResponseDto ordersResponseDto = ordersDao.findByOrdersId(ordersId);
@@ -129,6 +131,19 @@ public class OrdersService_kdh {
 
     public Integer findPointByMemberId(Long memberId){
         return pointDao.findByMemberId(memberId);
+    }
+
+    public boolean isQuickLaundry(Long ordersId){
+        return ordersDao.isQuickLaundry(ordersId);
+    }
+
+
+    @Transactional
+    public void updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice) {
+        int result = ordersDao.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
+        if(result==0) {
+            throw new IllegalArgumentException("잘못된 회원아이디 입력");
+        }
     }
 
 

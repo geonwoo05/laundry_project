@@ -3,10 +3,7 @@ package aug.laundry.controller;
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.domain.CouponList;
 import aug.laundry.dto.*;
-import aug.laundry.enums.category.Category;
-import aug.laundry.enums.category.CategoryOption;
-import aug.laundry.enums.category.MemberShip;
-import aug.laundry.enums.category.Pass;
+import aug.laundry.enums.category.*;
 import aug.laundry.service.LaundryService;
 import aug.laundry.validator.OrderPostValidator;
 import lombok.RequiredArgsConstructor;
@@ -41,15 +38,19 @@ public class LaundryController {
     @GetMapping("/order")
     public String order(Model model, HttpServletRequest request) {
         MemberShip memberShip = laundryService.isPass(1L); // 패스 여부
-
-        Long totalPrice = 3000L; // 배송비
-        Long discount = 0L;
         OrderInfo info = laundryService.firstInfo(1L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
+
+        Long totalPrice = 0L;
+        Long discount = 0L;
+        if (info.getIsQuick() == null) {
+            totalPrice += Delivery.COMMON_DELIVERY.getPrice();
+        } else {
+            totalPrice += Delivery.QUICK_DELIVERY.getPrice();
+        }
+
         List<MyCoupon> coupon = laundryService.getCoupon(1L); // 내가 보유한 쿠폰
         Address address = laundryService.getAddress(1L); // 주소 가져오기
         DateForm dateForm = new DateForm(); // 날짜 가져오기
-
-        totalPrice += info.getIsQuick() != null ? 4000 : 0; // 빠른세탁
 
         if (info.getIsCommon() != 0) {
             model.addAttribute("common", Category.BASIC);
@@ -74,6 +75,7 @@ public class LaundryController {
         }
 
 
+        model.addAttribute("delivery", info.getIsQuick() == null ? Delivery.COMMON_DELIVERY : Delivery.QUICK_DELIVERY);
         model.addAttribute("memberShip", memberShip.getCheck() == Pass.PASS ? 1 : null);
         model.addAttribute("totalPrice", Math.round(totalPrice / 100) * 100);
         model.addAttribute("discount", discount);

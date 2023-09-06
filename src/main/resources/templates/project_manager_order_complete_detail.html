@@ -105,7 +105,7 @@
             <th class='content'>불가능 이유</th>
         </tr>
         <tr th:if="${repair.repairPossibility.toString() == 'N'}">
-            <th th:text="${repair.repairRequest}"/>
+            <th th:text="${repair.repairNotReason}"/>
         </tr>
 
     </table>
