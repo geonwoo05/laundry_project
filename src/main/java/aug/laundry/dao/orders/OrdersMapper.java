@@ -4,6 +4,7 @@ import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.OrdersResponseDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,7 @@ public interface OrdersMapper {
 
     int findQuickLaundryByOrdersId(Long ordersId);
 
+    int updateExpectedPriceByOrdersId(@Param("ordersId") Long ordersId, @Param("expectedPrice") Long expectedPrice);
+
+    Optional<Long> findExpectedPriceByOrdersId(Long ordersId);
 }

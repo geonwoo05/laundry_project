@@ -44,4 +44,16 @@
         WHERE B.ORDERS_ID = #{ordersId}
     </select>
 
+    <update id="updateExpectedPriceByOrdersId">
+        UPDATE ORDERS
+        SET ORDERS_EXPECTED_PRICE = #{expectedPrice}
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+
+    <select id="findExpectedPriceByOrdersId" resultType="Long">
+        SELECT ORDERS_EXPECTED_PRICE
+        FROM ORDERS
+        WHERE ORDERS_ID = #{ordersId}
+    </select>
+
 </mapper>

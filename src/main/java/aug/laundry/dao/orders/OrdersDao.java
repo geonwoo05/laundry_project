@@ -57,4 +57,14 @@ public class OrdersDao {
         }
     }
 
+    public int updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice){
+        int i = ordersMapper.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
+        log.info("updateExpectedPriceByOrdersId={}", i);
+        return i;
+    }
+
+    public Optional<Long> findExpectedPriceByOrdersId(Long ordersId){
+        return ordersMapper.findExpectedPriceByOrdersId(ordersId);
+    }
+
 }

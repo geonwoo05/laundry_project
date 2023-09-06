@@ -21,7 +21,7 @@
         <h4>기본사항</h4>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>주문번호</span>
-            <span th:text="${order.ordersId}" class='basicinfoContent'>10101010101010L</span>
+            <span th:text="${order.ordersId}" class='basicinfoContent' id='ordersId'>10101010101010L</span>
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>일정</span>
@@ -178,7 +178,7 @@
             <tr>
                 <th class='content'>총 합계</th>
                 <td th:text="${totalPriceWithDeliveryPrice}" id='totalPrice' class='content'>200,000원</td>
-                <input type="hidden" name="totalPriceInput" th:value="${totalPriceWithDeliveryPrice}">
+<!--                <input type="hidden" name="totalPriceInput" th:value="${totalPriceWithDeliveryPrice}">-->
             </tr>
         </table>
         <div class='fixbox'>
