@@ -1,7 +1,7 @@
 package aug.laundry.service;
 
 import aug.laundry.commom.SessionConstant;
-import aug.laundry.dao.LoginMapper;
+import aug.laundry.dao.login.LoginMapper;
 import aug.laundry.dto.KakaoOauthToken;
 import aug.laundry.dto.KakaoProfile;
 import aug.laundry.dto.MemberDto;
@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -35,6 +34,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     private final ApiExamMemberProfile apiExam;
     private final LoginMapper loginMapper;
     private final MemberDto memberDto;
+    private final BCryptService_kgw bc;
     private final MemberService_kgw memberService;
 
     @Override
@@ -72,7 +72,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
                 int registerUserInfoRes = registerSocialUser(memberDto);
                 int registerSocialNumRes = registerSocialNumber(response.get("id"));
-                
+
                 // memberId를 받아 session에 저장하기
                 Long memberId = loginMapper.socialLogin(memberAccount, "naver").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
@@ -241,10 +241,10 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
 
             // Long타입을 String타입으로 바꾸기
-            Long SocalId = kakaoProfile.getId();
-            String memberSocalId = String.valueOf(SocalId);
+            Long SocialId = kakaoProfile.getId();
+            String memberSocialId = String.valueOf(SocialId);
 
-            int checkRes = loginMapper.checkSocialId(memberSocalId);
+            int checkRes = loginMapper.checkSocialId(memberSocialId);
 
             if(checkRes <= 0){
                 System.out.println("kakao 유저정보 db에 저장");
@@ -256,11 +256,11 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 memberDto.setMemberPhone(formattedPhoneNumber);
 
                 int registerUserInfoRes = registerSocialUser(memberDto);
-                int registerSocialNumRes = registerSocialNumber(memberSocalId);
+                int registerSocialNumRes = registerSocialNumber(memberSocialId);
 
                 System.out.println(registerUserInfoRes);
                 System.out.println(registerSocialNumRes);
-                
+
                 // memberId를 가져와서 session에 저장하기
                 Long memberId = loginMapper.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
@@ -306,9 +306,22 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         return formattedNumber;
     }
 
-    public MemberDto login(String memberAccount){
-        MemberDto memberDto = loginMapper.login(memberAccount);
-        return memberDto;
+    public MemberDto login(MemberDto memberDto, HttpSession session){
+        String password = memberDto.getMemberPassword();
+
+        MemberDto member = loginMapper.login(memberDto.getMemberAccount());
+
+        if(member != null){
+            String encodedPassword = member.getMemberPassword();
+            boolean isLogin = bc.matchBCrypt(password, encodedPassword);
+            if(isLogin){
+                return member;
+            }
+           return null;
+
+        }else{
+            return null;
+        }
     }
 
 }

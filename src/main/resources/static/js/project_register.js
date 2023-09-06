@@ -47,10 +47,23 @@ function sample6_execDaumPostcode(event) {
             }).open();
         }
 
+function phoneNum(){
+    let num = document.querySelector('.phoneNumber');
+    if (num.value.length == 3 || num.value.length == 8){
+        num.value += "-";
+        document.querySelector('#sendSmsBtn').disabled = false;
+    }
 
-document.querySelector('#sendSmsBtn').addEventListener('click',function(){
-    let phonenumber = document.querySelector('.phoneNumber').value;
+}
+document.querySelector('.phoneNumber').addEventListener('input',function(){
+    validationPhonenumber='';
+})
+function sendSms(){
+    let subPhonenumber = document.querySelector('.phoneNumber');
+    let phonenumber = subPhonenumber.value.replace(/-/gi,'');
+    let sendSmsBtn = document.querySelector('#sendSmsBtn');
     let resultMsg = document.querySelector('#phonenumber-check-warn');
+
 
     fetch("/sendSms?phonenumber="+phonenumber)
     .then(response => response.json())
@@ -59,21 +72,26 @@ document.querySelector('#sendSmsBtn').addEventListener('click',function(){
     		phone_check_number = map.number;
     		//document.querySelector('.phonenumber-check-input').disabled = false;
     		document.querySelector('.phonenumber-check-button').addEventListener('click', function(){
-    			let inputCode = document.querySelector('.phonenumber-check-input').value;
+    			let inputCode = document.querySelector('.phonenumber-check-input');
 
-    			if(phone_check_number == inputCode){
+    			if(phone_check_number == inputCode.value){
     		        alert('인증되었습니다.');
+    		        document.querySelector('.validation-phonenumber').value=1;
+
+
     			}else{
     				resultMsg.innerHTML = '인증번호가 불일치 합니다. 다시 확인해주세요!';
     		        resultMsg.style.color = 'red';
     			}
     		})
     	})
+}
 
-})
-
-
+document.querySelector('#member_account').addEventListener('input', function(){
+        validationId = '';
+    })
 function idcheck(){
+
     let memberAccount = document.querySelector("#member_account").value;
     let checkMsg = document.querySelector('#checkMsg');
     if(memberAccount == null || memberAccount == ''){
@@ -87,15 +105,21 @@ function idcheck(){
                 if(map.res > 0){
                     checkMsg.style.color = 'red';
                     checkMsg.innerHTML = map.msg;
+                    document.querySelector('.validation-id').value = '';
                 }else{
                     checkMsg.style.color = '#3CB371';
                     checkMsg.innerHTML = map.msg;
+                    document.querySelector('.validation-id').value = 1;
                 }
             })
     }
 }
 
+
 function passwordCheck(){
+    document.querySelector('.password-input').addEventListener('input',function(){
+        validationPassword ='';
+    })
     let password = document.querySelector('.password-input').value;
     let passwordCheckMsg = document.querySelector('.passwordCheck1');
 
@@ -109,14 +133,19 @@ function passwordCheck(){
         if(regex1.test(password) && regex2.test(password)){
             passwordCheckMsg.style.color = '#3CB371';
             passwordCheckMsg.innerHTML = '사용가능한 비밀번호입니다.';
+            document.querySelector('.validation-password').value=1;
+
+
         }else{
             passwordCheckMsg.style.color = 'red';
             passwordCheckMsg.innerHTML = '대소문자, 숫자, 특수문자가 적어도 하나씩 있어야 합니다.';
+
         }
 
     }else{
         passwordCheckMsg.style.color = 'red';
         passwordCheckMsg.innerHTML = '비밀번호는 8~15자 사이로 정해주세요.';
+
     }
 
     // 비밀번호 -> 비밀번호 확인 -> 비밀번호 순으로 입력할 경우 대비
@@ -124,6 +153,9 @@ function passwordCheck(){
 }
 
 function passwordValidation(){
+    document.querySelector('.password-check-input').addEventListener('input',function(){
+        validationPasswordCheck='';
+    })
     let password = document.querySelector('.password-input').value;
     let passwordCheckInput = document.querySelector('.password-check-input').value;
     let passwordCheckMsg = document.querySelector('.passwordCheck2');
@@ -131,10 +163,74 @@ function passwordValidation(){
     if(password === passwordCheckInput){
         passwordCheckMsg.style.color = '#3CB371';
         passwordCheckMsg.innerHTML = '비밀번호가 일치합니다.';
+        document.querySelector('.validation-passwordCheck').value=1;
     }else{
         passwordCheckMsg.style.color = 'red';
         passwordCheckMsg.innerHTML = '비밀번호가 일치하지 않습니다.';
     }
-
-
 }
+document.querySelector('#inviteCode').addEventListener('input',function(){
+    validationInviteCode='';
+})
+function inviteCodeCheck(){
+    let inviteCode = document.querySelector('#inviteCode').value;
+    let inviteCodeCheckMsg = document.querySelector('.inviteCodeCheck');
+
+    if(inviteCode === '' || inviteCode === null){
+        inviteCode = 0;
+    }
+    fetch("/inviteCode/" + inviteCode)
+    .then(response => response.json())
+    .then(map => {
+        if(map.result > 0){
+            inviteCodeCheckMsg.style.color = '#3CB371';
+            inviteCodeCheckMsg.innerHTML = map.resultMsg;
+            document.querySelector('.validation-inviteCode').value=1;
+        }else{
+            inviteCodeCheckMsg.style.color = 'red';
+            inviteCodeCheckMsg.innerHTML = map.resultMsg
+        }
+    })
+}
+
+function validationSubmit() {
+  let validationId = document.querySelector('.validation-id').value;
+  let validationPassword = document.querySelector('.validation-password').value;
+  let validationPasswordCheck = document.querySelector('.validation-passwordCheck').value;
+  let validationPhonenumber = document.querySelector('.validation-phonenumber').value;
+  let validationInviteCode = document.querySelector('.validation-inviteCode').value;
+  let memberName = document.querySelector('#memberName').value;
+  // 모든 변수가 1인 경우에만 true 반환
+  if (
+    validationId === '1' &&
+    validationPassword === '1' &&
+    validationPasswordCheck === '1' &&
+    validationPhonenumber === '1' &&
+    validationInviteCode === '1' &&
+    memberName !== ''
+  ) {
+    return true;
+  } else {
+    // 어떤 조건을 만족하지 않는 경우에는 false 반환
+    return false;
+  }
+}
+
+
+
+//if(validationId === 1 && validationPassword === 1 && validationPasswordCheck === 1 && validationPhonenumber === 1 && validationInviteCode === 1 && memberName !== ''){
+//
+//    }
+
+//let box = document.querySelector('.register_box_address');
+//let array = box.querySelectorAll('input');
+//console.log(array);
+//for(let i = 0; i <= 2; i++){
+//    console.log(array[i].value);
+//}
+
+
+
+
+
+

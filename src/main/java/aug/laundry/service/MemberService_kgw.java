@@ -18,6 +18,8 @@ public interface MemberService_kgw {
 
     public Integer registerUser(MemberDto memberDto);
 
+    public int inviteCodeCheck(String inviteCode);
+
 
 
 

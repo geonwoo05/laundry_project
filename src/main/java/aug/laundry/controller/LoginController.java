@@ -4,6 +4,7 @@ package aug.laundry.controller;
 
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dto.MemberDto;
+import aug.laundry.service.BCryptService_kgw;
 import aug.laundry.service.LoginService_kgw;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.http.HttpRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -38,12 +42,28 @@ public class LoginController {
 
     }
 
-    @PostMapping("/login")
-    public String login(MemberDto memberDto, HttpSession session) {
-        MemberDto dto = service.login(memberDto.getMemberAccount());
-        session.setAttribute(SessionConstant.LOGIN_MEMBER, dto.getMemberId());
-        return "redirect:/members/" + dto.getMemberId() + "/mypage";
+
+    @PostMapping("/loginAction")
+    public  String login(MemberDto memberDto, HttpSession session, Model model) {
+        MemberDto dto = service.login(memberDto ,session);
+        if(dto != null){
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, dto.getMemberId());
+            return "redirect:/members/" + session.getAttribute("memberId") + "/mypage";
+        }else{
+            model.addAttribute("memberAccount", memberDto.getMemberAccount());
+            model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+            return "project_login";
+        }
+
+
+
     }
+
+    @GetMapping("/login/page")
+    public String goLogin(){
+        return "project_login";
+    }
+
 
 
 

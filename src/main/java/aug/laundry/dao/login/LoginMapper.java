@@ -1,5 +1,4 @@
-package aug.laundry.dao;
-
+package aug.laundry.dao.login;
 import aug.laundry.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

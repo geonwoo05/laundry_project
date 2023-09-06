@@ -175,3 +175,9 @@ div[class^=register_box] input{
     width: 40%;
     background-color: #fff;
 }
+
+/*
+.validation-input{
+    display: none;
+}
+*/

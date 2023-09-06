@@ -17,7 +17,8 @@
             SEQ_MEMBER_ID.NEXTVAL,
             #{memberAccount},
             #{memberPassword},
-            #{memberName},#{memberPhone},
+            #{memberName},
+            #{memberPhone},
             #{memberZipcode},
             #{memberAddress},
             #{memberAddressDetails},
@@ -31,6 +32,10 @@
             'SDDASDADSADAQE',
             NULL)
     </insert>
+
+    <select id="inviteCodeCheck" resultType="int">
+        select count(MEMBER_MY_INVITE_CODE) from member where MEMBER_MY_INVITE_CODE = #{inviteCode}
+    </select>
 
 
 </mapper>
