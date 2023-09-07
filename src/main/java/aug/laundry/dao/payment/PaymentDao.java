@@ -27,8 +27,13 @@ public class PaymentDao {
         return coupon;
     }
 
-    public Optional<Long> savePaymentInfo(Paymentinfo paymentinfo) {
-        return paymentMapper.savePaymentInfo(paymentinfo);
+    public void savePaymentInfo(Paymentinfo paymentinfo) {
+        paymentMapper.savePaymentInfo(paymentinfo);
     }
 
+    public Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId){
+        Paymentinfo paymentinfo = paymentMapper.findPaymentinfoByPaymentinfoId(paymentinfoId);
+        log.info("paymentinfo={}", paymentinfo);
+        return paymentinfo;
+    }
 }

@@ -16,5 +16,7 @@ public interface PaymentMapper {
 
     CouponCheckDto findCouponByCouponListId(Long couponListId);
 
-    Optional<Long> savePaymentInfo(Paymentinfo paymentinfo);
+    void savePaymentInfo(Paymentinfo paymentinfo);
+
+    Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId);
 }
