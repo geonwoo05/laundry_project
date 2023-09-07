@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface PointMapper {
 
     Integer findByMemberId(Long memberId);
-    Integer addPoint(@Param("memberId") Long memberId, @Param("point") int point, @Param("reason") String reason);
+    int registerPoint(Long memberId);
+    int addRecommandPoint(@Param("memberId") Long memberId, @Param("point") int point, @Param("reason") String reason);
 
 }

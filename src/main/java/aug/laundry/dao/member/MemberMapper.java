@@ -16,10 +16,4 @@ public interface MemberMapper {
     public Long findRecommender(String inviteCode);
     public MemberDto selectId(String memberAccount);
 
-
-
-
-
-
-
 }
