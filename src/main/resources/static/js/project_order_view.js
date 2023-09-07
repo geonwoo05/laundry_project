@@ -11,6 +11,18 @@ window.addEventListener('load', function(){
     IMP.init("imp05521551");
 });
 
+function formatDate(date) {
+        var year = date.getFullYear();
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        var hours = ('0' + date.getHours()).slice(-2);
+        var minutes = ('0' + date.getMinutes()).slice(-2);
+        var seconds = ('0' + date.getSeconds()).slice(-2);
+        var milliseconds = ('00' + date.getMilliseconds()).slice(-3);
+
+        return year + '_' + month + '_' + day + '_' + hours + minutes + seconds + milliseconds;
+    }
+
 function requestPay() {
 
     let ordersId = document.querySelector('#ordersId').textContent;
@@ -18,23 +30,28 @@ function requestPay() {
     let couponPrice = document.querySelector('input[name=couponPrice]').value;
     let pointPrice = document.querySelector('input[name=point]').value;
 
+
+    var merchantUId = 'p'+ordersId+'_'+formatDate(new Date());
+
     var IMP = window.IMP;
+
     IMP.request_pay(
       {
         pg: "inicis",
         pay_method: "card",
-        merchant_uid: "merchant_test_" + new Date(),
+        merchant_uid: merchantUId,
         name: "결제테스트",
         amount: 100,
-        buyer_email: "Iamport@chai.finance",
         buyer_name: "구매자",
         buyer_tel: "010-1234-5678",
-        m_redirect_url: "10.0.2.2:8080/orders/" + ordersId
-                        + "/payment/validation?"
+        m_redirect_url: "localhost:8080/orders/" + ordersId
+                        + "/payment/complete?"
                         + "couponListId=" + couponListId
                         + "&couponPrice=" + couponPrice
                         + "&pointPrice=" + pointPrice
           // ... (이하 코드 생략)
+          // orders/2/payment/validation?couponListId=&couponPrice=&pointPrice=&imp_uid=imp_205309550611&merchant_uid=merchant_test_Wed+Sep+06+2023+11%3A45%3A08+G&imp_success=true
+          // localhost:8080/orders/2/payment?point=&coupon=&couponPrice=#
       },
         function (rsp) {
           console.log(rsp);

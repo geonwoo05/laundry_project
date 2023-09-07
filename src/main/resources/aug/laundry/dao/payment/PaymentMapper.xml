@@ -14,6 +14,22 @@
         WHERE A.COUPON_LIST_ID = #{couponListId}
     </select>
 
+    <insert id="savePaymentInfo">
+        <selectKey keyProperty="paymentinfoId" resultType="Long" order="BEFORE">
+            SELECT SEQ_PAYMENTINFO_ID.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO PAYMENTINFO (PAYMENTINFO_ID, MEMBER_ID, IMP_UID,
+                                 PAY_METHOD, MERCHANT_UID,
+                                 BUYER_NAME, BUYER_TEL, AMOUNT, PAYMENT_STATUS)
+        VALUES(#{paymentinfoId}, #{memberId}, #{impUid}, #{payMethod}, #{merchantUid},
+               #{buyerName}, #{buyerTel}, #{amount}, 1)
+    </insert>
 
+    <select id="findPaymentinfoByPaymentinfoId" resultType="Paymentinfo">
+        SELECT MEMBER_ID, IMP_UID, PAY_METHOD, MERCHANT_UID, BUYER_NAME, BUYER_TEL, AMOUNT, PAYMENT_STATUS
+        FROM PAYMENTINFO
+        WHERE PAYMENTINFO_ID = #{paymentinfoId}
+    </select>
 
 </mapper>
