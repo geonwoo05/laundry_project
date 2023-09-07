@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="aug.laundry.dao.MemberMapper">
+<mapper namespace="aug.laundry.dao.member.MemberMapper">
     <select id="selectOne" resultType="aug.laundry.dto.MemberDto">
         select * from member where member_id = #{memberId}
+    </select>
+
+    <select id="selectId" resultType="aug.laundry.dto.MemberDto">
+        select * from member where MEMBER_ACCOUNT = #{memberAccount}
     </select>
 
     <select id="checkId" resultType="int">
@@ -17,7 +21,8 @@
             SEQ_MEMBER_ID.NEXTVAL,
             #{memberAccount},
             #{memberPassword},
-            #{memberName},#{memberPhone},
+            #{memberName},
+            #{memberPhone},
             #{memberZipcode},
             #{memberAddress},
             #{memberAddressDetails},
@@ -28,9 +33,19 @@
             2,
             NULL,
             'N',
-            'SDDASDADSADAQE',
-            NULL)
+            #{memberMyInviteCode},
+            #{memberInviteCode})
     </insert>
+
+    <select id="inviteCodeCheck" resultType="int">
+        select count(MEMBER_MY_INVITE_CODE) from member where MEMBER_MY_INVITE_CODE = #{inviteCode}
+    </select>
+
+    <select id="findRecommender" resultType="Long">
+        select MEMBER_ID from member where MEMBER_MY_INVITE_CODE = #{inviteCode}
+
+    </select>
+
 
 
 </mapper>

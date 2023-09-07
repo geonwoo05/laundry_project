@@ -1,29 +1,30 @@
 package aug.laundry.controller;
 
+import aug.laundry.commom.SessionConstant;
 import aug.laundry.domain.CouponList;
 import aug.laundry.dto.*;
-import aug.laundry.enums.category.Category;
-import aug.laundry.enums.category.CategoryOption;
-import aug.laundry.enums.category.MemberShip;
-import aug.laundry.enums.category.Pass;
+import aug.laundry.enums.category.*;
 import aug.laundry.service.LaundryService;
 import aug.laundry.validator.OrderPostValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/laundry")
 public class LaundryController {
 
     private final LaundryService laundryService;
@@ -34,17 +35,22 @@ public class LaundryController {
         dataBinder.addValidators(orderPostValidator);
     }
 
-    @GetMapping("/laundry/order")
+    @GetMapping("/order")
     public String order(Model model, HttpServletRequest request) {
         MemberShip memberShip = laundryService.isPass(1L); // 패스 여부
-        Long totalPrice = 3000L; // 배송비
-        Long discount = 0L;
         OrderInfo info = laundryService.firstInfo(1L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
+
+        Long totalPrice = 0L;
+        Long discount = 0L;
+        if (info.getIsQuick() == null) {
+            totalPrice += Delivery.COMMON_DELIVERY.getPrice();
+        } else {
+            totalPrice += Delivery.QUICK_DELIVERY.getPrice();
+        }
+
         List<MyCoupon> coupon = laundryService.getCoupon(1L); // 내가 보유한 쿠폰
         Address address = laundryService.getAddress(1L); // 주소 가져오기
         DateForm dateForm = new DateForm(); // 날짜 가져오기
-
-        totalPrice += info.getIsQuick() != null ? 4000 : 0; // 빠른세탁
 
         if (info.getIsCommon() != 0) {
             model.addAttribute("common", Category.BASIC);
@@ -69,6 +75,7 @@ public class LaundryController {
         }
 
 
+        model.addAttribute("delivery", info.getIsQuick() == null ? Delivery.COMMON_DELIVERY : Delivery.QUICK_DELIVERY);
         model.addAttribute("memberShip", memberShip.getCheck() == Pass.PASS ? 1 : null);
         model.addAttribute("totalPrice", Math.round(totalPrice / 100) * 100);
         model.addAttribute("discount", discount);
@@ -82,9 +89,7 @@ public class LaundryController {
         return "project_order_confirm";
     }
 
-
-
-    @PostMapping("/laundry/order")
+    @PostMapping("/order")
     public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model) {
 
         System.out.println("orderPost = " + orderPost);
@@ -99,8 +104,16 @@ public class LaundryController {
         return "redirect:/";
     }
 
-    @GetMapping("/members/{memberId}/coupons/select")
-    public String selectCoupon(@PathVariable Long memberId, Model model, String takeDate) {
+    @GetMapping("/order/pickup")
+    public String pickupLocation() {
+        return "project_pickup_location";
+    }
+
+    @GetMapping("/order/coupons/select")
+    public String selectCoupon(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
+        memberId = 1L;
+        if (memberId == null) return "redirect:/login";
+
         List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
         model.addAttribute("memberId", memberId);
         model.addAttribute("coupon", getCoupon);

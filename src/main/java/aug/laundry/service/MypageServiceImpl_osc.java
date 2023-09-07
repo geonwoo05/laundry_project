@@ -1,8 +1,7 @@
 package aug.laundry.service;
 
 import aug.laundry.dao.mypage.MypageDao;
-import aug.laundry.dto.MyPointDto;
-import aug.laundry.dto.MypageDto;
+import aug.laundry.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,11 +36,23 @@ public class MypageServiceImpl_osc implements MypageService_osc {
   }
 
   @Override
-  public int updateAddress(Long memberId, String memberZipcode, String memberAddress, String memberAddressDetails) {
-    return mypageDao.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);
+  public int updateAddress(Long memberId, UpdateAddressDto updateAddressDto) {
+    return mypageDao.updateAddress(memberId, updateAddressDto);
   }
 
-  public int updatePhone(Long memberId, String memberPhone){ return mypageDao.updatePhone(memberId, memberPhone); }
+//  @Override
+//  public int updateAddress(Long memberId, String memberZipcode, String memberAddress, String memberAddressDetails) {
+//    return mypageDao.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);
+//  }
+
+
+  @Override
+  public int updatePhone(Long memberId, UpdatePhoneDto updatePhoneDto) {
+
+    return mypageDao.updatePhone(memberId, updatePhoneDto);
+  }
+
+//  public int updatePhone(Long memberId, String memberPhone){ return mypageDao.updatePhone(memberId, memberPhone); }
 
   @Override
   public int unregister(Long memberId) {
@@ -49,13 +60,31 @@ public class MypageServiceImpl_osc implements MypageService_osc {
   }
 
   @Override
-  public int updatePassword(Long memberId, String memberPassword) {
-    return mypageDao.updatePassword(memberId, memberPassword);
+  public int changePassword(Long memberId, ChangePasswordDto changePasswordDto) {
+    return mypageDao.changePassword(memberId, changePasswordDto);
   }
+
+//  @Override
+//  public int updatePassword(Long memberId, String memberPassword) {
+//    return mypageDao.updatePassword(memberId, memberPassword);
+//  }
+
+
 
   @Override
   public List<MyPointDto> getPoint(Long memberId) {
     return mypageDao.getPoint(memberId);
   }
+
+  @Override
+  public PointNowDto getPointNow(Long memberId) {
+    return mypageDao.getPointNow(memberId);
+  }
+
+  @Override
+  public int someCoupon(Long memberId) {
+    return mypageDao.someCoupon(memberId);
+  }
+
 
 }

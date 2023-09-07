@@ -4,10 +4,7 @@ package aug.laundry.dto;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 
 @Data
@@ -25,12 +22,12 @@ public class MemberDto {
     @NotBlank(message = "memberName is required")
     private String memberName;
 
-    @NotBlank(message = "memberPhone is required")
+    @NotNull(message = "memberPhone is required")
     private String memberPhone;
 
     @NotNull(message = "memberZipcode is required")
     @Min(value = 0)
-    @Min(value = 99999)
+    @Max(value = 99999)
     private Integer memberZipcode;
 
     @NotBlank(message = "memberAddress is required")

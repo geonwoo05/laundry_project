@@ -38,4 +38,6 @@ public interface LaundryMapper {
     Integer useCoupon(@Param("memberId") Long memberId, @Param("couponListId") Long couponListId);
 
     Integer insert(Orders orders);
+
+    Long getCouponDiscount(@Param("memberId") Long memberId, @Param("couponListId") Long couponListId);
 }

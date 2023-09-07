@@ -69,4 +69,8 @@ public class LaundryRepository {
     public Integer insert(Orders orders) {
         return laundryMapper.insert(orders);
     }
+
+    public Long getCouponDiscount(Long memberId, Long couponListId) {
+        return laundryMapper.getCouponDiscount(memberId, couponListId);
+    }
 }

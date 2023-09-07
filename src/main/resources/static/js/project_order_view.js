@@ -30,8 +30,8 @@ function requestPay() {
     let couponPrice = document.querySelector('input[name=couponPrice]').value;
     let pointPrice = document.querySelector('input[name=point]').value;
 
-    var merchantUId = 'p'+ordersId+'_'+formatDate(new Date());
 
+    var merchantUId = 'p'+ordersId+'_'+formatDate(new Date());
 
     var IMP = window.IMP;
 

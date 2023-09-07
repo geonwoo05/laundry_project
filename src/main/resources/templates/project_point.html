@@ -15,9 +15,9 @@
 
 <div class='container'>
     <th:block th:if="${not #lists.isEmpty(point)}">
-    <div class='remainder' th:each="item : ${point}">
+    <div class='remainder'>
         <p>보유 포인트</p>
-        <p class='point' th:text="${item.pointNow} + ' P'">100 P</p>
+        <p class='point' th:text="${#numbers.formatInteger(pointNow, 1, 'COMMA')} + ' P'">100 P</p>
     </div>
     </th:block>
     <th:block th:if="${not #lists.isEmpty(point)}">
@@ -25,7 +25,7 @@
         <li>
             <div class='top'>
                 <div th:text="${item.pointStackReason}">헌 옷 포인트 적립</div>
-                <div th:text="${item.pointStack} + ' P'">+ 180P</div>
+                <div id="pointStack" th:text="${#numbers.formatInteger(item.pointStack, 1, 'COMMA')} + ' P'">+ 180P</div>
             </div>
             <br>
             <div class='bottom'>

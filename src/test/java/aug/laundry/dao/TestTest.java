@@ -1,5 +1,7 @@
 package aug.laundry.dao;
 
+import aug.laundry.dao.login.LoginMapper;
+import aug.laundry.dao.member.MemberMapper;
 import aug.laundry.dto.MemberDto;
 import aug.laundry.service.MemberService_kgw;
 import org.assertj.core.api.Assertions;
@@ -7,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -52,5 +52,13 @@ class TestTest {
     void checkId(){
         int res = memberMapper.checkId("rlarjsdn531@naver.com");
         System.out.println(res);
+    }
+
+    @Test
+    void loginTest(){
+        MemberDto member = new MemberDto();
+        member = loginMapper.login("rlarjsdn531@naver.com");
+        System.out.println(member);
+
     }
 }
