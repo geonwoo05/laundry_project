@@ -5,6 +5,7 @@ import aug.laundry.domain.Repair;
 import aug.laundry.dto.OrdersResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -66,5 +67,7 @@ public class OrdersDao {
     public Optional<Long> findExpectedPriceByOrdersId(Long ordersId){
         return ordersMapper.findExpectedPriceByOrdersId(ordersId);
     }
+
+
 
 }

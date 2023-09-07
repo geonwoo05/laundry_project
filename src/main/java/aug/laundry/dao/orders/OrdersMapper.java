@@ -23,4 +23,6 @@ public interface OrdersMapper {
     int updateExpectedPriceByOrdersId(@Param("ordersId") Long ordersId, @Param("expectedPrice") Long expectedPrice);
 
     Optional<Long> findExpectedPriceByOrdersId(Long ordersId);
+
+
 }

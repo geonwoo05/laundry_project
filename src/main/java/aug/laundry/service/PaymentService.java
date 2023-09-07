@@ -106,5 +106,14 @@ public class PaymentService {
         return paymentinfo;
     }
 
+    @Transactional
+    public void updateRefundInfoBypaymentinfoId(Long paymentinfoId, String errorMessage){
+        int result = paymentDao.updateRefundInfoBypaymentinfoId(paymentinfoId, errorMessage);
+
+        if(result == 0){
+            throw new IllegalArgumentException("결제 환불정보를 업데이트 하지 못했습니다");
+        }
+    }
+
 }
 
