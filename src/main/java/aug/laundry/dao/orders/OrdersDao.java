@@ -68,6 +68,9 @@ public class OrdersDao {
         return ordersMapper.findExpectedPriceByOrdersId(ordersId);
     }
 
+    public int updateOrdersStatusToCompletePayment(Long ordersId){
+        return ordersMapper.updateOrdersStatusToCompletePayment(ordersId);
+    }
 
 
 }

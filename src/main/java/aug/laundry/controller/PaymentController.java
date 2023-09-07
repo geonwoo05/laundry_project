@@ -33,6 +33,7 @@ public class PaymentController {
 
     private IamportClient iamportClient;
     private PaymentService paymentService;
+    private OrdersService_kdh ordersServiceKdh;
 
     @Autowired
     public PaymentController(PaymentService paymentService) {
@@ -43,6 +44,11 @@ public class PaymentController {
     @GetMapping("/orders/{ordersId}/payment/complete")
     public String complete(@PathVariable Long ordersId, @ModelAttribute PaymentCheckRequestDto payment,
                            @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId) throws IamportResponseException, IOException {
+
+        if(payment.isImp_success() == false){
+            return "redirect:/orders/" + ordersId +"/payment";
+        }
+
 
         iamportClient = new IamportClient(restApi, restApiSecret);
         IamportResponse<Payment> irsp = iamportClient.paymentByImpUid(payment.getImp_uid());
@@ -65,6 +71,9 @@ public class PaymentController {
         }
 
         paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
+
+
+//        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);  //검증하지 못함. 나중에 실행되는지 확인
 
         //redirect로 바꿔야함
         return "project_search_id_result";

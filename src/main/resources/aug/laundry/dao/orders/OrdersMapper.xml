@@ -56,4 +56,10 @@
         WHERE ORDERS_ID = #{ordersId}
     </select>
 
+    <update id="updateOrdersStatusToCompletePayment">
+        UPDATE ORDERS
+        SET ORDERS_STATUS = 8
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+
 </mapper>
