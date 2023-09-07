@@ -28,11 +28,11 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
 
     private final SubscribeDao subscribeDao;
 
-    //@Value("${import.rest-api}")
-    private String restApi = "1332441508786676";
+    @Value("${import.rest-api}")
+    private String restApi;
 
-    //@Value("${import.rest-api-secret}")
-    private String restApiSecret ="paZ8k1DpZYmBi6v9oTUTpPbyMsxDyKt025wu7qGVKH914FWliCYP3aj4Bz0mLEPNlItgwKtkzSLSBdlf";
+    @Value("${import.rest-api-secret}")
+    private String restApiSecret;
 
     @Transactional
     @Override
