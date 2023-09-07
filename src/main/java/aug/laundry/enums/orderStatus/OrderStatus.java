@@ -1,6 +1,11 @@
 package aug.laundry.enums.orderStatus;
 
+import aug.laundry.domain.Orders;
+import aug.laundry.dto.OrdersEnum;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public enum OrderStatus {
@@ -29,4 +34,27 @@ public enum OrderStatus {
         this.content = content;
         this.subContent = subContent;
     }
+
+    public static List<OrdersEnum> change(List<Orders> orders) {
+        return orders.stream().map( x -> {
+            return OrdersEnum.builder()
+                    .ordersId(x.getOrdersId())
+                    .memberId(x.getMemberId())
+                    .ordersDate(x.getOrdersDate())
+                    .ordersAddress(x.getOrdersAddress())
+                    .ordersAddressDetails(x.getOrdersAddressDetails())
+                    .ordersInfo(x.getOrdersInfo())
+                    .ordersRequest(x.getOrdersRequest())
+                    .ordersPay(x.getOrdersPay())
+                    .ordersPickup(x.getOrdersPickup())
+                    .ordersExpectedPrice(x.getOrdersExpectedPrice())
+                    .ordersStatus(OrderStatus.valueOf("R" + x.getOrdersStatus()).getTitle())
+                    .riderId(x.getRiderId())
+                    .quickRiderId(x.getQuickRiderId())
+                    .ordersPickupDate(x.getOrdersPickupDate())
+                    .ordersReturnDate(x.getOrdersReturnDate())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
 }

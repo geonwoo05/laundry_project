@@ -3,10 +3,12 @@ package aug.laundry.controller;
 import aug.laundry.domain.DeliveryImage;
 import aug.laundry.domain.Orders;
 import aug.laundry.domain.Rider;
+import aug.laundry.dto.DongInfoDto;
 import aug.laundry.dto.OrdersEnum;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.fileUpload.FileUploadType;
 import aug.laundry.enums.orderStatus.OrderStatus;
+import aug.laundry.enums.orderStatus.routineOrder;
 import aug.laundry.service.FileUploadService_ksh;
 import aug.laundry.service.RiderService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+
+import static aug.laundry.enums.orderStatus.routineOrder.regionList;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,6 +46,7 @@ public class RiderController {
 //        List<Orders> orderList = riderService.OrderList("대기중");
         List<OrdersEnum> orderList = riderService.OrderListEnum("대기중");
         Rider riderInfo = riderService.riderInfo("스크류바");
+
 
 //        List<Orders> orderList = new ArrayList<>();
 
@@ -61,7 +67,7 @@ public class RiderController {
     @GetMapping("/ride/accept")
     public String acceptList(Model model) {
 //        List<Orders> orderList = riderService.OrderList("진행중");
-        List<OrdersEnum> orderList = riderService.OrderListEnum("진행중");
+        List<OrdersEnum> orderList = riderService.OrderList("진행중");
         List<Map<String, Integer>> cnt = riderService.orderListCnt();
 
         model.addAttribute("orderList", orderList);
@@ -133,9 +139,9 @@ public class RiderController {
         Orders orders = new Orders();
         orders.setOrdersId(ordersId);
 
-        int res = riderService.updateOrderRider(orders);
+//        int res = riderService.updateOrderRider(orders);
         int res2 = riderService.updateOrderStatus(orders);
-        System.out.println(res);
+//        System.out.println(res);
         System.out.println(res2);
 
         return "redirect:/ride/accept";
@@ -155,6 +161,73 @@ public class RiderController {
         return "redirect:/ride/finish";
     }
 
+    @GetMapping("/ride/routine")
+    public String routineList(Model model){
+        Rider rider = riderService.routineRider("홀란드");
+
+        routineOrder order = routineOrder.valueOf(rider.getRiderPossibleZipcode());
+        List<String> dongNames = order.getDongName();
+        System.out.println(dongNames);
+
+        List<Orders> list = riderService.routineOrderList(dongNames.get(0), "진행중");
+        System.out.println(list);
+
+        Map<String,Integer> total = riderService.routineTotalCnt(rider.getRiderPossibleZipcode());
+        System.out.println(total);
+
+        List<Map<String, Integer>> cnt = riderService.routineOrderCnt();
+        System.out.println(cnt);
+
+//        List<Map<String, Integer>> dongCnt = riderService.dongCnt(rider.getRiderPossibleZipcode());
+        List<Integer> dongCntWait = riderService.dongCnt(rider.getRiderPossibleZipcode(), "진행중");
+        List<Integer> dongCntComplete = riderService.dongCnt(rider.getRiderPossibleZipcode(), "완료");
+
+        List<Map<String, DongInfoDto>> regionCntWait = new ArrayList<>();
+        List<Map<String, DongInfoDto>> regionCntComplete = new ArrayList<>();
+
+        for(int i=0; i<dongCntWait.size(); i++){
+            DongInfoDto dongInfo = new DongInfoDto();
+            dongInfo.setDongNames(dongNames.get(i));
+            dongInfo.setDongCnt(dongCntWait.get(i));
+
+            Map<String, DongInfoDto> resultMap = new HashMap<>();
+            resultMap.put("dongInfo", dongInfo);
+            regionCntWait.add(resultMap);
+        }
+        for(int i=0; i<dongCntComplete.size(); i++){
+            DongInfoDto dongInfo = new DongInfoDto();
+            dongInfo.setDongNames(dongNames.get(i));
+            dongInfo.setDongCnt(dongCntComplete.get(i));
+
+            Map<String, DongInfoDto> resultMap = new HashMap<>();
+            resultMap.put("dongInfo", dongInfo);
+            regionCntComplete.add(resultMap);
+        }
 
 
+        model.addAttribute("dongNames",dongNames);
+        model.addAttribute("rider", rider);
+        model.addAttribute("list", list);
+        model.addAttribute("total", total);
+        model.addAttribute("cnt", cnt);
+        model.addAttribute("regionCntWait",regionCntWait);
+        model.addAttribute("regionCntComplete",regionCntComplete);
+        return "project_rider_routine";
+    }
+
+
+    @GetMapping("/ride/routine/{ordersId}")
+    public String routineRead(@PathVariable("ordersId") Long ordersId, Model model){
+        Orders info = riderService.orderInfo(ordersId);
+        DeliveryImage img = riderService.finishImg(ordersId);
+
+        System.out.println(info);
+        System.out.println(img);
+        // 이미지가 없을때 img에 담기는거 처리 해줘야함
+
+        model.addAttribute("img", img);
+        model.addAttribute("info", info);
+
+        return "project_rider_routine_read_more";
+    }
 }
