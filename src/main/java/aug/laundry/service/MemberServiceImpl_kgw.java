@@ -37,23 +37,23 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
         memberDto.setMemberPassword(password);
         String inviteCode = getRandomCode();
         memberDto.setMemberMyInviteCode(inviteCode);
-        Integer res = memberMapper.registerUser(memberDto);
-        if(memberDto.getMemberInviteCode() != null || memberDto.getMemberInviteCode() != ""){
-            // 추천인 아이디
-            Long recommenderId = memberMapper.findRecommender(memberDto.getMemberInviteCode());
-
-            // 뉴비 회원 
-            MemberDto newBie = memberMapper.selectId(memberDto.getMemberAccount());
-            
-            // 추천자 포인트 주기
-            pointDao.addPoint(recommenderId, 5000, "추천자로 인정되어 포인트 획득");
-            
-            // 뉴비 회원 포인트 주기
-            pointDao.addPoint(newBie.getMemberId(), 5000, "추천 코드 작성");
-
+        Integer registerRes = memberMapper.registerUser(memberDto);
+        MemberDto newbie = memberMapper.selectId(memberDto.getMemberAccount());
+        if(registerRes > 0){
+            int res = pointDao.registerPoint(newbie.getMemberId());
+            System.out.println("포인트 넣기 : " + res);
         }
 
-        return res;
+        if(memberDto.getMemberInviteCode() != null || !memberDto.getMemberInviteCode().equals("")){
+            // 추천인 포인트 적립
+            Long recommanderId = memberMapper.findRecommender(memberDto.getMemberInviteCode());
+            pointDao.addRecommandPoint(recommanderId, 5000, "신규회원에게 추천");
+
+            // 뉴비 포인트 적립
+            pointDao.addRecommandPoint(newbie.getMemberId(), 5000, "추천인 코드 작성");
+
+        }
+        return registerRes;
     }
 
     public int inviteCodeCheck(String inviteCode){
