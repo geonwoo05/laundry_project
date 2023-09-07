@@ -174,7 +174,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("grant_type", "authorization_code");
             jsonBody.put("client_id", "6ceec1b5aece169e4582fd82601abd44");
-            jsonBody.put("redirect_uri", "http://localhost:8080/kakaoLogin");
+            jsonBody.put("redirect_uri", "http://localhost:8080/login/kakaoLogin");
             jsonBody.put("code",code);
 
             String queryString = encodeParameters(jsonBody);
@@ -198,7 +198,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     }
 
     public String encodeParameters(JSONObject params) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://localhost:8080/kakaoLogin").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://localhost:8080/login/kakaoLogin").newBuilder();
         for (String key : params.keySet()) {
             urlBuilder.addQueryParameter(key, params.getString(key));
         }

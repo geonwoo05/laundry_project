@@ -6,6 +6,10 @@
         select * from member where member_id = #{memberId}
     </select>
 
+    <select id="selectId" resultType="aug.laundry.dto.MemberDto">
+        select * from member where MEMBER_ACCOUNT = #{memberAccount}
+    </select>
+
     <select id="checkId" resultType="int">
         SELECT COUNT(MEMBER_ACCOUNT) FROM MEMBER WHERE MEMBER_ACCOUNT = #{memberAccount}
 
@@ -29,13 +33,19 @@
             2,
             NULL,
             'N',
-            'SDDASDADSADAQE',
-            NULL)
+            #{memberMyInviteCode},
+            #{memberInviteCode})
     </insert>
 
     <select id="inviteCodeCheck" resultType="int">
         select count(MEMBER_MY_INVITE_CODE) from member where MEMBER_MY_INVITE_CODE = #{inviteCode}
     </select>
+
+    <select id="findRecommender" resultType="Long">
+        select MEMBER_ID from member where MEMBER_MY_INVITE_CODE = #{inviteCode}
+
+    </select>
+
 
 
 </mapper>

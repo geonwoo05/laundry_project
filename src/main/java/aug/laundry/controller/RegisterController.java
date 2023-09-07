@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @Controller
 @RequiredArgsConstructor
 public class RegisterController {
 
-    private final SendSmsService_kgw sendSms;
     private final MemberService_kgw memberService;
 
     @ResponseBody
@@ -45,11 +45,10 @@ public class RegisterController {
     @ResponseBody
     @RequestMapping(value = "/registerAction", method = {RequestMethod.POST})
     public Map<String, String> registerUser(@Valid MemberDto memberDto, BindingResult bindingResult) {
-
         System.out.println(memberDto.toString());
         Map<String, String> validation = new HashMap<>();
         if (bindingResult.hasErrors()) {
-//            throw new IllegalArgumentException("validation 실패");
+            //throw new IllegalArgumentException("validation 실패");
 
             System.out.println("spring validation 실패!");
             validation.put("validation", "실패");
@@ -93,5 +92,6 @@ public class RegisterController {
 
         return "project_register";
     }
+
 
 }

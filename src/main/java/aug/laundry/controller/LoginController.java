@@ -21,10 +21,11 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/login")
 public class LoginController {
     private final LoginService_kgw service;
 
-    @GetMapping("/login/naver_callback")
+    @GetMapping("/naver_callback")
     public String naverLogin_callback(HttpServletRequest request, Model model, HttpSession session) {
         service.naverLogin(request, model, session);
         System.out.println("naverLogin =======");
@@ -33,7 +34,7 @@ public class LoginController {
 
         return "redirect:/members/" + session.getAttribute("memberId") + "/mypage";
     }
-    @RequestMapping(value = "/kakaoLogin", method = RequestMethod.GET)
+    @GetMapping("/kakaoLogin")
     public String kakaoLogin_Redirect(String code, Model model, HttpSession session){
         service.kakaoProcess(code, session);
 
@@ -54,19 +55,12 @@ public class LoginController {
             model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
             return "project_login";
         }
-
-
-
     }
 
-    @GetMapping("/login/page")
+    @GetMapping
     public String goLogin(){
         return "project_login";
     }
-
-
-
-
 
 
 }
