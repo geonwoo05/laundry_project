@@ -72,5 +72,9 @@ public class OrdersDao {
         return ordersMapper.updateOrdersStatusToCompletePayment(ordersId);
     }
 
+    public int updateCouponListStatusToUsedCoupon(Long couponListId){
+        return ordersMapper.updateCouponListStatusToUsedCoupon(couponListId);
+    }
+
 
 }

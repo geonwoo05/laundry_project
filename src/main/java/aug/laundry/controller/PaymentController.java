@@ -24,7 +24,6 @@ import java.io.IOException;
 @Controller
 public class PaymentController {
 
-
     @Value("${import.rest-api}")
     private String restApi;
 
@@ -74,6 +73,11 @@ public class PaymentController {
 
 
 //        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);  //검증하지 못함. 나중에 실행되는지 확인
+
+        //검증하지 못함 나중에 실행되는 지 확인 (쿠폰 사용하면 쿠폰상태 사용완료로 변경)
+//        if(payment.getCouponListId() != null){
+//            ordersServiceKdh.updateCouponListStatusToUsedCoupon(payment.getCouponListId());
+//        }
 
         //redirect로 바꿔야함
         return "project_search_id_result";

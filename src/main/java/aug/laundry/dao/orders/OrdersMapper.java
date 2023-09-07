@@ -25,4 +25,6 @@ public interface OrdersMapper {
     Optional<Long> findExpectedPriceByOrdersId(Long ordersId);
 
     int updateOrdersStatusToCompletePayment(Long ordersId);
+
+    int updateCouponListStatusToUsedCoupon(Long couponListId);
 }
