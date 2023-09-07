@@ -1,6 +1,7 @@
 package aug.laundry.controller;
 
 import aug.laundry.dto.*;
+import aug.laundry.service.BCryptService_kgw;
 import aug.laundry.service.LaundryService;
 import aug.laundry.service.MemberService_kgw;
 import aug.laundry.service.MypageService_osc;
@@ -29,6 +30,7 @@ public class MypageController_osc {
   private final MypageService_osc mypageService;
   private final MemberService_kgw memberService;
   private final LaundryService laundryService;
+  private final BCryptService_kgw bc;
 
   @GetMapping("/{memberId}/mypage")
   public String MypageMain(@PathVariable Long memberId, Model model){
@@ -219,7 +221,7 @@ public class MypageController_osc {
       return  "project_change_password";
     }
 
-
+    changePasswordDto.setMemberPassword(bc.encodeBCrypt(changePasswordDto.getMemberPassword()));
     mypageService.changePassword(memberId, changePasswordDto);
     return "redirect:/members/{memberId}/update";
   }
