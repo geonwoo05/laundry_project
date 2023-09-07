@@ -13,6 +13,8 @@ public interface MemberMapper {
     public int checkId(String memberAccount);
     public Integer registerUser(MemberDto memberDto);
     public int inviteCodeCheck(String inviteCode);
+    public Long findRecommender(String inviteCode);
+    public MemberDto selectId(String memberAccount);
 
 
 
