@@ -76,5 +76,10 @@ public class OrdersDao {
         return ordersMapper.updateCouponListStatusToUsedCoupon(couponListId);
     }
 
+    public int addPoint(Long memberId, Long pointStack, String pointStackReason){
+        return ordersMapper.addPoint(memberId, pointStack, pointStackReason);
+    }
+
+
 
 }

@@ -162,5 +162,13 @@ public class OrdersService_kdh {
         }
     }
 
+    @Transactional
+    public void addPoint(Long memberId, Long pointStack, String pointStackReason){
+        int result = ordersDao.addPoint(memberId, pointStack, pointStackReason);
+        if(result==0) {
+            throw new IllegalArgumentException("포인트 적립/사용이 업데이트 되지 않았습니다.");
+        }
+    }
+
 
 }

@@ -78,6 +78,12 @@ public class PaymentController {
 //        if(payment.getCouponListId() != null){
 //            ordersServiceKdh.updateCouponListStatusToUsedCoupon(payment.getCouponListId());
 //        }
+        //검증하지 못함 나중에 실행되는지확인 포인트 차감
+//        if(payment.getPointPrice() != null){
+//            //음수로 변환
+//            Long pointPrice = -payment.getPointPrice();
+//            ordersServiceKdh.addPoint(memberId, pointPrice, "포인트 사용");
+//        }
 
         //redirect로 바꿔야함
         return "project_search_id_result";

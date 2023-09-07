@@ -72,4 +72,25 @@
         WHERE COUPON_LIST_ID = #{couponListId})
     </update>
 
+    <insert id="addPoint">
+        <selectKey keyProperty="pointId" resultType="Long" order="BEFORE">
+            SELECT SEQ_POINT_ID.NEXTVAL
+            FROM DUAL
+        </selectKey>
+        INSERT INTO POINT(POINT_ID, MEMBER_ID, POINT_STACK, POINT_STACK_REASON, POINT_STACK_DATE, POINT_NOW)
+        VALUES(#{pointId}, #{memberId}, #{pointStack}, #{pointStackReason}, SYSDATE, (SELECT
+        POINT_NOW
+        FROM
+        (SELECT
+        POINT_NOW,
+        POINT_STACK_DATE,
+        ROW_NUMBER() OVER (ORDER BY POINT_STACK_DATE DESC) AS rn
+        FROM
+        POINT
+        WHERE
+        MEMBER_ID = #{memberId})
+        WHERE
+        rn = 1) + #{pointStack})
+    </insert>
+
 </mapper>

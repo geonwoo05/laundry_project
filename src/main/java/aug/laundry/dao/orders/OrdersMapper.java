@@ -5,6 +5,7 @@ import aug.laundry.domain.Repair;
 import aug.laundry.dto.OrdersResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,6 @@ public interface OrdersMapper {
     int updateOrdersStatusToCompletePayment(Long ordersId);
 
     int updateCouponListStatusToUsedCoupon(Long couponListId);
+
+    int addPoint(@Param("memberId") Long memberId, @Param("pointStack") Long pointStack, @Param("pointStackReason") String pointStackReason);
 }
