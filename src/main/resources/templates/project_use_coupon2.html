@@ -76,18 +76,18 @@
             opener.document.querySelector('#couponPrice').value = '';
 
             let expectedPrice = parseInt(document.querySelector('#expectedPrice').value);
-                opener.document.querySelector('#totalPrice').innerHTML = expectedPrice;
+                opener.document.querySelector('#totalPrice').innerHTML = Number(expectedPrice).toLocaleString() + '원';
 
 
             let pointValue = parseInt(opener.document.querySelector('#point').value);
 
             if(isNaN(pointValue)){
                     //입력되었을때 서버에서 계산해온 값으로 초기화
-                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice;
+                    opener.document.querySelector('#totalPrice').innerHTML = Number(expectedPrice).toLocaleString() + '원';
                 }
                 if(!isNaN(pointValue)){
                     //입력되었을때 화면에서 포인트 적용된 가격으로 초기화
-                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice - pointValue;
+                    opener.document.querySelector('#totalPrice').innerHTML = Number(expectedPrice - pointValue).toLocaleString() + '원';
                 }
 
 
@@ -111,15 +111,15 @@
 
                 if(isNaN(pointValue)){
                     //입력되었을때 서버에서 계산해온 값으로 초기화
-                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice;
+                    opener.document.querySelector('#totalPrice').innerHTML = Number(expectedPrice).toLocaleString() + '원';
                     let temp = expectedPrice - couponPrice;
-                    opener.document.querySelector('#totalPrice').innerHTML = temp;
+                    opener.document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
                 }
                 if(!isNaN(pointValue)){
                     //입력되었을때 화면에서 쿠폰가격적용된 가격으로 초기화
-                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice - pointValue;
+                    opener.document.querySelector('#totalPrice').innerHTML = Number(expectedPrice - pointValue).toLocaleString() + '원';
                     let temp = expectedPrice - pointValue - couponPrice;
-                    opener.document.querySelector('#totalPrice').innerHTML = temp;
+                    opener.document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
                 }
             }
 

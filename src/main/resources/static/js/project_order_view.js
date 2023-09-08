@@ -47,21 +47,21 @@ window.addEventListener('load', function(){
 
         if(isNaN(couponPrice)){
             //입력되었을때 서버에서 계산해온 값으로 초기화
-            document.querySelector('#totalPrice').innerHTML = totalPriceFromServer;
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer).toLocaleString() + '원';
             let pointValue = parseInt(document.querySelector('#point').value);
 
             if(!isNaN(pointValue)){
                 let temp = totalPriceFromServer - pointValue;
-                document.querySelector('#totalPrice').innerHTML = temp;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
             }
         }
         else if(!isNaN(couponPrice)){
-            document.querySelector('#totalPrice').innerHTML = totalPriceFromServer - couponPrice;
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer - couponPrice).toLocaleString() + '원';
             let pointValue = parseInt(document.querySelector('#point').value);
 
             if(!isNaN(pointValue)){
                 let temp = totalPriceFromServer - couponPrice - pointValue;
-                document.querySelector('#totalPrice').innerHTML = temp;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
             }
         }
 
