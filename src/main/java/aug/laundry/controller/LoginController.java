@@ -36,13 +36,13 @@ public class LoginController {
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
 
 
-        return "redirect:/members/" + session.getAttribute("memberId") + "/mypage";
+        return "redirect:/";
     }
     @GetMapping("/kakaoLogin")
     public String kakaoLogin_Redirect(String code, Model model, HttpSession session){
         service.kakaoProcess(code, session);
 
-        return "redirect:/members/" + session.getAttribute("memberId") + "/mypage";
+        return "redirect:/";
 
 
     }
@@ -52,7 +52,7 @@ public class LoginController {
         MemberDto dto = service.login(memberDto, session);
         if (dto != null) {
             session.setAttribute(SessionConstant.LOGIN_MEMBER, dto.getMemberId());
-            return "redirect:/members/" + session.getAttribute("memberId") + "/mypage";
+            return "redirect:/";
         } else {
             model.addAttribute("memberAccount", memberDto.getMemberAccount());
             model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
@@ -62,6 +62,7 @@ public class LoginController {
 
     @PostMapping("/find-account/confirm")
     public String confirmId(ConfirmIdDto confirmIdDto, Model model){
+        // 주석 추가
         // 주석 추가
         List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone());
         model.addAttribute("list", list);

@@ -182,19 +182,25 @@ function inviteCodeCheck(){
     let inviteCode = document.querySelector('#inviteCode').value;
     let inviteCodeCheckMsg = document.querySelector('.inviteCodeCheck');
 
-    fetch("/inviteCode/" + inviteCode)
-    .then(response => response.json())
-    .then(map => {
-        if(map.result > 0){
-            inviteCodeCheckMsg.style.color = '#3CB371';
-            inviteCodeCheckMsg.innerHTML = map.resultMsg;
-            document.querySelector('.validation-inviteCode').value=1;
-        }else{
-            inviteCodeCheckMsg.style.color = 'red';
-            inviteCodeCheckMsg.innerHTML = map.resultMsg;
-            document.querySelector('.validation-inviteCode').value=2;
-        }
-    })
+    if(inviteCode == null || inviteCode === ''){
+        inviteCodeCheckMsg.style.color = 'red'
+        inviteCodeCheckMsg.innerHTML = '추천인 코드를 입력해주세요.';
+    }else{
+        fetch("/inviteCode/" + inviteCode)
+            .then(response => response.json())
+            .then(map => {
+                if(map.result > 0){
+                    inviteCodeCheckMsg.style.color = '#3CB371';
+                    inviteCodeCheckMsg.innerHTML = map.resultMsg;
+                    document.querySelector('.validation-inviteCode').value=1;
+                }else{
+                    inviteCodeCheckMsg.style.color = 'red';
+                    inviteCodeCheckMsg.innerHTML = map.resultMsg;
+                    document.querySelector('.validation-inviteCode').value=2;
+                }
+            })
+    }
+
 }
 
 
@@ -228,7 +234,7 @@ function validationSubmit() {
     return true;
   } else {
     // 어떤 조건을 만족하지 않는 경우에는 false 반환
-    alert('누락된 항목이 있습니다.');
+    alert('각 항목들을 다시 확인해주세요.');
     return false;
   }
 }
