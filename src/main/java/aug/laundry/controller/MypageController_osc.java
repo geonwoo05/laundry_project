@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -190,12 +191,8 @@ public class MypageController_osc {
   public String unregister(@PathVariable Long memberId){
 
     MemberDto memberDto = memberService.selectOne(memberId);
-    if(memberDto!=null){
       int res = mypageService.unregister(memberDto.getMemberId());
-      return "redirect:/";
-    } else {
-      return "redirect:/";
-    }
+      return "redirect:/login";
   }
 
   @GetMapping("{memberId}/password/update")
@@ -224,6 +221,15 @@ public class MypageController_osc {
     changePasswordDto.setMemberPassword(bc.encodeBCrypt(changePasswordDto.getMemberPassword()));
     mypageService.changePassword(memberId, changePasswordDto);
     return "redirect:/members/{memberId}/update";
+  }
+
+  @GetMapping("{membersId}/logout")
+  public String logout(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+      session.invalidate();
+    }
+    return "redirect:/login";
   }
 
 }
