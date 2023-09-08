@@ -39,7 +39,7 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
     public int saveSubscribe(SubscriptionPayDto subData) {
         // 결제정보 DB저장
         int res = subscribeDao.insertJoinSubscribe(subData);
-        res += subscribeDao.updateMemberSubscribe(subData.getSelect_month(), subData.getMember_id());
+        res += subscribeDao.updateMemberSubscribe(subData.getSelectMonth(), subData.getMemberId());
         return res;
     }
 
@@ -128,7 +128,12 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
     }
 
     @Override
-    public int updateNextMerchantId(String merchant_uid, String merchant_uid_r) {
-        return subscribeDao.updateNextMerchantId(merchant_uid, merchant_uid_r);
+    public int updateNextMerchantId(String merchantUid, String merchantUidRe) {
+        return subscribeDao.updateNextMerchantId(merchantUid, merchantUidRe);
+    }
+
+    @Override
+    public SubscriptionPayDto getScheduleInfo(Long memberId) {
+        return subscribeDao.getScheduleInfo(memberId);
     }
 }

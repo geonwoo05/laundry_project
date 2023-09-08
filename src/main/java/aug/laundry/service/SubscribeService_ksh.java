@@ -13,5 +13,7 @@ public interface SubscribeService_ksh {
     String getAccessToken();
     JsonObject postData(String requestUrl, String jsonBody) throws IOException;
     JsonObject getData(String requestUrl) throws IOException;
-    int updateNextMerchantId(String merchant_uid, String merchant_uid_r);
+    int updateNextMerchantId(String merchantUid, String merchantUidRe);
+    SubscriptionPayDto getScheduleInfo(Long memberId);
+
 }
