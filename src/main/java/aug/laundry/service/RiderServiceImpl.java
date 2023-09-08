@@ -6,11 +6,9 @@ import aug.laundry.domain.Orders;
 import aug.laundry.domain.Rider;
 import aug.laundry.dto.OrdersEnum;
 import aug.laundry.enums.orderStatus.OrderStatus;
-import aug.laundry.enums.orderStatus.routineOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +18,9 @@ public class RiderServiceImpl implements RiderService{
 
     private final RiderMapper riderMapper;
 
-
     @Override
-    public List<OrdersEnum> OrderList(String status) {
-        List<Orders> orders = riderMapper.orderList(status);
-        List<OrdersEnum> change = OrderStatus.change(orders);
-        return change;
+    public List<Orders> OrderList(String status) {
+        return riderMapper.orderList(status);
     }
     @Override
     public List<OrdersEnum> OrderListEnum(String status) {
@@ -63,53 +58,4 @@ public class RiderServiceImpl implements RiderService{
     public DeliveryImage finishImg(Long ordersId) {
         return riderMapper.finishImg(ordersId);
     }
-
-    @Override
-    public List<Orders> routineOrderList(String ordersAddress, String status) {
-        return riderMapper.routineOrderList(ordersAddress, status);
-    }
-
-    @Override
-    public Rider routineRider(String riderName) {
-        return riderMapper.routineRider(riderName);
-    }
-
-    @Override
-    public List<Map<String, Integer>> routineOrderCnt() {
-        return riderMapper.routineOrderCnt();
-    }
-
-    @Override
-    public Map<String, Integer> routineTotalCnt(String RIDER_POSSIBLE_ZIPCODE) {
-        return riderMapper.routineTotalCnt(RIDER_POSSIBLE_ZIPCODE);
-    }
-
-    @Override
-    public List<Integer> dongCnt(String ordersAddress, String status) {
-        routineOrder order = routineOrder.valueOf(ordersAddress);
-        List<String> dongNames = order.getDongName();
-
-        List<Integer> list = new ArrayList<>();
-
-        for(String a : dongNames){
-            String address = ordersAddress + " " + a;
-            list.add(riderMapper.dongCnt(address, status));
-        }
-        System.out.println(list);
-        return list;
-    }
-
-//    @Override
-//    public List<Map<String, Integer>> dongCnt(String ordersAddress) {
-//        routineOrder order = routineOrder.valueOf(ordersAddress);
-//        List<String> dongNames = order.getDongName();
-//
-//        List<Map<String, Integer>> list = new ArrayList<>();
-//
-//        for(String a : dongNames){
-//            String address = ordersAddress + " " + a;
-//            list.add(riderMapper.dongCnt(address));
-//        }
-//        return list;
-//    }
 }

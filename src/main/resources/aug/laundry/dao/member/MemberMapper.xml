@@ -46,6 +46,10 @@
 
     </select>
 
+    <select id="confirmId" resultType="aug.laundry.dto.MemberDto">
+        SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone}
+    </select>
+
 
 
 </mapper>

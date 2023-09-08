@@ -6,6 +6,7 @@ import aug.laundry.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 
@@ -33,11 +34,20 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
     }
 
     public Integer registerUser(MemberDto memberDto){
+        // 비밀번호 암호화
         String password = bc.encodeBCrypt(memberDto.getMemberPassword());
         memberDto.setMemberPassword(password);
+
+        // 핸드폰 번호 형식 수정(예 : 010-1234-5678 -> 01012345678)
+        String memberPhone = memberDto.getMemberPhone().replace("-","");
+        memberDto.setMemberPhone(memberPhone);
+        
+        // 추천인 코드 생성후 DB에 저장
         String inviteCode = getRandomCode();
         memberDto.setMemberMyInviteCode(inviteCode);
         Integer registerRes = memberMapper.registerUser(memberDto);
+        
+        // 추천인 코드 작성 시 포인트 적립
         MemberDto newbie = memberMapper.selectId(memberDto.getMemberAccount());
         if(registerRes > 0){
             int res = pointDao.registerPoint(newbie.getMemberId());
@@ -86,6 +96,12 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
             }
         }
         return inviteCode;
+    }
+
+    public List<MemberDto> confirmId(String memberName, String memberPhone){
+        List<MemberDto> list = memberMapper.confirmId(memberName, memberPhone);
+        return list;
+
     }
 
 

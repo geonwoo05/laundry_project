@@ -51,7 +51,7 @@ public class PaymentController {
         Paymentinfo paymentinfo = new Paymentinfo(
                 1L, response.getImpUid(), response.getPayMethod(), response.getMerchantUid(),
                 response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
-                );//memberId 세션에서 가져온 값으로 바꿔야함
+        );//memberId 세션에서 가져온 값으로 바꿔야함
 
         try {
             paymentService.savePaymentInfo(paymentinfo);
@@ -60,7 +60,7 @@ public class PaymentController {
             iamportClient.cancelPaymentByImpUid(
                     new CancelData(
                             irsp.getResponse().getImpUid(), true, irsp.getResponse().getAmount()));
-            
+
             return ""; // 결제정보가 db에 저장되지않아서 취소후 결제시스템 오류있다고 안내페이지 보여줘야함
         }
 
