@@ -42,8 +42,6 @@ public class LoginController {
 
 
     }
-
-
     @PostMapping("/loginAction")
     public  String login(MemberDto memberDto, HttpSession session, Model model) {
         MemberDto dto = service.login(memberDto ,session);
@@ -56,6 +54,9 @@ public class LoginController {
             return "project_login";
         }
     }
+
+
+
 
     @GetMapping
     public String goLogin(){
