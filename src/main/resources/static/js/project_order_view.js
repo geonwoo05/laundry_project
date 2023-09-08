@@ -13,15 +13,12 @@ window.addEventListener('load', function(){
 
 //    let pointValue = parseInt(document.querySelector('#point').value);
     let couponId = parseInt(document.querySelector('#coupon').value);
-    let couponPrice = parseInt(document.querySelector('#couponPrice').value);
-
-    if(!isNaN(couponPrice)){
 
 
-    }
 
     document.querySelector('#point').addEventListener('input', function(){
 
+        let couponPrice = parseInt(document.querySelector('#couponPrice').value);
         if(isNaN(couponPrice)){
             //입력되었을때 서버에서 계산해온 값으로 초기화
             document.querySelector('#totalPrice').innerHTML = totalPriceFromServer;
@@ -32,6 +29,17 @@ window.addEventListener('load', function(){
                 document.querySelector('#totalPrice').innerHTML = temp;
             }
         }
+        else if(!isNaN(couponPrice)){
+            document.querySelector('#totalPrice').innerHTML = totalPriceFromServer - couponPrice;
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - couponPrice - pointValue;
+                document.querySelector('#totalPrice').innerHTML = temp;
+            }
+        }
+
+
 
 
 
