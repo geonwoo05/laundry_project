@@ -27,7 +27,7 @@ public class RiderRestController {
     public Map<String, Object> list(@PathVariable("ordersAddress")String ordersAddress, @PathVariable("presentStatus")String presentStatus){
         Map<String, Object> map =new HashMap<>();
 
-        List<Orders> list = riderService.routineOrderList(ordersAddress, presentStatus);
+        List<OrdersEnum> list = riderService.routineOrderList(ordersAddress, presentStatus);
         Rider rider = riderService.routineRider("홀란드");
         List<Map<String, Integer>> cnt = riderService.routineOrderCnt();
 

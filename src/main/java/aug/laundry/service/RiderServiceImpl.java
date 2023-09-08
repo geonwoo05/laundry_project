@@ -65,8 +65,10 @@ public class RiderServiceImpl implements RiderService{
     }
 
     @Override
-    public List<Orders> routineOrderList(String ordersAddress, String status) {
-        return riderMapper.routineOrderList(ordersAddress, status);
+    public List<OrdersEnum> routineOrderList(String ordersAddress, String status) {
+        List<Orders> orders = riderMapper.routineOrderList(ordersAddress, status);
+        List<OrdersEnum> change = OrderStatus.change(orders);
+        return change;
     }
 
     @Override
