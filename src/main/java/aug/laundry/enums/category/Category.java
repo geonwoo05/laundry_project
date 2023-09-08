@@ -108,7 +108,11 @@ public enum Category {
     // 전체 하위카테고리 가져오기
     public static Map<String, Long> getAll() {
         return Arrays.stream(Category.values()).filter(x -> Objects.nonNull(x.parentCategory)).collect(Collectors.toMap(y -> y.title, y -> y.price));
+    }
 
+    // 상위 카테고리 전체 가져오기
+    public static Set<Category> getParentCategoryAll() {
+        return Arrays.stream(Category.values()).filter(x -> Objects.isNull(x.getPrice()) && x != Category.COMMON).collect(Collectors.toSet());
     }
 
 }

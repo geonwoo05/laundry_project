@@ -20,4 +20,8 @@ public class SubscribeDao {
     public int updateMemberSubscribe(int selectMonth, Long memberId){
         return subscribeMapper.updateMemberSubscribe(selectMonth, memberId);
     }
+
+    public int updateNextMerchantId(String merchant_uid, String merchant_uid_r){
+        return subscribeMapper.updateNextMerchantId(merchant_uid, merchant_uid_r);
+    }
 }

@@ -189,13 +189,23 @@
 }
 
 .progressBar{
-    width: 100%;
+    width: calc(100% - 1.8rem);
     height: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
-    vertical-align: bottom;
+    margin: 0 0.9rem;
+
+}
+
+.progressBarTitle{
+    margin: 0;
+    width: 100%;
+    height: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .dot{
@@ -205,23 +215,19 @@
     background-color: var(--main-font-color);
     margin: 0;
 }
-.dot.st{
-    margin-left: 0.9rem;
-}
-.dot.ed{
-    margin-right: 0.9rem;
-}
+
 .bar{
-    width: calc(100% - 2.5rem);
+    width: calc(100% - 0.8rem);
     height: 0.4rem;
     background-color: var(--main-font-color);
     position: absolute;
-    left: 1.3rem;
+    left: 0.4rem;
 }
 .now{
     position: absolute;
     animation: sizeChange 0.4s alternate infinite;
 }
+
 
 @keyframes sizeChange {
 
