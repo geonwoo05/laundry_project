@@ -69,7 +69,7 @@
             opener.document.querySelector('input[name=coupon]').value = '';
 
 
-            let couponRow = opener.document.querySelector('.coupon-row');
+            let couponRow = opener.document.querySelector('#coupon-row');
             opener.document.querySelector('.content.discount').textContent=''
             couponRow.style.display = 'none';
 
@@ -97,7 +97,7 @@
             opener.document.querySelector('input[name=coupon]').value = radio.value;
             opener.document.querySelector('input[name=couponPrice]').value = Number(radio.parentElement.children.item(1).textContent);
 
-            let couponRow = opener.document.querySelector('.coupon-row');
+            let couponRow = opener.document.querySelector('#coupon-row');
             couponRow.style.display = '';
             couponRow.querySelector('.content.discount').textContent = '- ' + Number(radio.parentElement.children.item(1).textContent).toLocaleString() + '원';
 

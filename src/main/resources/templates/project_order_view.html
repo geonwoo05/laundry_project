@@ -161,11 +161,11 @@
                 <th class='content'>수선</th>
                 <td th:text="|+ ${#numbers.formatDecimal(repairMap.get('totalRepairPrice'),3,'COMMA',0,'COMMA')}원|" class='content'>+ 20,000원</td>
             </tr>
-            <tr class="coupon-row">
+            <tr id="coupon-row">
                 <th class='content'>쿠폰</th>
                 <td class='content discount'>- 3,000원</td>
             </tr>
-            <tr>
+            <tr id="point-row">
                 <th class='content'>포인트</th>
                 <td class='content discount'>- 3,000원</td>
             </tr>

@@ -1,5 +1,17 @@
 window.addEventListener('load', function(){
 
+    if(document.querySelector('#couponPrice').value==''){
+        document.querySelector('#coupon-row').style.display = 'none';
+    }
+
+    if(document.querySelector('#point').value==''){
+        document.querySelector('#point-row').style.display = 'none';
+    }
+
+
+
+
+
     let couponBtn = document.querySelector('#selectCoupon');
     couponBtn.addEventListener('click', function(){
         var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
@@ -19,6 +31,20 @@ window.addEventListener('load', function(){
     document.querySelector('#point').addEventListener('input', function(){
 
         let couponPrice = parseInt(document.querySelector('#couponPrice').value);
+
+        let pointRow = document.querySelector('#point-row');
+
+        if(document.querySelector('#point').value==''){
+            document.querySelector('#point-row').style.display = 'none';
+        }
+
+        if(document.querySelector('#point').value != ''){
+            pointRow.style.display = '';
+            pointRow.querySelector('.content.discount').textContent = '- ' + Number(document.querySelector('#point').value).toLocaleString() + '원';
+        }
+
+
+
         if(isNaN(couponPrice)){
             //입력되었을때 서버에서 계산해온 값으로 초기화
             document.querySelector('#totalPrice').innerHTML = totalPriceFromServer;
