@@ -63,6 +63,7 @@ public class LoginController {
     @PostMapping("/find-account/confirm")
     public String confirmId(ConfirmIdDto confirmIdDto, Model model){
         // 주석 추가
+        // 주석 추가
         List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone());
         model.addAttribute("list", list);
         return "project_search_id_result";
