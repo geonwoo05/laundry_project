@@ -177,8 +177,8 @@
         <table class='totalPrice'>
             <tr>
                 <th class='content'>총 합계</th>
-                <td th:text="${totalPriceWithDeliveryPrice}" id='totalPrice' class='content'>200,000원</td>
-                
+                <td th:text="|${#numbers.formatDecimal(totalPriceWithDeliveryPrice,3,'COMMA',0,'COMMA')}원|" id='totalPrice' class='content'>200,000원</td>
+
             </tr>
         </table>
         <div class='fixbox'>
@@ -190,5 +190,8 @@
 </div>
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
+<script th:inline="javascript">
+    let tPrice = [[${totalPriceWithDeliveryPrice}]];
+</script>
 
 </html>

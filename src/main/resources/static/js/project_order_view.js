@@ -21,9 +21,7 @@ window.addEventListener('load', function(){
 
 
 //    서버에서 계산해온 값
-    let totalPriceFromServer = parseInt(document.querySelector('#totalPrice').textContent);
-
-//    let pointValue = parseInt(document.querySelector('#point').value);
+    let totalPriceFromServer = tPrice;
     let couponId = parseInt(document.querySelector('#coupon').value);
 
 
