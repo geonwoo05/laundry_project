@@ -1,10 +1,88 @@
 window.addEventListener('load', function(){
 
+    if(document.querySelector('#couponPrice').value==''){
+        document.querySelector('#coupon-row').style.display = 'none';
+    }
+
+    if(document.querySelector('#point').value==''){
+        document.querySelector('#point-row').style.display = 'none';
+    }
+
+
+
+
+
     let couponBtn = document.querySelector('#selectCoupon');
     couponBtn.addEventListener('click', function(){
         var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
-            window.open('/orders/members/1/coupons', '_blank');
+            window.open('/orders/2/members/1/coupons', '_blank');
     })
+
+
+
+//    서버에서 계산해온 값
+    let totalPriceFromServer = parseInt(document.querySelector('#totalPrice').textContent);
+
+//    let pointValue = parseInt(document.querySelector('#point').value);
+    let couponId = parseInt(document.querySelector('#coupon').value);
+
+
+
+    document.querySelector('#point').addEventListener('input', function(){
+
+        let couponPrice = parseInt(document.querySelector('#couponPrice').value);
+
+        let pointRow = document.querySelector('#point-row');
+
+        if(document.querySelector('#point').value==''){
+            document.querySelector('#point-row').style.display = 'none';
+        }
+
+        if(document.querySelector('#point').value != ''){
+            pointRow.style.display = '';
+            pointRow.querySelector('.content.discount').textContent = '- ' + Number(document.querySelector('#point').value).toLocaleString() + '원';
+        }
+
+
+
+        if(isNaN(couponPrice)){
+            //입력되었을때 서버에서 계산해온 값으로 초기화
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer).toLocaleString() + '원';
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - pointValue;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
+            }
+        }
+        else if(!isNaN(couponPrice)){
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer - couponPrice).toLocaleString() + '원';
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - couponPrice - pointValue;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
+            }
+        }
+
+
+
+
+
+
+
+    })
+
+
+
+
+
+
+
+
+
+
+
 
 
     var IMP = window.IMP;

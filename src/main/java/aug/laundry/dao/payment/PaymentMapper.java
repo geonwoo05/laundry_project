@@ -19,4 +19,7 @@ public interface PaymentMapper {
     void savePaymentInfo(Paymentinfo paymentinfo);
 
     Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId);
+
+    int updateRefundInfoBypaymentinfoId(
+            @Param("paymentinfoId") Long paymentinfoId, @Param("errorMessage") String errorMessage);
 }

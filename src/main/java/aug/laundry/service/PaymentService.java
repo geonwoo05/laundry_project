@@ -14,9 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -104,6 +101,15 @@ public class PaymentService {
         }
 
         return paymentinfo;
+    }
+
+    @Transactional
+    public void updateRefundInfoBypaymentinfoId(Long paymentinfoId, String errorMessage){
+        int result = paymentDao.updateRefundInfoBypaymentinfoId(paymentinfoId, errorMessage);
+
+        if(result == 0){
+            throw new IllegalArgumentException("결제 환불정보를 업데이트 하지 못했습니다");
+        }
     }
 
 }

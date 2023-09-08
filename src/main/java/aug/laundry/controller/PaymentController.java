@@ -17,13 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import retrofit2.http.Path;
 
 import java.io.IOException;
 
 @Controller
 public class PaymentController {
-
 
     @Value("${import.rest-api}")
     private String restApi;
@@ -33,6 +31,7 @@ public class PaymentController {
 
     private IamportClient iamportClient;
     private PaymentService paymentService;
+    private OrdersService_kdh ordersServiceKdh;
 
     @Autowired
     public PaymentController(PaymentService paymentService) {
@@ -43,6 +42,11 @@ public class PaymentController {
     @GetMapping("/orders/{ordersId}/payment/complete")
     public String complete(@PathVariable Long ordersId, @ModelAttribute PaymentCheckRequestDto payment,
                            @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId) throws IamportResponseException, IOException {
+
+        if(payment.isImp_success() == false){
+            return "redirect:/orders/" + ordersId +"/payment";
+        }
+
 
         iamportClient = new IamportClient(restApi, restApiSecret);
         IamportResponse<Payment> irsp = iamportClient.paymentByImpUid(payment.getImp_uid());
@@ -65,6 +69,20 @@ public class PaymentController {
         }
 
         paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
+
+
+//        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);  //검증하지 못함. 나중에 실행되는지 확인
+
+        //검증하지 못함 나중에 실행되는 지 확인 (쿠폰 사용하면 쿠폰상태 사용완료로 변경)
+//        if(payment.getCouponListId() != null){
+//            ordersServiceKdh.updateCouponListStatusToUsedCoupon(payment.getCouponListId());
+//        }
+        //검증하지 못함 나중에 실행되는지확인 포인트 차감
+//        if(payment.getPointPrice() != null){
+//            //음수로 변환
+//            Long pointPrice = -payment.getPointPrice();
+//            ordersServiceKdh.addPoint(memberId, pointPrice, "포인트 사용");
+//        }
 
         //redirect로 바꿔야함
         return "project_search_id_result";

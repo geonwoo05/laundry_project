@@ -32,4 +32,11 @@
         WHERE PAYMENTINFO_ID = #{paymentinfoId}
     </select>
 
+    <update id="updateRefundInfoBypaymentinfoId">
+        UPDATE PAYMENTINFO
+        SET PAYMENT_STATUS = 2,
+        REFUND_REASON = #{errorMessage}
+        WHERE PAYMENTINFO_ID = #{paymentinfoId}
+    </update>
+
 </mapper>

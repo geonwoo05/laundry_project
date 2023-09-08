@@ -142,8 +142,37 @@ public class OrdersService_kdh {
     public void updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice) {
         int result = ordersDao.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
         if(result==0) {
-            throw new IllegalArgumentException("잘못된 회원아이디 입력");
+            throw new IllegalArgumentException("예상금액이 업데이트 되지 않았습니다.");
         }
+    }
+
+    @Transactional
+    public void updateOrdersStatusToCompletePayment(Long ordersId){
+        int result = ordersDao.updateOrdersStatusToCompletePayment(ordersId);
+        if(result==0) {
+            throw new IllegalArgumentException("주문상태가 업데이트 되지 않았습니다.");
+        }
+    }
+
+    @Transactional
+    public void updateCouponListStatusToUsedCoupon(Long couponListId){
+        int result = ordersDao.updateCouponListStatusToUsedCoupon(couponListId);
+        if(result==0) {
+            throw new IllegalArgumentException("쿠폰리스트상태가 업데이트 되지 않았습니다.");
+        }
+    }
+
+    @Transactional
+    public void addPoint(Long memberId, Long pointStack, String pointStackReason){
+        int result = ordersDao.addPoint(memberId, pointStack, pointStackReason);
+        if(result==0) {
+            throw new IllegalArgumentException("포인트 적립/사용이 업데이트 되지 않았습니다.");
+        }
+    }
+
+    public Long findExpectedPriceByOrdersId(Long ordersId){
+        return ordersDao.findExpectedPriceByOrdersId(ordersId)
+                .orElseThrow(() -> new IllegalArgumentException("예상금액이 존재하지 않습니다."));
     }
 
 

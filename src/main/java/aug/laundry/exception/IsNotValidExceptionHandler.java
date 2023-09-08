@@ -49,6 +49,8 @@ public class IsNotValidExceptionHandler {
                 paymentinfo.getImpUid(), true,
                 BigDecimal.valueOf(paymentinfo.getAmount())));
 
+        paymentService.updateRefundInfoBypaymentinfoId(paymentinfoId, e.getMessage());
+
         ErrorResponse response = ErrorResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message(e.getMessage())

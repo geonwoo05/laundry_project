@@ -133,8 +133,8 @@
             <span class='couponName content'>적용안함</span>
             <svg xmlns="http://www.w3.org/2000/svg" style='rotate: 180deg;' viewBox="0 0 512 512"><path d="M290.5 51.8C283.3 39.5 270.2 32 256 32s-27.3 7.5-34.5 19.8l-216 368c-7.3 12.4-7.3 27.7-.2 40.1S25.7 480 40 480H472c14.3 0 27.6-7.7 34.7-20.1s7-27.8-.2-40.1l-216-368z"/></svg>
         </button>
-        <input type="hidden" name="coupon">
-        <input type="hidden" name="couponPrice">
+        <input type="hidden" name="coupon" id="coupon">
+        <input type="hidden" name="couponPrice" id="couponPrice">
 
 
         <hr class='bighr'>
@@ -161,11 +161,11 @@
                 <th class='content'>수선</th>
                 <td th:text="|+ ${#numbers.formatDecimal(repairMap.get('totalRepairPrice'),3,'COMMA',0,'COMMA')}원|" class='content'>+ 20,000원</td>
             </tr>
-            <tr class="coupon-row">
+            <tr id="coupon-row">
                 <th class='content'>쿠폰</th>
                 <td class='content discount'>- 3,000원</td>
             </tr>
-            <tr>
+            <tr id="point-row">
                 <th class='content'>포인트</th>
                 <td class='content discount'>- 3,000원</td>
             </tr>
@@ -178,7 +178,7 @@
             <tr>
                 <th class='content'>총 합계</th>
                 <td th:text="${totalPriceWithDeliveryPrice}" id='totalPrice' class='content'>200,000원</td>
-<!--                <input type="hidden" name="totalPriceInput" th:value="${totalPriceWithDeliveryPrice}">-->
+                
             </tr>
         </table>
         <div class='fixbox'>

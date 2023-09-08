@@ -36,4 +36,8 @@ public class PaymentDao {
         log.info("paymentinfo={}", paymentinfo);
         return paymentinfo;
     }
+
+    public int updateRefundInfoBypaymentinfoId(Long paymentinfoId, String errorMessage){
+        return paymentMapper.updateRefundInfoBypaymentinfoId(paymentinfoId, errorMessage);
+    }
 }
