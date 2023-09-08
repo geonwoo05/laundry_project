@@ -16,7 +16,7 @@ window.addEventListener('load',function(){
 
         if(regex1.test(userPw.value)){
             if(regex1.test(userPw.value) && regex2.test(userPw.value)){
-                error.textContent = '사용가능한 비밀번호입니다.';
+                error.textContent = '';
                 button_passwordChange.disabled = true;
             }else{
                 error.textContent = '대소문자, 숫자, 특수문자가 적어도 하나씩 있어야 합니다.';

@@ -1,7 +1,10 @@
 window.addEventListener('load', function(){
 
 // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init('7f5f612c37590a5d3b0a2cfec0c466a4');
+    if (!Kakao.isInitialized()) {
+        Kakao.init('7f5f612c37590a5d3b0a2cfec0c466a4');
+    };
+
 
     // SDK 초기화 여부를 판단합니다.
     console.log(Kakao.isInitialized());
