@@ -98,48 +98,4 @@
     <select id="finishImg" resultType="DeliveryImage">
         select * from delivery_image where orders_id = #{ordersId}
     </select>
-
-<!--  정기배송  -->
-    <select id="routineOrderList" resultType="aug.laundry.domain.Orders">
-        select orders_pay_status as ordersStatus, orders_id, orders_date, orders_address, orders_address_details
-        from orders
-        where rider_id = (select rider_id from rider where rider_name = '홀란드') and quick_rider_id is null
-        and orders_address like CONCAT(CONCAT('%', #{ordersAddress}), '%')
-        <if test="status == '진행중'">
-            and orders_pay_status in (3,12)
-        </if>
-        <if test="status == '완료'">
-            and orders_pay_status in (4,13)
-        </if>
-    </select>
-    <select id="routineRider" resultType="aug.laundry.domain.Rider">
-        select * from rider where rider_name = '홀란드'
-    </select>
-
-    <select id="routineOrderCnt" resultType="map">
-    select 'waitCnt' as query_name, count(*) as result FROM orders WHERE orders_pay_status IN (3, 12) AND rider_id = (select rider_id from rider where rider_name = '홀란드')
-    UNION
-    select 'completeCnt' as query_name, count(*) as result FROM orders WHERE orders_pay_status IN (4, 13) AND rider_id = (select rider_id from rider where rider_name = '홀란드')
-    </select>
-
-    <select id="routineTotalCnt" resultType="map">
-        SELECT 'TotalCnt' AS query_name, COUNT(*) AS result
-        FROM orders o
-        JOIN rider r ON o.rider_id = r.rider_id
-        WHERE
-<!--            o.orders_pay_status IN (3, 4, 11, 12) AND -->
-            o.orders_address LIKE '%' || #{zipCode} || '%'
-            AND r.rider_name = '홀란드'
-    </select>
-
-    <select id="dongCnt" resultType="Integer">
-<!--        SELECT 'dongCnt' AS query_name, COUNT(*) AS result from orders where orders_address LIKE '%' || #{ordersAddress} || '%'-->
-        SELECT COUNT(*) AS result from orders where orders_address LIKE '%' || #{ordersAddress} || '%'
-        <if test="status == '진행중'">
-            and orders_pay_Status in (3, 12)
-        </if>
-        <if test="status == '완료'">
-            and orders_pay_Status in (4, 13)
-        </if>
-    </select>
 </mapper>

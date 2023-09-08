@@ -43,6 +43,8 @@ public class MemberController {
 
 
     }
+
+
     @PostMapping("/loginAction")
     public  String login(MemberDto memberDto, HttpSession session, Model model) {
         MemberDto dto = service.login(memberDto, session);
@@ -56,6 +58,7 @@ public class MemberController {
         }
     }
 
+<<<<<<< HEAD:src/main/java/aug/laundry/controller/MemberController.java
     @PostMapping("/find-account/confirm")
     public String confirmId(ConfirmIdDto confirmIdDto, Model model){
         List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone());
@@ -69,6 +72,8 @@ public class MemberController {
     }
 
 
+=======
+>>>>>>> parent of 25aae82 (충돌해결):src/main/java/aug/laundry/controller/LoginController.java
     @GetMapping
     public String goLogin(){
         return "project_login";
