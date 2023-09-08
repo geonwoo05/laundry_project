@@ -223,13 +223,4 @@ public class MypageController_osc {
     return "redirect:/members/{memberId}/update";
   }
 
-  @GetMapping("{membersId}/logout")
-  public String logout(HttpServletRequest request) {
-    HttpSession session = request.getSession(false);
-    if (session != null) {
-      session.invalidate();
-    }
-    return "redirect:/login";
-  }
-
 }
