@@ -21,9 +21,10 @@
         </div>
 
         <div class='res_email_box'>
-            <h5 class='res_email'>aaaa</h5>
-            <div th:each="li : ${list}">
-                <h5 th:text="${li.memberAccount}"></h5>
+            <div id="userId" th:each="li : ${list}">
+                <span th:text="${li.memberAccount}">
+                </span><span th:if="${li.memberSocial == 'kakao'}">(카카오 회원)</span>
+                </span><span th:if="${li.memberSocial == 'naver'}">(네이버 회원)</span>
             </div>
         </div>
 

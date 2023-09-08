@@ -6,6 +6,7 @@ import aug.laundry.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
@@ -55,7 +56,8 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
         }
         
         // 추천인 코드를 작성한 경우 신규회원, 추천한 회원에게 포인트 적립
-        if(memberDto.getMemberInviteCode() != null || !("".equals(memberDto.getMemberInviteCode()))){
+        if(memberDto.getMemberInviteCode() != null && !memberDto.getMemberInviteCode().isBlank()){
+            System.out.println("추천인 코드 : " + memberDto.getMemberInviteCode());
             try {
                 // 추천인 포인트 적립
                 Long recommanderId = memberMapper.findRecommender(memberDto.getMemberInviteCode());
@@ -103,7 +105,10 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
     }
 
     public List<MemberDto> confirmId(String memberName, String memberPhone){
-        List<MemberDto> list = memberMapper.confirmId(memberName, memberPhone);
+        // 전화번호 형식변경 후 아이디 list에 담기
+        String phonenumber = memberPhone.replace("-","");
+        
+        List<MemberDto> list = memberMapper.confirmId(memberName, phonenumber);
         return list;
 
     }
