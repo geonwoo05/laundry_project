@@ -3,8 +3,52 @@ window.addEventListener('load', function(){
     let couponBtn = document.querySelector('#selectCoupon');
     couponBtn.addEventListener('click', function(){
         var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
-            window.open('/orders/members/1/coupons', '_blank');
+            window.open('/orders/2/members/1/coupons', '_blank');
     })
+
+
+
+//    서버에서 계산해온 값
+    let totalPriceFromServer = parseInt(document.querySelector('#totalPrice').textContent);
+
+//    let pointValue = parseInt(document.querySelector('#point').value);
+    let couponId = parseInt(document.querySelector('#coupon').value);
+    let couponPrice = parseInt(document.querySelector('#couponPrice').value);
+
+    if(!isNaN(couponPrice)){
+
+
+    }
+
+    document.querySelector('#point').addEventListener('input', function(){
+
+        if(isNaN(couponPrice)){
+            //입력되었을때 서버에서 계산해온 값으로 초기화
+            document.querySelector('#totalPrice').innerHTML = totalPriceFromServer;
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - pointValue;
+                document.querySelector('#totalPrice').innerHTML = temp;
+            }
+        }
+
+
+
+
+
+    })
+
+
+
+
+
+
+
+
+
+
+
 
 
     var IMP = window.IMP;

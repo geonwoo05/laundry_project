@@ -52,6 +52,7 @@
                     <li>- 쿠폰 만료일은 수거일 기준으로 적용됩니다.</li>
                 </ul>
             </div>
+            <input type="hidden" id="expectedPrice" th:value="${expectedPrice}">
             <button id="submit" type="button">적용하기</button>
         </form>
     </div>
@@ -71,6 +72,26 @@
             let couponRow = opener.document.querySelector('.coupon-row');
             opener.document.querySelector('.content.discount').textContent=''
             couponRow.style.display = 'none';
+
+            opener.document.querySelector('#couponPrice').value = '';
+
+            let expectedPrice = parseInt(document.querySelector('#expectedPrice').value);
+                opener.document.querySelector('#totalPrice').innerHTML = expectedPrice;
+
+
+            let pointValue = parseInt(opener.document.querySelector('#point').value);
+
+            if(isNaN(pointValue)){
+                    //입력되었을때 서버에서 계산해온 값으로 초기화
+                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice;
+                }
+                if(!isNaN(pointValue)){
+                    //입력되었을때 화면에서 포인트 적용된 가격으로 초기화
+                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice - pointValue;
+                }
+
+
+
         } else {
             opener.document.querySelector('.couponName').textContent = radio.parentElement.parentElement.children.item(1).textContent;
             opener.document.querySelector('input[name=coupon]').value = radio.value;
@@ -79,6 +100,34 @@
             let couponRow = opener.document.querySelector('.coupon-row');
             couponRow.style.display = '';
             couponRow.querySelector('.content.discount').textContent = '- ' + Number(radio.parentElement.children.item(1).textContent).toLocaleString() + '원';
+
+<!--            -->
+
+            let expectedPrice = parseInt(document.querySelector('#expectedPrice').value);
+            let couponPrice = parseInt(opener.document.querySelector('#couponPrice').value);
+            let pointValue = parseInt(opener.document.querySelector('#point').value);
+
+            if(!isNaN(couponPrice)){
+
+                if(isNaN(pointValue)){
+                    //입력되었을때 서버에서 계산해온 값으로 초기화
+                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice;
+                    let temp = expectedPrice - couponPrice;
+                    opener.document.querySelector('#totalPrice').innerHTML = temp;
+                }
+                if(!isNaN(pointValue)){
+                    //입력되었을때 화면에서 쿠폰가격적용된 가격으로 초기화
+                    opener.document.querySelector('#totalPrice').innerHTML = expectedPrice - pointValue;
+                    let temp = expectedPrice - pointValue - couponPrice;
+                    opener.document.querySelector('#totalPrice').innerHTML = temp;
+                }
+            }
+
+
+
+
+
+
         }
         window.close();
     })

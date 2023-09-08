@@ -5,11 +5,15 @@
 
 
     <select id="findByMemberId" resultType="Integer">
-        SELECT B.POINT_NOW
-        FROM MEMBER A
-        INNER JOIN POINT B
-        ON A.MEMBER_ID = B.MEMBER_ID
-        WHERE A.MEMBER_ID = #{memberId}
+        SELECT POINT_NOW
+        FROM (
+            SELECT B.POINT_NOW, B.POINT_STACK_DATE, ROW_NUMBER() OVER (ORDER BY POINT_STACK_DATE DESC) AS rn
+            FROM MEMBER A
+            INNER JOIN POINT B
+            ON A.MEMBER_ID = B.MEMBER_ID
+            WHERE A.MEMBER_ID = #{memberId}
+            )
+        WHERE RN = 1
     </select>
 
     <insert id="addPoint">

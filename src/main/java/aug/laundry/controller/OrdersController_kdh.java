@@ -1,6 +1,7 @@
 package aug.laundry.controller;
 
 import aug.laundry.commom.SessionConstant;
+import aug.laundry.dao.orders.OrdersDao;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.CategoryOption;
 import aug.laundry.enums.category.Delivery;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import retrofit2.http.Path;
 
 import javax.swing.text.html.Option;
 import java.util.List;
@@ -134,11 +136,14 @@ public class OrdersController_kdh {
         return delivery;
     }
 
-    @GetMapping("/members/{memberId}/coupons")
-    public String coupons(@PathVariable Long memberId, Model model, String takeDate){
+    @GetMapping("/{ordersId}/members/{memberId}/coupons")
+    public String coupons(@PathVariable Long ordersId, @PathVariable Long memberId, Model model, String takeDate){
+
+        Long expectedPrice = ordersServiceKdh.findExpectedPriceByOrdersId(ordersId);
         List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
         model.addAttribute("memberId", memberId);
         model.addAttribute("coupon", getCoupon);
+        model.addAttribute("expectedPrice", expectedPrice);
 
         return "project_use_coupon2";
     }

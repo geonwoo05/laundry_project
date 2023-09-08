@@ -170,5 +170,10 @@ public class OrdersService_kdh {
         }
     }
 
+    public Long findExpectedPriceByOrdersId(Long ordersId){
+        return ordersDao.findExpectedPriceByOrdersId(ordersId)
+                .orElseThrow(() -> new IllegalArgumentException("예상금액이 존재하지 않습니다."));
+    }
+
 
 }
