@@ -129,9 +129,9 @@
                 $(".ride_num").text(count + "건");
 
                 listItem = `
-                    <a href='/ride/orders/25'>
+                    <a href='/ride/orders/${orders.ordersId}'>
                         <li>
-                            <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >1119</span><br>
+                            <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${orders.ordersId}</span><br>
                             <span class='delivery_address'>${orders.ordersAddress} ${orders.ordersAddressDetails}</span>
                             <div class='space'>
                                 <span class='delivery_time'>${orders.ordersDate}</span>

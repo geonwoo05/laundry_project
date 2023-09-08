@@ -4,11 +4,10 @@
 <mapper namespace="aug.laundry.dao.rider.RiderMapper">
 
     <select id="orderList" resultType="aug.laundry.domain.Orders">
-<!--        select orders_pay_status, orders_id, orders_address ||' '||orders_address_details as orders_address, orders_date-->
         select orders_pay_status as ordersStatus, orders_id, orders_address, orders_address_details, orders_date
         from orders
         <if test="status == '대기중'">
-            where quick_rider_id is null and orders_pay_status in(2, 10)
+            where quick_rider_id is null and orders_pay_status in(2, 10) and rider_id is null
         </if>
         <if test="status == '진행중'">
             where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바') and orders_pay_status in(3, 4, 11, 12)
@@ -37,20 +36,20 @@
         select 'acceptCnt' as query_name, count(*) as result
         from orders
         where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바')
-        and orders_pay_status in (3, 4, 10, 11)
+        and orders_pay_status in (3, 4, 11, 12)
 
         union all
 
         select 'waitCnt' as query_name, count(*) as result
         from orders
-        where quick_rider_id is null
+        where quick_rider_id is null and rider_id is null
 
         union all
 
         select 'completeCnt' as query_name, count(*) as result
         from orders
         where quick_rider_id = (select quick_rider_id from quick_rider where quick_rider_name = '스크류바')
-        and orders_pay_status in (5, 12)
+        and orders_pay_status in (5, 13)
     </select>
 
 
@@ -68,6 +67,7 @@
         o.orders_request,
         o.orders_pickup,
         o.orders_info,
+        o.rider_id,
         ql.quick_laundry_take_time as ordersPickupDate
         FROM
         orders o

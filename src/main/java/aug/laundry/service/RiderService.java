@@ -28,7 +28,7 @@ public interface RiderService {
 
     DeliveryImage finishImg(Long ordersId);
 
-    List<Orders> routineOrderList(@Param("ordersAddress")String ordersAddress, @Param("status")String status);
+    List<OrdersEnum> routineOrderList(@Param("ordersAddress")String ordersAddress, @Param("status")String status);
 
     Rider routineRider(String riderName);
 

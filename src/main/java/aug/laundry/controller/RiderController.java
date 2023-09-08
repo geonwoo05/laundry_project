@@ -98,8 +98,9 @@ public class RiderController {
         Map<String, Object> map = new HashMap<>();
 
         Orders orders = new Orders();
-        orders.setOrdersId(1234L);
+        orders.setOrdersId(37L);
         orders.setOrdersDate("2023/08/31");
+        orders.setOrdersStatus(2);
         orders.setOrdersAddress("서울시 서대문구 홍은동 454");
 //        orders.setOrdersAddress("서울시 강북구 번동 657");
         orders.setOrdersAddressDetails("108동 505호");
@@ -134,31 +135,61 @@ public class RiderController {
         return "project_rider_read_more";
     }
 
-    @PostMapping("/ride/assign/{ordersId}")
-    public String orderCheck(@PathVariable("ordersId") Long ordersId, Model model){
-        Orders orders = new Orders();
-        orders.setOrdersId(ordersId);
+    @PostMapping("/ride/assign/{ordersId}/{riderId}")
+    public String orderCheck(@PathVariable("ordersId") Long ordersId, @PathVariable("riderId") Long riderId, Model model){
+        System.out.println(riderId);
+        // 정기배송
+        if(riderId != 0){
+            Orders orders = new Orders();
+            orders.setOrdersId(ordersId);
 
-//        int res = riderService.updateOrderRider(orders);
-        int res2 = riderService.updateOrderStatus(orders);
-//        System.out.println(res);
-        System.out.println(res2);
+            int res2 = riderService.updateOrderStatus(orders);
+            System.out.println(res2);
+            return "redirect:/ride/routine";
+        }else{
+            Orders orders = new Orders();
+            orders.setOrdersId(ordersId);
 
-        return "redirect:/ride/accept";
+            int res = riderService.updateOrderRider(orders);
+            int res2 = riderService.updateOrderStatus(orders);
+            System.out.println(res);
+            System.out.println(res2);
+            return "redirect:/ride/accept";
+        }
+//        Orders orders = new Orders();
+//        orders.setOrdersId(ordersId);
+//
+////        int res = riderService.updateOrderRider(orders);
+//        int res2 = riderService.updateOrderStatus(orders);
+////        System.out.println(res);
+//        System.out.println(res2);
+
+//        return "redirect:/ride/accept";
     }
 
-    @PostMapping("/ride/pickUp/{ordersId}")
-    public String deliveryFinish(@PathVariable("ordersId") Long ordersId, @RequestParam("files") List<MultipartFile> files ){
+    @PostMapping("/ride/pickUp/{ordersId}/{riderId}")
+    public String deliveryFinish(@PathVariable("ordersId") Long ordersId, @PathVariable("riderId") Long riderId, @RequestParam("files") List<MultipartFile> files ){
+        System.out.println("riderId : " + riderId);
         System.out.println(ordersId);
         System.out.println(files);
 
-        int fileRes = fileUpload.saveFile(files, ordersId, FileUploadType.DELIVERY);
-
-        Orders orders = new Orders();
-        orders.setOrdersId(ordersId);
-        int res = riderService.updateOrderRider(orders);
-        int res2 = riderService.updateOrderStatus(orders);
-        return "redirect:/ride/finish";
+        // 정기배송에서 넘어올때
+        if(riderId != 0){
+            int fileRes = fileUpload.saveFile(files, ordersId, FileUploadType.DELIVERY);
+            System.out.println("fileRes : " + fileRes);
+            Orders orders = new Orders();
+            orders.setOrdersId(ordersId);
+            int res2 = riderService.updateOrderStatus(orders);
+            return "redirect:/ride/routine/"+ordersId;
+        }else{
+            int fileRes = fileUpload.saveFile(files, ordersId, FileUploadType.DELIVERY);
+            System.out.println("fileRes : " + fileRes);
+            Orders orders = new Orders();
+            orders.setOrdersId(ordersId);
+            int res = riderService.updateOrderRider(orders);
+            int res2 = riderService.updateOrderStatus(orders);
+            return "redirect:/ride/finish";
+        }
     }
 
     @GetMapping("/ride/routine")
@@ -169,7 +200,7 @@ public class RiderController {
         List<String> dongNames = order.getDongName();
         System.out.println(dongNames);
 
-        List<Orders> list = riderService.routineOrderList(dongNames.get(0), "진행중");
+        List<OrdersEnum> list = riderService.routineOrderList(dongNames.get(0), "진행중");
         System.out.println(list);
 
         Map<String,Integer> total = riderService.routineTotalCnt(rider.getRiderPossibleZipcode());
@@ -205,7 +236,7 @@ public class RiderController {
         }
 
 
-        model.addAttribute("dongNames",dongNames);
+//        model.addAttribute("dongNames",dongNames);
         model.addAttribute("rider", rider);
         model.addAttribute("list", list);
         model.addAttribute("total", total);
