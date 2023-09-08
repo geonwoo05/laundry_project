@@ -11,5 +11,7 @@ public interface SubscribeMapper {
 
     int updateMemberSubscribe(@Param("selectMonth") int selectMonth, @Param("memberId") Long memberId);
 
-    int updateNextMerchantId(@Param("merchant_uid") String merchant_uid, @Param("merchant_uid_r") String merchant_uid_r);
+    int updateNextMerchantId(@Param("merchantUid") String merchantUid, @Param("merchantUidRe") String merchantUidRe);
+
+    SubscriptionPayDto getScheduleInfo(Long memberId);
 }
