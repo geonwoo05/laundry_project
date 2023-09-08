@@ -6,6 +6,7 @@ import aug.laundry.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 
@@ -18,7 +19,7 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
     private final ApiExamMemberProfile apiExam;
 
     private final BCryptService_kgw bc;
-    
+
     private final PointDao pointDao;
 
     public MemberDto selectOne(Long memberId){
@@ -33,24 +34,37 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
     }
 
     public Integer registerUser(MemberDto memberDto){
+        // 비밀번호 암호화
         String password = bc.encodeBCrypt(memberDto.getMemberPassword());
         memberDto.setMemberPassword(password);
+
+        // 핸드폰 번호 형식 수정(예 : 010-1234-5678 -> 01012345678)
+        String memberPhone = memberDto.getMemberPhone().replace("-","");
+        memberDto.setMemberPhone(memberPhone);
+
+        // 추천인 코드 생성후 DB에 저장
         String inviteCode = getRandomCode();
         memberDto.setMemberMyInviteCode(inviteCode);
         Integer registerRes = memberMapper.registerUser(memberDto);
+
+        // 추천인 코드 작성 시 포인트 적립
         MemberDto newbie = memberMapper.selectId(memberDto.getMemberAccount());
         if(registerRes > 0){
             int res = pointDao.registerPoint(newbie.getMemberId());
             System.out.println("포인트 넣기 : " + res);
         }
-
-        if(memberDto.getMemberInviteCode() != null || !memberDto.getMemberInviteCode().equals("")){
-            // 추천인 포인트 적립
-            Long recommanderId = memberMapper.findRecommender(memberDto.getMemberInviteCode());
-            pointDao.addRecommandPoint(recommanderId, 5000, "신규회원에게 추천");
-
-            // 뉴비 포인트 적립
-            pointDao.addRecommandPoint(newbie.getMemberId(), 5000, "추천인 코드 작성");
+        
+        // 추천인 코드를 작성한 경우 신규회원, 추천한 회원에게 포인트 적립
+        if(memberDto.getMemberInviteCode() != null || !("".equals(memberDto.getMemberInviteCode()))){
+            try {
+                // 추천인 포인트 적립
+                Long recommanderId = memberMapper.findRecommender(memberDto.getMemberInviteCode());
+                pointDao.addRecommandPoint(recommanderId, 5000, "신규회원에게 추천");
+                // 뉴비 포인트 적립
+                pointDao.addRecommandPoint(newbie.getMemberId(), 5000, "추천인 코드 작성");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
         }
         return registerRes;
@@ -60,7 +74,7 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
         int res = memberMapper.inviteCodeCheck(inviteCode);
         return res;
     }
-    
+
     // 신규유저의 초대코드 생성
     public String getRandomCode(){
         int length = 8; // 생성할 문자열의 길이
@@ -86,6 +100,12 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
             }
         }
         return inviteCode;
+    }
+
+    public List<MemberDto> confirmId(String memberName, String memberPhone){
+        List<MemberDto> list = memberMapper.confirmId(memberName, memberPhone);
+        return list;
+
     }
 
 
