@@ -22,10 +22,13 @@
 
             <div class='res_email_box'>
                 <h5 class='res_email'>aaaa</h5>
+                <div th:each="li : ${list}">
+                    <h5 th:text="${li.memberAccount}"></h5>
+                </div>
             </div>
 
             <div class='find_id_button'>
-                <a href="#">로그인하기</a>
+                <a href="/login">로그인하기</a>
             </div>
         </div>
     </div>

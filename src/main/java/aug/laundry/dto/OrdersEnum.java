@@ -1,11 +1,12 @@
 package aug.laundry.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 public class OrdersEnum {
 
     private Long ordersId;
@@ -25,23 +26,6 @@ public class OrdersEnum {
     private String ordersPickupDate;
     private String ordersReturnDate;
 
-    @Builder
-    public OrdersEnum(Long ordersId, Long memberId, String ordersDate, String ordersAddress, String ordersAddressDetails, String ordersInfo, String ordersRequest, Integer ordersPay, String ordersPickup, Integer ordersExpectedPrice, Integer ordersFinalPrice, String ordersStatus, Long riderId, Long quickRiderId, String ordersPickupDate, String ordersReturnDate) {
-        this.ordersId = ordersId;
-        this.memberId = memberId;
-        this.ordersDate = ordersDate;
-        this.ordersAddress = ordersAddress;
-        this.ordersAddressDetails = ordersAddressDetails;
-        this.ordersInfo = ordersInfo;
-        this.ordersRequest = ordersRequest;
-        this.ordersPay = ordersPay;
-        this.ordersPickup = ordersPickup;
-        this.ordersExpectedPrice = ordersExpectedPrice;
-        this.ordersFinalPrice = ordersFinalPrice;
-        this.ordersStatus = ordersStatus;
-        this.riderId = riderId;
-        this.quickRiderId = quickRiderId;
-        this.ordersPickupDate = ordersPickupDate;
-        this.ordersReturnDate = ordersReturnDate;
+    public OrdersEnum() {
     }
 }

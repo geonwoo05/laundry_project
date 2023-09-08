@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @SpringBootTest
 @Transactional
 class TestTest {
@@ -33,7 +35,6 @@ class TestTest {
 
 
     }
-
     @Test
     void testSelectOne(){
         Long memberId = 7L;
@@ -59,6 +60,13 @@ class TestTest {
         MemberDto member = new MemberDto();
         member = loginMapper.login("rlarjsdn531@naver.com");
         System.out.println(member);
+
+    }
+
+    @Test
+    void findIdTest(){
+        List<MemberDto> list = memberMapper.confirmId("김건우","010-8120-8867");
+        System.out.println(list);
 
     }
 }

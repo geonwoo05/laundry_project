@@ -54,8 +54,8 @@ function phoneNum(){
         num.value += "-";
         document.querySelector('#sendSmsBtn').disabled = false;
     }
-
 }
+
 document.querySelector('.phoneNumber').addEventListener('input',function(){
     document.querySelector('.validation-phonenumber').value='';
 })
@@ -228,6 +228,15 @@ function validationSubmit() {
     return true;
   } else {
     // 어떤 조건을 만족하지 않는 경우에는 false 반환
+    console.log(validationId);
+    console.log(validationPassword);
+    console.log(validationPasswordCheck);
+    console.log(validationPhonenumber);
+    console.log(memberName);
+    console.log(memberZipcode);
+    console.log(memberDetailAddress);
+
+
     alert('누락된 항목이 있습니다.');
     return false;
   }
