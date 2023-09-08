@@ -15,5 +15,5 @@ public interface MemberMapper {
     public int inviteCodeCheck(String inviteCode);
     public Long findRecommender(String inviteCode);
     public MemberDto selectId(String memberAccount);
-
+    public List<MemberDto> confirmId(@Param("memberName") String memberName, @Param("memberPhone") String memberPhone);
 }

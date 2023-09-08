@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 
 @Service
@@ -20,7 +21,7 @@ public interface MemberService_kgw {
 
     public int inviteCodeCheck(String inviteCode);
 
-
+    public List<MemberDto> confirmId(String memberName, String memberPhone);
 
 
 

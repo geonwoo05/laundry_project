@@ -18,23 +18,23 @@
     <insert id="registerUser">
         INSERT INTO MEMBER (MEMBER_ID, MEMBER_ACCOUNT, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_PHONE, MEMBER_ZIPCODE, MEMBER_ADDRESS, MEMBER_ADDRESS_DETAILS, MEMBER_CREATE_DATE, MEMBER_SOCIAL, SUBSCRIPTION_ID, SUBSCRIPTION_EXPIRE_DATE, GRADE_ID, MEMBER_RECENTLY_DATE, MEMBER_DELETE_STATUS, MEMBER_MY_INVITE_CODE, MEMBER_INVITE_CODE)
         VALUES (
-            SEQ_MEMBER_ID.NEXTVAL,
-            #{memberAccount},
-            #{memberPassword},
-            #{memberName},
-            #{memberPhone},
-            #{memberZipcode},
-            #{memberAddress},
-            #{memberAddressDetails},
-            SYSDATE,
-            NULL,
-            NULL,
-            NULL ,
-            2,
-            NULL,
-            'N',
-            #{memberMyInviteCode},
-            #{memberInviteCode})
+        SEQ_MEMBER_ID.NEXTVAL,
+        #{memberAccount},
+        #{memberPassword},
+        #{memberName},
+        #{memberPhone},
+        #{memberZipcode},
+        #{memberAddress},
+        #{memberAddressDetails},
+        SYSDATE,
+        NULL,
+        NULL,
+        NULL ,
+        2,
+        NULL,
+        'N',
+        #{memberMyInviteCode},
+        #{memberInviteCode})
     </insert>
 
     <select id="inviteCodeCheck" resultType="int">
@@ -44,6 +44,10 @@
     <select id="findRecommender" resultType="Long">
         select MEMBER_ID from member where MEMBER_MY_INVITE_CODE = #{inviteCode}
 
+    </select>
+
+    <select id="confirmId" resultType="aug.laundry.dto.MemberDto">
+        SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone}
     </select>
 
 
