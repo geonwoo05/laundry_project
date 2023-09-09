@@ -2,9 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="aug.laundry.dao.subscribe.SubscribeMapper">
+    <select id="getScheduleInfo" resultType="aug.laundry.dto.SubscriptionPayDto">
+        SELECT subscription_pay_id, customer_uid, merchant_uid, merchant_uid_re
+        FROM (
+                 SELECT ROW_NUMBER() OVER(ORDER BY s.pay_date DESC) rn, s.*
+                 FROM subscription_pay s
+                 WHERE member_id = #{memberId}
+             )
+        WHERE rn = 1
+    </select>
+
     <insert id="insertJoinSubscribe">
-        INSERT INTO subscription_pay(subscription_pay_id, member_id, select_month, merchant_uid,  customer_uid, amount, pay_date, subscription_status, imp_uid)
-        VALUES(seq_subscription_pay_id.nextval, #{member_id}, #{select_month}, #{merchant_uid}, #{customer_uid}, #{amount}, default, default, #{imp_uid})
+        INSERT INTO subscription_pay(subscription_pay_id, member_id, select_month, merchant_uid,  customer_uid, amount, pay_date, subscription_status, imp_uid, repay_count)
+        VALUES(seq_subscription_pay_id.nextval, #{memberId}, #{selectMonth}, #{merchantUid}, #{customerUid}, #{amount}, default, default, #{impUid}, 0)
     </insert>
 
     <update id="updateMemberSubscribe">
@@ -19,8 +29,26 @@
 
     <update id="updateNextMerchantId">
         UPDATE subscription_pay
-        SET merchant_uid_r = #{merchant_uid_r}
-        WHERE merchant_uid = #{merchant_uid}
+        SET merchant_uid_re = #{merchantUidRe}
+        WHERE merchant_uid = #{merchantUid}
+    </update>
+
+    <update id="updateCancel">
+        UPDATE subscription_pay
+        SET subscription_status = 'N'
+        WHERE merchant_uid = #{merchantUid}
+    </update>
+
+    <select id="getRepayCount" resultType="int">
+        SELECT repay_count
+        FROM subscription_pay
+        WHERE merchant_uid = #{merchantUid}
+    </select>
+
+    <update id="updateRepayCount">
+        UPDATE subscription_pay
+        SET repay_count = repay_count+1
+        WHERE merchant_uid = #{merchantUid}
     </update>
 
 </mapper>

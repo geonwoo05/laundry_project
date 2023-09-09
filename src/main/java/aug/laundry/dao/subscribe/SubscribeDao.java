@@ -21,7 +21,23 @@ public class SubscribeDao {
         return subscribeMapper.updateMemberSubscribe(selectMonth, memberId);
     }
 
-    public int updateNextMerchantId(String merchant_uid, String merchant_uid_r){
-        return subscribeMapper.updateNextMerchantId(merchant_uid, merchant_uid_r);
+    public int updateNextMerchantId(String merchantUid, String merchantUidRe){
+        return subscribeMapper.updateNextMerchantId(merchantUid, merchantUidRe);
+    }
+
+    public SubscriptionPayDto getScheduleInfo(Long memberId) {
+        return subscribeMapper.getScheduleInfo(memberId);
+    }
+
+    public int updateCancel(String merchantUid){
+        return subscribeMapper.updateCancel(merchantUid);
+    }
+
+    public int getRepayCount(String merchantUid){
+        return subscribeMapper.getRepayCount(merchantUid);
+    }
+
+    public int updateRepayCount(String merchantUid) {
+        return subscribeMapper.updateRepayCount(merchantUid);
     }
 }

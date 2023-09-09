@@ -1,8 +1,10 @@
 package aug.laundry.service;
 
 import aug.laundry.dao.subscribe.SubscribeDao;
+import aug.laundry.dto.ScheduleDto;
 import aug.laundry.dto.SubscriptionPayDto;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.IamportClient;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +47,7 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
     public int saveSubscribe(SubscriptionPayDto subData) {
         // 결제정보 DB저장
         int res = subscribeDao.insertJoinSubscribe(subData);
-        res += subscribeDao.updateMemberSubscribe(subData.getSelect_month(), subData.getMember_id());
+        res += subscribeDao.updateMemberSubscribe(subData.getSelectMonth(), subData.getMemberId());
         return res;
     }
 
@@ -128,7 +136,98 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
     }
 
     @Override
-    public int updateNextMerchantId(String merchant_uid, String merchant_uid_r) {
-        return subscribeDao.updateNextMerchantId(merchant_uid, merchant_uid_r);
+    public int updateNextMerchantId(String merchantUid, String merchantUidRe) {
+        return subscribeDao.updateNextMerchantId(merchantUid, merchantUidRe);
+    }
+
+    @Override
+    public SubscriptionPayDto getScheduleInfo(Long memberId) {
+        return subscribeDao.getScheduleInfo(memberId);
+    }
+
+    @Override
+    public int updateCancel(String merchantUid) {
+        return subscribeDao.updateCancel(merchantUid);
+    }
+
+    @Override
+    public String schedulePay(SubscriptionPayDto subDto, long timeStamp) throws IOException {
+
+        // 재결제 예약 메서드로 빼기
+        String scheduleUrl =  "https://api.iamport.kr/subscribe/payments/schedule";
+        CloseableHttpClient httpClient = HttpClients.createDefault(); // http 요청하기위한 객체 생성
+//        ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).plusMonths(1);
+//        Instant instant = date.toInstant();
+//        long timeStamp = instant.getEpochSecond();
+
+        String merchantUidRe = subDto.getCustomerUid()+"_subscribe_"+getDate();
+
+        ScheduleDto schedule = new ScheduleDto();
+        schedule.setMerchant_uid(merchantUidRe);
+        schedule.setSchedule_at(timeStamp);
+        schedule.setAmount(subDto.getAmount());
+        schedule.setName(subDto.getSelectMonth()+"개월 정기결제예약");
+
+        Gson gson = new Gson();
+        String scheduleJson = gson.toJson(schedule);
+
+        String jsonBody = String.format("{\"customer_uid\": \"%s\", \"schedules\": [%s]}", subDto.getCustomerUid(), scheduleJson);
+        JsonObject jsonObjS = postData(scheduleUrl, jsonBody);
+
+        // 리스폰스 데이터 배열이므로 JsonArray로 받음
+        JsonArray responseArr = jsonObjS.get("response").getAsJsonArray();
+        JsonObject response = responseArr.get(0).getAsJsonObject();
+
+        String result = "";
+        if("scheduled".equals(response.get("schedule_status").getAsString())){
+            // 예약 성공하면 테이블에 merchant_uid_r 업데이트
+            updateNextMerchantId(subDto.getMerchantUid(), merchantUidRe);
+            result = "success";
+        } else {
+            // 예약 실패일 경우 구독 해지 처리 subscription_pay 테이블에 status N으로하고
+            updateCancel(subDto.getMerchantUid());
+            result = "fail";
+        }
+
+        return result;
+    }
+
+    @Override
+    public String refund(String impUid, int payPrice) throws IOException {
+        String result="";
+
+        String cancelUrl =  "https://api.iamport.kr/payments/cancel";
+        String jsonBody = String.format("{\"reason\": \"%s\", \"imp_uid\": \"%s\", \"amount\": %d, \"checksum\": %d}", "잘못된 결제", impUid, payPrice, payPrice);
+
+        JsonObject cancelDate  = postData(cancelUrl, jsonBody);
+        String status = cancelDate.get("response").getAsJsonObject().get("status").getAsString();
+
+        log.info("status={}", status);
+
+        if("cancelled".equals(status)) {
+            result = "success";
+        } else {
+            result = "fail";
+        }
+
+        return result;
+    }
+
+    @Override
+    public int getRepayCount(String merchantUid) {
+        return subscribeDao.getRepayCount(merchantUid);
+    }
+
+    @Override
+    public int updateRepayCount(String merchantUid) {
+        return subscribeDao.updateRepayCount(merchantUid);
+    }
+
+    private String getDate() {
+        LocalDateTime today = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmmssSSS");
+        String date = today.format(formatter);
+
+        return date;
     }
 }
