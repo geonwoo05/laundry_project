@@ -20,6 +20,10 @@ window.addEventListener('load', function(){
 
 
 
+
+
+
+
 //    서버에서 계산해온 값
     let totalPriceFromServer = tPrice;
     let couponId = parseInt(document.querySelector('#coupon').value);
@@ -63,15 +67,48 @@ window.addEventListener('load', function(){
             }
         }
 
-
-
-
-
-
-
     })
 
 
+// 전부사용 눌렀을때
+    let pointBtn = document.querySelector('.pointbtn');
+    pointBtn.addEventListener('click', function(){
+        document.querySelector('#point').value = totalPoint;
+
+        let couponPrice = parseInt(document.querySelector('#couponPrice').value);
+
+        let pointRow = document.querySelector('#point-row');
+
+        if(document.querySelector('#point').value==''){
+            document.querySelector('#point-row').style.display = 'none';
+        }
+
+        if(document.querySelector('#point').value != ''){
+            pointRow.style.display = '';
+            pointRow.querySelector('.content.discount').textContent = '- ' + Number(document.querySelector('#point').value).toLocaleString() + '원';
+        }
+
+        if(isNaN(couponPrice)){
+            //입력되었을때 서버에서 계산해온 값으로 초기화
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer).toLocaleString() + '원';
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - pointValue;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
+            }
+        }
+        else if(!isNaN(couponPrice)){
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer - couponPrice).toLocaleString() + '원';
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - couponPrice - pointValue;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
+            }
+        }
+
+    })
 
 
 
