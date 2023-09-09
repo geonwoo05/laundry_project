@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel='stylesheet' href='/css/project_subscribe_success.css'>
     <title>구독완료</title>
-    <script>
-    </script>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
@@ -19,15 +17,15 @@
     <div class='breakdown-wrap'>
         <div class='breakdown-container'>
             <div>구독권</div>
-            <div>1개월</div>
+            <div th:text="${data.selectMonth + '개월'}"></div>
         </div>
         <div class='breakdown-container'>
             <div>구독만기일</div>
-            <div>24/08/25</div>
+            <div th:text="${data.subscriptionExpireDate}"></div>
         </div>
         <div class='breakdown-container'>
             <div>결제금액</div>
-            <div>4500원</div>
+            <div th:text="${#numbers.formatInteger(data.amount, 3, 'COMMA') + '원'}"></div>
         </div>
     </div>
 

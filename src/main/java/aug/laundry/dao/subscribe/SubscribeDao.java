@@ -17,16 +17,16 @@ public class SubscribeDao {
         return subscribeMapper.insertJoinSubscribe(subData);
     }
 
-    public int updateMemberSubscribe(int selectMonth, Long memberId){
-        return subscribeMapper.updateMemberSubscribe(selectMonth, memberId);
+    public int updateMemberSubscribe(int selectMonth, Long customerUid){
+        return subscribeMapper.updateMemberSubscribe(selectMonth, customerUid);
     }
 
     public int updateNextMerchantId(String merchantUid, String merchantUidRe){
         return subscribeMapper.updateNextMerchantId(merchantUid, merchantUidRe);
     }
 
-    public SubscriptionPayDto getScheduleInfo(Long memberId) {
-        return subscribeMapper.getScheduleInfo(memberId);
+    public SubscriptionPayDto getScheduleInfo(Long customerUid) {
+        return subscribeMapper.getScheduleInfo(customerUid);
     }
 
     public int updateCancel(String merchantUid){
@@ -39,5 +39,9 @@ public class SubscribeDao {
 
     public int updateRepayCount(String merchantUid) {
         return subscribeMapper.updateRepayCount(merchantUid);
+    }
+
+    public SubscriptionPayDto getSubscribeInfo(Long memberId) {
+        return subscribeMapper.getSubscribeInfo(memberId);
     }
 }
