@@ -28,4 +28,16 @@ public class SubscribeDao {
     public SubscriptionPayDto getScheduleInfo(Long memberId) {
         return subscribeMapper.getScheduleInfo(memberId);
     }
+
+    public int updateCancel(String merchantUid){
+        return subscribeMapper.updateCancel(merchantUid);
+    }
+
+    public int getRepayCount(String merchantUid){
+        return subscribeMapper.getRepayCount(merchantUid);
+    }
+
+    public int updateRepayCount(String merchantUid) {
+        return subscribeMapper.updateRepayCount(merchantUid);
+    }
 }

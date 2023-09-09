@@ -20,6 +20,13 @@
         let totalPrice = 0;
         let productName = '';
 
+        /*<![CDATA[*/
+        const result = "[[${result}]]";
+        if(result.length>0){
+            alert(result+"\n관리자에게 문의해주세요.");
+        }
+        /*]]>*/
+
         function selectSubscribe(month, price) {
             const btnPay = document.querySelector('#btnPay');
 
@@ -78,7 +85,7 @@
                 name : productName,
                 amount : totalPrice, // 결제창에 표시될 금액. 실제 승인이 이루어지지는 않습니다. (모바일에서는 가격이 표시되지 않음)
                 customer_uid : customer_uid, // 필수 입력.
-                m_redirect_url : 'https://ef8e-112-186-75-22.ngrok-free.app/payments/mobile'
+                m_redirect_url : 'https://1b7b-180-230-31-201.ngrok-free.app/payments/mobile'
                 //m_redirect_url : 'http://localhost:8080/payments/mobile' // 모바일에서 결제 완료 후 리디렉션 될 URL 예: https://www.my-service.com/payments/complete/mobile
             }, function(rsp) {
                 if ( rsp.success ) {
@@ -97,26 +104,18 @@
                         }),
                     })
                         .then(response => response.json())
-                        .then(data => {
-                            console.log("결제테스트");
-                            if (data.success) {
+                        .then(map => {
+                            if (map.result === 'success') {
                                 // pc결제 성공할 경우
-                                //window.location.href='/subscription/confirm'
-                                // fetch('/api/auth/logout')
-                                //     .then(response => response.json())
-                                //     .then(data => {
-                                //         if (data.success) {
-                                //             alert('구독신청이 완료되었습니다. 다시 로그인해주세요.');
-                                //             window.location.href = '/';
-                                //         }
-                                //     });
+                                window.location.href='/subscription/confirm?result='+map.result;
                             } else {
                                 // 실패 처리
+                                window.location.href='/subscription/order?result='+map.result;
                             }
                         });
                 }
                 else {
-                    let msg = '빌링키 발급 실패.\n';
+                    let msg = '빌링키 발급 실패.\n관리자에게 문의해주세요';
                     msg+=rsp.error_msg;
                     alert(msg);
                 }
@@ -129,7 +128,6 @@
                 .then(response => response.json())
                 .then(map => console.log("unscheduleTEST=", map));
         }
-
 
         function formatDate(date) {
             var year = date.getFullYear();
