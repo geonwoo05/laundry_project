@@ -24,6 +24,8 @@ window.addEventListener('load', function(){
 
 
 
+
+
 //    서버에서 계산해온 값
     let totalPriceFromServer = tPrice;
     let couponId = parseInt(document.querySelector('#coupon').value);
@@ -67,6 +69,15 @@ window.addEventListener('load', function(){
             }
         }
 
+
+
+
+
+
+
+
+
+
     })
 
 
@@ -74,7 +85,6 @@ window.addEventListener('load', function(){
     let pointBtn = document.querySelector('.pointbtn');
     pointBtn.addEventListener('click', function(){
         document.querySelector('#point').value = totalPoint;
-
         let couponPrice = parseInt(document.querySelector('#couponPrice').value);
 
         let pointRow = document.querySelector('#point-row');
@@ -142,6 +152,8 @@ function requestPay() {
     let couponListId = document.querySelector('input[name=coupon]').value;
     let couponPrice = document.querySelector('input[name=couponPrice]').value;
     let pointPrice = document.querySelector('input[name=point]').value;
+    let totalPriceStr = document.querySelector('#totalPrice').textContent;
+    let totalPrice = parseInt(totalPriceStr.replace(/[^0-9]/g, ''));
 
 
     var merchantUId = 'p'+ordersId+'_'+formatDate(new Date());
@@ -153,10 +165,10 @@ function requestPay() {
         pg: "inicis",
         pay_method: "card",
         merchant_uid: merchantUId,
-        name: "결제테스트",
-        amount: 100,
-        buyer_name: "구매자",
-        buyer_tel: "010-1234-5678",
+        name: "세탁",
+        amount: totalPrice,
+        buyer_name: memberName,
+        buyer_tel: memberPhone,
         m_redirect_url: "localhost:8080/orders/" + ordersId
                         + "/payment/complete?"
                         + "couponListId=" + couponListId

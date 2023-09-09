@@ -1,6 +1,7 @@
 package aug.laundry.controller;
 
 import aug.laundry.commom.SessionConstant;
+import aug.laundry.dao.member.MemberMapper;
 import aug.laundry.dao.orders.OrdersDao;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.CategoryOption;
@@ -33,6 +34,7 @@ public class OrdersController_kdh {
 
     private final OrdersService_kdh ordersServiceKdh;
     private final LaundryService laundryService;
+    private final MemberMapper memberMapper;
 
     @GetMapping("/orders")
     public String orders(){
@@ -56,7 +58,8 @@ public class OrdersController_kdh {
         Pass pass = memberShip.getCheck();
 
 
-
+        MemberDto member = memberMapper.selectOne(1L); // 멤버아이디 바꾸기
+        model.addAttribute("member", member);
 
         Map<String, Object> dryMap = ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
         Map<String, Object> repairMap = ordersServiceKdh.findRepairByOrdersId(ordersId);
@@ -141,6 +144,7 @@ public class OrdersController_kdh {
 
         Long expectedPrice = ordersServiceKdh.findExpectedPriceByOrdersId(ordersId);
         List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
+
         model.addAttribute("memberId", memberId);
         model.addAttribute("coupon", getCoupon);
         model.addAttribute("expectedPrice", expectedPrice);
