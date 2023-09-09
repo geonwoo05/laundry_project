@@ -1,35 +1,19 @@
 package aug.laundry.controller;
 
-import aug.laundry.dto.ScheduleDto;
 import aug.laundry.dto.SubscriptionPayDto;
 import aug.laundry.enums.subscribe.Subscribe;
 import aug.laundry.service.SubscribeService_ksh;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.siot.IamportRestClient.response.Schedule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,19 +23,37 @@ import java.util.Map;
 public class SubscribeController {
 
     private final SubscribeService_ksh subscribeService_ksh;
-    @GetMapping("/subscription")
-    public String subscribeInfo() {
+    @GetMapping(value={"/subscription/{memberId}", "/subscription"})
+    public String subscribeInfo(@PathVariable(required = false) Long memberId, Model model) {
+
+        SubscriptionPayDto data = null;
+        if(memberId != null) {
+            data = subscribeService_ksh.getSubscribeInfo(memberId);
+        }
+        model.addAttribute("data", data);
         return "project_subscribe";
     }
 
-    @GetMapping("/subscription/order")
-    public String subscribeOrder(@RequestParam(name = "result", required = false) String result, Model model) {
-        model.addAttribute("result", result);
+    @GetMapping("/subscription/order/{memberId}")
+    public String subscribeOrder(@RequestParam(name = "result", required = false) String result,
+                                 @PathVariable("memberId") Long memberId, Model model) {
+        if(memberId != null) {
+            SubscriptionPayDto data = subscribeService_ksh.getSubscribeInfo(memberId);
+            model.addAttribute("data", data);
+        }
+        if(result!=null) {
+            model.addAttribute("result", result);
+        }
+
         return "project_subscribe_choice";
     }
 
-    @GetMapping("/subscription/confirm")
-    public String confirmView(@RequestParam(name = "result", required = false) String result, Model model) {
+    @GetMapping("/subscription/confirm/{memberId}")
+    public String confirmView(@RequestParam(name = "result", required = false) String result,
+                              @PathVariable("memberId") Long memberId, Model model) {
+        SubscriptionPayDto data = subscribeService_ksh.getSubscribeInfo(memberId);
+
+        model.addAttribute("data", data);
         model.addAttribute("result", result);
         return "project_subscribe_success";
     }
@@ -61,12 +63,13 @@ public class SubscribeController {
         // 모바일 결제
         String result = "";
         int payPrice = 0;
+        Long customerUid = 0L;
         try {
             // imp_uid 또는 merchant_uid로 아임포트 서버에서 결제 정보 조회
             String requestUrl = "https://api.iamport.kr/payments/" + imp_uid;
             JsonObject jsonObj = subscribeService_ksh.getData(requestUrl);
             JsonObject data = jsonObj.get("response").getAsJsonObject();
-            String customerUid = data.get("customer_uid").getAsString();
+            customerUid = data.get("customer_uid").getAsLong();
             String merchantUid = data.get("merchant_uid").getAsString();
             String impUid = data.get("imp_uid").getAsString();
             int amountToBePaid = 0;
@@ -88,7 +91,6 @@ public class SubscribeController {
             // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
             if (payPrice == amountToBePaid) {
                 SubscriptionPayDto subDto = new SubscriptionPayDto();
-                subDto.setMemberId(Long.parseLong(customerUid));
                 subDto.setSelectMonth(selectMonth);
                 subDto.setMerchantUid(merchantUid);
                 subDto.setCustomerUid(customerUid);
@@ -137,7 +139,8 @@ public class SubscribeController {
             // 오류 -> 관리자 문의
             return "redirect:/subscription/order?result=" + e.getMessage();
         }
-        return "redirect:/subscription/confirm?result=" + result;
+        String url = "/subscription/confirm/"+customerUid+"?result="+result;
+        return "redirect:"+url;
     }
 
     @PostMapping("/payments/prepare")
@@ -171,12 +174,13 @@ public class SubscribeController {
         String result = "";
         Map<String, String> map = new HashMap<>();
         int payPrice = 0;
+        Long customerUid = 0L;
         try {
             // imp_uid 또는 merchant_uid로 아임포트 서버에서 결제 정보 조회
             String requestUrl = "https://api.iamport.kr/payments/" + subData.getImpUid();
             JsonObject jsonObj = subscribeService_ksh.getData(requestUrl);
             JsonObject data = jsonObj.get("response").getAsJsonObject();
-            String customerUid = data.get("customer_uid").getAsString();
+            customerUid = data.get("customer_uid").getAsLong();
             String merchantUid = data.get("merchant_uid").getAsString();
             String impUid = data.get("imp_uid").getAsString();
             int amountToBePaid = 0;
@@ -198,7 +202,6 @@ public class SubscribeController {
             // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
             if (payPrice == amountToBePaid) {
                 SubscriptionPayDto subDto = new SubscriptionPayDto();
-                subDto.setMemberId(Long.parseLong(customerUid));
                 subDto.setSelectMonth(selectMonth);
                 subDto.setMerchantUid(merchantUid);
                 subDto.setCustomerUid(customerUid);
