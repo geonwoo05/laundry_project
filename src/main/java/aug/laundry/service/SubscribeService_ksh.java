@@ -15,5 +15,9 @@ public interface SubscribeService_ksh {
     JsonObject getData(String requestUrl) throws IOException;
     int updateNextMerchantId(String merchantUid, String merchantUidRe);
     SubscriptionPayDto getScheduleInfo(Long memberId);
-
+    int updateCancel(String merchantUid);
+    String schedulePay(SubscriptionPayDto subDto, long timeStamp) throws IOException;
+    String refund(String impUid, int payPrice) throws IOException;
+    int getRepayCount(String merchantUid);
+    int updateRepayCount(String merchantUid);
 }
