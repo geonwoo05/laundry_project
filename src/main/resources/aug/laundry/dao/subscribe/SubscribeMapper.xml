@@ -7,14 +7,14 @@
         FROM (
                  SELECT ROW_NUMBER() OVER(ORDER BY s.pay_date DESC) rn, s.*
                  FROM subscription_pay s
-                 WHERE member_id = #{memberId}
+                 WHERE customer_uid = #{customerUid}
              )
         WHERE rn = 1
     </select>
 
     <insert id="insertJoinSubscribe">
-        INSERT INTO subscription_pay(subscription_pay_id, member_id, select_month, merchant_uid,  customer_uid, amount, pay_date, subscription_status, imp_uid, repay_count)
-        VALUES(seq_subscription_pay_id.nextval, #{memberId}, #{selectMonth}, #{merchantUid}, #{customerUid}, #{amount}, default, default, #{impUid}, 0)
+        INSERT INTO subscription_pay(subscription_pay_id, select_month, merchant_uid,  customer_uid, amount, pay_date, subscription_status, imp_uid, repay_count)
+        VALUES(seq_subscription_pay_id.nextval, #{selectMonth}, #{merchantUid}, #{customerUid}, #{amount}, default, default, #{impUid}, 0)
     </insert>
 
     <update id="updateMemberSubscribe">
@@ -23,8 +23,8 @@
             SELECT subscription_id
             FROM subscription
             WHERE subscription_month=#{selectMonth}
-        ), subscription_expire_date = SYSDATE + (31*#{selectMonth})
-        WHERE member_id = #{memberId}
+        ), subscription_expire_date = SYSDATE + (31*#{selectMonth}) + (INTERVAL '23:59:59' HOUR TO SECOND)
+        WHERE member_id = #{customerUid}
     </update>
 
     <update id="updateNextMerchantId">
@@ -50,5 +50,19 @@
         SET repay_count = repay_count+1
         WHERE merchant_uid = #{merchantUid}
     </update>
+
+    <select id="getSubscribeInfo" resultType="aug.laundry.dto.SubscriptionPayDto">
+        SELECT TO_CHAR(subscription_expire_date, 'YYYY-MM-DD') AS subscription_expire_date, select_month, amount
+        FROM (
+                 SELECT ROW_NUMBER() OVER(ORDER BY mp.subscription_pay_id DESC) rn, mp.*
+                 FROM (
+                          SELECT m.subscription_expire_date, p.select_month, p.amount, p.subscription_pay_id
+                          FROM member m
+                                   LEFT OUTER JOIN subscription_pay p ON m.member_id = p.customer_uid
+                          WHERE m.member_id = #{memberId}
+                      ) mp
+             )
+        WHERE rn=1
+    </select>
 
 </mapper>
