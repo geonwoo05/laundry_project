@@ -1,7 +1,10 @@
 package aug.laundry.dao.orders;
 
 import aug.laundry.domain.Drycleaning;
+import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
+import aug.laundry.dto.Criteria;
+import aug.laundry.dto.OrdersListResponseDto;
 import aug.laundry.dto.OrdersResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +81,19 @@ public class OrdersDao {
 
     public int addPoint(Long memberId, Long pointStack, String pointStackReason){
         return ordersMapper.addPoint(memberId, pointStack, pointStackReason);
+    }
+
+    public List<OrdersListResponseDto> findOrdersByMemberIdAndCri(Criteria cri, Long memberId){
+        return ordersMapper.findOrdersByMemberIdAndCri(cri, memberId);
+    }
+
+    public List<OrdersListResponseDto> findOrdersFinishedByMemberIdAndCri(Criteria cri, Long memberId){
+        return ordersMapper.findOrdersFinishedByMemberIdAndCri(cri, memberId);
+    }
+
+
+    public int getTotalCount(Long memberId) {
+        return ordersMapper.getTotalCount(memberId);
     }
 
 

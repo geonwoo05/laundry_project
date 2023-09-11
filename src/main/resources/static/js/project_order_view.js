@@ -10,20 +10,24 @@ window.addEventListener('load', function(){
 
 
 
-
+    let orders_Id = document.querySelector('#ordersId').textContent;
 
     let couponBtn = document.querySelector('#selectCoupon');
     couponBtn.addEventListener('click', function(){
         var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
-            window.open('/orders/2/members/1/coupons', '_blank');
+            window.open('/orders/' + orders_Id + '/members/' + memberId + '/coupons', '_blank');
     })
 
 
 
-//    서버에서 계산해온 값
-    let totalPriceFromServer = parseInt(document.querySelector('#totalPrice').textContent);
 
-//    let pointValue = parseInt(document.querySelector('#point').value);
+
+
+
+
+
+//    서버에서 계산해온 값
+    let totalPriceFromServer = tPrice;
     let couponId = parseInt(document.querySelector('#coupon').value);
 
 
@@ -71,9 +75,50 @@ window.addEventListener('load', function(){
 
 
 
+
+
+
     })
 
 
+// 전부사용 눌렀을때
+    let pointBtn = document.querySelector('.pointbtn');
+    pointBtn.addEventListener('click', function(){
+        document.querySelector('#point').value = totalPoint;
+        let couponPrice = parseInt(document.querySelector('#couponPrice').value);
+
+        let pointRow = document.querySelector('#point-row');
+
+        if(document.querySelector('#point').value==''){
+            document.querySelector('#point-row').style.display = 'none';
+        }
+
+        if(document.querySelector('#point').value != ''){
+            pointRow.style.display = '';
+            pointRow.querySelector('.content.discount').textContent = '- ' + Number(document.querySelector('#point').value).toLocaleString() + '원';
+        }
+
+        if(isNaN(couponPrice)){
+            //입력되었을때 서버에서 계산해온 값으로 초기화
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer).toLocaleString() + '원';
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - pointValue;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
+            }
+        }
+        else if(!isNaN(couponPrice)){
+            document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer - couponPrice).toLocaleString() + '원';
+            let pointValue = parseInt(document.querySelector('#point').value);
+
+            if(!isNaN(pointValue)){
+                let temp = totalPriceFromServer - couponPrice - pointValue;
+                document.querySelector('#totalPrice').innerHTML = Number(temp).toLocaleString() + '원';
+            }
+        }
+
+    })
 
 
 
@@ -107,6 +152,8 @@ function requestPay() {
     let couponListId = document.querySelector('input[name=coupon]').value;
     let couponPrice = document.querySelector('input[name=couponPrice]').value;
     let pointPrice = document.querySelector('input[name=point]').value;
+    let totalPriceStr = document.querySelector('#totalPrice').textContent;
+    let totalPrice = parseInt(totalPriceStr.replace(/[^0-9]/g, ''));
 
 
     var merchantUId = 'p'+ordersId+'_'+formatDate(new Date());
@@ -118,10 +165,10 @@ function requestPay() {
         pg: "inicis",
         pay_method: "card",
         merchant_uid: merchantUId,
-        name: "결제테스트",
-        amount: 100,
-        buyer_name: "구매자",
-        buyer_tel: "010-1234-5678",
+        name: "세탁",
+        amount: totalPrice,
+        buyer_name: memberName,
+        buyer_tel: memberPhone,
         m_redirect_url: "localhost:8080/orders/" + ordersId
                         + "/payment/complete?"
                         + "couponListId=" + couponListId
