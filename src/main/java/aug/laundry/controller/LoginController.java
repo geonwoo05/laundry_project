@@ -97,6 +97,12 @@ public class LoginController {
         return "project_change_password";
     }
 
+    @RequestMapping(value = "/logout", method = {RequestMethod.POST})
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/";
+    }
+
 
     @GetMapping("/find-account")
     public String goFindAccount(){
