@@ -13,7 +13,6 @@
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
 <div class='container'>
-    <form action="#" method="get">
         <h2>드라이클리닝</h2>
         <div class='top'>
             <div class='category'>
@@ -28,6 +27,7 @@
             </div>
             <button type='button' class='categoryadd' id="categoryAdd">추가</button>
         </div>
+    <form action="" method="get" id="dryForm">
         <div class='deleteSec'>
             <input type="checkbox" class="custom-checkbox" id="allDelete">
             <label for="allDelete" class='custom-label'>전체선택</label>
@@ -51,6 +51,7 @@
 
     var memberShip = (percent != null && percent != '') ? true : false;
     console.log(memberShip);
+
 
 
 </script>

@@ -7,7 +7,9 @@ import aug.laundry.dto.OrderPost;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.MemberShip;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 public interface LaundryService {
 
@@ -24,4 +26,9 @@ public interface LaundryService {
     MemberShip isPass(Long memberId);
 
     void update(Long memberId, Long couponListId, OrderPost orderPost);
+
+    void check(Long memberId, HttpSession session);
+
+    boolean insertDrycleaning(Long memberId, Long ordersDetailId, Map<String, Integer> result);
+
 }

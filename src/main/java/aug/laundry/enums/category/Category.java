@@ -115,5 +115,10 @@ public enum Category {
         return Arrays.stream(Category.values()).filter(x -> Objects.isNull(x.getPrice()) && x != Category.COMMON).collect(Collectors.toSet());
     }
 
+    // 카테고리 Title로 카테고리 가져오기
+    public static Optional<Category> findByTitle(String title) {
+        return Arrays.stream(Category.values()).filter(x -> x.getTitle().equals(title)).findAny();
+    }
+
 }
 

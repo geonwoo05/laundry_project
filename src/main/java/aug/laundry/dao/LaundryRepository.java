@@ -16,6 +16,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,5 +73,29 @@ public class LaundryRepository {
 
     public Long getCouponDiscount(Long memberId, Long couponListId) {
         return laundryMapper.getCouponDiscount(memberId, couponListId);
+    }
+
+    public Long check(Long memberId, Long ordersDetailId) {
+        return laundryMapper.check(memberId, ordersDetailId);
+    }
+
+    @Transactional
+    public void removeOrdersDetail(Long ordersDetailId) {
+        laundryMapper.removeDrycleaning(ordersDetailId); // 드라이클리닝 장바구니 삭제
+        log.info("remove Drycleaning");
+        laundryMapper.removeCommon(ordersDetailId); // 생활빨래 장바구니 삭제
+        log.info("remove Common");
+        laundryMapper.removeRepair(ordersDetailId); // 수선 장바구니 삭제
+        log.info("remove Repair");
+        laundryMapper.removeOrdersDetail(ordersDetailId); // 장바구니 삭제
+        log.info("remove OrdersDetail");
+    }
+
+    public void createOrdersDetail(Long memberId) {
+        laundryMapper.createOrdersDetail(memberId);
+    }
+
+    public void insertDryCleaning(Long ordersDetailId, Category category) {
+        laundryMapper.insertDryCleaning(ordersDetailId, category.name());
     }
 }

@@ -75,4 +75,42 @@
     </select>
 
 
+    <select id="check">
+        SELECT ORDERS_DETAIL_ID
+        FROM ORDERS_DETAIL
+        WHERE MEMBER_ID = #{memberId} AND ORDERS_ID IS NULL
+        <if test="ordersDetailId != null">
+            AND ORDERS_DETAIL_ID = #{ordersDetailId}
+        </if>
+
+    </select>
+
+    <insert id="createOrdersDetail">
+        INSERT INTO ORDERS_DETAIL (ORDERS_DETAIL_ID, MEMBER_ID)
+        VALUES (SEQ_ORDERS_DETAIL_ID.NEXTVAL, #{memberId})
+    </insert>
+
+    <delete id="removeDrycleaning">
+        DELETE FROM DRYCLEANING
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </delete>
+    <delete id="removeCommon">
+        DELETE FROM COMMON_LAUNDRY
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </delete>
+    <delete id="removeRepair">
+        DELETE FROM REPAIR
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </delete>
+    <delete id="removeOrdersDetail">
+        DELETE FROM ORDERS_DETAIL
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </delete>
+
+    <insert id="insertDryCleaning">
+        INSERT INTO DRYCLEANING (DRYCLEANING_ID, ORDERS_DETAIL_ID, DRYCLEANING_CATEGORY)
+        VALUES (SEQ_DRYCLEANING_ID.NEXTVAL, #{ordersDetailId}, #{category})
+
+    </insert>
+
 </mapper>

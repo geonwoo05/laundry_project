@@ -1,5 +1,6 @@
 package aug.laundry.service;
 
+import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.LaundryRepository;
 import aug.laundry.domain.Orders;
 import aug.laundry.dto.Address;
@@ -15,9 +16,11 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -84,6 +87,41 @@ public class LaundryServiceImpl implements LaundryService{
         System.out.println("최종 orders = " + orders);
         Integer result = laundryRepository.insert(orders);
         System.out.println("성공!");
+    }
+
+    @Transactional
+    @Override
+    public void check(Long memberId, HttpSession session) {
+        Long orders_detail_id =  laundryRepository.check(memberId, null);
+        if (orders_detail_id != null && orders_detail_id != 0){ // 장바구니가 존재한다면
+            laundryRepository.removeOrdersDetail(orders_detail_id.longValue()); // 삭제
+            log.info("removeAll OrdersDetail");
+        }
+        laundryRepository.createOrdersDetail(memberId); // 장바구니 생성
+        log.info("Create OrdersDetail");
+        orders_detail_id =  laundryRepository.check(memberId, null);
+        session.setAttribute(SessionConstant.ORDERS_CONFIRM, orders_detail_id); // session 발급 (경로 우회로 다음페이지로 이동하는것을 막기 위해 session 사용)
+        log.info("Create Session (ORDERS_DETAIL_ID) = {}", orders_detail_id);
+        log.info("ORDERS_CONFIRM Session = {}", session.getAttribute(SessionConstant.ORDERS_CONFIRM));
+    }
+
+    @Override
+    public boolean insertDrycleaning(Long memberId, Long ordersDetailId, Map<String, Integer> result) {
+        Long check = laundryRepository.check(memberId, ordersDetailId);
+        if (check == null || check == 0L) return false;
+
+        for (String category : result.keySet()) {
+            if (Category.findByTitle(category).isEmpty()) return false; // 해당하는 카테고리가 없으면 false 반환
+        }
+        for (String category : result.keySet()) {
+            Category category1 = Category.findByTitle(category).get();
+            int amount = result.get(category1.getTitle());
+            for (int i=0;i<amount;i++){
+                laundryRepository.insertDryCleaning(ordersDetailId, category1);
+                log.info("Category = {}, amount = {}", category1, amount);
+            }
+        }
+        return true;
     }
 
     @NotNull
