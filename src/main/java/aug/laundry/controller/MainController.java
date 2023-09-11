@@ -38,11 +38,13 @@ public class MainController {
 
     @GetMapping
     public String mainPage(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
-        memberId = memberId == null ? 1L : memberId;
-        MemberDto memberDto = memberServiceKgw.selectOne(memberId);
-        List<OrdersEnum2> orders = mainService.getOrders(memberId);
-        model.addAttribute("name", memberDto.getMemberName());
-        model.addAttribute("orders", orders);
+        if (memberId != null){
+            MemberDto memberDto = memberServiceKgw.selectOne(memberId);
+            List<OrdersEnum2> orders = mainService.getOrders(memberId);
+            model.addAttribute("name", memberDto.getMemberName());
+            model.addAttribute("orders", orders);
+        }
+
 
         return "project_main";
     }
