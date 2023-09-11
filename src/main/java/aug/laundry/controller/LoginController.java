@@ -81,8 +81,6 @@ public class LoginController {
 
     @PostMapping("/find-pw/update")
     public String updatePassword(MemberDto memberDto){
-        //System.out.println("memberAccount : " + memberAccount);
-        //memberDto.setMemberAccount(memberAccount);
         System.out.println("memberDto : " + memberDto);
         int res = memberServce.updatePassword(memberDto);
         System.out.println("비밀번호 변경 : " + res);
@@ -96,13 +94,6 @@ public class LoginController {
         model.addAttribute("memberAccount", memberAccount);
         return "project_change_password";
     }
-
-    @RequestMapping(value = "/logout", method = {RequestMethod.POST})
-    public String logout(HttpSession session){
-        session.invalidate();
-        return "redirect:/";
-    }
-
 
     @GetMapping("/find-account")
     public String goFindAccount(){
