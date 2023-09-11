@@ -37,5 +37,7 @@ public interface OrdersMapper {
 
     List<OrdersListResponseDto> findOrdersByMemberIdAndCri(@Param("cri") Criteria cri, @Param("memberId") Long memberId);
 
+    List<OrdersListResponseDto> findOrdersFinishedByMemberIdAndCri(@Param("cri") Criteria cri, @Param("memberId") Long memberId);
+
     int getTotalCount(Long memberId);
 }

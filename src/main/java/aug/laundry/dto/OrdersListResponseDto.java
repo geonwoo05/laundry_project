@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class OrdersListResponseDto {
 
-
+    private Long ordersId;
     private String ordersDate;
     private Integer ordersStatus;
     private OrderStatus statusEnum;

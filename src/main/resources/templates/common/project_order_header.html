@@ -53,8 +53,10 @@
         }
       }
       function getList(){
+        const orderStatus = document.querySelector('#inspectionStatus').value;
+        console.log("orderStatus=", orderStatus);
         console.log("pageNo=",pageNo);
-        fetchGet(`/orders/getList/${pageNo}`, listView);
+        fetchGet(`/orders/getList/${pageNo}/${orderStatus}`, listView);
       }
 
       function listView(map) {
@@ -69,12 +71,13 @@
           if(list.length>0) {
                 console.log(10);
             list.forEach(order=>{
-              const url = orderStatus == 1 ? '/admin/9/'+order.ordersId : '/admin/complete/'+order.ordersId;
-              const quick = order.quickLaundryId!=null ? '빠른세탁' : '';
+<!--              const url = orderStatus == 1 ? '/orders/' + order.ordersId + '/payment' : '/admin/complete/'+order.ordersId;-->
+              const url = '/orders/' + order.ordersId + '/payment';
+<!--              const quick = order.quickLaundryId!=null ? '빠른세탁' : '';-->
               divlist+='<div class="order_box" onclick="location.href=\''+url+'\'">'
                       + '<div class="date_status">'
-                      + '<p class="date_text">'+order.ordersDate+'</p>'
-                      + '<p class="status">'+quick+'</p>'
+                      + '<p class="date_text">'+ 'a' +'</p>'
+                      + '<p class="status">'+ 'a' +'</p>'
                       + '</div>'
                       + '<div class="image_box">'
                       + '<p class="status_text">주문번호 : ' + order.ordersId + '</p>'
@@ -125,10 +128,10 @@
     <div class='select_category'>
       <ul>
         <li class='active'>
-          <a href="/admin">검수대기</a>
+          <a href="/orders">진행중인 주문</a>
         </li>
         <li>
-          <a href="/admin/complete">검수완료</a>
+          <a href="/orders/complete">배달완료</a>
         </li>
       </ul>
     </div>

@@ -190,6 +190,21 @@ public class OrdersService_kdh {
         }
     }
 
+    public List<OrdersListResponseDto> findOrdersFinishedByMemberIdAndCri(Criteria cri, Long memberId){
+        List<OrdersListResponseDto> ordersList = ordersDao.findOrdersFinishedByMemberIdAndCri(cri, memberId);
+
+        if(ordersList == null || ordersList.isEmpty()){
+            return Collections.EMPTY_LIST;
+        } else {
+            ordersList.stream()
+                    .forEach(order -> {
+                        order.setStatusEnum(
+                                OrderStatus.valueOf("R"+order.getOrdersStatus()));
+                    });
+            return ordersList;
+        }
+    }
+
     public int getTotalCount(Long memberId){
         return ordersDao.getTotalCount(memberId);
     }

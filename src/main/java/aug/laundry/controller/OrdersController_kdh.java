@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,22 +32,35 @@ public class OrdersController_kdh {
 
     @GetMapping
     public String orders(){
-
-
         return "project_order_list";
     }
 
-    @GetMapping("/getList/{pageNo}")
+    @GetMapping("/complete")
+    public String ordersComplete(){
+        return "project_order_list_complete";
+    }
+
+
+
+    @GetMapping("/getList/{pageNo}/{orderStatus}")
     @ResponseBody
-    public Map<String, Object> getOrdersList(@PathVariable("pageNo") int pageNo, Model model){
+    public Map<String, Object> getOrdersList(@PathVariable("pageNo") int pageNo, @PathVariable("orderStatus") int orderStatus, Model model){
 
         Map<String, Object> ordersMap = new HashMap<>();
 
         Criteria cri = new Criteria();
         cri.setPageNo(pageNo, ordersServiceKdh.getTotalCount(1L)); //memberId 수정
 
-        List<OrdersListResponseDto> list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, 1L);
-        log.info("================list============={}", list);
+        List<OrdersListResponseDto> list = null;
+        log.info("orderStatus ========================={}", orderStatus);
+        if(orderStatus == 1){
+            list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, 1L);
+            log.info("orderStatus=1, list={}", list);
+        } else if(orderStatus == 2){
+            list = ordersServiceKdh.findOrdersFinishedByMemberIdAndCri(cri, 1L);
+            log.info("orderStatus=2, list={}", list);
+        }
+
         if(!list.isEmpty()) {
             ordersMap.put("res", "success");
             ordersMap.put("list", list);

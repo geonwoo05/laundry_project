@@ -87,6 +87,11 @@ public class OrdersDao {
         return ordersMapper.findOrdersByMemberIdAndCri(cri, memberId);
     }
 
+    public List<OrdersListResponseDto> findOrdersFinishedByMemberIdAndCri(Criteria cri, Long memberId){
+        return ordersMapper.findOrdersFinishedByMemberIdAndCri(cri, memberId);
+    }
+
+
     public int getTotalCount(Long memberId) {
         return ordersMapper.getTotalCount(memberId);
     }
