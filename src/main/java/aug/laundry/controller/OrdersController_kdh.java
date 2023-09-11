@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +29,35 @@ public class OrdersController_kdh {
     private final LaundryService laundryService;
     private final MemberMapper memberMapper;
 
-    @GetMapping("/orders")
+    @GetMapping
     public String orders(){
 
 
-        return "";
+        return "project_order_list";
     }
+
+    @GetMapping("/getList/{pageNo}")
+    @ResponseBody
+    public Map<String, Object> getOrdersList(@PathVariable("pageNo") int pageNo, Model model){
+
+        Map<String, Object> ordersMap = new HashMap<>();
+
+        Criteria cri = new Criteria();
+        cri.setPageNo(pageNo, ordersServiceKdh.getTotalCount(1L)); //memberId 수정
+
+        List<OrdersListResponseDto> list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, 1L);
+        log.info("================list============={}", list);
+        if(!list.isEmpty()) {
+            ordersMap.put("res", "success");
+            ordersMap.put("list", list);
+            ordersMap.put("realEnd", cri.getRealEnd());
+        }else {
+            ordersMap.put("res", "fail");        }
+
+        return ordersMap;
+    }
+
+
 
     @GetMapping("/{ordersId}/payment")
     public String payOrder(@PathVariable Long ordersId,
@@ -144,6 +167,8 @@ public class OrdersController_kdh {
 
         return "project_use_coupon2";
     }
+
+
 
 
 

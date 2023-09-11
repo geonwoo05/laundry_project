@@ -93,4 +93,20 @@
         rn = 1) + #{pointStack})
     </insert>
 
+    <select id="findOrdersByMemberIdAndCri" resultType="aug.laundry.dto.OrdersListResponseDto">
+        SELECT ORDERS_DATE, ORDERS_STATUS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE
+        FROM(SELECT ROWNUM rn, t.*
+        from(SELECT TO_CHAR(TO_NUMBER(TO_CHAR(ORDERS_DATE, 'MM'))) || '월 ' || TO_CHAR(ORDERS_DATE, 'DD') || '일' || TO_CHAR(ORDERS_DATE, '(DY)') AS ORDERS_DATE,
+        ORDERS_STATUS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE
+        FROM ORDERS
+        WHERE MEMBER_ID = #{memberId} AND ORDERS_STATUS NOT IN(1)
+        ORDER BY ORDERS_DATE DESC) t)
+        WHERE rn BETWEEN #{cri.startNo} and #{cri.endNo}
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM ORDERS
+        WHERE MEMBER_ID = #{memberId}AND ORDERS_STATUS NOT IN(1)
+    </select>
 </mapper>
