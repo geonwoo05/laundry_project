@@ -22,14 +22,15 @@
 
         <div class='res_email_box'>
             <div id="userId" th:each="li : ${list}">
-                <span th:text="${li.memberAccount}">
-                </span><span th:if="${li.memberSocial == 'kakao'}">(카카오 회원)</span>
-                </span><span th:if="${li.memberSocial == 'naver'}">(네이버 회원)</span>
+                <span th:text="${li.memberAccount}"></span>
+                <span th:if="${li.memberSocial == 'kakao'}">(카카오 회원)</span>
+                <span th:if="${li.memberSocial == 'naver'}">(네이버 회원)</span>
             </div>
+
         </div>
 
         <div class='find_id_button'>
-            <a href="#">로그인하기</a>
+            <a href="/login">로그인하기</a>
         </div>
     </div>
 </div>

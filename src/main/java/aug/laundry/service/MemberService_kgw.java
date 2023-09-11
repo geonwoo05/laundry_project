@@ -21,7 +21,9 @@ public interface MemberService_kgw {
 
     public int inviteCodeCheck(String inviteCode);
 
-    public List<MemberDto> confirmId(String memberName, String memberPhone);
+    public List<MemberDto> confirmId(String memberName, String memberPhone, String memberAccount);
+
+    public int updatePassword(MemberDto memberDto);
 
 
 

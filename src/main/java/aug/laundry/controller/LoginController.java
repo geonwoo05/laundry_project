@@ -12,14 +12,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Controller
@@ -43,8 +47,6 @@ public class LoginController {
         service.kakaoProcess(code, session);
 
         return "redirect:/";
-
-
     }
 
     @PostMapping("/loginAction")
@@ -60,19 +62,49 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/find-account/confirm")
+    @PostMapping("/find-account")
     public String confirmId(ConfirmIdDto confirmIdDto, Model model){
-        // 주석 추가
-        // 주석 추가
-        List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone());
+        System.out.println("memberAccount : " + confirmIdDto.getMemberAccount());
+        List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone(), confirmIdDto.getMemberAccount());
         model.addAttribute("list", list);
         return "project_search_id_result";
     }
+
+    @ResponseBody
+    @PostMapping("/find-pw")
+    public Map<String, Object> confirmId(@RequestBody @Valid ConfirmIdDto confirmIdDto){
+        List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone(), confirmIdDto.getMemberAccount());
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+        return map;
+    }
+
+    @PostMapping("/find-pw/update")
+    public String updatePassword(MemberDto memberDto){
+        //System.out.println("memberAccount : " + memberAccount);
+        //memberDto.setMemberAccount(memberAccount);
+        System.out.println("memberDto : " + memberDto);
+        int res = memberServce.updatePassword(memberDto);
+        System.out.println("비밀번호 변경 : " + res);
+        return "redirect:/login";
+    }
+
+
+    @GetMapping("/find-pw/update")
+    public String updatePasswordForm(@RequestParam("memberAccount") String memberAccount, Model model){
+        System.out.println("memberAccount : " + memberAccount);
+        model.addAttribute("memberAccount", memberAccount);
+        return "project_change_password";
+    }
+
 
     @GetMapping("/find-account")
     public String goFindAccount(){
         return "project_search_id";
     }
+
+    @GetMapping("/find-pw")
+    public String goFindPassword(){return "project_search_password";}
 
     @GetMapping
     public String goLogin(){

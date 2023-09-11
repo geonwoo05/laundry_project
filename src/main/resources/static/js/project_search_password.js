@@ -39,7 +39,7 @@ function sendSms(){
             		        sendSmsBtn.disabled = false;
             		        inputCode.readOnly = true;
             			}else{
-            				resultMsg.innerHTML = '인증번호가 불일치 합니다. 다시 확인해주세요!';
+            				alert('인증번호가 불일치 합니다. 다시 확인해주세요!');
             		        resultMsg.style.color = 'red';
             		        sendSmsBtn.disabled = false;
             			}
@@ -51,14 +51,35 @@ function sendSms(){
 
 }
 
-function submitValidation(){
+    function validationSubmit(){
     let validationPhonenumber = document.querySelector('.validation-phonenumber').value;
     let memberName = document.querySelector('#memberName').value;
+    let memberAccount = document.querySelector('#memberAccount').value;
+    let memberPhonenumber = document.querySelector('#memberPhonenumber').value;
 
-    if(validationPhonenumber == 1 && memberName !== ''){
-        document.querySelector('.find_Id_form').submit();
-    }else{
-        alert('각 항목들을 다시 확인해주세요.');
-    }
+    fetch("/login/find-pw", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+         },
+        body: JSON.stringify({
+            memberName: memberName,
+            memberAccount: memberAccount,
+            memberPhone: memberPhonenumber
+        })
+    })
+    .then((response) => response.json())
+    .then(map => {
+        if(map.list.length > 0 && validationPhonenumber == 1 && memberName !== ''){
+            document.querySelector('.find_Id_form').submit();
+        }else{
+           alert("아이디, 이름, 전화번호를 다시 확인해주세요.");
+        }
+    })
+    .catch(() => {
+        alert("아이디, 이름, 전화번호를 다시 확인해주세요.");
+    })
+
 
 }
+

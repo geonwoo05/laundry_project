@@ -12,4 +12,6 @@ public class ConfirmIdDto {
 
     @NotBlank(message = "phoneNumber is required")
     private String memberPhone;
+    private String memberAccount;
+
 }
