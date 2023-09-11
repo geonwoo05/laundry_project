@@ -3,11 +3,11 @@ package aug.laundry.service;
 import aug.laundry.dao.orders.OrdersDao;
 import aug.laundry.dao.point.PointDao;
 import aug.laundry.domain.Drycleaning;
+import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
-import aug.laundry.dto.DrycleaningResponseDto;
-import aug.laundry.dto.OrdersResponseDto;
-import aug.laundry.dto.RepairResponseDto;
+import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
+import aug.laundry.enums.orderStatus.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -173,6 +173,40 @@ public class OrdersService_kdh {
     public Long findExpectedPriceByOrdersId(Long ordersId){
         return ordersDao.findExpectedPriceByOrdersId(ordersId)
                 .orElseThrow(() -> new IllegalArgumentException("예상금액이 존재하지 않습니다."));
+    }
+
+    public List<OrdersListResponseDto> findOrdersByMemberIdAndCri(Criteria cri, Long memberId){
+        List<OrdersListResponseDto> ordersList = ordersDao.findOrdersByMemberIdAndCri(cri, memberId);
+
+        if(ordersList == null || ordersList.isEmpty()){
+            return Collections.EMPTY_LIST;
+        } else {
+            ordersList.stream()
+                    .forEach(order -> {
+                        order.setStatusEnum(
+                                OrderStatus.valueOf("R"+order.getOrdersStatus()));
+                    });
+            return ordersList;
+        }
+    }
+
+    public List<OrdersListResponseDto> findOrdersFinishedByMemberIdAndCri(Criteria cri, Long memberId){
+        List<OrdersListResponseDto> ordersList = ordersDao.findOrdersFinishedByMemberIdAndCri(cri, memberId);
+
+        if(ordersList == null || ordersList.isEmpty()){
+            return Collections.EMPTY_LIST;
+        } else {
+            ordersList.stream()
+                    .forEach(order -> {
+                        order.setStatusEnum(
+                                OrderStatus.valueOf("R"+order.getOrdersStatus()));
+                    });
+            return ordersList;
+        }
+    }
+
+    public int getTotalCount(Long memberId){
+        return ordersDao.getTotalCount(memberId);
     }
 
 

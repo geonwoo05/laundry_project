@@ -1,7 +1,11 @@
 package aug.laundry.dao.orders;
 
 import aug.laundry.domain.Drycleaning;
+import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
+import aug.laundry.dto.AdminInspectionDto;
+import aug.laundry.dto.Criteria;
+import aug.laundry.dto.OrdersListResponseDto;
 import aug.laundry.dto.OrdersResponseDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -30,4 +34,10 @@ public interface OrdersMapper {
     int updateCouponListStatusToUsedCoupon(Long couponListId);
 
     int addPoint(@Param("memberId") Long memberId, @Param("pointStack") Long pointStack, @Param("pointStackReason") String pointStackReason);
+
+    List<OrdersListResponseDto> findOrdersByMemberIdAndCri(@Param("cri") Criteria cri, @Param("memberId") Long memberId);
+
+    List<OrdersListResponseDto> findOrdersFinishedByMemberIdAndCri(@Param("cri") Criteria cri, @Param("memberId") Long memberId);
+
+    int getTotalCount(Long memberId);
 }

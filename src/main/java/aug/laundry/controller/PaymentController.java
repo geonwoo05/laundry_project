@@ -53,7 +53,7 @@ public class PaymentController {
         Payment response = irsp.getResponse();
 
         Paymentinfo paymentinfo = new Paymentinfo(
-                1L, response.getImpUid(), response.getPayMethod(), response.getMerchantUid(),
+                memberId, response.getImpUid(), response.getPayMethod(), response.getMerchantUid(),
                 response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
                 );//memberId 세션에서 가져온 값으로 바꿔야함
 
