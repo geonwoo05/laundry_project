@@ -42,9 +42,8 @@ public class RegisterController {
     }
 
 
-    @ResponseBody
     @RequestMapping(value = "/registerAction", method = {RequestMethod.POST})
-    public Map<String, String> registerUser(@Valid MemberDto memberDto, BindingResult bindingResult) {
+    public String registerUser(@Valid MemberDto memberDto, BindingResult bindingResult) {
         System.out.println(memberDto.toString());
         Map<String, String> validation = new HashMap<>();
         if (bindingResult.hasErrors()) {
@@ -58,7 +57,7 @@ public class RegisterController {
                         System.err.println("defaultMessage : " + objectError.getDefaultMessage());
                         System.err.println("objectName : " + objectError.getObjectName());
                     });
-            return validation;
+            return "/register";
 
 
         } else {
@@ -66,7 +65,7 @@ public class RegisterController {
             memberService.registerUser(memberDto);
         }
 
-        return validation;
+        return "redirect:/login";
 
     }
 

@@ -104,13 +104,22 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
         return inviteCode;
     }
 
-    public List<MemberDto> confirmId(String memberName, String memberPhone){
+    public List<MemberDto> confirmId(String memberName, String memberPhone, String memberAccount){
         // 전화번호 형식변경 후 아이디 list에 담기
         String phonenumber = memberPhone.replace("-","");
         
-        List<MemberDto> list = memberMapper.confirmId(memberName, phonenumber);
+        List<MemberDto> list = memberMapper.confirmId(memberName, phonenumber, memberAccount);
         return list;
+    }
 
+    public int updatePassword(MemberDto memberDto){
+        // 비밀번호 암호화
+        String password = bc.encodeBCrypt(memberDto.getMemberPassword());
+        memberDto.setMemberPassword(password);
+
+        int res = memberMapper.updatePassword(memberDto);
+
+        return res;
     }
 
 

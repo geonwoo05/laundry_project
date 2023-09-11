@@ -47,8 +47,19 @@
     </select>
 
     <select id="confirmId" resultType="aug.laundry.dto.MemberDto">
-        SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone}
+        <if test = "memberAccount == null">
+            SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone}
+        </if>
+        <if test="memberAccount != null">
+            SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone} AND MEMBER_ACCOUNT = #{memberAccount}
+        </if>
     </select>
+
+    <insert id="updatePassword">
+        UPDATE MEMBER
+        SET MEMBER_PASSWORD = #{memberPassword}
+        WHERE MEMBER_ACCOUNT = #{memberAccount}
+    </insert>
 
 
 
