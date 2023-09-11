@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 //        로그인 체크 인터셉터
         registry.addInterceptor(new LoginCheckInterceptor())
-                .addPathPatterns("/laundry")
+                .addPathPatterns("/laundry/**")
                 .excludePathPatterns("/css/**", "/images/**", "/js/**");
     }
 

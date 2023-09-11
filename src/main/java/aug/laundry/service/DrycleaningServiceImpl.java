@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DrycleaningServiceImpl_sdj implements DrycleaningService_sdj {
+public class DrycleaningServiceImpl implements DrycleaningService {
 
 
     @Autowired

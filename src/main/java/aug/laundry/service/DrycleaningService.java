@@ -4,7 +4,7 @@ import aug.laundry.dto.DrycleaningDto;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface DrycleaningService_sdj {
+public interface DrycleaningService {
 
-    public int insert(DrycleaningDto dto);
+    int insert(DrycleaningDto dto);
 }

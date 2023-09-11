@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RepairServiceImpl_sdj implements RepairService_sdj{
+public class RepairServiceImpl implements RepairService {
 
     @Autowired
     RepairMapper mapper;
