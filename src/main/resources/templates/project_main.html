@@ -14,9 +14,13 @@
 <div class='container'>
     <div class='floor'>
         <div class='banner'>
-            <a href="#"><img src="#" alt=""></a>
-            <a href="#"><img src="#" alt=""></a>
-            <a href="#"><img src="#" alt=""></a>
+            <a href="members/{memberId}/invite" class="slide" id="banner1"></a>
+            <a href="/subscription" class="slide" id="banner2"></a>
+            <a href="#" class="slide" id="banner3"></a>
+            <div class="arrow">
+                <div id="left" onclick="javascript:prevSlide()">&lang;</div>
+                <div id="right" onclick="javascript:nextSlide()">&rang;</div>
+            </div>
         </div>
         <div class='ball'></div>
     </div>
@@ -48,7 +52,7 @@
         </a>
     </div>
     <div class='floor'>
-        <a href="#" id='laundry'>
+        <a href="/laundry" id='laundry'>
             <div class='imgBox'>
                 <img src="/images/laundryDelivery.png" alt="">
             </div>
@@ -94,9 +98,7 @@
         </a>
     </div>
 </div>
+<script src="/js/project_main.js"></script>
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>
-<script>
-
-</script>
 </html>

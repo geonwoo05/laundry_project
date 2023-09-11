@@ -19,6 +19,7 @@
     border-radius: var(--border-radius);
     background-color: white;
     box-shadow: 2px 2px 5px #dadada;
+    position: relative;
 }
 .banner a{
     width: 100%;
@@ -27,7 +28,21 @@
     white-space: nowrap;
     border: none;
     border-radius: var(--border-radius);
+    background-size: 100% 100%;
 }
+
+#banner1{
+    background-image: url(/images/banner1.png);
+}
+
+#banner2{
+    background-image: url(/images/banner2.png);
+}
+
+#banner3{
+    background-image: url(/images/banner3.png);
+}
+
 .floor .ball{
     position: absolute;
 
@@ -272,4 +287,24 @@
 }
 .orderText{
     margin: 0;
+}
+
+.arrow{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    z-index: 100;
+    position: absolute;
+    width:100%;
+    height: 100%;
+    left: 0;;
+    top: 0;
+    flex-wrap: wrap;
+}
+
+.arrow #right{
+    margin: 0 1rem 0 0;
+}
+.arrow #left{
+    margin: 0 0 0 1rem;
 }
