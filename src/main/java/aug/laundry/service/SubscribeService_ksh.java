@@ -2,6 +2,7 @@ package aug.laundry.service;
 
 import aug.laundry.dto.SubscriptionPayDto;
 import com.google.gson.JsonObject;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,4 +22,8 @@ public interface SubscribeService_ksh {
     int getRepayCount(String merchantUid);
     int updateRepayCount(String merchantUid);
     SubscriptionPayDto getSubscribeInfo(Long memberId);
+    SubscriptionPayDto validationPay(String imp_uid) throws IOException;
+    int updateFailReason(String merchantUid,String failReason);
+
+    int getPrice(int selectMonth);
 }

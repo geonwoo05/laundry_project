@@ -23,7 +23,13 @@
             SELECT subscription_id
             FROM subscription
             WHERE subscription_month=#{selectMonth}
-        ), subscription_expire_date = SYSDATE + (31*#{selectMonth}) + (INTERVAL '23:59:59' HOUR TO SECOND)
+        ),subscription_expire_date =
+        <if test="amount != 0">
+            TRUNC(SYSDATE)+(31*#{selectMonth})+(INTERVAL '23:59:59' HOUR TO SECOND)
+        </if>
+        <if test="amount == 0">
+            TRUNC(SYSDATE)+31+(INTERVAL '23:59:59' HOUR TO SECOND)
+        </if>
         WHERE member_id = #{customerUid}
     </update>
 
@@ -52,11 +58,11 @@
     </update>
 
     <select id="getSubscribeInfo" resultType="aug.laundry.dto.SubscriptionPayDto">
-        SELECT TO_CHAR(subscription_expire_date, 'YYYY-MM-DD') AS subscription_expire_date, select_month, amount
+        SELECT TO_CHAR(subscription_expire_date, 'YYYY-MM-DD') AS subscription_expire_date, select_month, amount, subscription_status
         FROM (
                  SELECT ROW_NUMBER() OVER(ORDER BY mp.subscription_pay_id DESC) rn, mp.*
                  FROM (
-                          SELECT m.subscription_expire_date, p.select_month, p.amount, p.subscription_pay_id
+                          SELECT m.subscription_expire_date, p.select_month, p.amount, p.subscription_pay_id, p.subscription_status
                           FROM member m
                                    LEFT OUTER JOIN subscription_pay p ON m.member_id = p.customer_uid
                           WHERE m.member_id = #{memberId}
@@ -64,5 +70,11 @@
              )
         WHERE rn=1
     </select>
+
+    <update id="updateFailReason">
+        UPDATE subscription_pay
+        SET fail_reason = #{failReason}
+        WHERE merchant_uid = #{merchantUid}
+    </update>
 
 </mapper>

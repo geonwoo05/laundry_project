@@ -20,18 +20,20 @@
             <div th:text="${data.selectMonth + '개월'}"></div>
         </div>
         <div class='breakdown-container'>
-            <div>구독만기일</div>
+            <div th:if="${first}">1개월 체험 만기일</div>
+            <div th:if="${!first}">구독만기일</div>
             <div th:text="${data.subscriptionExpireDate}"></div>
         </div>
         <div class='breakdown-container'>
-            <div>결제금액</div>
+            <div th:if="${first}">결제예정금액</div>
+            <div th:if="${!first}">결제금액</div>
             <div th:text="${#numbers.formatInteger(data.amount, 3, 'COMMA') + '원'}"></div>
         </div>
     </div>
-
     <div class='comment'>한 번 사용해보세요!</div>
 
     <button class='goLaundry' onclick="location.href='/laundry';">세탁하러가기</button>
+    <p style="font-size: 0.8rem;margin: 0.5rem;" th:if="${first}">1개월 체험 만기일에 결제됩니다.<br>원하지 않으실 경우 만기일 이전에 해지해주세요</p>
 
 </div>
 

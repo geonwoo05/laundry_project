@@ -38,6 +38,7 @@
 
             btnPay.classList.remove('hidden');
             btnPay.innerText = month + '개월 ' + totalPrice.toLocaleString('ko-KR');
+            console.log("month="+month);
         }
         // 결제
         IMP.init('imp50315416');
@@ -62,13 +63,22 @@
 
             let merchant_uid = memberId+"_subscribe_"+formatDate(new Date());
 
+            console.log("expire=", expire);
+            console.log("expireDate=", expireDate);
+
+            if(expire === "null") {
+                // 신규회원일경우
+                totalPrice = 0;
+            }
+
+            console.log("신규회원 빌링키 totalPrice="+ totalPrice);
+
             fetch('/payments/prepare', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    memberId: memberId,
                     selectMonth: selectMonth,
                     merchantUid: merchant_uid,
                     customerUid: memberId,
@@ -95,7 +105,7 @@
                 name : productName,
                 amount : totalPrice, // 결제창에 표시될 금액. 실제 승인이 이루어지지는 않습니다. (모바일에서는 가격이 표시되지 않음)
                 customer_uid : memberId, // 필수 입력.
-                m_redirect_url : 'https://1b7b-180-230-31-201.ngrok-free.app/payments/mobile'
+                m_redirect_url : 'https://c14f-183-96-143-101.ngrok-free.app/payments/mobile'
                 //m_redirect_url : 'http://localhost:8080/payments/mobile' // 모바일에서 결제 완료 후 리디렉션 될 URL 예: https://www.my-service.com/payments/complete/mobile
             }, function(rsp) {
                 if ( rsp.success ) {
@@ -105,7 +115,6 @@
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            memberId: memberId,
                             selectMonth: selectMonth,
                             merchantUid: merchant_uid,
                             customerUid: memberId,
@@ -117,7 +126,7 @@
                         .then(map => {
                             if (map.result === 'success') {
                                 // pc결제 성공할 경우
-                                window.location.href='/subscription/confirm/'+memberId+'?result='+map.result;
+                                window.location.href='/subscription/confirm/'+rsp.imp_uid+'?result='+map.result;
                             } else {
                                 // 실패 처리
                                 window.location.href='/subscription/order?result='+map.result;
@@ -162,22 +171,17 @@
 <div class='container'>
     <div class='subscribe-choice-title'>구독권 선택</div>
 
-    <div class='subscribe-right' onclick="selectSubscribe(1, 5900)">
-        <div>1개월</div>
-        <div>월 5900원</div>
+    <div class='middle_info' onclick="selectSubscribe(1, 5900)">
+        <span class="passText">1개월 월 5,900원</span>
     </div>
-    <div class='subscribe-right' onclick="selectSubscribe(3, 4900)">
-        <div>3개월</div>
-        <div>월 4900원</div>
-
+    <div class='middle_info' onclick="selectSubscribe(3, 4900)">
+        <span class="passText">3개월 <span class="redText">17,700원</span> -> 14,700원</span>
     </div>
-    <div class='subscribe-right' onclick="selectSubscribe(6, 4500)">
-        <div>6개월</div>
-        <div>월 4500원</div>
+    <div class='middle_info' onclick="selectSubscribe(6, 4500)">
+        <span class="passText">6개월 <span class="redText">35,400원</span> -> 27,000원</span>
     </div>
-    <div class='subscribe-right' onclick="selectSubscribe(12, 4100)">
-        <div>12개월</div>
-        <div>월 4100원</div>
+    <div class='middle_info' onclick="selectSubscribe(12, 4100)">
+        <span class="passText">12개월 <span class="redText">70,800원</span> -> 49,200원</span>
     </div>
 
     <!-- * 신규결제일경우에 표시 * -->

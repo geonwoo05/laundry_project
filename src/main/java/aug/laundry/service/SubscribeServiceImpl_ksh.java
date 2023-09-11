@@ -3,10 +3,10 @@ package aug.laundry.service;
 import aug.laundry.dao.subscribe.SubscribeDao;
 import aug.laundry.dto.ScheduleDto;
 import aug.laundry.dto.SubscriptionPayDto;
+import aug.laundry.enums.subscribe.Subscribe;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.siot.IamportRestClient.IamportClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -22,12 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +43,7 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
     public int saveSubscribe(SubscriptionPayDto subData) {
         // 결제정보 DB저장
         int res = subscribeDao.insertJoinSubscribe(subData);
-        res += subscribeDao.updateMemberSubscribe(subData.getSelectMonth(), subData.getCustomerUid());
+        res += subscribeDao.updateMemberSubscribe(subData);
         return res;
     }
 
@@ -150,15 +146,12 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
         return subscribeDao.updateCancel(merchantUid);
     }
 
+    @Transactional
     @Override
     public String schedulePay(SubscriptionPayDto subDto, long timeStamp) throws IOException {
-
-        // 재결제 예약 메서드로 빼기
+        // 재결제 예약
         String scheduleUrl =  "https://api.iamport.kr/subscribe/payments/schedule";
         CloseableHttpClient httpClient = HttpClients.createDefault(); // http 요청하기위한 객체 생성
-//        ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).plusMonths(1);
-//        Instant instant = date.toInstant();
-//        long timeStamp = instant.getEpochSecond();
 
         String merchantUidRe = subDto.getCustomerUid()+"_subscribe_"+getDate();
 
@@ -184,7 +177,10 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
             updateNextMerchantId(subDto.getMerchantUid(), merchantUidRe);
             result = "success";
         } else {
-            // 예약 실패일 경우 구독 해지 처리 subscription_pay 테이블에 status N으로하고
+            // 예약 실패일 경우 구독 해지 처리
+            if(!response.get("fail_reason").isJsonNull()) {
+                updateFailReason(subDto.getMerchantUid(), response.get("fail_reason").getAsString());
+            }
             updateCancel(subDto.getMerchantUid());
             result = "fail";
         }
@@ -200,14 +196,14 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
         String jsonBody = String.format("{\"reason\": \"%s\", \"imp_uid\": \"%s\", \"amount\": %d, \"checksum\": %d}", "잘못된 결제", impUid, payPrice, payPrice);
 
         JsonObject cancelDate  = postData(cancelUrl, jsonBody);
-        String status = cancelDate.get("response").getAsJsonObject().get("status").getAsString();
+        JsonObject statusJson = cancelDate.get("response").getAsJsonObject();
 
-        log.info("status={}", status);
-
-        if("cancelled".equals(status)) {
+        if("cancelled".equals(statusJson.get("status").getAsString())) {
             result = "success";
         } else {
-            result = "fail";
+            if(!statusJson.get("fail_reason").isJsonNull()) {
+                result = "fail"+statusJson.get("fail_reason").getAsString();
+            }
         }
 
         return result;
@@ -228,6 +224,63 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
         return subscribeDao.getSubscribeInfo(memberId);
     }
 
+    @Override
+    public SubscriptionPayDto validationPay(String imp_uid) throws IOException {
+        String result = "";
+        SubscriptionPayDto subDto = new SubscriptionPayDto();
+
+        // imp_uid 또는 merchant_uid로 아임포트 서버에서 결제 정보 조회
+        String requestUrl = "https://api.iamport.kr/payments/" + imp_uid;
+        JsonObject jsonObj = getData(requestUrl);
+        JsonObject data = jsonObj.get("response").getAsJsonObject();
+
+        int selectMonth = Integer.parseInt(data.get("name").getAsString().replaceAll("[^0-9]", ""));
+        SubscriptionPayDto infoData = getSubscribeInfo(data.get("customer_uid").getAsLong());
+        int amountToBePaid = 0;
+
+        if(infoData == null){
+            // 신규 구독일때
+            amountToBePaid  = 0;
+        } else {
+            amountToBePaid = getPrice(selectMonth);
+        }
+
+        subDto.setCustomerUid(data.get("customer_uid").getAsLong());
+        subDto.setMerchantUid(data.get("merchant_uid").getAsString());
+        subDto.setImpUid(data.get("imp_uid").getAsString());
+        subDto.setAmount(Integer.parseInt(data.get("amount").toString()));
+        subDto.setSelectMonth(selectMonth);
+        subDto.setAmountToBepay(amountToBePaid);
+        subDto.setPayStatus(data.get("status").getAsString());
+        if(!data.get("fail_reason").isJsonNull()) {
+            subDto.setFailReason(data.get("fail_reason").getAsString());
+        }
+        return subDto;
+    }
+
+    @Override
+    public int updateFailReason(String merchantUid, String failReason) {
+        return subscribeDao.updateFailReason(merchantUid, failReason);
+    }
+
+    @Override
+    public int getPrice(int selectMonth) {
+
+        int getPrice = 0;
+        if (selectMonth == 1) {
+            getPrice = Subscribe.ONE.getPrice();
+        } else if (selectMonth == 3) {
+            getPrice = Subscribe.THREE.getPrice();
+        } else if (selectMonth == 6) {
+            getPrice = Subscribe.SIX.getPrice();
+        } else if (selectMonth == 12) {
+            getPrice = Subscribe.TWELVE.getPrice();
+        } else {
+            getPrice = -1;
+        }
+        return getPrice;
+    }
+
     private String getDate() {
         LocalDateTime today = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmmssSSS");
@@ -235,4 +288,5 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
 
         return date;
     }
+
 }
