@@ -36,9 +36,9 @@ public class LaundryController {
     }
 
     @GetMapping("/order")
-    public String order(Model model, HttpServletRequest request) {
-        MemberShip memberShip = laundryService.isPass(1L); // 패스 여부
-        OrderInfo info = laundryService.firstInfo(1L); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
+    public String order(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model, HttpServletRequest request) {
+        MemberShip memberShip = laundryService.isPass(memberId); // 패스 여부
+        OrderInfo info = laundryService.firstInfo(memberId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
 
         Long totalPrice = 0L;
         Long discount = 0L;
@@ -48,8 +48,8 @@ public class LaundryController {
             totalPrice += Delivery.QUICK_DELIVERY.getPrice();
         }
 
-        List<MyCoupon> coupon = laundryService.getCoupon(1L); // 내가 보유한 쿠폰
-        Address address = laundryService.getAddress(1L); // 주소 가져오기
+        List<MyCoupon> coupon = laundryService.getCoupon(memberId); // 내가 보유한 쿠폰
+        Address address = laundryService.getAddress(memberId); // 주소 가져오기
         DateForm dateForm = new DateForm(); // 날짜 가져오기
 
         if (info.getIsCommon() != 0) {
@@ -58,7 +58,7 @@ public class LaundryController {
             discount += Category.BASIC.getPrice() - memberShip.apply(Category.BASIC.getPrice()); // 할인금액
         }
         if (info.getIsDry() != 0) {
-            List<Category> getDry = laundryService.getDry(1L);
+            List<Category> getDry = laundryService.getDry(memberId);
             model.addAttribute("dry", getDry);
             Long dryTotalPrice = getDry.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
             model.addAttribute("dryTotalPrice", dryTotalPrice);
@@ -66,7 +66,7 @@ public class LaundryController {
             discount += dryTotalPrice - memberShip.apply(dryTotalPrice); // 할인금액
         }
         if (info.getIsRepair() != 0) {
-            List<Category> getRepair = laundryService.getRepair(1L);
+            List<Category> getRepair = laundryService.getRepair(memberId);
             model.addAttribute("repair", getRepair);
             Long repairTotalPrice = getRepair.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
             model.addAttribute("repairTotalPrice", repairTotalPrice);
@@ -90,7 +90,7 @@ public class LaundryController {
     }
 
     @PostMapping("/order")
-    public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model) {
+    public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId) {
 
         System.out.println("orderPost = " + orderPost);
         if (bindingResult.hasErrors()) {
@@ -98,7 +98,7 @@ public class LaundryController {
             System.out.println(bindingResult.getAllErrors());
             return "redirect:/laundry/order";
         }
-        laundryService.update(1L, orderPost.getCoupon(), orderPost); // 쿠폰 유효성 검사
+        laundryService.update(memberId, orderPost.getCoupon(), orderPost); // 쿠폰 유효성 검사
 
 
         return "redirect:/";
@@ -111,7 +111,6 @@ public class LaundryController {
 
     @GetMapping("/order/coupons/select")
     public String selectCoupon(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
-        memberId = 1L;
         if (memberId == null) return "redirect:/login";
 
         List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);

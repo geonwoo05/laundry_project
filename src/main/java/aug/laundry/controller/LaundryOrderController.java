@@ -38,13 +38,12 @@ public class LaundryOrderController {
     @GetMapping("/dry")
     public String drycleaning(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
         Map<String, Map<String, Long>> category = mainService.getCategory();
-        MemberShip memberShip = laundryService.isPass(1L);
+        MemberShip memberShip = laundryService.isPass(memberId);
         model.addAttribute("category", category);
         if (memberShip.getCheck() == Pass.PASS) {
             Float percent = CategoryPriceCalculator.PASS.percent();
             model.addAttribute("percent", percent);
         }
-
         return "project_order_2_1";
     }
 
