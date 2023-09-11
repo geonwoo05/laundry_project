@@ -23,7 +23,17 @@ public class FooterAspect {
                 break;
             }
         }
+    }
 
+    @Before("execution(* aug.laundry.controller.MainController.*(..))")
+    public void mainpageAspect(JoinPoint joinPoint) {
+        log.info("MainPageController Aspect Before 실행 : {}", joinPoint.getSignature().getName());
 
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            if (arg instanceof Model) {
+                ((Model) arg).addAttribute("footer", "main");
+            }
+        }
     }
 }
