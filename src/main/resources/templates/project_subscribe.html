@@ -115,7 +115,7 @@
             height: 2.5rem;
         }
 
-        .middle_info span {
+        .infoText {
             padding: 0;
             margin: 0;
             margin-right: 2rem;
@@ -126,24 +126,6 @@
             font-weight: bolder;
             margin-top: 2rem;
             margin-bottom: 0.5rem;
-        }
-
-        .free_cupon {
-            margin-top: 1rem;
-            color: aliceblue;
-            width: 100%;
-            height: 4rem;
-            background-color: black;
-            border-radius: var(--border-radius);
-
-        }
-
-        .membership {
-            border: mediumturquoise;
-            height: 2rem;
-            width: 20%;
-            margin: 0px;
-            position: relative;
         }
 
         .subscribe-promotion-content {
@@ -191,6 +173,16 @@
             padding-top: 0.3rem;
             margin-top: -2.0rem;
         }
+        .passText{
+            margin: 0;
+            padding: 0;
+            font-size: 1rem;
+        }
+        .redText {
+            color: red;
+            text-decoration: line-through;
+        }
+
     </style>
     <script>
         /*<![CDATA[*/
@@ -203,7 +195,7 @@
             } else if(memberId !== null) {
                 location.href='/subscription/order/'+memberId;
             } else {
-                location.href='/test/1';
+                location.href='/login';
             }
         }
 
@@ -212,7 +204,7 @@
             const nowDate = new Date();
 
             if(memberId === null) {
-                location.href='/test/1';
+                location.href='/login';
             } else if(expireDate>=nowDate) {
                 alert("이미 패스에 가입중입니다.");
                 return;
@@ -244,12 +236,27 @@
     <div class='middel_text'>세탁 무제한, <br> 할인과 적립이 동시에!</div>
     <div class='middle_info'>
         <img src="../images/discount.png" alt="">
-        <span>모든 종류의 세탁 15% 할인</span>
+        <span class="infoText">모든 종류의 세탁 15% 할인</span>
     </div>
     <div class='middle_info'>
         <img src="../images/point.png" alt="">
-        <span>포인트 3%적립</span>
+        <span class="infoText">포인트 3%적립</span>
     </div>
+
+    <div class='middel_text'>구독권 종류</div>
+    <div class='middle_info'>
+        <span class="passText">1개월 월 5,900원</span>
+    </div>
+    <div class='middle_info'>
+        <span class="passText">3개월 <span class="redText">17,700원</span> -> 14,700원</span>
+    </div>
+    <div class='middle_info'>
+        <span class="passText">6개월 <span class="redText">35,400원</span> -> 27,000원</span>
+    </div>
+    <div class='middle_info'>
+        <span class="passText">12개월 <span class="redText">70,800원</span> -> 49,200원</span>
+    </div>
+
     <div class='promotion-target'>신규회원이라면?</div>
     <a onclick="firstPass()">
         <div class='subscribe-promotion-content'>

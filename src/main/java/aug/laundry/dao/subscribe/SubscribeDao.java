@@ -17,8 +17,8 @@ public class SubscribeDao {
         return subscribeMapper.insertJoinSubscribe(subData);
     }
 
-    public int updateMemberSubscribe(int selectMonth, Long customerUid){
-        return subscribeMapper.updateMemberSubscribe(selectMonth, customerUid);
+    public int updateMemberSubscribe(SubscriptionPayDto subData){
+        return subscribeMapper.updateMemberSubscribe(subData);
     }
 
     public int updateNextMerchantId(String merchantUid, String merchantUidRe){
@@ -43,5 +43,9 @@ public class SubscribeDao {
 
     public SubscriptionPayDto getSubscribeInfo(Long memberId) {
         return subscribeMapper.getSubscribeInfo(memberId);
+    }
+
+    public int updateFailReason(String merchantUid, String failReason) {
+        return subscribeMapper.updateFailReason(merchantUid, failReason);
     }
 }

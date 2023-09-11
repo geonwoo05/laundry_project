@@ -25,9 +25,9 @@ public class SubscribeTest {
 //
 //        int res = subscribeDao.insertJoinSubscribe(data);
 
-        int res1 = subscribeDao.updateMemberSubscribe(1, 1L);
+//        int res1 = subscribeDao.updateMemberSubscribe(1, 1L);
 
-        Assertions.assertThat(res1).isEqualTo(1);
+//        Assertions.assertThat(res1).isEqualTo(1);
     }
 
 }

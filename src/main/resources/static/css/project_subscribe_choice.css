@@ -18,7 +18,27 @@
     justify-content: space-between;
     cursor: pointer;
 }
-
+.middle_info {
+    cursor: pointer;
+    padding: 0px;
+    border: 1px solid silver;
+    border-radius: var(--border-radius);
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    height: 3.5rem;
+}
+.passText{
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+}
+.redText {
+    color: red;
+    text-decoration: line-through;
+}
 .subscribe-right div{
     margin: 0 1.5rem;
 }
@@ -94,6 +114,7 @@ label {
     font-size: 2rem;
     font-weight: bold;
     color:deepskyblue;
+    margin-top: 1.5rem;
 }
 .hidden{
     display: none;

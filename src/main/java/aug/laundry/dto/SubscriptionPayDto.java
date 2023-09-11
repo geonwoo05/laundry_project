@@ -18,7 +18,10 @@ public class SubscriptionPayDto {
     private char subscriptionStatus;
     private String impUid;
     private int repayCount;
+    private String failReason;
     private String subscriptionExpireDate;
+    private int amountToBepay;
+    private String payStatus;
 
     public SubscriptionPayDto() {
 

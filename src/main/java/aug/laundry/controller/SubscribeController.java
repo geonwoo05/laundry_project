@@ -3,6 +3,7 @@ package aug.laundry.controller;
 import aug.laundry.dto.SubscriptionPayDto;
 import aug.laundry.enums.subscribe.Subscribe;
 import aug.laundry.service.SubscribeService_ksh;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +37,7 @@ public class SubscribeController {
     @GetMapping("/subscription/order/{memberId}")
     public String subscribeOrder(@RequestParam(name = "result", required = false) String result,
                                  @PathVariable("memberId") Long memberId, Model model) {
+        // 세션에 저장된 memberId와 PathVariable의 memberId가 다르면 로그인페이지로 리다이렉트
         if(memberId != null) {
             SubscriptionPayDto data = subscribeService_ksh.getSubscribeInfo(memberId);
             model.addAttribute("data", data);
@@ -48,12 +49,34 @@ public class SubscribeController {
         return "project_subscribe_choice";
     }
 
-    @GetMapping("/subscription/confirm/{memberId}")
+    @GetMapping("/subscription/confirm/{impUid}")
     public String confirmView(@RequestParam(name = "result", required = false) String result,
-                              @PathVariable("memberId") Long memberId, Model model) {
-        SubscriptionPayDto data = subscribeService_ksh.getSubscribeInfo(memberId);
+                              @PathVariable("impUid") String impUid, Model model) {
+        try {
+            String requestUrl = "https://api.iamport.kr/payments/" + impUid;
+            JsonObject jsonObj = subscribeService_ksh.getData(requestUrl);
+            JsonObject dataObj = jsonObj.get("response").getAsJsonObject();
 
-        model.addAttribute("data", data);
+            int selectMonth = Integer.parseInt(dataObj.get("name").getAsString().replaceAll("[^0-9]", ""));
+
+            String expireDate = LocalDate.now().plusDays(31*selectMonth).toString();
+            SubscriptionPayDto data = new SubscriptionPayDto();
+            boolean first = false;
+            if(dataObj.get("amount").getAsInt() == 0) {
+                // 1개월 무료 체험일경우
+                expireDate = LocalDate.now().plusDays(31).toString();
+                first = true;
+            }
+            data.setAmount(subscribeService_ksh.getPrice(selectMonth));
+            data.setSelectMonth(selectMonth);
+            data.setSubscriptionExpireDate(expireDate);
+
+            model.addAttribute("first", first);
+            model.addAttribute("data", data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         model.addAttribute("result", result);
         return "project_subscribe_success";
     }
@@ -61,43 +84,18 @@ public class SubscribeController {
     @GetMapping("/payments/mobile")
     public String subscribeOrderConfirm(String imp_uid, String merchant_uid, String imp_success) {
         // 모바일 결제
+        /*
         String result = "";
         int payPrice = 0;
         Long customerUid = 0L;
         try {
-            // imp_uid 또는 merchant_uid로 아임포트 서버에서 결제 정보 조회
-            String requestUrl = "https://api.iamport.kr/payments/" + imp_uid;
-            JsonObject jsonObj = subscribeService_ksh.getData(requestUrl);
-            JsonObject data = jsonObj.get("response").getAsJsonObject();
-            customerUid = data.get("customer_uid").getAsLong();
-            String merchantUid = data.get("merchant_uid").getAsString();
-            String impUid = data.get("imp_uid").getAsString();
-            int amountToBePaid = 0;
-            int selectMonth = Integer.parseInt(data.get("name").getAsString().substring(0, 1));
-
-            if (selectMonth == 1) {
-                amountToBePaid = Subscribe.ONE.getPrice();
-            } else if (selectMonth == 3) {
-                amountToBePaid = Subscribe.THREE.getPrice();
-            } else if (selectMonth == 6) {
-                amountToBePaid = Subscribe.SIX.getPrice();
-            } else if (selectMonth == 12) {
-                amountToBePaid = Subscribe.TWELVE.getPrice();
-            } else {
-                amountToBePaid = -1;
-            }
-
-            payPrice = Integer.parseInt(data.get("amount").toString());
+            SubscriptionPayDto subDto = subscribeService_ksh.validationPay(imp_uid);
+            customerUid = subDto.getCustomerUid();
+            payPrice = subDto.getAmount(); // amount
             // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
-            if (payPrice == amountToBePaid) {
-                SubscriptionPayDto subDto = new SubscriptionPayDto();
-                subDto.setSelectMonth(selectMonth);
-                subDto.setMerchantUid(merchantUid);
-                subDto.setCustomerUid(customerUid);
-                subDto.setAmount(payPrice);
-                subDto.setImpUid(impUid);
-                if (data.get("status").getAsString().equals("paid")) {
-                    // DB에 결제 정보 저장 <- DB에 이미 있으면 저장X 예외메세지 처리하기
+            if (payPrice == subDto.getAmountToBepay()) {
+                if ("paid".equals(subDto.getPayStatus())) {
+                    // DB에 결제 정보 저장
                     subscribeService_ksh.saveSubscribe(subDto);
                     ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).plusMonths(1);
                     Instant instant = date.toInstant();
@@ -117,10 +115,10 @@ public class SubscribeController {
                     Instant instant = date.toInstant();
                     long timeStamp = instant.getEpochSecond();
 
-                    int count = subscribeService_ksh.getRepayCount(merchantUid);
+                    int count = subscribeService_ksh.getRepayCount(subDto.getMerchantUid());
                     if (count < 3) {
                         result = subscribeService_ksh.schedulePay(subDto, timeStamp);
-                        subscribeService_ksh.updateRepayCount(merchantUid);
+                        subscribeService_ksh.updateRepayCount(subDto.getMerchantUid());
                         if (!"success".equals(result)) {
                             subscribeService_ksh.updateCancel(subDto.getMerchantUid());
                         }
@@ -141,6 +139,36 @@ public class SubscribeController {
         }
         String url = "/subscription/confirm/"+customerUid+"?result="+result;
         return "redirect:"+url;
+        */
+        // 웹훅 사용
+        String result = "";
+        int payPrice = 0;
+        try {
+            SubscriptionPayDto subDto = subscribeService_ksh.validationPay(imp_uid);
+            payPrice = subDto.getAmount(); // amount
+            // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
+            if (payPrice == subDto.getAmountToBepay()) {
+                if ("paid".equals(subDto.getPayStatus())) {
+                    // DB에 결제 정보 저장
+                    result = "success";
+                } else {
+                    // 잔액 부족등과 같은 결제 오류가 났을경우
+                    result = "fail";
+                    return "redirect:/subscription/order?result=" + result;
+                }
+            } else {
+                // 결제금액 불일치. 위/변조 된 결제
+                String refundRes = subscribeService_ksh.refund(imp_uid, payPrice);
+                result = "Fraudulent payment attempt refund "+refundRes;
+                return "redirect:/subscription/order?result=" + result;
+            }
+        }
+        catch (Exception e) {
+            // 오류 -> 관리자 문의
+            return "redirect:/subscription/order?result=" + e.getMessage();
+        }
+        String url = "/subscription/confirm/"+imp_uid+"?result="+result;
+        return "redirect:"+url;
     }
 
     @PostMapping("/payments/prepare")
@@ -149,20 +177,19 @@ public class SubscribeController {
         // 결제 전 검증
         String result = "fail";
 
-        switch (subData.getSelectMonth()) {
-            case 1:
-                if (subData.getAmount() == Subscribe.ONE.getPrice()) result = "success";
-                break;
-            case 3:
-                if (subData.getAmount() == Subscribe.THREE.getPrice()) result = "success";
-                break;
-            case 6:
-                if(subData.getAmount() == Subscribe.SIX.getPrice()) result = "success";
-                break;
-            case 12:
-                if (subData.getAmount() == Subscribe.TWELVE.getPrice())  result = "success";
-                break;
+        log.info("prepare");
+        log.info("subData={}", subData); //1 3 6 12 들어오는거 확인 완료
+
+        log.info("subscribeService_ksh.getPrice(subData.getSelectMonth())={}", subscribeService_ksh.getPrice(subData.getSelectMonth()));
+        // 세션에 저장된 memberId와 PathVariable의 memberId가 다르면 fail메세지보내고 return;
+        SubscriptionPayDto getInfo = subscribeService_ksh.getSubscribeInfo(subData.getCustomerUid());
+        if(getInfo==null) {
+            // 신규
+            result = "success";
+        } else if(subData.getAmount() == subscribeService_ksh.getPrice(subData.getSelectMonth()) ) {
+            result = "success";
         }
+
         map.put("result", result);
 
         return map;
@@ -171,44 +198,17 @@ public class SubscribeController {
     @PostMapping("/payments/pc")
     public @ResponseBody Map<String, String> paymentsComplete(@RequestBody SubscriptionPayDto subData) {
         // pc결제
+        /*
         String result = "";
         Map<String, String> map = new HashMap<>();
         int payPrice = 0;
-        Long customerUid = 0L;
         try {
-            // imp_uid 또는 merchant_uid로 아임포트 서버에서 결제 정보 조회
-            String requestUrl = "https://api.iamport.kr/payments/" + subData.getImpUid();
-            JsonObject jsonObj = subscribeService_ksh.getData(requestUrl);
-            JsonObject data = jsonObj.get("response").getAsJsonObject();
-            customerUid = data.get("customer_uid").getAsLong();
-            String merchantUid = data.get("merchant_uid").getAsString();
-            String impUid = data.get("imp_uid").getAsString();
-            int amountToBePaid = 0;
-            int selectMonth = Integer.parseInt(data.get("name").getAsString().substring(0, 1));
-
-            if (selectMonth == 1) {
-                amountToBePaid = Subscribe.ONE.getPrice();
-            } else if (selectMonth == 3) {
-                amountToBePaid = Subscribe.THREE.getPrice();
-            } else if (selectMonth == 6) {
-                amountToBePaid = Subscribe.SIX.getPrice();
-            } else if (selectMonth == 12) {
-                amountToBePaid = Subscribe.TWELVE.getPrice();
-            } else {
-                amountToBePaid = -1;
-            }
-
-            payPrice = Integer.parseInt(data.get("amount").toString());
+            SubscriptionPayDto subDto = subscribeService_ksh.validationPay(subData.getImpUid());
+            payPrice = subDto.getAmount(); // amount
             // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
-            if (payPrice == amountToBePaid) {
-                SubscriptionPayDto subDto = new SubscriptionPayDto();
-                subDto.setSelectMonth(selectMonth);
-                subDto.setMerchantUid(merchantUid);
-                subDto.setCustomerUid(customerUid);
-                subDto.setAmount(payPrice);
-                subDto.setImpUid(impUid);
-                if (data.get("status").getAsString().equals("paid")) {
-                    // DB에 결제 정보 저장 <- DB에 이미 있으면 저장X 예외메세지 처리하기
+            if (payPrice == subDto.getAmountToBepay()) {
+                if ("paid".equals(subDto.getPayStatus())) {
+                    // DB에 결제 정보 저장
                     subscribeService_ksh.saveSubscribe(subDto);
                     ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).plusMonths(1);
                     Instant instant = date.toInstant();
@@ -228,10 +228,10 @@ public class SubscribeController {
                     Instant instant = date.toInstant();
                     long timeStamp = instant.getEpochSecond();
 
-                    int count = subscribeService_ksh.getRepayCount(merchantUid);
+                    int count = subscribeService_ksh.getRepayCount(subDto.getMerchantUid());
                     if (count < 3) {
                         result = subscribeService_ksh.schedulePay(subDto, timeStamp);
-                        subscribeService_ksh.updateRepayCount(merchantUid);
+                        subscribeService_ksh.updateRepayCount(subDto.getMerchantUid());
                         if (!"success".equals(result)) {
                             subscribeService_ksh.updateCancel(subDto.getMerchantUid());
                         }
@@ -251,9 +251,96 @@ public class SubscribeController {
             map.put("result", e.getMessage());
 
         }
-
         map.put("result", result);
         return map;
+         */
+        // 웹훅 사용
+        String result = "";
+        Map<String, String> map = new HashMap<>();
+        int payPrice = 0;
+        try {
+            SubscriptionPayDto subDto = subscribeService_ksh.validationPay(subData.getImpUid());
+            payPrice = subDto.getAmount(); // amount
+            // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
+            if (payPrice == subDto.getAmountToBepay()) {
+                if ("paid".equals(subDto.getPayStatus())) {
+                    result = "success";
+                } else {
+                    // 잔액 부족등과 같은 결제 오류가 났을경우
+                    result = "fail";
+                }
+            } else {
+                // 결제금액 불일치. 위/변조 된 결제
+                String refundRes = subscribeService_ksh.refund(subData.getImpUid(), payPrice);
+                result = "Fraudulent payment attempt refund "+refundRes;
+            }
+        }
+        catch (Exception e) {
+            // 오류 -> 관리자 문의
+            result = e.getMessage();
+        }
+        map.put("result", result);
+        return map;
+    }
+
+    @PostMapping("/repayments/webhook")
+    public @ResponseBody String webhookUse(@RequestBody String webhook){
+        // webhook={"imp_uid":"imp_1234567890","merchant_uid":"merchant_1234567890","status":"paid"}
+        JsonObject data = new Gson().fromJson(webhook, JsonObject.class);
+        String imp_uid = data.get("imp_uid").getAsString();
+        String result = "";
+        try {
+            SubscriptionPayDto subDto = subscribeService_ksh.validationPay(imp_uid);
+            int payPrice = subDto.getAmount(); // amount
+            // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
+            if (payPrice == subDto.getAmountToBepay()) {
+                if ("paid".equals(subDto.getPayStatus())) {
+                    // DB저장
+                    log.info("subDto={}", subDto);
+                    subscribeService_ksh.saveSubscribe(subDto);
+                    ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).with(LocalTime.MIDNIGHT);
+                    if(payPrice==0) {
+                        date= date.plusDays(31);
+                        subDto.setAmount(subscribeService_ksh.getPrice(subDto.getSelectMonth()));
+                        log.info("**************IF**********subDto={}", subDto);
+                    } else {
+                        date = date.plusDays(31*subDto.getSelectMonth());
+                    }
+                    Instant instant = date.toInstant();
+                    long timeStamp = instant.getEpochSecond();
+                    // 다음결제 예약
+                    result = subscribeService_ksh.schedulePay(subDto, timeStamp);
+                } else {
+                    SubscriptionPayDto getInfo = subscribeService_ksh.getSubscribeInfo(subDto.getCustomerUid());
+                    // 처음 구독시 결제실패 DB저장 X
+                    if(getInfo!=null && 'Y'==getInfo.getSubscriptionStatus()) {
+                        // 재결제 때 잔액 부족등과 같은 결제 오류가 났을경우 최근 결제 내역이 있으면
+                        // 다음날로 재결제 예약이랑 fail_resaon저장, 결제 시도 3번 후 더이상 예약 X
+                        ZonedDateTime date = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(1);
+                        Instant instant = date.toInstant();
+                        long timeStamp = instant.getEpochSecond();
+
+                        subscribeService_ksh.updateFailReason(subDto.getMerchantUid(), subDto.getFailReason());
+                        int count = subscribeService_ksh.getRepayCount(subDto.getMerchantUid());
+                        if (count < 3) {
+                            result = subscribeService_ksh.schedulePay(subDto, timeStamp);
+                            subscribeService_ksh.updateRepayCount(subDto.getMerchantUid());
+                        } else {
+                            subscribeService_ksh.updateCancel(subDto.getMerchantUid());
+                        }
+                    }
+                }
+            } else {
+                // 결제금액 불일치. 위/변조 된 결제
+                String refundRes = subscribeService_ksh.refund(imp_uid, payPrice);
+                result = "Fraudulent payment attempt refund "+refundRes;
+            }
+        }
+        catch (Exception e) {
+            // 오류 -> 관리자 문의
+            result = e.getMessage();
+        }
+        return result;
     }
 
     @GetMapping("/subscribe/unschedule/{memberId}")
@@ -265,12 +352,15 @@ public class SubscribeController {
             SubscriptionPayDto info = subscribeService_ksh.getScheduleInfo(memberId);
             String cancelUrl =  "https://api.iamport.kr/subscribe/payments/unschedule";
             String jsonBody = String.format("{\"customer_uid\": \"%s\", \"merchant_uid\": \"%s\"}", info.getCustomerUid(), info.getMerchantUidRe());
-            String scheduleStatus = subscribeService_ksh.postData(cancelUrl, jsonBody).getAsJsonArray("response").get(0).getAsJsonObject().get("schedule_status").getAsString();
+            JsonObject scheduleStatus = subscribeService_ksh.postData(cancelUrl, jsonBody).getAsJsonArray("response").get(0).getAsJsonObject();
 
-            if("revoked".equals(scheduleStatus)) {
+            if("revoked".equals(scheduleStatus.get("schedule_status").getAsString())) {
                 subscribeService_ksh.updateCancel(info.getMerchantUid());
                 map.put("result", "success");
             } else {
+                if(!scheduleStatus.get("fail_reason").isJsonNull()) {
+                    subscribeService_ksh.updateFailReason(info.getMerchantUid(),scheduleStatus.get("fail_reason").getAsString());
+                }
                 map.put("result", "fail");
             }
 
