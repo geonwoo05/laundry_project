@@ -8,6 +8,7 @@ import aug.laundry.dto.OrdersEnum;
 import aug.laundry.enums.orderStatus.OrderStatus;
 import aug.laundry.enums.orderStatus.routineOrder;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,22 +22,22 @@ public class RiderServiceImpl implements RiderService{
     private final RiderMapper riderMapper;
 
 
+//    @Override
+//    public List<OrdersEnum> OrderList(String status, Long riderId) {
+//        List<Orders> orders = riderMapper.orderList(status, riderId);
+//        List<OrdersEnum> change = OrderStatus.change(orders);
+//        return change;
+//    }
     @Override
-    public List<OrdersEnum> OrderList(String status) {
-        List<Orders> orders = riderMapper.orderList(status);
-        List<OrdersEnum> change = OrderStatus.change(orders);
-        return change;
-    }
-    @Override
-    public List<OrdersEnum> OrderListEnum(String status) {
-        List<OrdersEnum> ordersEnums = riderMapper.orderListEnum(status);
+    public List<OrdersEnum> OrderListEnum(String status, Long quickRiderId) {
+        List<OrdersEnum> ordersEnums = riderMapper.orderListEnum(status, quickRiderId);
         ordersEnums.forEach(x -> x.setOrdersStatus(OrderStatus.valueOf("R" + x.getOrdersStatus()).getTitle()));
         return ordersEnums;
     }
 
     @Override
-    public List<Map<String, Integer>> orderListCnt() {
-        return riderMapper.orderListCnt();
+    public List<Map<String, Integer>> orderListCnt(Long quickRiderId) {
+        return riderMapper.orderListCnt(quickRiderId);
     }
 
     @Override
@@ -55,8 +56,8 @@ public class RiderServiceImpl implements RiderService{
     }
 
     @Override
-    public Rider riderInfo(String riderName) {
-        return riderMapper.riderInfo(riderName);
+    public Rider riderInfo(Long riderId) {
+        return riderMapper.riderInfo(riderId);
     }
 
     @Override
@@ -65,25 +66,25 @@ public class RiderServiceImpl implements RiderService{
     }
 
     @Override
-    public List<OrdersEnum> routineOrderList(String ordersAddress, String status) {
-        List<Orders> orders = riderMapper.routineOrderList(ordersAddress, status);
+    public List<OrdersEnum> routineOrderList(String ordersAddress, String status, Long riderId) {
+        List<Orders> orders = riderMapper.routineOrderList(ordersAddress, status, riderId);
         List<OrdersEnum> change = OrderStatus.change(orders);
         return change;
     }
 
     @Override
-    public Rider routineRider(String riderName) {
-        return riderMapper.routineRider(riderName);
+    public Rider routineRider(Long riderId) {
+        return riderMapper.routineRider(riderId);
     }
 
     @Override
-    public List<Map<String, Integer>> routineOrderCnt() {
-        return riderMapper.routineOrderCnt();
+    public List<Map<String, Integer>> routineOrderCnt(Long riderId) {
+        return riderMapper.routineOrderCnt(riderId);
     }
 
     @Override
-    public Map<String, Integer> routineTotalCnt(String RIDER_POSSIBLE_ZIPCODE) {
-        return riderMapper.routineTotalCnt(RIDER_POSSIBLE_ZIPCODE);
+    public Map<String, Integer> routineTotalCnt(String zipCode, Long riderId) {
+        return riderMapper.routineTotalCnt(zipCode, riderId);
     }
 
     @Override
@@ -100,6 +101,12 @@ public class RiderServiceImpl implements RiderService{
         System.out.println(list);
         return list;
     }
+
+    @Override
+    public int acceptCheck(Long ordersId) {
+        return riderMapper.acceptCheck(ordersId);
+    }
+
 
 //    @Override
 //    public List<Map<String, Integer>> dongCnt(String ordersAddress) {

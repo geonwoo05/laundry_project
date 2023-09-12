@@ -1,5 +1,6 @@
 package aug.laundry.controller;
 
+import aug.laundry.commom.SessionConstant;
 import aug.laundry.domain.DeliveryImage;
 import aug.laundry.domain.Orders;
 import aug.laundry.domain.Rider;
@@ -19,13 +20,12 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -41,34 +41,31 @@ public class RiderController {
     private final FileUploadService_ksh fileUpload;
 
     @GetMapping("/ride/wait")
-    public String waitList(Model model) {
-        List<Map<String, Integer>> cnt = riderService.orderListCnt();
-//        List<Orders> orderList = riderService.OrderList("대기중");
-        List<OrdersEnum> orderList = riderService.OrderListEnum("대기중");
-        Rider riderInfo = riderService.riderInfo("스크류바");
+    public String waitList(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Long quickRiderId = (Long)session.getAttribute("memberId");
 
+        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId);
+        List<OrdersEnum> orderList = riderService.OrderListEnum("대기중", quickRiderId);
+        Rider riderInfo = riderService.riderInfo(quickRiderId);
 
-//        List<Orders> orderList = new ArrayList<>();
-
-//        for(Orders area : list){
-//            if(area.getOrdersAddress().contains(riderInfo.getWorkingArea())){
-//                orderList.add(area);
-//            }
-//        }
-//        System.out.println(orderList);
+        System.out.println(quickRiderId);
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
         model.addAttribute("riderInfo",riderInfo);
+        model.addAttribute("id",quickRiderId);
 
         return "project_rider_list_on_call";
     }
 
     @GetMapping("/ride/accept")
-    public String acceptList(Model model) {
+    public String acceptList(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId) {
 //        List<Orders> orderList = riderService.OrderList("진행중");
-        List<OrdersEnum> orderList = riderService.OrderList("진행중");
-        List<Map<String, Integer>> cnt = riderService.orderListCnt();
+//        List<OrdersEnum> orderList = riderService.OrderList("진행중", memberId);
+        Long quickRiderId = memberId;
+        List<OrdersEnum> orderList = riderService.OrderListEnum("진행중", quickRiderId);
+        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId);
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
@@ -77,10 +74,11 @@ public class RiderController {
     }
 
     @GetMapping("/ride/finish")
-    public String finishList(Model model) {
+    public String finishList(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId) {
 //        List<Orders> orderList = riderService.OrderList("완료");
-        List<OrdersEnum> orderList = riderService.OrderListEnum("완료");
-        List<Map<String, Integer>> cnt = riderService.orderListCnt();
+        Long quickRiderId = memberId;
+        List<OrdersEnum> orderList = riderService.OrderListEnum("완료", quickRiderId);
+        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId);
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
@@ -101,13 +99,22 @@ public class RiderController {
         orders.setOrdersId(37L);
         orders.setOrdersDate("2023/08/31");
         orders.setOrdersStatus(2);
-        orders.setOrdersAddress("서울시 서대문구 홍은동 454");
+        orders.setOrdersAddress("서울 서대문구 남가좌동 거북골로 84");
+//        orders.setOrdersAddress("서울시 서대문구 홍은동 454");
 //        orders.setOrdersAddress("서울시 강북구 번동 657");
         orders.setOrdersAddressDetails("108동 505호");
 
-        map.put("a",orders);
-        map.put("storeId", storeId);
-        return map;
+        System.out.println(orders.getOrdersAddress());
+        System.out.println(riderService.riderInfo(5L).getWorkingArea());
+        System.out.println(orders.getOrdersAddress().split(" ")[1]);
+        if(riderService.riderInfo(5L).getWorkingArea().equals(orders.getOrdersAddress().split(" ")[1])
+        ){
+            map.put("a",orders);
+            map.put("storeId", storeId);
+            return map;
+        }else{
+            return null;
+        }
     }
 
     @GetMapping("/oo/kk/{storeId}")
@@ -122,7 +129,7 @@ public class RiderController {
     }
 
     @GetMapping("/ride/orders/{ordersId}")
-    public String orderInfo(@PathVariable("ordersId") Long ordersId, Model model) {
+    public String orderInfo(@PathVariable("ordersId") Long ordersId, Model model, HttpSession session) {
         Orders info = riderService.orderInfo(ordersId);
         DeliveryImage img = riderService.finishImg(ordersId);
 
@@ -130,51 +137,67 @@ public class RiderController {
         System.out.println(img);
         // 이미지가 없을때 img에 담기는거 처리 해줘야함
 
+//        if(session.getAttribute("msg") != null){
+            String msg = (String)session.getAttribute("errMsg");
+            System.out.println("msg : "  + msg);
+            model.addAttribute("msg", msg);
+//        }
         model.addAttribute("img", img);
         model.addAttribute("info", info);
         return "project_rider_read_more";
     }
 
-    @PostMapping("/ride/assign/{ordersId}/{riderId}")
-    public String orderCheck(@PathVariable("ordersId") Long ordersId, @PathVariable("riderId") Long riderId, Model model){
-        System.out.println(riderId);
-        // 정기배송
-        if(riderId != 0){
+    @PostMapping("/ride/assign/{ordersId}/{ordersStatus}")
+    public String orderCheck(@PathVariable("ordersId") Long ordersId,
+                             @PathVariable("ordersStatus") Long ordersStatus,
+                             @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+                             HttpSession session){
+        if(ordersStatus == riderService.acceptCheck(ordersId)){
             Orders orders = new Orders();
-            orders.setOrdersId(ordersId);
 
-            int res2 = riderService.updateOrderStatus(orders);
-            System.out.println(res2);
-            return "redirect:/ride/routine";
-        }else{
-            Orders orders = new Orders();
             orders.setOrdersId(ordersId);
+            orders.setRiderId(memberId);
 
             int res = riderService.updateOrderRider(orders);
             int res2 = riderService.updateOrderStatus(orders);
+
             System.out.println(res);
             System.out.println(res2);
-            return "redirect:/ride/accept";
-        }
-//        Orders orders = new Orders();
-//        orders.setOrdersId(ordersId);
-//
-////        int res = riderService.updateOrderRider(orders);
-//        int res2 = riderService.updateOrderStatus(orders);
-////        System.out.println(res);
-//        System.out.println(res2);
 
-//        return "redirect:/ride/accept";
+            return "redirect:/ride/accept";
+        }else{
+            session.setAttribute("errMsg","이미 수락된 배달입니다.");
+            return "redirect:/ride/orders/"+ordersId;
+        }
     }
 
+    @PostMapping("/routine/assign/{ordersId}")
+    public String routineCheck(@PathVariable("ordersId") Long ordersId, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model){
+        // 정기배달
+        Orders orders = new Orders();
+
+        orders.setOrdersId(ordersId);
+        orders.setRiderId(memberId);
+
+        int res2 = riderService.updateOrderStatus(orders);
+
+        System.out.println(res2);
+
+        return "redirect:/ride/routine";
+    }
+
+
     @PostMapping("/ride/pickUp/{ordersId}/{riderId}")
-    public String deliveryFinish(@PathVariable("ordersId") Long ordersId, @PathVariable("riderId") Long riderId, @RequestParam("files") List<MultipartFile> files ){
-        System.out.println("riderId : " + riderId);
+    public String deliveryFinish(@PathVariable("ordersId") Long ordersId,
+                                 @PathVariable("riderId") Long riderId,
+                                 @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+                                 @RequestParam("files") List<MultipartFile> files){
+        System.out.println(memberId);
         System.out.println(ordersId);
         System.out.println(files);
 
-        // 정기배송에서 넘어올때
-        if(riderId != 0){
+        if(riderId != 1){
+            // 정기배송
             int fileRes = fileUpload.saveFile(files, ordersId, FileUploadType.DELIVERY);
             System.out.println("fileRes : " + fileRes);
             Orders orders = new Orders();
@@ -182,10 +205,14 @@ public class RiderController {
             int res2 = riderService.updateOrderStatus(orders);
             return "redirect:/ride/routine/"+ordersId;
         }else{
+            // 빠른배송
             int fileRes = fileUpload.saveFile(files, ordersId, FileUploadType.DELIVERY);
             System.out.println("fileRes : " + fileRes);
+
             Orders orders = new Orders();
+            orders.setRiderId(memberId);
             orders.setOrdersId(ordersId);
+
             int res = riderService.updateOrderRider(orders);
             int res2 = riderService.updateOrderStatus(orders);
             return "redirect:/ride/finish";
@@ -193,23 +220,22 @@ public class RiderController {
     }
 
     @GetMapping("/ride/routine")
-    public String routineList(Model model){
-        Rider rider = riderService.routineRider("홀란드");
+    public String routineList(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId){
+        Rider rider = riderService.routineRider(memberId);
 
         routineOrder order = routineOrder.valueOf(rider.getRiderPossibleZipcode());
         List<String> dongNames = order.getDongName();
         System.out.println(dongNames);
 
-        List<OrdersEnum> list = riderService.routineOrderList(dongNames.get(0), "진행중");
+        List<OrdersEnum> list = riderService.routineOrderList(dongNames.get(0), "진행중", rider.getRiderId());
         System.out.println(list);
 
-        Map<String,Integer> total = riderService.routineTotalCnt(rider.getRiderPossibleZipcode());
+        Map<String,Integer> total = riderService.routineTotalCnt(rider.getRiderPossibleZipcode(), rider.getRiderId());
         System.out.println(total);
 
-        List<Map<String, Integer>> cnt = riderService.routineOrderCnt();
+        List<Map<String, Integer>> cnt = riderService.routineOrderCnt(rider.getRiderId());
         System.out.println(cnt);
 
-//        List<Map<String, Integer>> dongCnt = riderService.dongCnt(rider.getRiderPossibleZipcode());
         List<Integer> dongCntWait = riderService.dongCnt(rider.getRiderPossibleZipcode(), "진행중");
         List<Integer> dongCntComplete = riderService.dongCnt(rider.getRiderPossibleZipcode(), "완료");
 
@@ -235,8 +261,6 @@ public class RiderController {
             regionCntComplete.add(resultMap);
         }
 
-
-//        model.addAttribute("dongNames",dongNames);
         model.addAttribute("rider", rider);
         model.addAttribute("list", list);
         model.addAttribute("total", total);

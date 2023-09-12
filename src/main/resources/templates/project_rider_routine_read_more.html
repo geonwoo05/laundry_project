@@ -125,7 +125,7 @@
                                           console.log(position.coords.latitude);
                                           console.log(position.coords.longitude);
 
-                                       resettingMap();
+<!--                                       resettingMap();-->
 
 
             <!-- ----------------------------------------------------------------------------------------------- -->
@@ -583,7 +583,7 @@
 <!--        <input type="submit" value="수거완료" id='agree_btn' th:if="${info.ordersStatus == 2 or info.ordersStatus == 10}">-->
 <!--    </form>-->
 
-    <form th:action="@{/ride/assign/{ordersId}/{riderId}(ordersId=${info.ordersId},riderId=${info.riderId == null ? 0 : info.riderId})}"  method="post">
+    <form th:action="@{/routine/assign/{ordersId} (ordersId=${info.ordersId})}"  method="post">
         <input type="submit" value="수거완료" id='pick_btn' th:if="${info.ordersStatus == 3}">
     </form>
 
@@ -591,7 +591,7 @@
 <!--        <input type="submit" value="업체배송완료" id='status4_btn' th:if="${info.ordersStatus == 4}">-->
 <!--    </form>-->
 
-    <form th:action="@{/ride/pickUp/{ordersId}/{riderId}(ordersId=${info.ordersId},riderId=${info.riderId == null ? 0 : info.riderId})}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/ride/pickUp/{ordersId}/{riderId} (ordersId=${info.ordersId}, riderId=${info.riderId == null ? 1 : info.riderId})}" method="post" enctype="multipart/form-data">
         <input type="submit" value="배송완료" id='complete_btn' th:if="${info.ordersStatus == 12}" style="display: none;">
 
                     <div class='imglist' th:if="${info.ordersStatus == 12}" >
@@ -645,5 +645,5 @@
 </form>
 </div>
 </body>
-<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+<footer th:replace="~{/common/project_rider_footer :: footer}"> </footer>
 </html>
