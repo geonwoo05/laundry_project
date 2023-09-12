@@ -3,8 +3,7 @@ package aug.laundry.controller;
 
 
 import aug.laundry.commom.SessionConstant;
-import aug.laundry.dto.ConfirmIdDto;
-import aug.laundry.dto.MemberDto;
+import aug.laundry.dto.*;
 import aug.laundry.service.BCryptService_kgw;
 import aug.laundry.service.LoginService_kgw;
 import aug.laundry.service.MemberService_kgw;
@@ -51,15 +50,31 @@ public class LoginController {
 
     @PostMapping("/loginAction")
     public  String login(MemberDto memberDto, HttpSession session, Model model) {
-        MemberDto dto = service.login(memberDto, session);
-        if (dto != null) {
-            session.setAttribute(SessionConstant.LOGIN_MEMBER, dto.getMemberId());
+        MemberDto userdto = service.login(memberDto, session);
+
+
+        AdminDto adminDto = service.adminLogin(memberDto.getMemberAccount());
+        RiderDto riderDto = service.riderLogin(memberDto.getMemberAccount());
+        QuickRiderDto quickRiderDto = service.quickRiderLogin(memberDto.getMemberAccount());
+
+        if (userdto != null) {
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, userdto.getMemberId());
             return "redirect:/";
-        } else {
+        }else if(adminDto != null){
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, adminDto.getAdminId());
+            return "redirect:/admin";
+        }else if(riderDto != null){
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, riderDto.getRiderId());
+            return "redirect:/ride/wait";
+        }else if (quickRiderDto != null) {
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, quickRiderDto.getQuickRiderId());
+            return "redirect:/ride/routine";
+        }else{
             model.addAttribute("memberAccount", memberDto.getMemberAccount());
             model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
             return "project_login";
         }
+
     }
 
     @PostMapping("/find-account")
