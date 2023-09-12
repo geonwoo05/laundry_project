@@ -75,8 +75,8 @@ public class OrdersDao {
         return ordersMapper.updateOrdersStatusToCompletePayment(ordersId);
     }
 
-    public int updateCouponListStatusToUsedCoupon(Long couponListId){
-        return ordersMapper.updateCouponListStatusToUsedCoupon(couponListId);
+    public int updateCouponListStatusToUsedCoupon(Long couponListId, Long ordersId){
+        return ordersMapper.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
     }
 
     public int addPoint(Long memberId, Long pointStack, String pointStackReason){

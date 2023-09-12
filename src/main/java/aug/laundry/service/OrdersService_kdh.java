@@ -155,8 +155,8 @@ public class OrdersService_kdh {
     }
 
     @Transactional
-    public void updateCouponListStatusToUsedCoupon(Long couponListId){
-        int result = ordersDao.updateCouponListStatusToUsedCoupon(couponListId);
+    public void updateCouponListStatusToUsedCoupon(Long couponListId, Long ordersId){
+        int result = ordersDao.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
         if(result==0) {
             throw new IllegalArgumentException("쿠폰리스트상태가 업데이트 되지 않았습니다.");
         }

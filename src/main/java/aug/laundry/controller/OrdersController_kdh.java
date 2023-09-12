@@ -49,15 +49,15 @@ public class OrdersController_kdh {
         Map<String, Object> ordersMap = new HashMap<>();
 
         Criteria cri = new Criteria();
-        cri.setPageNo(pageNo, ordersServiceKdh.getTotalCount(1L)); //memberId 수정
+        cri.setPageNo(pageNo, ordersServiceKdh.getTotalCount(4L)); //memberId 수정
 
         List<OrdersListResponseDto> list = null;
         log.info("orderStatus ========================={}", orderStatus);
         if(orderStatus == 1){
-            list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, 1L);
+            list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, 4L);
             log.info("orderStatus=1, list={}", list);
         } else if(orderStatus == 2){
-            list = ordersServiceKdh.findOrdersFinishedByMemberIdAndCri(cri, 1L);
+            list = ordersServiceKdh.findOrdersFinishedByMemberIdAndCri(cri, 4L);
             log.info("orderStatus=2, list={}", list);
         }
 
@@ -78,7 +78,7 @@ public class OrdersController_kdh {
                            @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId,
                            Model model){
 
-
+        memberId = 4L;
         OrdersResponseDto ordersResponseDto = ordersServiceKdh.findByOrdersId(ordersId);
 
         if(memberId != ordersResponseDto.getMemberId()){
@@ -90,13 +90,14 @@ public class OrdersController_kdh {
 
         MemberDto member = memberMapper.selectOne(memberId); // 멤버아이디 바꾸기
         model.addAttribute("member", member);
-
         Map<String, Object> dryMap = ordersServiceKdh.findDryCleaningByOrdersId(ordersId);
         Map<String, Object> repairMap = ordersServiceKdh.findRepairByOrdersId(ordersId);
         boolean isQuickLaundry = ordersServiceKdh.isQuickLaundry(ordersId);
         Integer point = ordersServiceKdh.findPointByMemberId(memberId);
 
-
+        log.info("getCommonLaundryPrice={}",ordersResponseDto.getCommonLaundryPrice());
+        log.info("totalDryPrice={}",(Long)dryMap.get("totalDryPrice"));
+        log.info("totalRepairPrice={}",(Long)repairMap.get("totalRepairPrice"));
         //배송금액 로직 (생활빨래, 드라이클리닝, 수선만 포함)(배송비X 빠른세탁 X)
         Long totalPrice = ordersResponseDto.getCommonLaundryPrice() +
                 (Long)dryMap.get("totalDryPrice") +

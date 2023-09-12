@@ -34,8 +34,9 @@ public class PaymentController {
     private OrdersService_kdh ordersServiceKdh;
 
     @Autowired
-    public PaymentController(PaymentService paymentService) {
+    public PaymentController(PaymentService paymentService, OrdersService_kdh ordersService_kdh) {
         this.paymentService = paymentService;
+        this.ordersServiceKdh = ordersService_kdh;
     }
 
 
@@ -47,6 +48,7 @@ public class PaymentController {
             return "redirect:/orders/" + ordersId +"/payment";
         }
 
+        memberId=4L;
 
         iamportClient = new IamportClient(restApi, restApiSecret);
         IamportResponse<Payment> irsp = iamportClient.paymentByImpUid(payment.getImp_uid());
@@ -71,12 +73,12 @@ public class PaymentController {
         paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
 
 
-//        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);  //검증하지 못함. 나중에 실행되는지 확인
+        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
 
         //검증하지 못함 나중에 실행되는 지 확인 (쿠폰 사용하면 쿠폰상태 사용완료로 변경)
-//        if(payment.getCouponListId() != null){
-//            ordersServiceKdh.updateCouponListStatusToUsedCoupon(payment.getCouponListId());
-//        }
+        if(payment.getCouponListId() != null){
+            ordersServiceKdh.updateCouponListStatusToUsedCoupon(payment.getCouponListId(), ordersId);
+        }
         //검증하지 못함 나중에 실행되는지확인 포인트 차감
 //        if(payment.getPointPrice() != null){
 //            //음수로 변환

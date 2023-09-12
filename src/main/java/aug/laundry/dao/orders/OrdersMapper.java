@@ -31,7 +31,7 @@ public interface OrdersMapper {
 
     int updateOrdersStatusToCompletePayment(Long ordersId);
 
-    int updateCouponListStatusToUsedCoupon(Long couponListId);
+    int updateCouponListStatusToUsedCoupon(@Param("couponListId") Long couponListId, @Param("ordersId") Long ordersId);
 
     int addPoint(@Param("memberId") Long memberId, @Param("pointStack") Long pointStack, @Param("pointStackReason") String pointStackReason);
 
