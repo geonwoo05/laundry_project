@@ -90,15 +90,14 @@ public class PaymentController {
                 ordersServiceKdh.updateCouponListStatusToUsedCoupon(payment.getCouponListId(), ordersId);
             }
 
-        if(payment.getPointPrice() != null){
-            //음수로 변환
-            Long pointPrice = -payment.getPointPrice();
-            ordersServiceKdh.addPoint(memberId, pointPrice, "포인트 사용");
+            if(payment.getPointPrice() != null){
+                //음수로 변환
+                Long pointPrice = -payment.getPointPrice();
+                ordersServiceKdh.addPoint(memberId, pointPrice, "포인트 사용");
+            }
         }
-        }
-
         //redirect로 바꿔야함
-        return "project_search_id_result";
+        return "redirect:/payment/complete";
     }
 
     @ResponseBody
@@ -134,8 +133,6 @@ public class PaymentController {
                     return new ResponseEntity<>(HttpStatus.OK);
                 }
 
-
-
                 paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId,
                         new PaymentCheckRequestDto(couponListId, couponPrice, pointPrice, response.getImpUid(), response.getMerchantUid(), true));
                 // 주문상태 결제완료로 변경
@@ -152,8 +149,13 @@ public class PaymentController {
                 }
             }
         }
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/payment/complete")
+    public String completeForm(){
+        return "project_payment_success";
+    }
+
 
 }
