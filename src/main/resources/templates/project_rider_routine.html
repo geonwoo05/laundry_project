@@ -87,6 +87,7 @@
 
             const modal = document.querySelector('.modal');
             var categoryBtn = document.querySelector('.category_btn');
+            var ss = document.querySelector('.modalBox');
             var area = document.body;
             categoryBtn.addEventListener('click', function () {
 
@@ -94,7 +95,7 @@
                     modal1.style.display = 'block';
 
                     window.addEventListener('click', function (event) {
-                    if (event.target === area) {
+                    if (event.target === ss) {
                     console.log('aaaa');
                         modal.style.display = 'none'; // 모달을 닫음
                         body.style.backgroundColor = ''; // 배경 색상을 원래대로 복원
@@ -221,6 +222,8 @@
                                 console.log("주소: " + fullAddr);
                                 console.log("위도: " + resultInfo.coordinate[0].newLatEntr);
                                 console.log("경도: " + resultInfo.coordinate[0].newLonEntr);
+                               console.log("위도: " + resultInfo.coordinate[0].lat);
+                                console.log("경도: " + resultInfo.coordinate[0].lon);
 
                                if (resultInfo.coordinate[0].adminDong === "" || resultInfo.coordinate[0].adminDong === null) {
                                     endX = resultInfo.coordinate[0].newLonEntr;
@@ -366,5 +369,5 @@
     </div>
 </div>
 </body>
-<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+<footer th:replace="~{/common/project_rider_footer :: footer}"> </footer>
 </html>

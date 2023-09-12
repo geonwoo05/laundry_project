@@ -13,29 +13,31 @@ import java.util.Map;
 @Mapper
 public interface RiderMapper {
 
-    List<Orders> orderList(String status);
-    List<OrdersEnum> orderListEnum(String status);
+//    List<Orders> orderList(@Param("status")String status, @Param("riderId")Long riderId);
+    List<OrdersEnum> orderListEnum(@Param("status")String status, @Param("quickRiderId")Long quickRiderId);
 
-    List<Map<String, Integer>> orderListCnt();
+    List<Map<String, Integer>> orderListCnt(Long quickRiderId);
     Orders orderInfo(Long ordersId);
 
     int updateOrderRider(Orders orders);
 
     int updateOrderStatus(Orders orders);
 
-    Rider riderInfo(String riderName);
+    Rider riderInfo(Long riderId);
 
     DeliveryImage finishImg(Long ordersId);
 
-    List<Orders> routineOrderList(@Param("ordersAddress")String ordersAddress, @Param("status")String status);
+    List<Orders> routineOrderList(@Param("ordersAddress")String ordersAddress, @Param("status")String status, @Param("riderId") Long riderId);
 
-    Rider routineRider(String riderName);
+    Rider routineRider(Long riderId);
 
-    List<Map<String, Integer>> routineOrderCnt();
+    List<Map<String, Integer>> routineOrderCnt(Long riderId);
 
-    Map<String, Integer> routineTotalCnt(String zipCode);
+    Map<String, Integer> routineTotalCnt(@Param("zipCode")String zipCode, @Param("riderId")Long riderId);
 
 //    Map<String, Integer> dongCnt(String ordersAddress);
 
     int dongCnt(@Param("ordersAddress")String ordersAddress, @Param("status")String status);
+
+    int acceptCheck(Long ordersId);
 }

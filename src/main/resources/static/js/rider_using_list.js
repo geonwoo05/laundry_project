@@ -33,9 +33,19 @@
                                 console.log("주소: " + fullAddr);
                                 console.log("위도: " + resultInfo.coordinate[0].newLatEntr);
                                 console.log("경도: " + resultInfo.coordinate[0].newLonEntr);
+                                console.log("위도: " + resultInfo.coordinate[0].lat);
+                                console.log("경도: " + resultInfo.coordinate[0].lon);
 
-                                endX = resultInfo.coordinate[0].newLonEntr;
-                                endY = resultInfo.coordinate[0].newLatEntr;
+//                                endX = resultInfo.coordinate[0].newLonEntr;
+//                                endY = resultInfo.coordinate[0].newLatEntr;
+
+                                if (resultInfo.coordinate[0].adminDong === "" || resultInfo.coordinate[0].adminDong === null) {
+                                    endX = resultInfo.coordinate[0].newLonEntr;
+                                    endY = resultInfo.coordinate[0].newLatEntr;
+                                }else {
+                                    endX = resultInfo.coordinate[0].lon;
+                                    endY = resultInfo.coordinate[0].lat;
+                                }
 
                                 distance(endY, endX, index);
                             },

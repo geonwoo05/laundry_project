@@ -13,10 +13,10 @@ import java.util.Map;
 @Service
 public interface RiderService {
 
-    List<OrdersEnum> OrderList(String status);
-    List<OrdersEnum> OrderListEnum(String status);
+//    List<Orders> orderList(@Param("status")String status, @Param("riderId")Long riderId);
+    List<OrdersEnum> OrderListEnum(@Param("status")String status, @Param("quickRiderId")Long quickRiderId);
 
-    List<Map<String, Integer>> orderListCnt();
+    List<Map<String, Integer>> orderListCnt(Long quickRiderId);
 
     Orders orderInfo(Long ordersId);
 
@@ -24,19 +24,21 @@ public interface RiderService {
 
     int updateOrderStatus(Orders orders);
 
-    Rider riderInfo(String riderName);
+    Rider riderInfo(Long riderId);
 
     DeliveryImage finishImg(Long ordersId);
 
-    List<OrdersEnum> routineOrderList(@Param("ordersAddress")String ordersAddress, @Param("status")String status);
+    List<OrdersEnum> routineOrderList(@Param("ordersAddress")String ordersAddress, @Param("status")String status, @Param("riderId") Long riderId);
 
-    Rider routineRider(String riderName);
+    Rider routineRider(Long riderId);
 
-    List<Map<String, Integer>> routineOrderCnt();
+    List<Map<String, Integer>> routineOrderCnt(Long riderId);
 
-    Map<String, Integer> routineTotalCnt(String RIDER_POSSIBLE_ZIPCODE);
+    Map<String, Integer> routineTotalCnt(@Param("zipCode")String zipCode, @Param("riderId")Long riderId);
 
 //    List<Map<String, Integer>> dongCnt(String ordersAddress);
 
     List<Integer> dongCnt(String ordersAddress, String status);
+
+    int acceptCheck(Long ordersId);
 }

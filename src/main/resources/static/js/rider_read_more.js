@@ -1,8 +1,8 @@
 window.onload = function() {
             var orderStatus = document.querySelector('#orderStatus').value;
-
+            // status에 따른 지도 띄우기 조건
             if (orderStatus == 2 || orderStatus == 3 || orderStatus == 4 || orderStatus == 10 || orderStatus == 11) {
-                initTmap(); // 원하는 동작 실행
+                initTmap();
             }
 
 
@@ -28,7 +28,7 @@ window.onload = function() {
                 }
             });
 
-            var map;
+                     var map;
                      var markerInfo;
                      var marker_s, marker_e, marker_p;
                      var drawInfoArr = [];
@@ -37,6 +37,11 @@ window.onload = function() {
                      var chktraffic = [];
                      var resultdrawArr = [];
                      var resultMarkerArr = [];
+
+                     var fullAddressElements;
+                     var endX;
+                     var endY;
+
 
                      function initTmap() {
                         map = new Tmapv2.Map("map_div", {
@@ -58,14 +63,14 @@ window.onload = function() {
                               });
                                 });
 
-                        marker_e = new Tmapv2.Marker(
-                              {
-                                 position : new Tmapv2.LatLng(37.403049076341794,
-                                       127.10331814639885),
-                                 icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                                 iconSize : new Tmapv2.Size(24, 38),
-                                 map : map
-                              });
+//                        marker_e = new Tmapv2.Marker(
+//                              {
+//                                 position : new Tmapv2.LatLng(37.403049076341794,
+//                                       127.10331814639885),
+//                                 icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+//                                 iconSize : new Tmapv2.Size(24, 38),
+//                                 map : map
+//                              });
 
                         $(document).ready(function(){
                                        navigator.geolocation.getCurrentPosition((position) => {
@@ -73,34 +78,33 @@ window.onload = function() {
                                           console.log(position.coords.latitude);
                                           console.log(position.coords.longitude);
 
-                                       resettingMap();
+//                                       resettingMap();
 
 
             <!-- ----------------------------------------------------------------------------------------------- -->
             var extractedAddress = '';
-            var fullAddressElements = document.querySelector('#addressValue').value;
+            fullAddressElements = document.querySelector('#addressValue').value;
             console.log(fullAddressElements);
 
-            <!--        var fullAddress = fullAddressElements.value;-->
-            <!--        var indexOfDong = fullAddress.indexOf("동");-->
+//                    var fullAddress = fullAddressElements.value;
+//                    var indexOfDong = fullAddress.indexOf("동");
+//
+//                    if (indexOfDong !== -1) {
+//                        extractedAddress = fullAddress.substring(0, indexOfDong-4); // "동"을 포함하기 전까지 추출
+//                    }
 
-            <!--        if (indexOfDong !== -1) {-->
-            <!--            extractedAddress = fullAddress.substring(0, indexOfDong-4); // "동"을 포함하기 전까지 추출-->
-            <!--        }-->
+            <!-- ----------------------------------------------------------------------------------------------- -->
+
+
+           var searchOption = "12";
+
+           var trafficInfochk = "N";
+
+           var headers = {};
+              headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
 
             <!-- ----------------------------------------------------------------------------------------------- -->
 
-
-                                       var searchOption = "12";
-
-                                       var trafficInfochk = "N";
-
-                                       var headers = {};
-                                          headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
-
-            <!-- ----------------------------------------------------------------------------------------------- -->
-            var endX = '';
-            var endY = '';
                     $.ajax({
                         method: "GET",
                         headers: headers,
@@ -122,11 +126,11 @@ window.onload = function() {
                             console.log(resultInfo.coordinate[0].adminDong);
 
                                 if (resultInfo.coordinate[0].adminDong === "" || resultInfo.coordinate[0].adminDong === null) {
-            <!--                        새주소                      -->
+//                                    새주소
                                     endX = resultInfo.coordinate[0].newLonEntr;
                                     endY = resultInfo.coordinate[0].newLatEntr;
                                 }else {
-            <!--                        구주수                       -->
+//                                    구주수
                                     endX = resultInfo.coordinate[0].lon;
                                     endY = resultInfo.coordinate[0].lat;
                                 }
@@ -138,6 +142,22 @@ window.onload = function() {
                     console.log(endX);
                     console.log(endY);
 
+//                    $('#start-navigation').click(function(e){
+//                        e.preventDefault();
+//
+//                        console.log(endX);
+//                        console.log(endY);
+//                        console.log(fullAddressElements);
+//
+//                        Kakao.Navi.start({
+//                            name: fullAddressElements,
+////                 //              x: 127.11205203011632,
+////                 //              y: 37.39279717586919,
+//                            x : 126.919905,
+//                            y : 37.576905,
+//                            coordType: 'wgs84',
+//                        });
+//                    });
             <!-- ----------------------------------------------------------------------------------------------- -->
 
 
@@ -310,9 +330,9 @@ window.onload = function() {
                                           }
                                        });
                                     });
-
                               });
                      }
+
 
                      function addComma(num) {
                         var regexp = /\B(?=(\d{3})+(?!\d))/g;
@@ -342,11 +362,7 @@ window.onload = function() {
                         var polyline_;
 
                         if (chktraffic.length != 0) {
-
-
-
                            var lineColor = "";
-
                            if (traffic != "0") {
                               if (traffic.length == 0) {
 
@@ -380,7 +396,6 @@ window.onload = function() {
                                     for (var p = 0; p < tInfo[0].startIndex; p++) {
                                        noInfomationPoint.push(arrPoint[p]);
                                     }
-
 
                                     polyline_ = new Tmapv2.Polyline({
                                        path : noInfomationPoint,
@@ -503,9 +518,65 @@ window.onload = function() {
                         resultMarkerArr = [];
                         resultdrawArr = [];
                      }
+                };
 
-        };
+                      function navi() {
+                          var xx, yy;
+                          var aa = document.querySelector('#addressValue').value;
+                          console.log(aa);
 
-        function goToRiderList() {
-             window.location.href = "riderList.html";
-         }
+                          var searchOption = "12";
+
+                          var trafficInfochk = "N";
+
+                          var headers = {};
+                          headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+
+
+                          $.ajax({
+                              method: "GET",
+                              headers: headers,
+                              url: "https://apis.openapi.sk.com/tmap/geo/fullAddrGeo?version=1&format=json",
+                              async: false,
+                              data: {
+                                  "coordType": "WGS84GEO",
+                                  "fullAddr": aa
+                              },
+                              success: function(response) {
+                                  var resultInfo = response.coordinateInfo;
+
+                                      if (resultInfo.coordinate[0].adminDong === "" || resultInfo.coordinate[0].adminDong === null) {
+                                          xx = resultInfo.coordinate[0].newLonEntr;
+                                          yy = resultInfo.coordinate[0].newLatEntr;
+                                      }else {
+                                          xx = resultInfo.coordinate[0].lon;
+                                          yy = resultInfo.coordinate[0].lat;
+                                      }
+                                startNavigation(xx, yy, aa);
+                              },
+                              error: function(xhr, status, error) {
+                                  console.error(error);
+                              }
+                          });
+                          console.log(xx);
+                          console.log(yy);
+                    }
+
+                    function startNavigation(xx, yy, address){
+                    console.log(xx);
+                    console.log(yy);
+                    console.log(address);
+                    if(xx != null && yy != null && address != null){
+        //                Kakao.Navi.share({
+                        Kakao.Navi.start({
+                              name: address,
+                              x : Number(xx),
+                              y : Number(yy),
+                              vehicleType : 7,
+                              rpOption : 2,
+        //                      sX : 126.9433486,
+        //                      sY : 37.5605672,
+                            coordType: 'wgs84',
+                          });
+                        }
+                    }
