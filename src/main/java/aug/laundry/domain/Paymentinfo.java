@@ -18,6 +18,7 @@ public class Paymentinfo {
     private String buyerTel;
     private Long amount;
     private Integer paymentStatus;
+    private String refundReason;
 
     public Paymentinfo(Long memberId, String impUid, String payMethod, String merchantUid, String buyerName, String buyerTel, Long amount) {
         this.memberId = memberId;

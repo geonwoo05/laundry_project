@@ -39,4 +39,12 @@
         WHERE PAYMENTINFO_ID = #{paymentinfoId}
     </update>
 
+    <select id="findPaymentinfoByImpUid" resultType="Paymentinfo">
+        SELECT PAYMENTINFO_ID, MEMBER_ID, IMP_UID,
+               PAY_METHOD, MERCHANT_UID, BUYER_NAME,
+               BUYER_TEL, AMOUNT, PAYMENT_STATUS, REFUND_REASON
+        FROM PAYMENTINFO
+        WHERE IMP_UID = #{impUid}
+    </select>
+
 </mapper>

@@ -28,8 +28,9 @@ public class PaymentService {
         Long pointPrice = payment.getPointPrice();
 
         if (pointPrice != null) {
-            Integer point = pointDao.findByMemberId(1L);  //memberId 교체해야함
-
+            Integer point = pointDao.findByMemberId(memberId);
+            log.info("DB point={}",point);
+            log.info("클라이언트 point={},", point);
             if (point < payment.getPointPrice()) {
                 throw new IsNotValidException(
                         "주문에서 사용한 포인트가 회원이 가지고 있는 포인트보다 많습니다.[" + paymentinfoId + "]");
