@@ -18,16 +18,6 @@ window.addEventListener('load', function(){
     let checkboxs = document.querySelectorAll('.optionbox input[type=checkbox]');
     let boxs = document.querySelectorAll('.optionbox');
 
-    boxs.forEach(button => {
-        button.addEventListener('click', function(event) {
-
-            let inputNode = button.querySelector('input[type="checkbox"]');
-            if (inputNode) {
-                inputNode.click();
-            }
-
-        });
-    });
 
     let drycleaning = document.querySelector('#dryBtn');
     let common = document.querySelector('#commonBtn');
@@ -39,6 +29,14 @@ window.addEventListener('load', function(){
     })
 
     common.addEventListener('click', function(){
+        this.classList.toggle('select1');
+        if (this.classList.contains('select1')){
+            document.querySelector('#commonBtn svg').style.fill = 'var(--main-color)'
+            document.querySelector('#common_laundry').value = '1';
+        } else {
+            document.querySelector('#commonBtn svg').style.fill = ''
+            document.querySelector('#common_laundry').value = '0';
+        }
 
     })
     repair.addEventListener('click', function(){

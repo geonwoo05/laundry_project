@@ -3,10 +3,7 @@ package aug.laundry.service;
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.LaundryRepository;
 import aug.laundry.domain.Orders;
-import aug.laundry.dto.Address;
-import aug.laundry.dto.MyCoupon;
-import aug.laundry.dto.OrderInfo;
-import aug.laundry.dto.OrderPost;
+import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.Delivery;
 import aug.laundry.enums.category.MemberShip;
@@ -18,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -106,13 +104,20 @@ public class LaundryServiceImpl implements LaundryService{
     }
 
     @Override
-    public boolean insertDrycleaning(Long memberId, Long ordersDetailId, Map<String, Integer> result) {
+    public boolean insertDrycleaning(Long memberId, Long ordersDetailId, Map<String, Integer> result, HashMap<String, Boolean> resultMap) {
         Long check = laundryRepository.check(memberId, ordersDetailId);
         if (check == null || check == 0L) return false;
 
         for (String category : result.keySet()) {
             if (Category.findByTitle(category).isEmpty()) return false; // 해당하는 카테고리가 없으면 false 반환
         }
+        laundryRepository.removeDryCleaning(ordersDetailId); // 기존에 존재하던 드라이클리닝 장바구니 삭제
+
+        if (result.isEmpty()){ // 기존에 있던 드라이클리닝 목록을 다 지우고 빈 장바구니일경우 resultMap에 empty값 추가 후 true 반환
+            resultMap.put("empty", true);
+            return true;
+        }
+
         for (String category : result.keySet()) {
             Category category1 = Category.findByTitle(category).get();
             int amount = result.get(category1.getTitle());
@@ -122,6 +127,27 @@ public class LaundryServiceImpl implements LaundryService{
             }
         }
         return true;
+    }
+
+    @Override
+    public List<OrderDrycleaning> reloadDrycleaning(Long orderDetailId) {
+        return laundryRepository.reloadDrycleaning(orderDetailId);
+    }
+
+    @Override
+    public List<OrderRepair> reloadRepair(Long orderDetailId) {
+        return laundryRepository.reloadRepair(orderDetailId);
+    }
+
+    @Override
+    public Map<Long, List<String>> getRepairImage(List<OrderRepair> reload) {
+
+        Map<Long, List<String>> result = new ConcurrentHashMap<>();
+        for (OrderRepair orderRepair : reload) {
+            List<String> storeImageName = laundryRepository.getRepairImage(orderRepair.getRepairId());
+            result.put(orderRepair.getRepairId(), storeImageName);
+        }
+        return result;
     }
 
     @NotNull

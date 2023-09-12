@@ -1,10 +1,16 @@
 package aug.laundry.controller;
 
 import aug.laundry.commom.SessionConstant;
+import aug.laundry.domain.RepairImage;
 import aug.laundry.dto.DateForm;
+import aug.laundry.dto.OrderDrycleaning;
+import aug.laundry.dto.OrderRepair;
+import aug.laundry.dto.RepairFormData;
+import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.CategoryPriceCalculator;
 import aug.laundry.enums.category.MemberShip;
 import aug.laundry.enums.category.Pass;
+import aug.laundry.enums.repair.Repair;
 import aug.laundry.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +21,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -42,32 +51,70 @@ public class LaundryOrderController {
     }
 
     @GetMapping("/dry")
-    public String drycleaning(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
+    public String drycleaning(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+                              @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long orderDetailId,
+                              Model model) {
+
+        // 카테고리
         Map<String, Map<String, Long>> category = mainService.getCategory();
         MemberShip memberShip = laundryService.isPass(memberId);
         model.addAttribute("category", category);
         if (memberShip.getCheck() == Pass.PASS) {
-            Float percent = CategoryPriceCalculator.PASS.percent();
-            model.addAttribute("percent", percent);
+            model.addAttribute("percent", CategoryPriceCalculator.PASS.percent());
         }
+
+        // 현재 장바구니에서 기록이 있는지 확인후 장바구니 가져오기
+        List<OrderDrycleaning> reload = laundryService.reloadDrycleaning(orderDetailId); // null 이면 이전에 저장된값 없음
+        System.out.println("reload = " + reload);
+        model.addAttribute("reload", reload);
         return "project_order_2_1";
     }
 
     @GetMapping("/repair")
-    public String repair() {
+    public String repair(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+                         @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long orderDetailId,
+                         Model model) {
+        MemberShip memberShip = laundryService.isPass(memberId);
+        if (memberShip.getCheck() == Pass.PASS){
+            model.addAttribute("percent", CategoryPriceCalculator.PASS.percent());
+        }
+        Repair[] repairCategory = Repair.values();
 
-        return "project_order_repair";
+        List<OrderRepair> reload = laundryService.reloadRepair(orderDetailId);
+        if (reload != null && !reload.isEmpty()) {
+            Map<Long, List<String>> uploadImage = laundryService.getRepairImage(reload);
+            model.addAttribute("uploadImage", uploadImage);
+        }
+        model.addAttribute("reload", reload);
+        model.addAttribute("repairCategory", repairCategory);
+
+        return "project_order_2_2";
     }
 
     @Transactional
     @PostMapping("/dry/order")
-    public @ResponseBody ResponseEntity<String> dryOrder(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+    public @ResponseBody Map<String, Boolean> dryOrder(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
                                                          @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId,
                                                          @RequestBody Map<String, Integer> result) {
+        HashMap<String, Boolean> resultMap = new HashMap<>();
+        boolean status = laundryService.insertDrycleaning(memberId, ordersDetailId, result, resultMap);
 
-        boolean status = laundryService.insertDrycleaning(memberId, ordersDetailId, result);
+        System.out.println("status = " + status);
+
+        resultMap.put("result", status);
+        return resultMap;
+    }
+
+    @Transactional
+    @PostMapping("/repair/order")
+    public @ResponseBody Map<String, Boolean> repairOrder(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+                                                          @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId,
+                                                          @RequestParam("request") List<String> request,
+                                                          @RequestBody Map<Integer, RepairFormData> jsonObject) {
+        HashMap<String, Boolean> resultMap = new HashMap<>();
+        System.out.println("fileUpload = " + jsonObject);
 
 
-        return status ? new ResponseEntity<String>("success", HttpStatus.OK) : new ResponseEntity<String>("fail", HttpStatus.BAD_REQUEST);
+        return resultMap;
     }
 }

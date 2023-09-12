@@ -1,25 +1,17 @@
 package aug.laundry.dao;
 
-import aug.laundry.controller.LaundryController;
 import aug.laundry.domain.CouponList;
 import aug.laundry.domain.Orders;
-import aug.laundry.dto.Address;
-import aug.laundry.dto.MyCoupon;
-import aug.laundry.dto.OrderInfo;
+import aug.laundry.domain.Repair;
+import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
-import aug.laundry.enums.category.CategoryOption;
 import aug.laundry.enums.category.Pass;
-import aug.laundry.service.LaundryServiceImpl;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -97,5 +89,30 @@ public class LaundryRepository {
 
     public void insertDryCleaning(Long ordersDetailId, Category category) {
         laundryMapper.insertDryCleaning(ordersDetailId, category.name());
+    }
+
+    public void removeDryCleaning(Long ordersDetailId) {
+        laundryMapper.removeDrycleaning(ordersDetailId);
+    }
+
+    public void removeRepair(Long ordersDetailId) {
+        laundryMapper.removeRepair(ordersDetailId);
+    }
+    public void removeCommon(Long ordersDetailId) {
+        laundryMapper.removeCommon(ordersDetailId);
+    }
+
+    public List<OrderDrycleaning> reloadDrycleaning(Long orderDetailId) {
+        List<OrderDrycleaning> result = laundryMapper.reloadDrycleaning(orderDetailId);
+        if (result == null || result.isEmpty()) return null;
+        return result;
+    }
+
+    public List<OrderRepair> reloadRepair(Long orderDetailId) {
+        return laundryMapper.reloadRepair(orderDetailId);
+    }
+
+    public List<String> getRepairImage(Long repairId) {
+        return laundryMapper.getRepairImage(repairId);
     }
 }

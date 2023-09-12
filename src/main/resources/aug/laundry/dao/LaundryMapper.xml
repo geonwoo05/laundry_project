@@ -113,4 +113,22 @@
 
     </insert>
 
+    <select id="reloadDrycleaning" resultType="aug.laundry.dto.OrderDrycleaning">
+        SELECT DRYCLEANING_CATEGORY, COUNT(DRYCLEANING_CATEGORY) as amount
+        FROM DRYCLEANING
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+        GROUP BY DRYCLEANING_CATEGORY
+    </select>
+
+    <select id="reloadRepair" resultType="aug.laundry.dto.OrderRepair">
+        SELECT REPAIR_ID, ORDERS_DETAIL_ID, REPAIR_REQUEST, REPAIR_CATEGORY
+        FROM REPAIR
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </select>
+
+    <select id="getRepairImage">
+        SELECT REPAIR_IMAGE_STORE_NAME
+        FROM REPAIR_IMAGE
+        WHERE REPAIR_ID = #{repairId}
+    </select>
 </mapper>

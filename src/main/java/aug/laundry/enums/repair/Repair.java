@@ -13,7 +13,7 @@ public enum Repair {
     WAIST("허리수선", 15000L),
     QUILTED("누빔", 5000L),
     OVERHANGING("덧댐", 15000L),
-    ZIPPER_SLIDER("지퍼 슬러이더 교체", 5000L),
+    ZIPPER_SLIDER("지퍼 슬라이더 교체", 5000L),
     SLEEVE("소매수선", 15000L),
     FORM_SIZE_REDUCE("폼 줄이기", 25000L),
     SIZE_REDUCE("사이즈 수선", 50000L),

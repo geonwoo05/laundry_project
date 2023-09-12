@@ -34,7 +34,36 @@
             <button type='button' class='allDeleteBtn'>삭제</button>
         </div>
         <div class='warp'>
+            <th:block th:if="${reload != null}">
+                <div class="box" th:each="item : ${reload}">
+                    <label th:for="${item.category.title}">
+                        <div class="sec1">
+                            <input type="checkbox" name="dry" th:id="${item.category.title}" class="custom-checkbox custom-label myCheckbox">
+                            <div class="info">
+                                <div class="classification1" th:text="${item.category.title}"></div>
+                                <div class="classification2" th:text="${item.category.parentCategory.title}">침구류</div>
+                            </div>
+                        </div>
+                    </label>
+                    <div class="sec2">
+                        <div class="countCheck">
+                            <div class="cntBox minus" onclick="values(this)">-</div>
+                            <input type="text" th:name="${item.category.title}" th:value="${item.amount}" readonly="true" class="cntValue">
 
+                            <div class="cntBox plus" onclick="values(this)">+</div>
+                        </div>
+                        <div class="checkPrice">
+                            <th:block th:if="${memberShip}">
+                                <span class='passPrice' th:text="${#numbers.formatInteger(item.category.price * percent, 3, 'COMMA')} + '원'"></span>
+                                <span class="commonPrice line-through" th:text="${#numbers.formatInteger(item.category.price, 3, 'COMMA')} + '원'"></span>
+                            </th:block>
+                            <th:block th:unless="${memberShip}">
+                                <span class="commonPrice" th:text="${#numbers.formatInteger(item.category.price, 3, 'COMMA')} + '원'"></span>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
         </div>
         <div class='error'></div>
         <div class="fixButton">
