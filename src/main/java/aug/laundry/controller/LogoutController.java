@@ -16,4 +16,22 @@ public class LogoutController {
         }
         return "redirect:/";
     }
+
+    @GetMapping("/riderLogout")
+    public String riderLogout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/adminLogout")
+    public String adminLogout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        return "redirect:/login";
+    }
 }
