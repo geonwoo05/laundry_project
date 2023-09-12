@@ -3,6 +3,7 @@ package aug.laundry.intercept;
 import aug.laundry.commom.SessionConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,4 +27,5 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         log.info("인증된 사용자");
         return true;
     }
+    
 }

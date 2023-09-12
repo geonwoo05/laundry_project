@@ -52,7 +52,6 @@ public class LoginController {
     public  String login(MemberDto memberDto, HttpSession session, Model model) {
         MemberDto userdto = service.login(memberDto, session);
 
-
         AdminDto adminDto = service.adminLogin(memberDto.getMemberAccount());
         RiderDto riderDto = service.riderLogin(memberDto.getMemberAccount());
         QuickRiderDto quickRiderDto = service.quickRiderLogin(memberDto.getMemberAccount());
@@ -62,7 +61,7 @@ public class LoginController {
             return "redirect:/";
         }else if(adminDto != null){
             session.setAttribute(SessionConstant.LOGIN_MEMBER, adminDto.getAdminId());
-            return "redirect:/admin";
+            return "redirect:/admin/"+session.getAttribute("memberId");
         }else if(riderDto != null){
             session.setAttribute(SessionConstant.LOGIN_MEMBER, riderDto.getRiderId());
             return "redirect:/ride/routine";

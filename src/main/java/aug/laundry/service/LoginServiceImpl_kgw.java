@@ -225,7 +225,6 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             KakaoProfile kakaoProfile = null;
             try {
                 kakaoProfile = obMapper.readValue(body.string(), KakaoProfile.class);
-
             }catch(JsonMappingException e){
                 e.printStackTrace();
 
@@ -316,7 +315,6 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 return member;
             }
            return null;
-
         }else{
             return null;
         }
