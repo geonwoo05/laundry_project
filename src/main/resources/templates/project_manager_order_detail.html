@@ -110,8 +110,8 @@
             </table>
 
             <!-- 사진 -->
+            <input type='file' id='btnUpload' multiple='multiple' name="files"/>
             <div id="imagePreview">
-                <input type='file' id='btnUpload' multiple='multiple' name="files"/>
             </div>
 
             <div class='fixbox'>
@@ -120,8 +120,52 @@
         </form>
     </div>
 </body>
-<footer th:replace="~{/common/project_footer :: footer}"> </footer>
+<footer th:replace="~{/common/project_manager_order_footer :: footer}"> </footer>
 <script>
+
+    let selectedFiles = [];
+    // 이미지 미리보기, 삭제
+    document.querySelector('#btnUpload').addEventListener('change', function () {
+        let input = this;
+        if (input.files && input.files.length) {
+            for (let i = 0; i < input.files.length; i++) {
+                let file = input.files[i];
+                selectedFiles.push(file); // 선택한파일 배열에 추가
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let container = document.createElement('div');
+                    container.className = 'image-container';
+
+                    let img = document.createElement('img');
+                    img.className = 'thumb';
+                    img.src = e.target.result;
+                    img.width = 100;
+                    img.height = 100;
+
+                    // 삭제 버튼
+                    let deleteButton = document.createElement('button');
+                    deleteButton.className = 'preview-de';
+                    deleteButton.textContent = 'X';
+
+                    deleteButton.addEventListener('click', function () {
+                        let index = selectedFiles.indexOf(file);
+                        if(index!==-1) {
+                            selectedFiles.splice(index, 1);
+                        }
+                        container.remove();
+                        console.log("selectedFiles=", selectedFiles);
+                    });
+
+                    // 이미지와 삭제버튼을 div에 추가
+                    container.appendChild(img);
+                    container.appendChild(deleteButton);
+                    document.getElementById('imagePreview').appendChild(container);
+                };
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    });
+
     function toogleRadio(element) {
         const radio = element.previousElementSibling;
         if (!radio.checked){

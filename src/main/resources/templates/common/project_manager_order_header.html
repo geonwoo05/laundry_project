@@ -10,6 +10,11 @@
 <body>
   <aside class='res_box' th:fragment="manager_header">
     <script>
+      /*<![CDATA[*/
+      const memberId = [[${session.memberId != null ? session.memberId : 'null'}]];
+      /*]]>*/
+
+
       let pageNo = 1;
       let realEnd = 1;
       window.addEventListener('load', function () {
@@ -68,7 +73,7 @@
         if(res === 'success') {
           if(list.length>0) {
             list.forEach(order=>{
-              const url = orderStatus == 5 ? '/admin/9/'+order.ordersId : '/admin/complete/'+order.ordersId;
+              const url = orderStatus == 5 ? '/admin/'+memberId+'/'+order.ordersId : '/admin/complete/'+memberId+'/'+order.ordersId;
               const quick = order.quickLaundryId!=null ? '빠른세탁' : '';
               divlist+='<div class="order_box" onclick="location.href=\''+url+'\'">'
                       + '<div class="date_status">'
@@ -124,10 +129,10 @@
     <div class='select_category'>
       <ul>
         <li class='active'>
-          <a href="/admin">검수대기</a>
+          <a th:href="@{'/admin/'+${session.memberId}}">검수대기</a>
         </li>
         <li>
-          <a href="/admin/complete">검수완료</a>
+          <a th:href="@{'/admin/complete/'+${session.memberId}}">검수완료</a>
         </li>
       </ul>
     </div>

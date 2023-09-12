@@ -267,13 +267,13 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
     public int getPrice(int selectMonth) {
 
         int getPrice = 0;
-        if (selectMonth == 1) {
+        if (selectMonth == Subscribe.ONE.getSelectMonth()) {
             getPrice = Subscribe.ONE.getPrice();
-        } else if (selectMonth == 3) {
+        } else if (selectMonth == Subscribe.THREE.getSelectMonth()) {
             getPrice = Subscribe.THREE.getPrice();
-        } else if (selectMonth == 6) {
+        } else if (selectMonth == Subscribe.SIX.getSelectMonth()) {
             getPrice = Subscribe.SIX.getPrice();
-        } else if (selectMonth == 12) {
+        } else if (selectMonth == Subscribe.TWELVE.getSelectMonth()) {
             getPrice = Subscribe.TWELVE.getPrice();
         } else {
             getPrice = -1;
