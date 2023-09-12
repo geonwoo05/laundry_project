@@ -8,6 +8,7 @@ import aug.laundry.dto.CouponCheckDto;
 import aug.laundry.dto.OrdersResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
@@ -28,7 +29,7 @@ public class PaymentDao {
     }
 
     public void savePaymentInfo(Paymentinfo paymentinfo) {
-        paymentMapper.savePaymentInfo(paymentinfo);
+            paymentMapper.savePaymentInfo(paymentinfo);
     }
 
     public Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId){
@@ -39,5 +40,9 @@ public class PaymentDao {
 
     public int updateRefundInfoBypaymentinfoId(Long paymentinfoId, String errorMessage){
         return paymentMapper.updateRefundInfoBypaymentinfoId(paymentinfoId, errorMessage);
+    }
+
+    public Optional<Paymentinfo> findPaymentinfoByImpUid(String impUid){
+        return paymentMapper.findPaymentinfoByImpUid(impUid);
     }
 }

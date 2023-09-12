@@ -173,7 +173,9 @@ function requestPay() {
                         + "/payment/complete?"
                         + "couponListId=" + couponListId
                         + "&couponPrice=" + couponPrice
-                        + "&pointPrice=" + pointPrice
+                        + "&pointPrice=" + pointPrice,
+        notice_url : "https://235a-183-96-143-101.ngrok-free.app/orders/"
+                     + ordersId + "/payment/webhook?memberId=" + memberId + "&couponListId=" + couponListId + "&couponPrice=" + couponPrice + "&pointPrice=" + pointPrice
           // ... (이하 코드 생략)
           // orders/2/payment/validation?couponListId=&couponPrice=&pointPrice=&imp_uid=imp_205309550611&merchant_uid=merchant_test_Wed+Sep+06+2023+11%3A45%3A08+G&imp_success=true
           // localhost:8080/orders/2/payment?point=&coupon=&couponPrice=#

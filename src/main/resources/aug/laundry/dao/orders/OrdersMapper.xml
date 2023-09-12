@@ -64,8 +64,9 @@
 
     <update id="updateCouponListStatusToUsedCoupon">
         UPDATE COUPON_LIST
-        SET COUPON_LIST_STATUS = 3
-        WHERE COUPON_LIST_ID = (SELECT A.COUPON_LIST_STATUS
+        SET COUPON_LIST_STATUS = 3,
+            ORDERS_ID = #{ordersId}
+        WHERE COUPON_LIST_ID = (SELECT A.COUPON_LIST_ID
         FROM COUPON_LIST A
         INNER JOIN ORDERS B
         ON A.MEMBER_ID = B.MEMBER_ID

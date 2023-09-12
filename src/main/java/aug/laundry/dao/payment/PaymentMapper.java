@@ -22,4 +22,6 @@ public interface PaymentMapper {
 
     int updateRefundInfoBypaymentinfoId(
             @Param("paymentinfoId") Long paymentinfoId, @Param("errorMessage") String errorMessage);
+
+    Optional<Paymentinfo> findPaymentinfoByImpUid(String impUid);
 }

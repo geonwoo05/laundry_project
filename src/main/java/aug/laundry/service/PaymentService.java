@@ -28,8 +28,9 @@ public class PaymentService {
         Long pointPrice = payment.getPointPrice();
 
         if (pointPrice != null) {
-            Integer point = pointDao.findByMemberId(1L);  //memberId 교체해야함
-
+            Integer point = pointDao.findByMemberId(memberId);
+            log.info("DB point={}",point);
+            log.info("클라이언트 point={},", point);
             if (point < payment.getPointPrice()) {
                 throw new IsNotValidException(
                         "주문에서 사용한 포인트가 회원이 가지고 있는 포인트보다 많습니다.[" + paymentinfoId + "]");
@@ -45,7 +46,7 @@ public class PaymentService {
             if (coupon == null) {
                 throw new IsNotValidException("존재하지 않는 쿠폰입니다.[" + paymentinfoId + "]");
             }
-            if (couponPrice != coupon.getCouponPrice()) {
+            if (!couponPrice.equals(coupon.getCouponPrice())) {
                 throw new IsNotValidException("쿠폰 금액이 일치하지 않습니다.[" + paymentinfoId + "]");
             }
             // 1:미사용 2:주문대기 3:완료처리. 정확한 숫자는 ERD확인요망
@@ -73,7 +74,9 @@ public class PaymentService {
 
         Long amount = irsp.getResponse().getAmount().longValue();
 
-        if (expectedTotalPrice != amount) {
+        log.info("서버에서 계산한 최종가격={}",expectedTotalPrice);
+        log.info("실제 결제된 가격={}", amount);
+        if (!expectedTotalPrice.equals(amount)) {
             throw new IsNotValidException("최종가격과 결제금액이 일치하지 않음[" + paymentinfoId + "]");
         }
 
