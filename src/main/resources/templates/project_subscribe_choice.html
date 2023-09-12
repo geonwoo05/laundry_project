@@ -105,7 +105,7 @@
                 name : productName,
                 amount : totalPrice, // 결제창에 표시될 금액. 실제 승인이 이루어지지는 않습니다. (모바일에서는 가격이 표시되지 않음)
                 customer_uid : memberId, // 필수 입력.
-                m_redirect_url : 'https://c14f-183-96-143-101.ngrok-free.app/payments/mobile'
+                m_redirect_url : 'https://208a-183-96-143-101.ngrok-free.app/payments/mobile'
                 //m_redirect_url : 'http://localhost:8080/payments/mobile' // 모바일에서 결제 완료 후 리디렉션 될 URL 예: https://www.my-service.com/payments/complete/mobile
             }, function(rsp) {
                 if ( rsp.success ) {
@@ -140,13 +140,6 @@
                     alert(msg);
                 }
             });
-        }
-
-        function unschedule() {
-            // let memberId = document.querySelector('#memberId').value;
-            fetch("/subscribe/unschedule/"+memberId)
-                .then(response => response.json())
-                .then(map => console.log("unscheduleTEST=", map));
         }
 
         function formatDate(date) {
@@ -201,7 +194,6 @@
     </div>
 
     <input type="button" class='pay' onclick="preparePay()" value="결제하기"/>
-    <input type="button" class='pay' onclick="unschedule();" value="구독취소테스트"/>
 </div>
 </body>
 

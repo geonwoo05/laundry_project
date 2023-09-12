@@ -87,4 +87,14 @@
         WHERE orders_id = #{ordersId}
     </update>
 
+    <select id="getInspectionImageList" resultType="InspectionImage">
+        SELECT inspection_image_id, inspection_id, inspection_image_upload_name, inspection_image_store_name
+        FROM inspection_image
+        WHERE inspection_id = (
+            SELECT inspection_id
+            FROM INSPECTION
+            WHERE orders_id=#{ordersId}
+        )
+    </select>
+
 </mapper>

@@ -1,9 +1,6 @@
 package aug.laundry.dao.admin;
 
-import aug.laundry.domain.CommonLaundry;
-import aug.laundry.domain.Drycleaning;
-import aug.laundry.domain.Orders;
-import aug.laundry.domain.Repair;
+import aug.laundry.domain.*;
 import aug.laundry.dto.AdminInspectionDto;
 import aug.laundry.dto.Criteria;
 import aug.laundry.dto.RepairInfoDto;
@@ -26,6 +23,7 @@ public interface AdminInspectionMapper {
     //수선
     List<RepairInfoDto> getRepairInfo(Long orderDetailId);
     AdminInspectionDto getOrderSearchInfo(@Param("ordersId") Long ordersId,@Param("ordersStatus") Long ordersStatus);
+    List<InspectionImage> getInspectionImageList(Long ordersId);
     int updateCommon(CommonLaundry commonLaundry);
     int updateRepair(Repair repair);
     int updateDrycleaning(Drycleaning drycleaning);

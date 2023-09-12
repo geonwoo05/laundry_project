@@ -111,9 +111,8 @@
     </table>
 
     <!-- 사진 -->
-    <div id="imagePreview">
-        <h3>올려둔 이미지 보여주기</h3>
-
+    <div id="imagePreview" th:if="${info['imageList'] != null}" th:each="imageList, imageListIndex : ${info['imageList']}">
+        <img class='imgSize' th:src="@{'/images/'+${imageList.inspectionImageStoreName}}">
     </div>
 
     <div class='fixbox'>

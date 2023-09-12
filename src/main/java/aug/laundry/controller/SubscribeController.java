@@ -149,7 +149,6 @@ public class SubscribeController {
             // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
             if (payPrice == subDto.getAmountToBepay()) {
                 if ("paid".equals(subDto.getPayStatus())) {
-                    // DB에 결제 정보 저장
                     result = "success";
                 } else {
                     // 잔액 부족등과 같은 결제 오류가 났을경우
@@ -362,6 +361,7 @@ public class SubscribeController {
                     subscribeService_ksh.updateFailReason(info.getMerchantUid(),scheduleStatus.get("fail_reason").getAsString());
                 }
                 map.put("result", "fail");
+                map.put("reason", scheduleStatus.get("fail_reason").getAsString());
             }
 
         } catch (IOException e) {
