@@ -74,8 +74,24 @@ window.addEventListener('load', function(){
 
 })
 function callback(map){
-    console.log(map);
+    console.log(map.result);
+    if (map.result){
 
+        // 비어있을때 선택해제
+        if (map.empty){
+            opener.document.querySelector('#drycleaning').value = 0;
+            opener.document.querySelector('#dryBtn svg').style.fill = ''
+            opener.document.querySelector('#dryBtn').classList.remove('select1');
+        } else {
+            opener.document.querySelector('#dryBtn svg').style.fill = 'var(--main-color)'
+            opener.document.querySelector('#dryBtn').classList.add('select1');
+            opener.document.querySelector('#drycleaning').value = 1;
+        }
+        window.close();
+    } else {
+        alert('잘못된 접근입니다. 다시 시도해주세요.');
+        location.reload();
+    }
 }
 
 function values(div){
@@ -168,14 +184,17 @@ function createList(){
 
     let checkPrice = document.createElement('div')
     checkPrice.classList.add('checkPrice');
+    let commonPrice = document.createElement('span');
+    commonPrice.classList.add('commonPrice');
     if (memberShip) {
         let passPrice = document.createElement('span');
         passPrice.classList.add('passPrice');
         passPrice.innerText = (Number(category2.options[category2.selectedIndex].value) * Number(percent)).toLocaleString() + '원';
+        commonPrice.classList.add('line-through');
         checkPrice.appendChild(passPrice);
     }
-    let commonPrice = document.createElement('span');
-    commonPrice.classList.add('commonPrice');
+
+
     commonPrice.innerText = Number(category2.options[category2.selectedIndex].value).toLocaleString() + '원';
     checkPrice.appendChild(commonPrice);
 

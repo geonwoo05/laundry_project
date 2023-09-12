@@ -1,13 +1,11 @@
 package aug.laundry.service;
 
-import aug.laundry.dto.Address;
-import aug.laundry.dto.MyCoupon;
-import aug.laundry.dto.OrderInfo;
-import aug.laundry.dto.OrderPost;
+import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.MemberShip;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +27,11 @@ public interface LaundryService {
 
     void check(Long memberId, HttpSession session);
 
-    boolean insertDrycleaning(Long memberId, Long ordersDetailId, Map<String, Integer> result);
+    boolean insertDrycleaning(Long memberId, Long ordersDetailId, Map<String, Integer> result, HashMap<String, Boolean> resultMap);
 
+    List<OrderDrycleaning> reloadDrycleaning(Long orderDetailId);
+
+    List<OrderRepair> reloadRepair(Long orderDetailId);
+
+    Map<Long, List<String>> getRepairImage(List<OrderRepair> reload);
 }

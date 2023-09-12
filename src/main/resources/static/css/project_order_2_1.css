@@ -212,6 +212,9 @@ input[type=submit]{
     color: var(--main-color);
 }
 .commonPrice{
-    text-decoration: line-through;
     margin-left: 0.3rem;
+}
+
+.line-through{
+    text-decoration: line-through;
 }

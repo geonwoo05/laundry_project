@@ -3,16 +3,16 @@ package aug.laundry.dao;
 import aug.laundry.controller.LaundryController;
 import aug.laundry.domain.CouponList;
 import aug.laundry.domain.Orders;
-import aug.laundry.dto.Address;
-import aug.laundry.dto.MyCoupon;
-import aug.laundry.dto.OrderInfo;
+import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.service.LaundryServiceImpl;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface LaundryMapper {
@@ -55,4 +55,10 @@ public interface LaundryMapper {
     void removeRepair(Long ordersDetailId);
 
     void insertDryCleaning(@Param("ordersDetailId") Long ordersDetailId, @Param("category") String title);
+
+    List<OrderDrycleaning> reloadDrycleaning(Long orderDetailId);
+
+    List<OrderRepair> reloadRepair(Long orderDetailId);
+
+    List<String> getRepairImage(Long repairId);
 }
