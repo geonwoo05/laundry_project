@@ -22,5 +22,6 @@ public class OrdersResponseDto {
     @NumberFormat(pattern = "###,###")
     private Long commonLaundryPrice;
     private Long memberId;
+    private Integer ordersStatus;
 
 }

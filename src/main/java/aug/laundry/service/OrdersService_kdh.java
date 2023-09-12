@@ -29,6 +29,10 @@ public class OrdersService_kdh {
         Double commonLaundryWeight = ordersResponseDto.getCommonLaundryWeight();
 
         //생활빨래 계산로직
+        if(commonLaundryWeight == null){
+            ordersResponseDto.setCommonLaundryPrice(0L);
+        }
+
         if(commonLaundryWeight != null){
             Category commonLaundry = Category.BASIC;
             Category commonAdditional = Category.ADDITIONAL;
@@ -120,7 +124,7 @@ public class OrdersService_kdh {
     private static List<RepairResponseDto> mapToRepairResponseDto(List<Repair> repairList) {
         return repairList.stream()
                 .map(repair -> new RepairResponseDto(
-                        Category.valueOf(repair.getRepairCategory()),
+                        aug.laundry.enums.repair.Repair.valueOf(repair.getRepairCategory()),
                         repair.getRepairPossibility(),
                         repair.getRepairNotReason(),
                         aug.laundry.enums.repair.Repair.valueOf(repair.getRepairCategory()).getPrice()

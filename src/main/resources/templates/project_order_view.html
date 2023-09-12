@@ -74,6 +74,7 @@
                             </th>
                             <td th:if="${dry.drycleaningPossibility} == 'Y'" th:text="|+ ${{dry.drycleaningPrice}}원|" class='detailcontent'>+ 10,000원</td>
                             <td th:if="${dry.drycleaningPossibility} == 'N'" class='detailcontent'>+ 0원</td>
+                            <td th:if="${order.ordersStatus} == 1 or ${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} != 5">검수중</td>
                         </tr>
 
                     </th:block>
@@ -103,6 +104,7 @@
                             </th>
                             <td th:if="${repair.repairPossibility} == 'Y'" th:text="|+ ${{repair.repairPrice}}원|" class='detailcontent'>+ 10,000원</td>
                             <td th:if="${repair.repairPossibility} == 'N'" class='detailcontent'>+ 0원</td>
+                            <td th:if="${order.ordersStatus} == 1 or ${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} != 5">검수중</td>
                         </tr>
 
                     </th:block>
@@ -111,6 +113,9 @@
         </table>
 
         <hr class='bighr'>
+
+
+        <th:block th:if="${order.ordersStatus} != 1 and ${order.ordersStatus} != 2 and ${order.ordersStatus} != 3 and ${order.ordersStatus} != 4 and ${order.ordersStatus} != 5">
         <table>
             <tr>
                 <th>포인트</th>
@@ -181,11 +186,15 @@
 
             </tr>
         </table>
+        </th:block>
+
+        <th:block th:if="${order.ordersStatus} != 1 and ${order.ordersStatus} != 2 and ${order.ordersStatus} != 3 and ${order.ordersStatus} != 4 and ${order.ordersStatus} != 5">
         <div class='fixbox'>
             <button th:onclick="requestPay()" type="button">결제하기</button>
             <!--            <input type="submit" value="200,000원 결제하기">-->
             <!-- 검수중이거나 수거전 일때는 문구 바꿔주세요. -->
         </div>
+        </th:block>
     </form>
 </div>
 </body>
