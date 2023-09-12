@@ -1,6 +1,9 @@
 package aug.laundry.service;
 
+import aug.laundry.dto.AdminDto;
 import aug.laundry.dto.MemberDto;
+import aug.laundry.dto.QuickRiderDto;
+import aug.laundry.dto.RiderDto;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -19,5 +22,12 @@ public interface LoginService_kgw {
     public int registerSocialNumber(String id);
 
     public MemberDto login(MemberDto memberDto, HttpSession session);
+
+    public AdminDto adminLogin(String adminEmail);
+
+    public RiderDto riderLogin(String riderEmail);
+
+    public QuickRiderDto quickRiderLogin(String quickRiderEmail);
+
 
 }

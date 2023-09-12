@@ -2,9 +2,7 @@ package aug.laundry.service;
 
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.login.LoginMapper;
-import aug.laundry.dto.KakaoOauthToken;
-import aug.laundry.dto.KakaoProfile;
-import aug.laundry.dto.MemberDto;
+import aug.laundry.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -143,7 +141,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         String accessToken = getAccessToken(code);
         ObjectMapper obMapper = new ObjectMapper();
 
-        //json 문자열에 있는 키값이 DTO등 객체에는 없어서 문제가 생기므로 이 코드로 해결
+        //json 문자열에 있는 키값이 DTO 등 객체에는 없어서 문제가 생기므로 이 코드로 해결
         obMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 
@@ -322,6 +320,24 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         }else{
             return null;
         }
+    }
+
+    @Override
+    public AdminDto adminLogin(String adminEmail) {
+        AdminDto adminDto = loginMapper.adminLogin(adminEmail);
+        return adminDto;
+    }
+
+    @Override
+    public RiderDto riderLogin(String riderEmail) {
+        RiderDto riderDto = loginMapper.riderLogin(riderEmail);
+        return riderDto;
+    }
+
+    @Override
+    public QuickRiderDto quickRiderLogin(String quickRiderEmail) {
+        QuickRiderDto quickRiderDto = loginMapper.quickRiderLogin(quickRiderEmail);
+        return quickRiderDto;
     }
 
 }

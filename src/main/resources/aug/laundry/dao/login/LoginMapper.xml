@@ -23,7 +23,16 @@
         select * from member where MEMBER_ACCOUNT = #{memberAccount}
     </select>
 
+    <select id="adminLogin" resultType="aug.laundry.dto.AdminDto">
+        select * from admin where ADMIN_EMAIL = #{adminEmail}
+    </select>
 
+    <select id="riderLogin" resultType="aug.laundry.dto.RiderDto">
+        select * from rider where RIDER_EMAIL = #{riderEmail}
+    </select>
 
+    <select id="quickRiderLogin" resultType="aug.laundry.dto.QuickRiderDto">
+        select * from QUICK_RIDER where QUICK_RIDER_EMAIL = #{quickRiderEmail}
+    </select>
 
 </mapper>
