@@ -65,10 +65,10 @@ public class LoginController {
             return "redirect:/admin";
         }else if(riderDto != null){
             session.setAttribute(SessionConstant.LOGIN_MEMBER, riderDto.getRiderId());
-            return "redirect:/ride/wait";
+            return "redirect:/ride/routine";
         }else if (quickRiderDto != null) {
             session.setAttribute(SessionConstant.LOGIN_MEMBER, quickRiderDto.getQuickRiderId());
-            return "redirect:/ride/routine";
+            return "redirect:/ride/wait";
         }else{
             model.addAttribute("memberAccount", memberDto.getMemberAccount());
             model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
