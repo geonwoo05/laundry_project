@@ -15,6 +15,7 @@ import com.siot.IamportRestClient.response.Payment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -75,7 +76,12 @@ public class PaymentController {
                     response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
             );
 
-            paymentService.savePaymentInfo(paymentinfo);
+            try{
+                paymentService.savePaymentInfo(paymentinfo);
+            } catch(DataIntegrityViolationException e){
+                log.info("결제정보 리다이렉트/웹훅 중복저장 방지용으로 try catch로 잡음");
+            }
+
             paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
             ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
 
@@ -121,7 +127,13 @@ public class PaymentController {
                         response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
                 );
 
-                paymentService.savePaymentInfo(paymentinfo);
+                try{
+                    paymentService.savePaymentInfo(paymentinfo);
+                } catch(DataIntegrityViolationException e){
+                    log.info("결제정보 리다이렉트/웹훅 중복저장 방지용으로 try catch로 잡음");
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }
+
 
 
                 paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId,

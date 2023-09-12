@@ -29,11 +29,7 @@ public class PaymentDao {
     }
 
     public void savePaymentInfo(Paymentinfo paymentinfo) {
-        try{
             paymentMapper.savePaymentInfo(paymentinfo);
-        } catch(DataIntegrityViolationException e){
-            log.info("결제정보 리다이렉트/웹훅 중복저장 방지용으로 try catch로 잡음");
-        }
     }
 
     public Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId){
