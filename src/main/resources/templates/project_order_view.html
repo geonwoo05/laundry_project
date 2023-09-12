@@ -74,7 +74,7 @@
                             </th>
                             <td th:if="${dry.drycleaningPossibility} == 'Y'" th:text="|+ ${{dry.drycleaningPrice}}원|" class='detailcontent'>+ 10,000원</td>
                             <td th:if="${dry.drycleaningPossibility} == 'N'" class='detailcontent'>+ 0원</td>
-                            <td th:if="${order.ordersStatus} == 1 or ${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} != 5">검수중</td>
+                            <td th:if="${order.ordersStatus} == 1 or ${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} == 5">검수중</td>
                         </tr>
 
                     </th:block>
