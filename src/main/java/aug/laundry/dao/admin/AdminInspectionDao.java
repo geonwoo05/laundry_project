@@ -1,9 +1,6 @@
 package aug.laundry.dao.admin;
 
-import aug.laundry.domain.CommonLaundry;
-import aug.laundry.domain.Drycleaning;
-import aug.laundry.domain.Orders;
-import aug.laundry.domain.Repair;
+import aug.laundry.domain.*;
 import aug.laundry.dto.AdminInspectionDto;
 import aug.laundry.dto.Criteria;
 import aug.laundry.dto.RepairInfoDto;
@@ -60,5 +57,8 @@ public class AdminInspectionDao {
     }
     public AdminInspectionDto getOrderSearchInfo(Long ordersId, Long ordersStatus) {
         return mapper.getOrderSearchInfo(ordersId, ordersStatus);
+    }
+    public List<InspectionImage> getInspectionImageList(Long ordersId){
+        return mapper.getInspectionImageList(ordersId);
     }
 }

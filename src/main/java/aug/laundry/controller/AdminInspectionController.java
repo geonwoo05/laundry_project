@@ -93,7 +93,6 @@ public class AdminInspectionController {
             // 예외처리
             log.info("exception={}", e);
         }
-        // 다시 등록되지않게 처리하기
         return "redirect:/admin";
     }
 

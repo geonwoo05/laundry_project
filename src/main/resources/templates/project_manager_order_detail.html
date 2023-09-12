@@ -82,6 +82,7 @@
                 <input type="text" class="hidden" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
                 <tr>
                     <th class='content' th:text="${repair.repairCategory}">소분류 이름</th>
+                    <img class='imgSize' th:src="@{'/images/' + ${repair.repairImageStoreName}}">
                     <td class='content drycleaning_result'>
                         <div onchange="rhiddenInput(this)" th:id="|rpos${repairIndex.index}b|">
                             <input type="radio" th:name="|repairList[${repairIndex.index}].repairPossibility|" th:id="|rpos${repairIndex.index}|" value="Y">
@@ -101,7 +102,7 @@
                 <tr>
                     <th th:text="${repair.repairRequest}"/>
                 </tr>
-                <tr >
+                <tr>
                     <th class='reason selectR' th:id="|rpos${repairIndex.index}box|">
                         <input type="text" th:name="|repairList[${repairIndex.index}].repairNotReason|" class="reason1" placeholder='불가능한 사유를 적어주세요.'>
                     </th>

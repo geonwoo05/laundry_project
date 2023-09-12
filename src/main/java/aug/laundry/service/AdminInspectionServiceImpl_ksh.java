@@ -3,6 +3,7 @@ package aug.laundry.service;
 import aug.laundry.dao.admin.AdminInspectionDao;
 import aug.laundry.domain.CommonLaundry;
 import aug.laundry.domain.Drycleaning;
+import aug.laundry.domain.InspectionImage;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
@@ -72,6 +73,13 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
                 repairInfoDto.setRepairCategory(Category.valueOf(repairInfoDto.getRepairCategory()).getTitle());
             }
             detailInfo.put("repairInfo", repairInfo);
+        }
+
+        List<InspectionImage> imageList = adminInspectionDao.getInspectionImageList(ordersId);
+        if(imageList.size() == 0){
+            detailInfo.put("imageList", null);
+        } else {
+            detailInfo.put("imageList", imageList);
         }
 
         return detailInfo;
