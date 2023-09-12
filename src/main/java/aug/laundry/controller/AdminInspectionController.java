@@ -28,12 +28,12 @@ public class AdminInspectionController {
 
     private final AdminInspectionService_ksh adminInspectionService_ksh;
 
-    @GetMapping("/admin")
-    public String getInspectionView() {
+    @GetMapping("/admin/{adminId}")
+    public String getInspectionView(@PathVariable("adminId") Long adminId) {
         return "project_manager_order_list";
     }
-    @GetMapping("/admin/complete")
-    public String getInspectedList() {
+    @GetMapping("/admin/complete/{adminId}")
+    public String getInspectedList(@PathVariable("adminId") Long adminId) {
         return "project_manager_order_list_complete";
     }
     @GetMapping("/getList/{pageNo}/{orderStatus}")
@@ -96,8 +96,9 @@ public class AdminInspectionController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/complete/{ordersId}")
-    public String viewInspectionCompleteDetail(@PathVariable("ordersId") Long ordersId, Model model) {
+    @GetMapping("/admin/complete/{adminId}/{ordersId}")
+    public String viewInspectionCompleteDetail(@PathVariable("adminId") Long adminId,
+                                               @PathVariable("ordersId") Long ordersId, Model model) {
 
         model.addAttribute("info", adminInspectionService_ksh.getInspectionDetail(ordersId));
 
