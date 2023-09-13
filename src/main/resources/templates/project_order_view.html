@@ -123,8 +123,8 @@
 
         <hr class='bighr'>
 
-
         <th:block th:if="${order.ordersStatus} != 1 and ${order.ordersStatus} != 2 and ${order.ordersStatus} != 3 and ${order.ordersStatus} != 4 and ${order.ordersStatus} != 5">
+            <th:block th:if="${order.ordersStatus} == 6 or ${order.ordersStatus} == 7">
         <table>
             <tr>
                 <th>포인트</th>
@@ -150,8 +150,9 @@
         <input type="hidden" name="coupon" id="coupon">
         <input type="hidden" name="couponPrice" id="couponPrice">
 
-
         <hr class='bighr'>
+            </th:block>
+
 
         <h4>결제 금액</h4>
         <table>
@@ -199,15 +200,23 @@
             </tr>
         </table>
         <table class='totalPrice'>
-            <tr>
-                <th class='content'>총 합계</th>
-                <td th:text="|${#numbers.formatDecimal(totalPriceWithDeliveryPrice,3,'COMMA',0,'COMMA')}원|" id='totalPrice' class='content'>200,000원</td>
+            <th:block th:if="${order.ordersStatus} == 6 or ${order.ordersStatus} == 7">
+                <tr>
+                    <th class='content'>총 합계</th>
+                    <td th:text="|${#numbers.formatDecimal(totalPriceWithDeliveryPrice,3,'COMMA',0,'COMMA')}원|" id='totalPrice' class='content'>200,000원</td>
+                </tr>
+            </th:block>
 
-            </tr>
+            <th:block th:if="${order.ordersStatus} == 8 or ${order.ordersStatus} == 9 or ${order.ordersStatus} == 10 or ${order.ordersStatus} == 11">
+                <tr>
+                    <th class='content'>결제완료</th>
+                    <td th:text="|${#numbers.formatDecimal(totalPriceWithDeliveryPrice,3,'COMMA',0,'COMMA')}원|" id='totalPrice' class='content'>200,000원</td>
+                </tr>
+            </th:block>
         </table>
         </th:block>
 
-        <th:block th:if="${order.ordersStatus} != 1 and ${order.ordersStatus} != 2 and ${order.ordersStatus} != 3 and ${order.ordersStatus} != 4 and ${order.ordersStatus} != 5">
+        <th:block th:if="${order.ordersStatus} == 6 or ${order.ordersStatus} == 7">
         <div class='fixbox'>
             <button th:onclick="requestPay()" type="button">결제하기</button>
             <!--            <input type="submit" value="200,000원 결제하기">-->

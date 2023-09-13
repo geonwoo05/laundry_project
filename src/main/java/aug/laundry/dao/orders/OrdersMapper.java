@@ -42,4 +42,7 @@ public interface OrdersMapper {
     int getTotalCount(Long memberId);
 
     int updatePaymentinfoIdByOrdersId(@Param("paymentinfoId") Long paymentinfoId, @Param("ordersId") Long ordersId);
+
+    int updatePriceNStatusNPaymentinfo(
+            @Param("ordersFinalPrice") Long ordersFinalPrice, @Param("paymentinfoId") Long paymentinfoId, @Param("ordersId") Long ordersId);
 }

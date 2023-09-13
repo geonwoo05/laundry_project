@@ -220,5 +220,12 @@ public class OrdersService_kdh {
         }
     }
 
+    @Transactional
+    public void updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId){
+        int result = ordersDao.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId);
+        if(result==0) {
+            throw new IllegalArgumentException("주문테이블의 최종결제금액, 주문상태, 결제정보Id가 업데이트 되지 않았습니다.");
+        }
+    }
 
 }

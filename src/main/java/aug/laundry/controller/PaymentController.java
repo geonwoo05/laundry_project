@@ -84,8 +84,9 @@ public class PaymentController {
             Long paymentinfoId = paymentinfo.getPaymentinfoId();
             Long couponListId = payment.getCouponListId();
             Long pointPrice = payment.getPointPrice();
+            Long finalPrice = paymentinfo.getAmount();
 
-            updateSeveralRegardingOrders(ordersId, memberId, paymentinfoId, couponListId, pointPrice);
+            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
         }
         return "redirect:/payment/complete";
     }
@@ -122,18 +123,21 @@ public class PaymentController {
                         new PaymentCheckRequestDto(couponListId, couponPrice, pointPrice, irsp.getResponse().getImpUid(), irsp.getResponse().getMerchantUid(), true));
 
                 Long paymentinfoId = paymentinfo.getPaymentinfoId();
+                Long finalPrice = paymentinfo.getAmount();
 
-                updateSeveralRegardingOrders(ordersId, memberId, paymentinfoId, couponListId, pointPrice);
+                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
             }
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void updateSeveralRegardingOrders(Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice) {
-        // 주문상태 결제완료로 변경
-        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
-        // orders테이블의 paymentinfoId 변경
-        ordersServiceKdh.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
+    private void updateSeveralRegardingOrders(Long finalPrice, Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice) {
+//        // 주문상태 결제완료로 변경
+//        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
+//        // orders테이블의 paymentinfoId 변경
+//        ordersServiceKdh.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
+
+        ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
 
         if(couponListId != null){
             log.info("쿠폰상태변경");

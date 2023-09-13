@@ -24,4 +24,5 @@ public interface PaymentMapper {
             @Param("paymentinfoId") Long paymentinfoId, @Param("errorMessage") String errorMessage);
 
     Optional<Paymentinfo> findPaymentinfoByImpUid(String impUid);
+
 }

@@ -64,6 +64,14 @@
         WHERE ORDERS_ID = #{ordersId}
     </update>
 
+    <update id="updatePriceNStatusNPaymentinfo">
+        UPDATE ORDERS
+        SET ORDERS_FINAL_PRICE = #{ordersFinalPrice},
+        ORDERS_STATUS = 8,
+        PAYMENTINFO_ID = #{paymentinfoId}
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+
     <update id="updateCouponListStatusToUsedCoupon">
         UPDATE COUPON_LIST
         SET COUPON_LIST_STATUS = 3,
