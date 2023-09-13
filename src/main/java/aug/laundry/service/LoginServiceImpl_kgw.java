@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -272,8 +273,6 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
     public int registerSocialUser(MemberDto memberDto){
         int res = loginMapper.registerSocialUser(memberDto);
@@ -303,7 +302,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         return formattedNumber;
     }
 
-    public MemberDto login(MemberDto memberDto, HttpSession session){
+    public MemberDto login(MemberDto memberDto){
         String password = memberDto.getMemberPassword();
 
         MemberDto member = loginMapper.login(memberDto.getMemberAccount());
@@ -321,21 +320,33 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     }
 
     @Override
-    public AdminDto adminLogin(String adminEmail) {
-        AdminDto adminDto = loginMapper.adminLogin(adminEmail);
+    public AdminDto adminLogin(String adminEmail, String adminPassword) {
+        AdminDto adminDto = loginMapper.adminLogin(adminEmail, adminPassword);
         return adminDto;
     }
 
     @Override
-    public RiderDto riderLogin(String riderEmail) {
-        RiderDto riderDto = loginMapper.riderLogin(riderEmail);
+    public RiderDto riderLogin(String riderEmail , String riderPassword) {
+        RiderDto riderDto = loginMapper.riderLogin(riderEmail, riderPassword);
         return riderDto;
     }
 
     @Override
-    public QuickRiderDto quickRiderLogin(String quickRiderEmail) {
-        QuickRiderDto quickRiderDto = loginMapper.quickRiderLogin(quickRiderEmail);
+    public QuickRiderDto quickRiderLogin(String quickRiderEmail, String quickRiderPassword) {
+        QuickRiderDto quickRiderDto = loginMapper.quickRiderLogin(quickRiderEmail, quickRiderPassword);
         return quickRiderDto;
+    }
+
+    @Override
+    public int keepLogin(String sessionId, Date limit, Long memberId) {
+        int res = loginMapper.keepLogin(sessionId, limit, memberId);
+        return res;
+    }
+
+    @Override
+    public MemberDto checkUserWithSessionId(String sessionId) {
+        MemberDto memberDto = loginMapper.checkUserWithSessionId(sessionId);
+        return memberDto;
     }
 
 }

@@ -14,7 +14,7 @@ public class LogoutController {
         if(session != null){
             session.invalidate();
         }
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @GetMapping("/riderLogout")

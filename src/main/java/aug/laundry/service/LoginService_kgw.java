@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Date;
 
 @Service
 public interface LoginService_kgw {
@@ -21,13 +22,17 @@ public interface LoginService_kgw {
 
     public int registerSocialNumber(String id);
 
-    public MemberDto login(MemberDto memberDto, HttpSession session);
+    public MemberDto login(MemberDto memberDto);
 
-    public AdminDto adminLogin(String adminEmail);
+    public AdminDto adminLogin(String adminEmail, String adminPassword);
 
-    public RiderDto riderLogin(String riderEmail);
+    public RiderDto riderLogin(String riderEmail, String riderPassword);
 
-    public QuickRiderDto quickRiderLogin(String quickRiderEmail);
+    public QuickRiderDto quickRiderLogin(String quickRiderEmail, String quickRiderPassword);
+
+    public int keepLogin(String sessionId, Date limit, Long memberId);
+
+    public MemberDto checkUserWithSessionId(String sessionId);
 
 
 }

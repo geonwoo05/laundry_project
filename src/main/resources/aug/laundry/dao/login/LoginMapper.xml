@@ -24,15 +24,27 @@
     </select>
 
     <select id="adminLogin" resultType="aug.laundry.dto.AdminDto">
-        select * from admin where ADMIN_EMAIL = #{adminEmail}
+        select * from admin where ADMIN_EMAIL = #{adminEmail} and ADMIN_PASSWORD=#{adminPassword}
     </select>
 
     <select id="riderLogin" resultType="aug.laundry.dto.RiderDto">
-        select * from rider where RIDER_EMAIL = #{riderEmail}
+        select * from rider where RIDER_EMAIL = #{riderEmail} and RIDER_PASSWORD=#{riderPassword}
     </select>
 
     <select id="quickRiderLogin" resultType="aug.laundry.dto.QuickRiderDto">
-        select * from QUICK_RIDER where QUICK_RIDER_EMAIL = #{quickRiderEmail}
+        select * from QUICK_RIDER where QUICK_RIDER_EMAIL = #{quickRiderEmail} and QUICK_RIDER_PASSWORD = #{quickRiderPassword}
+    </select>
+
+    <insert id="keepLogin">
+        insert into USER_SESSION values(#{memberId}, #{sessionId}, #{limit})
+    </insert>
+
+    <select id="checkUserWithSessionId" resultType="aug.laundry.dto.MemberDto">
+        SELECT *
+        FROM MEMBER M, USER_SESSION S
+        WHERE M.MEMBER_ID = S.MEMBER_ID
+        AND S.SESSION_ID = #{sessionId}
+        AND S.SESSION_LIMIT > now()
     </select>
 
 </mapper>
