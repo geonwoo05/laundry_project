@@ -58,23 +58,18 @@ public class PaymentController {
         if(payment.isImp_success() == false){
             return "redirect:/orders/" + ordersId +"/payment";
         }
-
-        memberId=4L;
+        
 
         Optional<Paymentinfo> paymentinfoFromDB = paymentDao.findPaymentinfoByImpUid(payment.getImp_uid());
 
         //모바일 리다이렉트로직이랑 웹훅에 의해 결제정보 2건저장 방지로직
         //DB에 결제내역이 없다면 저장
         if(!paymentinfoFromDB.isPresent()){
-            log.info("웹훅보다 먼저 실행");
-            iamportClient = new IamportClient(restApi, restApiSecret);
-            IamportResponse<Payment> irsp = iamportClient.paymentByImpUid(payment.getImp_uid());
-            Payment response = irsp.getResponse();
+            log.info("결제후 리다이렉트 실행");
 
-            Paymentinfo paymentinfo = new Paymentinfo(
-                    memberId, response.getImpUid(), response.getPayMethod(), response.getMerchantUid(),
-                    response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
-            );
+            String impUid = payment.getImp_uid();
+            Paymentinfo paymentinfo = makePaymentinfoFromIamPort(iamportClient, impUid, restApi, restApiSecret, memberId);
+            IamportResponse<Payment> irsp = makeIamPortResponse(iamportClient, impUid, restApi, restApiSecret);
 
             try{
                 paymentService.savePaymentInfo(paymentinfo);
@@ -82,24 +77,19 @@ public class PaymentController {
                 log.info("결제정보 리다이렉트/웹훅 중복저장 방지용으로 try catch로 잡음");
             }
 
+            //검증
             paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
-            ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
 
-            if(payment.getCouponListId() != null){
-                log.info("쿠폰상태변경");
-                ordersServiceKdh.updateCouponListStatusToUsedCoupon(payment.getCouponListId(), ordersId);
-            }
+            Long paymentinfoId = paymentinfo.getPaymentinfoId();
+            Long couponListId = payment.getCouponListId();
+            Long pointPrice = payment.getPointPrice();
+            Long finalPrice = paymentinfo.getAmount();
 
-            if(payment.getPointPrice() != null){
-                //음수로 변환
-                Long pointPrice = -payment.getPointPrice();
-                ordersServiceKdh.addPoint(memberId, pointPrice, "포인트 사용");
-            }
+            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
         }
-        //redirect로 바꿔야함
         return "redirect:/payment/complete";
     }
-
+    
     @ResponseBody
     @PostMapping("/orders/{ordersId}/payment/webhook")
     public ResponseEntity<String> webhook(@RequestBody WebHook webHook, @PathVariable Long ordersId,
@@ -117,14 +107,8 @@ public class PaymentController {
             //DB에 결제내역이 없다면 저장
             if(!paymentinfoFromDB.isPresent()){
                 log.info("리다이렉트보다 먼저 실행");
-                iamportClient = new IamportClient(restApi, restApiSecret);
-                IamportResponse<Payment> irsp = iamportClient.paymentByImpUid(webHookImpUid);
-                Payment response = irsp.getResponse();
-
-                Paymentinfo paymentinfo = new Paymentinfo(
-                        memberId, response.getImpUid(), response.getPayMethod(), response.getMerchantUid(),
-                        response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
-                );
+                Paymentinfo paymentinfo = makePaymentinfoFromIamPort(iamportClient, webHookImpUid, restApi, restApiSecret, memberId);
+                IamportResponse<Payment> irsp = makeIamPortResponse(iamportClient, webHookImpUid, restApi, restApiSecret);
 
                 try{
                     paymentService.savePaymentInfo(paymentinfo);
@@ -133,23 +117,52 @@ public class PaymentController {
                     return new ResponseEntity<>(HttpStatus.OK);
                 }
 
+                //검증
                 paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId,
-                        new PaymentCheckRequestDto(couponListId, couponPrice, pointPrice, response.getImpUid(), response.getMerchantUid(), true));
-                // 주문상태 결제완료로 변경
-                ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
+                        new PaymentCheckRequestDto(couponListId, couponPrice, pointPrice, irsp.getResponse().getImpUid(), irsp.getResponse().getMerchantUid(), true));
 
-                if(couponListId != null){
-                    log.info("쿠폰상태변경");
-                    ordersServiceKdh.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
-                }
-                if(pointPrice != null){
-                    //음수로 변환
-                    Long pointValue = -pointPrice;
-                    ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
-                }
+                Long paymentinfoId = paymentinfo.getPaymentinfoId();
+                Long finalPrice = paymentinfo.getAmount();
+
+                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
             }
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void updateSeveralRegardingOrders(Long finalPrice, Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice) {
+//        // 주문상태 결제완료로 변경
+//        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
+//        // orders테이블의 paymentinfoId 변경
+//        ordersServiceKdh.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
+
+        ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
+
+        if(couponListId != null){
+            log.info("쿠폰상태변경");
+            ordersServiceKdh.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
+        }
+
+        if(pointPrice != null){
+            //음수로 변환
+            Long pointValue = -pointPrice;
+            ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
+        }
+    }
+
+    private Paymentinfo makePaymentinfoFromIamPort(IamportClient iamportClient, String impUid, String restApi, String restApiSecret, Long memberId) throws IamportResponseException, IOException {
+        IamportResponse<Payment> irsp = makeIamPortResponse(iamportClient, impUid, restApi, restApiSecret);
+        Payment response = irsp.getResponse();
+
+        return new Paymentinfo(
+                memberId, response.getImpUid(), response.getPayMethod(), response.getMerchantUid(),
+                response.getBuyerName(), response.getBuyerTel(), response.getAmount().longValue()
+        );
+    }
+
+    private IamportResponse<Payment> makeIamPortResponse(IamportClient iamportClient, String impUid, String restApi, String restApiSecret) throws IamportResponseException, IOException {
+        iamportClient = new IamportClient(restApi, restApiSecret);
+        return iamportClient.paymentByImpUid(impUid);
     }
 
     @GetMapping("/payment/complete")

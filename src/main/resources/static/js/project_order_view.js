@@ -48,6 +48,30 @@ window.addEventListener('load', function(){
         }
 
 
+//
+        if(isNaN(couponPrice)){
+            let pointValue = parseInt(document.querySelector('#point').value);
+            if(totalPoint < pointValue){
+               alert('보유한 포인트가 부족합니다.');
+               document.querySelector('#point').value = '';
+               document.querySelector('#point-row').style.display = 'none';
+               document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer).toLocaleString() + '원'
+              }
+        }
+        else if(!isNaN(couponPrice)){
+            let pointValue = parseInt(document.querySelector('#point').value);
+            if(totalPoint < pointValue){
+               alert('보유한 포인트가 부족합니다.');
+               document.querySelector('#point').value = '';
+               document.querySelector('#point-row').style.display = 'none';
+               document.querySelector('#totalPrice').innerHTML = Number(totalPriceFromServer - couponPrice).toLocaleString() + '원';
+               }
+        }
+
+
+
+//
+
 
         if(isNaN(couponPrice)){
             //입력되었을때 서버에서 계산해온 값으로 초기화
@@ -174,43 +198,12 @@ function requestPay() {
                         + "couponListId=" + couponListId
                         + "&couponPrice=" + couponPrice
                         + "&pointPrice=" + pointPrice,
-        notice_url : "https://235a-183-96-143-101.ngrok-free.app/orders/"
+        notice_url : "https://4412-183-96-143-101.ngrok-free.app/orders/"
                      + ordersId + "/payment/webhook?memberId=" + memberId + "&couponListId=" + couponListId + "&couponPrice=" + couponPrice + "&pointPrice=" + pointPrice
-          // ... (이하 코드 생략)
-          // orders/2/payment/validation?couponListId=&couponPrice=&pointPrice=&imp_uid=imp_205309550611&merchant_uid=merchant_test_Wed+Sep+06+2023+11%3A45%3A08+G&imp_success=true
-          // localhost:8080/orders/2/payment?point=&coupon=&couponPrice=#
+
       },
         function (rsp) {
           console.log(rsp);
-//                            if (rsp.success) {// 결제성공시 로직
-//                                        let data = {
-//                            				imp_uid:rsp.imp_uid,
-//                            				amount:rsp.paid_amount
-//                            			};
-//                                        //결제 검증
-//                                        $.ajax({
-//                            				type:"POST",
-//                            				url:"verifyIamport",
-//                            				data:JSON.stringify(data),
-//                            				contentType:"application/json; charset=utf-8",
-//                            				dataType:"json",
-//                            				success: function(result) {
-//                            					alert("결제검증 완료");
-//                            					//self.close();
-//                            				},
-//                            				error: function(result){
-//                            					alert(result.responseText);
-////                            					cancelPayments(rsp);
-//                            				}
-//                            			});
-//
-//                                    } else {// 결제 실패 시 로직
-//                            			alert("결재 실패");
-//                            			alert(rsp.error_msg);
-//                            			console.log(rsp);
-//                                    }
-                      // callback
-                      //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
     }
   );
 }

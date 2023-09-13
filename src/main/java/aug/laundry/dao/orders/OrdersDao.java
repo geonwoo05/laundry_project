@@ -96,6 +96,14 @@ public class OrdersDao {
         return ordersMapper.getTotalCount(memberId);
     }
 
+    public int updatePaymentinfoIdByOrdersId(Long paymentinfoId, Long ordersId){
+        return ordersMapper.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
+    }
+
+    public int updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId){
+        return ordersMapper.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId);
+    }
+
 
 
 }

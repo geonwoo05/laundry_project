@@ -40,4 +40,9 @@ public interface OrdersMapper {
     List<OrdersListResponseDto> findOrdersFinishedByMemberIdAndCri(@Param("cri") Criteria cri, @Param("memberId") Long memberId);
 
     int getTotalCount(Long memberId);
+
+    int updatePaymentinfoIdByOrdersId(@Param("paymentinfoId") Long paymentinfoId, @Param("ordersId") Long ordersId);
+
+    int updatePriceNStatusNPaymentinfo(
+            @Param("ordersFinalPrice") Long ordersFinalPrice, @Param("paymentinfoId") Long paymentinfoId, @Param("ordersId") Long ordersId);
 }
