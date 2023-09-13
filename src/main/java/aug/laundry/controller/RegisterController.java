@@ -41,7 +41,6 @@ public class RegisterController {
         return msg;
     }
 
-
     @RequestMapping(value = "/registerAction", method = {RequestMethod.POST})
     public String registerUser(@Valid MemberDto memberDto, BindingResult bindingResult) {
         System.out.println(memberDto.toString());

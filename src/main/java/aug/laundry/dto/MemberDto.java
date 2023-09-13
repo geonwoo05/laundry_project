@@ -45,12 +45,15 @@ public class MemberDto {
     private char memberDeleteStatus;
     private String memberMyInviteCode;
     private String memberInviteCode;
+    private String sessionId;
+    private String sessionLimit;
 
     // 기본 생성자 추가
     public MemberDto() {
+
     }
 
-    public MemberDto(Long memberId, String memberAccount, String memberPassword, String memberName, String memberPhone, Integer memberZipcode, String memberAddress, String memberCreateDate, String memberSocial, Long subscriptionId, String subscriptionExpireDate, Long gradeId, String memberRecentlyDate, char memberDeleteStatus, String memberMyInviteCode, String memberAddressDetails, String memberInviteCode) {
+    public MemberDto(Long memberId, String memberAccount, String memberPassword, String memberName, String memberPhone, Integer memberZipcode, String memberAddress, String memberCreateDate, String memberSocial, Long subscriptionId, String subscriptionExpireDate, Long gradeId, String memberRecentlyDate, char memberDeleteStatus, String memberMyInviteCode, String memberAddressDetails, String memberInviteCode, String sessionId, String sessionLimit) {
         this.memberId = memberId;
         this.memberAccount = memberAccount;
         this.memberPassword = memberPassword;
@@ -68,6 +71,8 @@ public class MemberDto {
         this.memberMyInviteCode = memberMyInviteCode;
         this.memberAddressDetails = memberAddressDetails;
         this.memberInviteCode = memberInviteCode;
+        this.sessionId = sessionId;
+        this.sessionLimit = sessionLimit;
     }
 
 

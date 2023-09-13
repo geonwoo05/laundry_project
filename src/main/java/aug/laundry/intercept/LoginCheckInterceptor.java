@@ -28,14 +28,22 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
 
         // controller에서 생성되었을 지 모를 쿠키를 꺼내온다.
-        Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
+//        Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
+//        System.out.println("sessionId : " + loginCookie.getValue());
+//        MemberDto memberDto = loginService.checkUserWithSessionId(loginCookie.getValue());
+//        System.out.println(memberDto);
+        // login쿠키가 있으면 자동 로그인
 //        if(loginCookie != null){
-//            String sessionId = loginCookie.getValue();
-//            MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
-//            if(memberDto != null){
-//                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
-//                return true;
+//            try {
+//                memberDto = loginService.checkUserWithSessionId(loginCookie.getValue());
+//                if(memberDto != null){
+//                    session.setAttribute(SessionConstant.LOGIN_MEMBER,memberDto.getMemberId());
+//                    return true;
+//                }
+//            }catch (Exception e){
+//                e.printStackTrace();
 //            }
+//
 //        }
         if (session == null || session.getAttribute(SessionConstant.LOGIN_MEMBER) == null) {
 
