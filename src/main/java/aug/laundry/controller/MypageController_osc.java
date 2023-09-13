@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,6 +38,7 @@ public class MypageController_osc {
   public String MypageMain(@PathVariable Long memberId, Model model){
     MypageDto mypageDto = mypageService.findByNameAndPass(memberId);
 
+    // 패스 기간 비교를 위해 날짜 형식 변경
     LocalDate day = LocalDate.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
     String sysdate = day.format(formatter);
@@ -45,20 +47,21 @@ public class MypageController_osc {
     String name = mypageDto.getMemberName();
     String pass = mypageDto.getSubscriptionExpireDate();
 
+    // 패스 기간이 null일 경우
     if(pass==null){
       model.addAttribute("userName", name);
       model.addAttribute("userPass", null);
       return "project_mypage_list";
     }
 
-    if(sysdate.compareTo(enddate) > 0){
+    if(sysdate.compareTo(enddate) > 0){ // 패스 종료기간이 지났을 경우
       model.addAttribute("userName",name);
       model.addAttribute("userPass", null);
-    } else if(sysdate.compareTo(enddate)<0){
+    } else if(sysdate.compareTo(enddate)<0){ // 종료기간이 남았을 경우
       model.addAttribute("userName", name);
       pass="PASS";
       model.addAttribute("userPass", pass);
-    } else {
+    } else { // 오늘이 종료일인 경우
       model.addAttribute("userName", name);
       pass="PASS";
       model.addAttribute("userPass", pass);
@@ -70,6 +73,8 @@ public class MypageController_osc {
   @GetMapping("{memberId}/coupons")
   public String MypageCouponList(@PathVariable Long memberId, Model model){
     List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
+
+    // 회원 쿠폰 리스트
     int someCoupon = mypageService.someCoupon(memberId);
 
       model.addAttribute("memberId", memberId);
@@ -82,6 +87,7 @@ public class MypageController_osc {
   public String MypagePointsList(@PathVariable Long memberId, Model model){
     List<MyPointDto> getPoint = mypageService.getPoint(memberId);
 
+    // 회원 포인트 리스트
     if(!getPoint.isEmpty()){
       PointNowDto getpointNow = mypageService.getPointNow(memberId);
       Long pointNow = getpointNow.getPointNow();
@@ -89,6 +95,8 @@ public class MypageController_osc {
       model.addAttribute("memberId", memberId);
       model.addAttribute("point", getPoint);
       model.addAttribute("pointNow", pointNow);
+
+    // 포인트 내역이 없는 경우
     } else {
       model.addAttribute("memberId", memberId);
       model.addAttribute("point", getPoint);
@@ -101,6 +109,7 @@ public class MypageController_osc {
   @GetMapping("{memberId}/invite")
   public String MypageInvite(@PathVariable Long memberId, Model model) {
 
+    // 멤버 초대 코드
     String inviteCode = mypageService.findByInviteCode(memberId);
 
     model.addAttribute("inviteCode", inviteCode);
@@ -110,6 +119,8 @@ public class MypageController_osc {
 
   @GetMapping("{memberId}/update")
   public String MypageUpdate(@PathVariable Long memberId, Model model){
+
+    // 현재 저장된 개인정보
 
     MypageDto mypageDto = mypageService.findByInfo(memberId);
     String name = mypageDto.getMemberName();
@@ -129,27 +140,13 @@ public class MypageController_osc {
     return "project_update_address";
   }
 
-//  @PostMapping("{memberId}/address/update")
-//  public String addressUpdate(@PathVariable Long memberId, HttpServletRequest request){
-//
-//    String memberZipcode = request.getParameter("zipcode");
-//    String memberAddress = request.getParameter("searchAddressValue");
-//    String memberAddressDetails = request.getParameter("detailAddress");
-//
-//    if(memberZipcode!=null && memberAddress!=null && memberAddressDetails!=null){
-//      int res = mypageService.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);
-//      return "redirect:/members/{memberId}/update";
-//    } else {
-//      return "redirect:/members/{memberId}/update";
-//    }
-//  }
-
   @PostMapping("{memberId}/address/update")
-  public String addressUpdate(@PathVariable Long memberId, @Valid @ModelAttribute("addressUpdate") UpdateAddressDto addressDto, BindingResult bindingResult){
+  public String addressUpdate(@PathVariable Long memberId, @Valid @ModelAttribute("addressUpdate") UpdateAddressDto addressDto, BindingResult bindingResult, RedirectAttributes redirectAttributes){
 
+    // 회원 주소 변경
     if(bindingResult.hasErrors()){
-
-      return "project_update_address";
+      redirectAttributes.addFlashAttribute("msg","정확한 주소를 전부 입력해주시기 바랍니다");
+      return "redirect:/members/{memberId}/address/update";
     }
 
     mypageService.updateAddress(memberId, addressDto);
@@ -161,25 +158,13 @@ public class MypageController_osc {
     return "project_update_phone";
   }
 
-//  @PostMapping("{memberId}/phone/update")
-//  public String phoneUpdate(@PathVariable Long memberId, HttpServletRequest request){
-//
-//    String requestPhone = request.getParameter("phone");
-//    String memberPhone = requestPhone.replace("-","");
-//
-//    if(memberPhone!=null){
-//      int res = mypageService.updatePhone(memberId, memberPhone);
-//      return "redirect:/members/{memberId}/update";
-//    } else {
-//      return "redirect:/members/{memberId}/update";
-//    }
-//  }
-
   @PostMapping("{memberId}/phone/update")
-  public String phoneUpdate(@PathVariable Long memberId, @Valid @ModelAttribute("phone") UpdatePhoneDto updatePhoneDto, BindingResult bindingResult){
-
+  public String phoneUpdate(@PathVariable Long memberId, @Valid @ModelAttribute("phone") UpdatePhoneDto updatePhoneDto, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    
+    // 회원 핸드폰 번호 변경
     if(bindingResult.hasErrors()){
-      return "project_update_phone";
+      redirectAttributes.addFlashAttribute("msg","휴대폰 번호 형식에 맞게 입력하세요");
+      return "redirect:/members/{memberId}/phone/update";
     }
 
     updatePhoneDto.setMemberPhone(updatePhoneDto.getMemberPhone().replace("-",""));
@@ -189,35 +174,28 @@ public class MypageController_osc {
 
   @GetMapping("{memberId}/unregister")
   public String unregister(@PathVariable Long memberId){
-
+    
+    // 회원 탈퇴
     MemberDto memberDto = memberService.selectOne(memberId);
-      int res = mypageService.unregister(memberDto.getMemberId());
-      return "redirect:/login";
+    int res = mypageService.unregister(memberDto.getMemberId());
+    return "redirect:/login";
   }
 
   @GetMapping("{memberId}/password/update")
   public  String passwordUpdate(@PathVariable Long memberId){
-    return "project_change_password";
+    return "project_update_password";
   }
 
-//  @PostMapping("{memberId}/password/update")
-//  public String passwordUpdate(@PathVariable Long memberId, HttpServletRequest request){
-//    String memberPassword = request.getParameter("userPw");
-//    if(memberPassword!=null){
-//      mypageService.updatePassword(memberId, memberPassword);
-//      return "redirect:/members/{memberId}/update";
-//    } else {
-//      return "redirect:/members/{memberId}/password/update";
-//    }
-//  }
-
   @PostMapping("{memberId}/password/update")
-  public String changePassword(@PathVariable Long memberId, @Valid @ModelAttribute("userPw") ChangePasswordDto changePasswordDto, BindingResult bindingResult){
+  public String changePassword(@PathVariable Long memberId, @Valid @ModelAttribute("userPw") ChangePasswordDto changePasswordDto, BindingResult bindingResult, RedirectAttributes redirectAttributes){
 
+    // 회원 비밀번호 변경
     if(bindingResult.hasErrors()){
-      return  "project_change_password";
+      redirectAttributes.addFlashAttribute("msg","대소문자, 숫자, 특수문자를 포함해서 8자 이상 ~ 15자 이하로 설정해주세요");
+      return  "redirect:/members/{memberId}/password/update";
     }
 
+    // 비밀번호 암호화
     changePasswordDto.setMemberPassword(bc.encodeBCrypt(changePasswordDto.getMemberPassword()));
     mypageService.changePassword(memberId, changePasswordDto);
     return "redirect:/members/{memberId}/update";

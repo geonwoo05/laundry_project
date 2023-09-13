@@ -23,7 +23,7 @@
                 <input type="text" id="detailAddress" name="memberAddressDetails" placeholder="상세주소 (예: 세탁아파트 101동 101호)"><br>
                 <input type="hidden" id="extraAddress" name="extraAddress" placeholder="참고항목" disabled>
                 <div class="errors"></div>
-                <div class="errorBox"><span class="errors message"></span></div>
+                <div class="errorBox"><span class="errors message" th:text="${msg}"></span></div>
                 <div class="fixButton">
                     <input type="submit" id="button_addressChange" value="저장하기">
                 </div>
