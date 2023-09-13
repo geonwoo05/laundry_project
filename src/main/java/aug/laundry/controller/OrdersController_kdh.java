@@ -77,8 +77,7 @@ public class OrdersController_kdh {
     public String payOrder(@PathVariable Long ordersId,
                            @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId,
                            Model model){
-
-        memberId = 4L;
+        
         OrdersResponseDto ordersResponseDto = ordersServiceKdh.findByOrdersId(ordersId);
 
         if(memberId != ordersResponseDto.getMemberId()){
@@ -104,6 +103,7 @@ public class OrdersController_kdh {
                 (Long)repairMap.get("totalRepairPrice");
 
         DeliveryResponseDto delivery = setDeliveryPrice(totalPrice, isQuickLaundry);
+
 
         Long deliveryPrice = calcDeliveryPrice(isQuickLaundry, totalPrice);
 

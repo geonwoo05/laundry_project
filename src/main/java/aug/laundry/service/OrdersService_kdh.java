@@ -3,7 +3,6 @@ package aug.laundry.service;
 import aug.laundry.dao.orders.OrdersDao;
 import aug.laundry.dao.point.PointDao;
 import aug.laundry.domain.Drycleaning;
-import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
@@ -13,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +29,10 @@ public class OrdersService_kdh {
         Double commonLaundryWeight = ordersResponseDto.getCommonLaundryWeight();
 
         //생활빨래 계산로직
+        if(commonLaundryWeight == null){
+            ordersResponseDto.setCommonLaundryPrice(0L);
+        }
+
         if(commonLaundryWeight != null){
             Category commonLaundry = Category.BASIC;
             Category commonAdditional = Category.ADDITIONAL;
@@ -122,10 +124,10 @@ public class OrdersService_kdh {
     private static List<RepairResponseDto> mapToRepairResponseDto(List<Repair> repairList) {
         return repairList.stream()
                 .map(repair -> new RepairResponseDto(
-                        Category.valueOf(repair.getRepairCategory()),
+                        aug.laundry.enums.repair.Repair.valueOf(repair.getRepairCategory()),
                         repair.getRepairPossibility(),
                         repair.getRepairNotReason(),
-                        Category.valueOf(repair.getRepairCategory()).getPrice()
+                        aug.laundry.enums.repair.Repair.valueOf(repair.getRepairCategory()).getPrice()
                 )).collect(Collectors.toList());
     }
 
