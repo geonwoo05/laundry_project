@@ -1,7 +1,5 @@
 package aug.laundry.controller;
 
-
-
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dto.*;
 import aug.laundry.service.BCryptService_kgw;
@@ -14,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,32 +34,65 @@ public class LoginController {
     private final MemberService_kgw memberServce;
 
     @GetMapping("/naver_callback")
-    public String naverLogin_callback(HttpServletRequest request, Model model, HttpSession session) {
+    public String naverLogin_callback(HttpServletRequest request, Model model, HttpSession session, String state) {
         service.naverLogin(request, model, session);
         System.out.println("naverLogin =======");
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
 
-
+        String redirectURL = state;
+        System.out.println("redirectURL : " + redirectURL);
+        if(redirectURL != null){
+            return "redirect:" + redirectURL;
+        }
         return "redirect:/";
     }
     @GetMapping("/kakaoLogin")
-    public String kakaoLogin_Redirect(String code, Model model, HttpSession session){
+    public String kakaoLogin_Redirect(String code, Model model, HttpSession session, String state){
         service.kakaoProcess(code, session);
+
+        String redirectURL = state;
+        System.out.println("redirectURL : " + redirectURL);
+        if(redirectURL != null){
+            return "redirect:" + redirectURL;
+        }
 
         return "redirect:/";
     }
 
     @PostMapping("/loginAction")
-    public  String login(MemberDto memberDto, HttpSession session, Model model) {
-        MemberDto userdto = service.login(memberDto, session);
+    public  String login(MemberDto memberDto, HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response) {
+        MemberDto userDto = service.login(memberDto);
 
-        AdminDto adminDto = service.adminLogin(memberDto.getMemberAccount());
-        RiderDto riderDto = service.riderLogin(memberDto.getMemberAccount());
-        QuickRiderDto quickRiderDto = service.quickRiderLogin(memberDto.getMemberAccount());
+        AdminDto adminDto = service.adminLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
+        RiderDto riderDto = service.riderLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
+        QuickRiderDto quickRiderDto = service.quickRiderLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
 
-        if (userdto != null) {
-            session.setAttribute(SessionConstant.LOGIN_MEMBER, userdto.getMemberId());
+        System.out.println("쿠키사용 : " + request.getParameter("useCookie"));
+
+        String redirectURL = request.getParameter("redirectURL");
+
+        // 로그인 성공
+        if (userDto != null) {
+            // 세션에 memberId 저장
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, userDto.getMemberId());
+
+            if(request.getParameter("useCookie") != null){
+                Cookie cookie = new Cookie("loginCookie", session.getId());
+                cookie.setPath("/");
+                int amount = 60 * 60 * 24 * 7;
+                cookie.setMaxAge(amount); // 단위는 (초)임으로 7일정도로 유효시간을 설정해 준다.
+                // 쿠키를 적용해 준다.
+                response.addCookie(cookie);
+                Date limit = new Date(System.currentTimeMillis() + (1000*amount));
+                // 현재 세션 id와 유효시간을 사용자 테이블에 저장한다.
+                service.keepLogin(session.getId(), limit, userDto.getMemberId());
+            }
+            if(redirectURL != null && !redirectURL.isEmpty()){
+                return "redirect:" + redirectURL;
+            }
+            request.setAttribute("useCookie", request.getParameter("useCookie"));
             return "redirect:/";
+
         }else if(adminDto != null){
             session.setAttribute(SessionConstant.LOGIN_MEMBER, adminDto.getAdminId());
             return "redirect:/admin/"+session.getAttribute("memberId");
