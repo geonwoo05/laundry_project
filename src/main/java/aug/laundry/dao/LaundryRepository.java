@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -114,5 +115,16 @@ public class LaundryRepository {
 
     public List<String> getRepairImage(Long repairId) {
         return laundryMapper.getRepairImage(repairId);
+    }
+
+    public void insertRepair(Long ordersDetailId, Map<String, RepairFormData> repairData, List<MultipartFile> files) {
+        for (String s : repairData.keySet()) {
+            laundryMapper.insertRepair(ordersDetailId, repairData.get(s).getRequest(), repairData.get(s).getTitle());
+            Long repairId = laundryMapper.getRepairId(ordersDetailId);
+            // 가공해서 들고가야한다!
+//            laundryMapper.insertRepairImage(repairId, files);
+            break;
+        }
+
     }
 }

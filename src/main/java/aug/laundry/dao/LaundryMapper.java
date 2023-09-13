@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -61,4 +62,10 @@ public interface LaundryMapper {
     List<OrderRepair> reloadRepair(Long orderDetailId);
 
     List<String> getRepairImage(Long repairId);
+
+    void insertRepair(@Param("ordersDetailId") Long ordersDetailId, @Param("request") String request, @Param("category") String title);
+
+    Long getRepairId(Long ordersDetailId);
+
+
 }

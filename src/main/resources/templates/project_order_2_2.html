@@ -21,7 +21,7 @@
         <h3>수선목록</h3>
         <button type='button' class='categoryadd' id="categoryAdd">추가</button>
     </div>
-    <form action="#" method="get" id='formTag'>
+    <form action="./laundry/repair/order" method="post" id='formTag' enctype="multipart/form-data">
         <div class='warp'>
             <div class='box' th:if="${reload != null}" th:each="item : ${reload}">
                 <div class='categoryInfo'>
