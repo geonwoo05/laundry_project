@@ -67,10 +67,10 @@
         console.log(endX);
 
 
-        navigator.geolocation.getCurrentPosition((position) => {
+//        navigator.geolocation.getCurrentPosition((position) => {
 
-                    console.log(position.coords.latitude);
-                    console.log(position.coords.longitude);
+//                    console.log(position.coords.latitude);
+//                    console.log(position.coords.longitude);
                     var searchOption = "12";
 
                     var trafficInfochk = "N";
@@ -84,8 +84,10 @@
                     url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1",
                     async : false,
                     data : {
-                         "startX" : position.coords.longitude,
-                         "startY" : position.coords.latitude,
+//                         "startX" : position.coords.longitude,
+//                         "startY" : position.coords.latitude,
+                         "startX" : 126.94561942060331,
+                         "startY" : 37.55652422737718,
                          "endX" : endX,
                          "endY" : endY,
                          "reqCoordType" : "WGS84GEO",
@@ -100,7 +102,7 @@
                      var tDistance = "거리 : " + (resultData[0].properties.totalDistance / 1000)
                                  .toFixed(1) + "km";
                     console.log(tDistance);
-//                    $('.delivery_dis').eq(0).html(tDistance);
+                    $('.delivery_dis').eq(0).html(tDistance);
 
                     dis = (resultData[0].properties.totalDistance / 1000).toFixed(1);
 
@@ -135,7 +137,7 @@
                     }
                     }
                 });
-            });
+//            });
         }
 
 

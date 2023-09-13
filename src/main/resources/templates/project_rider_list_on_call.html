@@ -12,8 +12,14 @@
     <!-- STOMP -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-
+        window.addEventListener('load', function(){
+            var msg = $('#msg').val();
+            if(msg != ""){
+                swal('배차 실패!',msg,'info')
+            }
+        });
     </script>
     <script src="/js/rider_list_on.js"></script>
     <title>Document</title>
@@ -21,7 +27,8 @@
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
     <div class='container'>
-        <div th:text="${id}"></div>
+<!--        <div th:text="${id}"></div>-->
+<!--        <input type="text" name="" id="aaaa" th:value="${msg}">-->
 <!--        <aside th:replace="~{/common/project_rider_header :: rider_header}"></aside>-->
             <div class='rider_header'>
                 <div class='ride_head'>배달</div><br>
@@ -59,9 +66,9 @@
                 </ul>
             </div>
         <div id="orderStatus"></div>
-        <input type="text" name="workingArea" id="workingArea" value="" th:value="${riderInfo.workingArea}">
+        <input type="hidden" name="workingArea" id="workingArea" value="" th:value="${riderInfo.workingArea}">
+        <input type="hidden" name="" id="msg" th:value="${msg}">
     </div>
 </body>
-<!--<footer th:replace="~{/common/project_footer :: footer}"> </footer>-->
 <footer th:replace="~{/common/project_rider_footer :: footer}"> </footer>
 </html>

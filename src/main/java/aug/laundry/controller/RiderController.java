@@ -6,15 +6,12 @@ import aug.laundry.domain.Orders;
 import aug.laundry.domain.Rider;
 import aug.laundry.dto.DongInfoDto;
 import aug.laundry.dto.OrdersEnum;
-import aug.laundry.enums.category.Category;
 import aug.laundry.enums.fileUpload.FileUploadType;
-import aug.laundry.enums.orderStatus.OrderStatus;
 import aug.laundry.enums.orderStatus.routineOrder;
 import aug.laundry.service.FileUploadService_ksh;
 import aug.laundry.service.RiderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -34,7 +30,6 @@ import static aug.laundry.enums.orderStatus.routineOrder.regionList;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-//@RequestMapping("/ride/*")
 public class RiderController {
 
     private final RiderService riderService;
@@ -54,7 +49,7 @@ public class RiderController {
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
         model.addAttribute("riderInfo",riderInfo);
-        model.addAttribute("id",quickRiderId);
+//        model.addAttribute("id",quickRiderId);
 
         return "project_rider_list_on_call";
     }
@@ -138,9 +133,9 @@ public class RiderController {
         // 이미지가 없을때 img에 담기는거 처리 해줘야함
 
 //        if(session.getAttribute("msg") != null){
-            String msg = (String)session.getAttribute("errMsg");
-            System.out.println("msg : "  + msg);
-            model.addAttribute("msg", msg);
+//            String msg = (String)session.getAttribute("errMsg");
+//            System.out.println("msg : "  + msg);
+//            model.addAttribute("msg", msg);
 //        }
         model.addAttribute("img", img);
         model.addAttribute("info", info);
@@ -151,7 +146,7 @@ public class RiderController {
     public String orderCheck(@PathVariable("ordersId") Long ordersId,
                              @PathVariable("ordersStatus") Long ordersStatus,
                              @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
-                             HttpSession session){
+                             RedirectAttributes redirectAttributes){
         if(ordersStatus == riderService.acceptCheck(ordersId)){
             Orders orders = new Orders();
 
@@ -166,8 +161,8 @@ public class RiderController {
 
             return "redirect:/ride/accept";
         }else{
-            session.setAttribute("errMsg","이미 수락된 배달입니다.");
-            return "redirect:/ride/orders/"+ordersId;
+            redirectAttributes.addFlashAttribute("msg", "이미 수락된 배달입니다.");
+            return "redirect:/ride/wait";
         }
     }
 

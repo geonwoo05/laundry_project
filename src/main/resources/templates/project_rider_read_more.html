@@ -54,16 +54,14 @@
             border-left: 1px dotted #8080804f;
         }
     </style>
-    <script>
-        alert(msg);
-    </script>
+
     <title>Document</title>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <!--<body th:if="${info.ordersStatus == 2 or info.ordersStatus == 3 or info.ordersStatus == 10 or info.ordersStatus == 11}" onload="initTmap();">-->
 <!--<body th:if="${info.ordersStatus == 4 or info.ordersStatus == 12}">-->
 <body id="uploadBody">
-<div th:text="${msg}"></div>
+
 <!-- 로그인 페이지 -> 배달기사 페이지 -->
 
 <!-- 완료 : 배송완료 사진 / 대기중 : 이동경로 표시 -->
@@ -140,6 +138,7 @@
     <p>공동현관 비밀번호</p><input type="text" name="" id="doorPw" value='비밀번호 없음' readonly th:value="${info.ordersInfo ?: '비밀번호 없음'}">
     <input type="hidden" name="" id="orderStatus" value="" th:value="${info.ordersStatus ?: '2'}">
     <input type="hidden" name="" id="addressValue" value="" th:value="${info.ordersAddress}">
+
 </div>
 </form>
 </div>
