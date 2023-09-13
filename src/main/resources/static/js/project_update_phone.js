@@ -42,7 +42,6 @@ button_phoneChange.addEventListener('click', function(){
 
 });
 
-
 sendSmsBtn.addEventListener('click',function(e){
 
     e.preventDefault();
