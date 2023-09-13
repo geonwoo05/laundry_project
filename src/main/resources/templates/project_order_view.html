@@ -210,7 +210,7 @@
             <th:block th:if="${order.ordersStatus} == 8 or ${order.ordersStatus} == 9 or ${order.ordersStatus} == 10 or ${order.ordersStatus} == 11">
                 <tr>
                     <th class='content'>결제완료</th>
-                    <td th:text="|${#numbers.formatDecimal(totalPriceWithDeliveryPrice,3,'COMMA',0,'COMMA')}원|" id='totalPrice' class='content'>200,000원</td>
+                    <td th:text="|${#numbers.formatDecimal(price.ordersFinalPrice,3,'COMMA',0,'COMMA')}원|" id='totalPrice' class='content'>200,000원</td>
                 </tr>
             </th:block>
         </table>

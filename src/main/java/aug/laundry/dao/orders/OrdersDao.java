@@ -6,6 +6,7 @@ import aug.laundry.domain.Repair;
 import aug.laundry.dto.Criteria;
 import aug.laundry.dto.OrdersListResponseDto;
 import aug.laundry.dto.OrdersResponseDto;
+import aug.laundry.dto.PriceResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -102,6 +103,11 @@ public class OrdersDao {
 
     public int updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId){
         return ordersMapper.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId);
+    }
+
+    public PriceResponseDto findPricesByOrdersId(Long ordersId){
+        return ordersMapper.findPricesByOrdersId(ordersId)
+                .orElseThrow(() -> new IllegalArgumentException("결제금액, 포인트, 쿠폰가격을 찾을 수 없습니다."));
     }
 
 

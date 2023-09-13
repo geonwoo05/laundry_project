@@ -3,10 +3,7 @@ package aug.laundry.dao.orders;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
-import aug.laundry.dto.AdminInspectionDto;
-import aug.laundry.dto.Criteria;
-import aug.laundry.dto.OrdersListResponseDto;
-import aug.laundry.dto.OrdersResponseDto;
+import aug.laundry.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
@@ -45,4 +42,6 @@ public interface OrdersMapper {
 
     int updatePriceNStatusNPaymentinfo(
             @Param("ordersFinalPrice") Long ordersFinalPrice, @Param("paymentinfoId") Long paymentinfoId, @Param("ordersId") Long ordersId);
+
+    Optional<PriceResponseDto> findPricesByOrdersId(Long ordersId);
 }

@@ -228,4 +228,8 @@ public class OrdersService_kdh {
         }
     }
 
+    public PriceResponseDto findPricesByOrdersId(Long ordersId){
+        return ordersDao.findPricesByOrdersId(ordersId);
+    }
+
 }

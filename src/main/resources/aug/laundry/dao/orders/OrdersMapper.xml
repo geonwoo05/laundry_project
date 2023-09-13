@@ -137,4 +137,16 @@
         SET PAYMENTINFO_ID = #{paymentinfoId}
         WHERE ORDERS_ID = #{ordersId}
     </update>
+
+    <select id="findPricesByOrdersId" resultType="aug.laundry.dto.PriceResponseDto">
+        SELECT NVL(C.POINT_STACK,0) AS POINT_STACK, NVL(D.COUPON_PRICE,0) AS COUPON_PRICE, A.ORDERS_FINAL_PRICE
+        FROM ORDERS A
+        LEFT JOIN COUPON_LIST B
+        ON A.ORDERS_ID = B.ORDERS_ID
+        LEFT JOIN POINT C
+        ON A.POINT_ID = C.POINT_ID
+        LEFT JOIN COUPON D
+        ON B.COUPON_ID = D.COUPON_ID
+        WHERE A.ORDERS_ID = #{ordersId}
+    </select>
 </mapper>
