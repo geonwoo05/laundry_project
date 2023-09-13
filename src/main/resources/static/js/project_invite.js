@@ -18,21 +18,21 @@ window.addEventListener('load', function(){
           description: '초대받고 가입하면 초대받은 친구도 초대한 친구도 5,000P 적립 혜택!',
           imageUrl: 'https://blog.kakaocdn.net/dn/bI9Kl8/btssfQ5fx4u/PAykLrfZ9OD5YfYv82jKVk/img.png',
           link: {
-            mobileWebUrl: '/test/4',
-            webUrl: '/test/4',
+            mobileWebUrl: 'https://1ba1-183-96-143-101.ngrok-free.app',
+            webUrl: 'https://1ba1-183-96-143-101.ngrok-free.app',
           },
         },
         buttons: [
           {
-            title: '웹으로 보기',
+            title: '세탁하러 가기',
             link: {
-              mobileWebUrl: '카카오공유하기 시 클릭 후 이동 경로',
-              webUrl: '카카오공유하기 시 클릭 후 이동 경로',
+              mobileWebUrl: 'https://1ba1-183-96-143-101.ngrok-free.app',
+              webUrl: 'https://1ba1-183-96-143-101.ngrok-free.app',
             },
           },
         ],
         // 카카오톡 미설치 시 카카오톡 설치 경로이동
-        //installTalk: true,
+        installTalk: true,
       })
     }
 });
