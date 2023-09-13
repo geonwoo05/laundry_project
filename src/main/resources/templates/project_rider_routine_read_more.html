@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/css/project_read_more.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1"></script>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js" integrity="sha384-mXVrIX2T/Kszp6Z0aEWaA8Nm7J6/ZeWXbL8UpGRjKwWe56Srd/iyNmWMBhcItAjH" crossorigin="anonymous"></script>
+    <script> Kakao.init('0b62ff88f2486bd7bface10342c8c856');</script>
     <style>
         .icon_text:last-child{
             margin-top: 1rem;
@@ -563,6 +565,67 @@
         function goToRiderList() {
              window.location.href = "riderList.html";
          }
+
+         function navi() {
+                          var xx, yy;
+                          var aa = document.querySelector('#addressValue').value;
+                          console.log(aa);
+
+                          var searchOption = "12";
+
+                          var trafficInfochk = "N";
+
+                          var headers = {};
+                          headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+
+
+                          $.ajax({
+                              method: "GET",
+                              headers: headers,
+                              url: "https://apis.openapi.sk.com/tmap/geo/fullAddrGeo?version=1&format=json",
+                              async: false,
+                              data: {
+                                  "coordType": "WGS84GEO",
+                                  "fullAddr": aa
+                              },
+                              success: function(response) {
+                                  var resultInfo = response.coordinateInfo;
+
+                                      if (resultInfo.coordinate[0].adminDong === "" || resultInfo.coordinate[0].adminDong === null) {
+                                          xx = resultInfo.coordinate[0].newLonEntr;
+                                          yy = resultInfo.coordinate[0].newLatEntr;
+                                      }else {
+                                          xx = resultInfo.coordinate[0].lon;
+                                          yy = resultInfo.coordinate[0].lat;
+                                      }
+                                startNavigation(xx, yy, aa);
+                              },
+                              error: function(xhr, status, error) {
+                                  console.error(error);
+                              }
+                          });
+                          console.log(xx);
+                          console.log(yy);
+                    }
+
+                    function startNavigation(xx, yy, address){
+                    console.log(xx);
+                    console.log(yy);
+                    console.log(address);
+                    if(xx != null && yy != null && address != null){
+<!--        //                Kakao.Navi.share({-->
+                        Kakao.Navi.start({
+                              name: address,
+                              x : Number(xx),
+                              y : Number(yy),
+                              vehicleType : 7,
+                              rpOption : 2,
+<!--        //                      sX : 126.9433486,-->
+<!--        //                      sY : 37.5605672,-->
+                            coordType: 'wgs84',
+                          });
+                        }
+                    }
     </script>
     <title>Document</title>
 </head>
@@ -576,7 +639,7 @@
 <div class='address_map' id="map_div">
     <img id="selectedImage" src="" alt="선택한 이미지" style='display: none;' th:if="${info.ordersStatus == 12}"/>
     <img id="ig" th:src="@{/images/} + ${img.deliveryImageStoreName}" alt="선택한 이미지" th:if="${info.ordersStatus == 13}" style="width: 100%; height: 100%"/>
-    <img id="ig2" src="/images/btnG_축약형.png" alt="선택한 이미지" th:if="${info.ordersStatus == 4}" style="width: 100%; height: 100%"/>
+    <img id="ig2" src="https://cdn-icons-png.flaticon.com/512/3847/3847871.png" alt="선택한 이미지" th:if="${info.ordersStatus == 4}" style="width: 100%; height: 100%"/>
 </div>
 <div class='agree_zone'>
 <!--    <form th:action="@{/ride/assign/{ordersId}(ordersId=${info.ordersId})}"  method="post">-->
