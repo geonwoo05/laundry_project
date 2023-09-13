@@ -29,7 +29,7 @@ public class RiderRestController {
     public Map<String, Object> list(@PathVariable("ordersAddress")String ordersAddress, @PathVariable("presentStatus")String presentStatus, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId){
         Map<String, Object> map =new HashMap<>();
 
-        List<OrdersEnum> list = riderService.routineOrderList(ordersAddress, presentStatus, 2L);
+        List<OrdersEnum> list = riderService.routineOrderList(ordersAddress, presentStatus, memberId);
         Rider rider = riderService.routineRider(memberId);
         List<Map<String, Integer>> cnt = riderService.routineOrderCnt(memberId);
 
