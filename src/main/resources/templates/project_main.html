@@ -66,7 +66,7 @@
         </a>
     </div>
     <div class='floor'>
-        <a href="#" id='pass'>
+        <a href="/subscription" id='pass'>
             <div class='warp'>
                     <span class='title'>
                         세탁패스
@@ -83,7 +83,7 @@
         </a>
     </div>
     <div class='floor'>
-        <a href="#" class='friend'>
+        <a th:href="@{/members/{memberId}/invite(memberId=${session.memberId})}" class='friend'>
             <div class='warp'>
                 <span class='title'>친구초대</span>
                 <span class='content'>5,000원 쿠폰 받으러가기</span>
