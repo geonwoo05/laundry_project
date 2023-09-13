@@ -35,16 +35,15 @@
         select * from QUICK_RIDER where QUICK_RIDER_EMAIL = #{quickRiderEmail} and QUICK_RIDER_PASSWORD = #{quickRiderPassword}
     </select>
 
-    <insert id="keepLogin">
-        insert into USER_SESSION values(#{memberId}, #{sessionId}, #{limit})
-    </insert>
+    <update id="keepLogin">
+        update MEMBER set SESSION_ID = #{sessionId}, SESSION_LIMIT = #{limit} where MEMBER_ID = #{memberId}
+    </update>
 
     <select id="checkUserWithSessionId" resultType="aug.laundry.dto.MemberDto">
         SELECT *
-        FROM MEMBER M, USER_SESSION S
-        WHERE M.MEMBER_ID = S.MEMBER_ID
-        AND S.SESSION_ID = #{sessionId}
-        AND S.SESSION_LIMIT > now()
+        FROM MEMBER
+        WHERE SESSION_ID = #{sessionId}
+        AND SESSION_LIMIT > now()
     </select>
 
 </mapper>

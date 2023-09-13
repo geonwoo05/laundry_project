@@ -75,7 +75,6 @@ public class LoginController {
         if (userDto != null) {
             // 세션에 memberId 저장
             session.setAttribute(SessionConstant.LOGIN_MEMBER, userDto.getMemberId());
-
             if(request.getParameter("useCookie") != null){
                 Cookie cookie = new Cookie("loginCookie", session.getId());
                 cookie.setPath("/");

@@ -142,7 +142,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         String accessToken = getAccessToken(code);
         ObjectMapper obMapper = new ObjectMapper();
 
-        //json 문자열에 있는 키값이 DTO 등 객체에는 없어서 문제가 생기므로 이 코드로 해결
+        // json 문자열에 있는 키값이 DTO 등 객체에는 없어서 문제가 생기므로 이 코드로 해결
         obMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 
