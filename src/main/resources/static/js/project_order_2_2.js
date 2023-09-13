@@ -31,6 +31,7 @@ window.addEventListener('load', function(){
         event.preventDefault();
 
         var formData = new FormData(this);
+        var newFormData = new FormData();
 
         var jsonObject = {};
 
@@ -44,30 +45,69 @@ window.addEventListener('load', function(){
                     jsonObject[index].request = value;
                 } else {
                     jsonObject[index].title = name;
-                    if (!Array.isArray(jsonObject[index].files)){
-                        jsonObject[index].files = [];
+                }
+         }
+
+         for (let key in jsonObject){
+            console.log('key = ', key);
+            let getJson = {};
+            getJson[key] = jsonObject[key];
+            console.log(getJson);
+            let newJson = new Blob([JSON.stringify(getJson)], {type : 'application/json'});
+            let fileData = document.querySelectorAll('input[type=file]');
+            let newForm = new FormData();
+
+            for (let j = 0; j< fileData.length; j++){
+                let num = fileData[j].name.split('-')[1];
+                if (Number(key) == Number(num)) {
+                    for (let i =0; i < fileData[j].files.length; i++){
+                        newForm.append('files', fileData[j].files[i], fileData[j].files[i].name);
                     }
-                    jsonObject[index].files.push(value);
                 }
             }
-        console.log(jsonObject);
+            newForm.append('repairData', newJson);
 
-        try{
-            fetch("./repair/order" , { method : 'post'
-                        , headers : {'Content-Type' : 'application/json'}
-                        , body : JSON.stringify(jsonObject)
-                    })
-                .then(response => response.json())
-                .then(map => callback(map));
-        }catch(e){
-            console.log('fetchPost', e);
-        }
+            apiFetchFile("./repair/order", newForm)
+         }
 
     })
 })
 
+function apiFetchFile(url, params) {
+
+    return new Promise( (resolve, reject) => {
+        fetch(url, {
+            method: "POST",
+            headers: {"X-Requested-With": "XMLHttpRequest"},
+            body: params
+        })
+        .then(res =>{
+            if (res.redirected) { // 리다이렉트가 있을 경우 (에러 발생 시 화면 이동을 위해)
+                window.location.href = res.url;
+                res.redirect(res.url)
+            }
+            // 응답 데이터를 JSON 형태로 받아서 다음 then으로 넘김
+            return res.json()
+        })
+        .then(res => {
+            callback(res); // 함수 실행
+            resolve();
+        })
+        .catch((error) => {
+            console.log(error);
+            alert("에러가 발생했습니다. \r\n관리자에게 문의해주십시오.");
+            reject();
+        });
+
+    })
+
+}
+
 function callback(map){
-    console.log(map.result);
+    return new Promise((resolve, reject) => {
+        console.log(map.result);
+        resolve();
+    })
 
 }
 

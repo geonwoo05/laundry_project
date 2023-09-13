@@ -22,6 +22,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +39,10 @@ public class MainController {
     private final EnumDao enumDao;
 
     @GetMapping
-    public String mainPage(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
+    public String mainPage(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+                           Model model) {
+
+
         if (memberId != null){
             MemberDto memberDto = memberServiceKgw.selectOne(memberId);
             List<OrdersEnum2> orders = mainService.getOrders(memberId);

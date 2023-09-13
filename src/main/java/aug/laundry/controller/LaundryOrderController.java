@@ -16,13 +16,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -106,14 +110,18 @@ public class LaundryOrderController {
     }
 
     @Transactional
-    @PostMapping("/repair/order")
+    @PostMapping(value = "/repair/order")
     public @ResponseBody Map<String, Boolean> repairOrder(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
                                                           @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId,
-                                                          @RequestParam("request") List<String> request,
-                                                          @RequestBody Map<Integer, RepairFormData> jsonObject) {
+                                                          @RequestPart("repairData") Map<String, RepairFormData> repairData,
+                                                          @RequestParam List<MultipartFile> files) {
         HashMap<String, Boolean> resultMap = new HashMap<>();
-        System.out.println("fileUpload = " + jsonObject);
 
+        boolean status = laundryService.insertRepair(memberId, ordersDetailId, resultMap, repairData, files);
+
+
+        log.info("repairData = {}", repairData);
+        log.info("files = {}", files);
 
         return resultMap;
     }

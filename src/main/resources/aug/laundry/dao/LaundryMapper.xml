@@ -131,4 +131,14 @@
         FROM REPAIR_IMAGE
         WHERE REPAIR_ID = #{repairId}
     </select>
+
+    <insert id="insertRepair">
+        INSERT INTO REPAIR (REPAIR_ID, ORDERS_DETAIL_ID, REPAIR_REQUEST, REPAIR_CATEGORY)
+        VALUES (SEQ_REPAIR_ID.NEXTVAL, #{ordersDetailId}, #{request}, #{category})
+    </insert>
+    <select id="getRepairId">
+        SELECT REPAIR_ID
+        FROM REPAIR
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </select>
 </mapper>

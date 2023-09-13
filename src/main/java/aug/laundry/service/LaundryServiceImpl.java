@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
@@ -148,6 +149,25 @@ public class LaundryServiceImpl implements LaundryService{
             result.put(orderRepair.getRepairId(), storeImageName);
         }
         return result;
+    }
+
+    @Transactional
+    @Override
+    public boolean insertRepair(Long memberId, Long ordersDetailId, HashMap<String, Boolean> resultMap, Map<String, RepairFormData> repairData, List<MultipartFile> files) {
+        Long check = laundryRepository.check(memberId, ordersDetailId);
+        if (check == null || check == 0L) return false;
+
+        laundryRepository.removeRepair(ordersDetailId); // 기존에 존재하던 드라이클리닝 장바구니 삭제
+
+        if (repairData.isEmpty()){ // 기존에 있던 수선 목록을 다 지우고 빈 장바구니일경우 resultMap에 empty값 추가 후 true 반환
+            resultMap.put("empty", true);
+            return true;
+        }
+
+
+        laundryRepository.insertRepair(ordersDetailId, repairData, files);
+
+        return true;
     }
 
     @NotNull
