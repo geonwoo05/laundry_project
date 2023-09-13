@@ -198,7 +198,7 @@ function requestPay() {
                         + "couponListId=" + couponListId
                         + "&couponPrice=" + couponPrice
                         + "&pointPrice=" + pointPrice,
-        notice_url : "https://235a-183-96-143-101.ngrok-free.app/orders/"
+        notice_url : "https://4412-183-96-143-101.ngrok-free.app/orders/"
                      + ordersId + "/payment/webhook?memberId=" + memberId + "&couponListId=" + couponListId + "&couponPrice=" + couponPrice + "&pointPrice=" + pointPrice
 
       },

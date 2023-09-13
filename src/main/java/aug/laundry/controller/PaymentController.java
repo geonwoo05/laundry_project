@@ -58,15 +58,14 @@ public class PaymentController {
         if(payment.isImp_success() == false){
             return "redirect:/orders/" + ordersId +"/payment";
         }
-
-        memberId=4L;
+        
 
         Optional<Paymentinfo> paymentinfoFromDB = paymentDao.findPaymentinfoByImpUid(payment.getImp_uid());
 
         //모바일 리다이렉트로직이랑 웹훅에 의해 결제정보 2건저장 방지로직
         //DB에 결제내역이 없다면 저장
         if(!paymentinfoFromDB.isPresent()){
-            log.info("웹훅보다 먼저 실행");
+            log.info("결제후 리다이렉트 실행");
 
             String impUid = payment.getImp_uid();
             Paymentinfo paymentinfo = makePaymentinfoFromIamPort(iamportClient, impUid, restApi, restApiSecret, memberId);
@@ -77,7 +76,7 @@ public class PaymentController {
             } catch(DataIntegrityViolationException e){
                 log.info("결제정보 리다이렉트/웹훅 중복저장 방지용으로 try catch로 잡음");
             }
-            
+
             //검증
             paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
 
