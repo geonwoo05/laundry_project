@@ -59,15 +59,16 @@
                         </li>
                     </a>
                     </th:block>
-                    <th:block th:if="${cnt[1]['RESULT'] == 0}">
-                        <li class='drive_none'>
-                            <span>현재 요청된 배달이 없습니다.</span>
-                        </li>
-                    </th:block>
+<!--                    <th:block th:if="${cnt[1]['RESULT'] == 0}">-->
+<!--                        <li class='drive_none'>-->
+<!--                            <span>현재 요청된 배달이 없습니다.</span>-->
+<!--                        </li>-->
+<!--                    </th:block>-->
                 </ul>
             </div>
         <div id="orderStatus"></div>
         <input type="hidden" name="workingArea" id="workingArea" value="" th:value="${riderInfo.workingArea}">
+        <input type="hidden" name="quickRiderId" id="quickRiderId" value="" th:value="${riderInfo.riderId}">
         <input type="hidden" name="" id="msg" th:value="${msg}">
     </div>
 </body>

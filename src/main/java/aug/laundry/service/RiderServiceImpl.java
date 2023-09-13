@@ -28,15 +28,15 @@ public class RiderServiceImpl implements RiderService{
 //        return change;
 //    }
     @Override
-    public List<OrdersEnum> OrderListEnum(String status, Long quickRiderId) {
-        List<OrdersEnum> ordersEnums = riderMapper.orderListEnum(status, quickRiderId);
+    public List<OrdersEnum> OrderListEnum(String status, Long quickRiderId, String workingArea) {
+        List<OrdersEnum> ordersEnums = riderMapper.orderListEnum(status, quickRiderId, workingArea);
         ordersEnums.forEach(x -> x.setOrdersStatus(OrderStatus.valueOf("R" + x.getOrdersStatus()).getTitle()));
         return ordersEnums;
     }
 
     @Override
-    public List<Map<String, Integer>> orderListCnt(Long quickRiderId) {
-        return riderMapper.orderListCnt(quickRiderId);
+    public List<Map<String, Integer>> orderListCnt(Long quickRiderId, String workingArea) {
+        return riderMapper.orderListCnt(quickRiderId, workingArea);
     }
 
     @Override

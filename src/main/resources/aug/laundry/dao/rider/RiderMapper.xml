@@ -22,13 +22,13 @@
         select orders_status, orders_id, orders_address, orders_address_details, orders_date
         from orders
         <if test="status == '대기중'">
-            where quick_rider_id is null and orders_status in(2, 10)
+            where quick_rider_id is null and orders_status in(2, 10) and orders_address like CONCAT(CONCAT('%', #{workingArea}), '%')
         </if>
         <if test="status == '진행중'">
-            where quick_rider_id = #{quickRiderId} and orders_status in(3, 4, 11, 12)
+            where quick_rider_id = #{quickRiderId} and orders_status in(3, 4, 11, 12) and orders_address like CONCAT(CONCAT('%', #{workingArea}), '%')
         </if>
         <if test="status == '완료'">
-            where quick_rider_id = #{quickRiderId} and orders_status in(5, 13)
+            where quick_rider_id = #{quickRiderId} and orders_status in(5, 13) and orders_address like CONCAT(CONCAT('%', #{workingArea}), '%')
         </if>
     </select>
 
@@ -36,20 +36,20 @@
         select 'acceptCnt' as query_name, count(*) as result
         from orders
         where quick_rider_id = #{quickRiderId}
-        and orders_status in (3, 4, 11, 12)
+        and orders_status in (3, 4, 11, 12) and orders_address like CONCAT(CONCAT('%', #{workingArea}), '%')
 
         union all
 
         select 'waitCnt' as query_name, count(*) as result
         from orders
-        where quick_rider_id is null and rider_id is null
+        where quick_rider_id is null and rider_id is null and orders_address like CONCAT(CONCAT('%', #{workingArea}), '%')
 
         union all
 
         select 'completeCnt' as query_name, count(*) as result
         from orders
         where quick_rider_id = #{quickRiderId}
-        and orders_status in (5, 13)
+        and orders_status in (5, 13) and orders_address like CONCAT(CONCAT('%', #{workingArea}), '%')
     </select>
 
 
@@ -93,7 +93,7 @@
     </update>
 
     <select id="riderInfo" resultType="Rider">
-        select * from quick_rider where quick_rider_id = #{riderId}
+        select quick_rider_id as riderId, working_Area from quick_rider where quick_rider_id = #{riderId}
     </select>
 
     <select id="finishImg" resultType="DeliveryImage">

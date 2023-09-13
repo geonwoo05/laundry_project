@@ -40,16 +40,17 @@ public class RiderController {
         HttpSession session = request.getSession();
         Long quickRiderId = (Long)session.getAttribute("memberId");
 
-        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId);
-        List<OrdersEnum> orderList = riderService.OrderListEnum("대기중", quickRiderId);
+
+//        List<OrdersEnum> orderList = riderService.OrderListEnum("대기중", quickRiderId);
+
         Rider riderInfo = riderService.riderInfo(quickRiderId);
+        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId, riderInfo.getWorkingArea());
 
         System.out.println(quickRiderId);
 
-        model.addAttribute("orderList", orderList);
+//        model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
         model.addAttribute("riderInfo",riderInfo);
-//        model.addAttribute("id",quickRiderId);
 
         return "project_rider_list_on_call";
     }
@@ -59,8 +60,10 @@ public class RiderController {
 //        List<Orders> orderList = riderService.OrderList("진행중");
 //        List<OrdersEnum> orderList = riderService.OrderList("진행중", memberId);
         Long quickRiderId = memberId;
-        List<OrdersEnum> orderList = riderService.OrderListEnum("진행중", quickRiderId);
-        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId);
+        Rider riderInfo = riderService.riderInfo(quickRiderId);
+        List<OrdersEnum> orderList = riderService.OrderListEnum("진행중", quickRiderId, riderInfo.getWorkingArea());
+
+        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId, riderInfo.getWorkingArea());
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
@@ -72,8 +75,11 @@ public class RiderController {
     public String finishList(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId) {
 //        List<Orders> orderList = riderService.OrderList("완료");
         Long quickRiderId = memberId;
-        List<OrdersEnum> orderList = riderService.OrderListEnum("완료", quickRiderId);
-        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId);
+        Rider riderInfo = riderService.riderInfo(quickRiderId);
+        List<OrdersEnum> orderList = riderService.OrderListEnum("완료", quickRiderId, riderInfo.getWorkingArea());
+
+
+        List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId, riderInfo.getWorkingArea());
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
