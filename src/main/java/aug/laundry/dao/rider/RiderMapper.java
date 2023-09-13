@@ -14,9 +14,9 @@ import java.util.Map;
 public interface RiderMapper {
 
 //    List<Orders> orderList(@Param("status")String status, @Param("riderId")Long riderId);
-    List<OrdersEnum> orderListEnum(@Param("status")String status, @Param("quickRiderId")Long quickRiderId);
+    List<OrdersEnum> orderListEnum(@Param("status")String status, @Param("quickRiderId")Long quickRiderId, @Param("workingArea")String workingArea);
 
-    List<Map<String, Integer>> orderListCnt(Long quickRiderId);
+    List<Map<String, Integer>> orderListCnt(@Param("quickRiderId")Long quickRiderId, @Param("workingArea")String workingArea);
     Orders orderInfo(Long ordersId);
 
     int updateOrderRider(Orders orders);

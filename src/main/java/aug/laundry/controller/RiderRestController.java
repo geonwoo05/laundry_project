@@ -42,4 +42,18 @@ public class RiderRestController {
         map.put("cnt", cnt);
         return map;
     }
+
+    @GetMapping("/ride/getList/{riderId}/{ordersStatus}/{workingArea}")
+    public Map<String, Object> getList(@PathVariable("riderId")Long riderId,
+                                       @PathVariable("ordersStatus")String ordersStatus,
+                                       @PathVariable("workingArea")String workingArea){
+        Map<String, Object> map = new HashMap<>();
+
+        List<OrdersEnum> info = riderService.OrderListEnum(ordersStatus, riderId, workingArea);
+        List<Map<String, Integer>> cnt = riderService.orderListCnt(riderId, workingArea);
+
+        map.put("info", info);
+        map.put("cnt", cnt);
+        return map;
+    }
 }
