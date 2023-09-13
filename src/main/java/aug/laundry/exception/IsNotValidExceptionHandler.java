@@ -40,7 +40,6 @@ public class IsNotValidExceptionHandler {
         Long paymentinfoId = Long.parseLong(e.getMessage().replaceAll("[^0-9]", ""));
         log.info("paymentinfoId={}", paymentinfoId);
 
-
         Paymentinfo paymentinfo = paymentService.findPaymentinfoByPaymentinfoId(paymentinfoId);
 
         log.info("paymentinfo={}", paymentinfo);
