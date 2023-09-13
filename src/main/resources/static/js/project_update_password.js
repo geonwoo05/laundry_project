@@ -5,7 +5,12 @@ window.addEventListener('load',function(){
     let error = document.querySelector('.errors');
     let button_passwordChange = document.querySelector('#button_passwordChange');
 
-    button_passwordChange.disabled = true;
+    button_passwordChange.addEventListener('click', function(){
+            if(userPw.value=='' && userPwCheck.value==''){
+                error.textContent = '비밀번호와 비밀번호 확인을 입력해주세요';
+                button_passwordChange.disabled = true;
+            }
+    });
 
     userPw.addEventListener('keyup',function(){
         // 문자열이 8~15자인 경우
@@ -27,7 +32,7 @@ window.addEventListener('load',function(){
             error.textContent = '대소문자, 숫자, 특수문자를 포함해서 8자 이상 ~ 15자 이하로 설정해주세요.';
             button_passwordChange.disabled = true;
         }
-    })
+    });
 
     userPwCheck.addEventListener('keyup',function(){
 
@@ -45,6 +50,6 @@ window.addEventListener('load',function(){
             error.textContent = '비밀번호가 일치하지 않습니다';
             button_passwordChange.disabled = true;
         }
-    })
+    });
 
 });
