@@ -19,6 +19,7 @@ public class OrdersResponseDto {
     private String ordersAddressDetails;
     private String ordersRequest;
     private Double commonLaundryWeight;
+    private Long commonLaundryId;
     @NumberFormat(pattern = "###,###")
     private Long commonLaundryPrice;
     private Long memberId;
