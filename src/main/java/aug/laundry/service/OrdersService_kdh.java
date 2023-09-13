@@ -8,6 +8,7 @@ import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.orderStatus.OrderStatus;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,7 @@ public class OrdersService_kdh {
         return ordersResponseDto;
     }
 
-    private static void calculateCommonLaundry(OrdersResponseDto ordersResponseDto, Double commonLaundryWeight, Category commonLaundry, Category commonAdditional) {
+    public static void calculateCommonLaundry(OrdersResponseDto ordersResponseDto, Double commonLaundryWeight, Category commonLaundry, Category commonAdditional) {
         if (commonLaundryWeight > 0 && commonLaundryWeight <= 10) {
             //생활빨래 0~10리터
             Long price = 1 * commonLaundry.getPrice();
@@ -209,6 +210,14 @@ public class OrdersService_kdh {
 
     public int getTotalCount(Long memberId){
         return ordersDao.getTotalCount(memberId);
+    }
+
+    @Transactional
+    public void updatePaymentinfoIdByOrdersId(Long paymentinfoId, Long ordersId){
+        int result = ordersDao.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
+        if(result==0) {
+            throw new IllegalArgumentException("주문테이블의 paymentinfoId가 업데이트 되지 않았습니다.");
+        }
     }
 
 

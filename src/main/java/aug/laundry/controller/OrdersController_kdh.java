@@ -86,7 +86,6 @@ public class OrdersController_kdh {
         MemberShip memberShip = laundryService.isPass(memberId);
         Pass pass = memberShip.getCheck();
 
-
         MemberDto member = memberMapper.selectOne(memberId); // 멤버아이디 바꾸기
         model.addAttribute("member", member);
         Map<String, Object> dryMap = ordersServiceKdh.findDryCleaningByOrdersId(ordersId);

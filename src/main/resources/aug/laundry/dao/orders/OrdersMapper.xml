@@ -123,4 +123,10 @@
         FROM ORDERS
         WHERE MEMBER_ID = #{memberId}AND ORDERS_STATUS NOT IN(1)
     </select>
+
+    <update id="updatePaymentinfoIdByOrdersId">
+        UPDATE ORDERS
+        SET PAYMENTINFO_ID = #{paymentinfoId}
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
 </mapper>

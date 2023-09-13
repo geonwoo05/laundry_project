@@ -26,23 +26,49 @@ public class PaymentService {
     public void isValid(IamportResponse<Payment> irsp, Long paymentinfoId, Long memberId, Long ordersId, PaymentCheckRequestDto payment) {
 
         Long pointPrice = payment.getPointPrice();
-
-        if (pointPrice != null) {
-            Integer point = pointDao.findByMemberId(memberId);
-            log.info("DB point={}",point);
-            log.info("클라이언트 point={},", point);
-            if (point < payment.getPointPrice()) {
-                throw new IsNotValidException(
-                        "주문에서 사용한 포인트가 회원이 가지고 있는 포인트보다 많습니다.[" + paymentinfoId + "]");
-            }
-        }
+        
+        //사용할 포인트가 내가 가진 포인트보다 더 많은지 검증
+        isLessPointThanIHave(paymentinfoId, memberId, payment, pointPrice);
 
         Long couponListId = payment.getCouponListId();
         Long couponPrice = payment.getCouponPrice();
+        
+        //유효한 쿠폰인지 검증
+        isValidCoupon(paymentinfoId, couponListId, couponPrice);
+        
+        //금액 계산후 검증해야함
+        Long finalValidPrice = ordersDao.findExpectedPriceByOrdersId(ordersId)
+                .orElseThrow(() -> new IsNotValidException("예상금액이 존재하지 않습니다.[" + paymentinfoId + "]"));
 
+        if (pointPrice == null) {
+            pointPrice = 0L;
+        }
+
+        if (couponPrice == null) {
+            couponPrice = 0L;
+        }
+        
+        //최종가격과 결제금액이 일치하는지 검증
+        isEqualsToPaidPrice(irsp, paymentinfoId, pointPrice, couponPrice, finalValidPrice);
+
+    }
+
+    private static void isEqualsToPaidPrice(IamportResponse<Payment> irsp, Long paymentinfoId, Long pointPrice, Long couponPrice, Long finalValidPrice) {
+        // 포인트, 쿠폰까지 적용된 최종가격
+        Long expectedTotalPrice = finalValidPrice - pointPrice - couponPrice;
+
+        Long amount = irsp.getResponse().getAmount().longValue();
+
+        log.info("서버에서 계산한 최종가격={}",expectedTotalPrice);
+        log.info("실제 결제된 가격={}", amount);
+        if (!expectedTotalPrice.equals(amount)) {
+            throw new IsNotValidException("최종가격과 결제금액이 일치하지 않음[" + paymentinfoId + "]");
+        }
+    }
+
+    private void isValidCoupon(Long paymentinfoId, Long couponListId, Long couponPrice) {
         if (couponListId != null) {
             CouponCheckDto coupon = paymentDao.findCouponByCouponListId(couponListId);
-
             if (coupon == null) {
                 throw new IsNotValidException("존재하지 않는 쿠폰입니다.[" + paymentinfoId + "]");
             }
@@ -54,32 +80,18 @@ public class PaymentService {
                 throw new IsNotValidException("이미 사용한 쿠폰입니다.[" + paymentinfoId + "]");
             }
         }
+    }
 
-
-        //금액 계산후 검증해야함
-
-        Long finalValidPrice = ordersDao.findExpectedPriceByOrdersId(ordersId)
-                .orElseThrow(() -> new IsNotValidException("예상금액이 존재하지 않습니다.[" + paymentinfoId + "]"));
-
-        if (pointPrice == null) {
-            pointPrice = 0L;
+    private void isLessPointThanIHave(Long paymentinfoId, Long memberId, PaymentCheckRequestDto payment, Long pointPrice) {
+        if (pointPrice != null) {
+            Integer point = pointDao.findByMemberId(memberId);
+            log.info("DB point={}",point);
+            log.info("클라이언트 point={},", point);
+            if (point < payment.getPointPrice()) {
+                throw new IsNotValidException(
+                        "주문에서 사용한 포인트가 회원이 가지고 있는 포인트보다 많습니다.[" + paymentinfoId + "]");
+            }
         }
-
-        if (couponPrice == null) {
-            couponPrice = 0L;
-        }
-
-        // 포인트, 쿠폰까지 적용된 최종가격
-        Long expectedTotalPrice = finalValidPrice - pointPrice - couponPrice;
-
-        Long amount = irsp.getResponse().getAmount().longValue();
-
-        log.info("서버에서 계산한 최종가격={}",expectedTotalPrice);
-        log.info("실제 결제된 가격={}", amount);
-        if (!expectedTotalPrice.equals(amount)) {
-            throw new IsNotValidException("최종가격과 결제금액이 일치하지 않음[" + paymentinfoId + "]");
-        }
-
     }
 
     @Transactional
@@ -92,7 +104,6 @@ public class PaymentService {
 
     public Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId){
         Paymentinfo paymentinfo = paymentDao.findPaymentinfoByPaymentinfoId(paymentinfoId);
-
         if(paymentinfo != null){
             //1:결제완료 2:환불. 숫자의미가 바뀌었을수있으므로 erd확인
             if(paymentinfo.getPaymentStatus() == 2){

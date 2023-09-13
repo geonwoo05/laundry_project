@@ -96,6 +96,10 @@ public class OrdersDao {
         return ordersMapper.getTotalCount(memberId);
     }
 
+    public int updatePaymentinfoIdByOrdersId(Long paymentinfoId, Long ordersId){
+        return ordersMapper.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
+    }
+
 
 
 }
