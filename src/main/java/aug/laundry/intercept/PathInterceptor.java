@@ -36,19 +36,15 @@ public class PathInterceptor implements HandlerInterceptor {
                 sb.insert(sb.indexOf("//")+1, session.getAttribute(SessionConstant.LOGIN_MEMBER));
                 requestURI = sb.toString();
                 //log.info("경로 변경 = {}", sb.toString());
-            }else{
-                requestURI = "/login";
+                // 응답 커밋을 방지하기 위해 다음 두 줄을 추가
+                response.reset(); // 응답 리셋
+                response.sendRedirect(requestURI);
+                return false;
             }
-        }else{
-
-            requestURI = "/login";
         }
-        // log.info("비정상적인 경로입니다. = {}", requestURI);
+         log.info("비정상적인 경로입니다. = {}", requestURI);
 //        response.sendRedirect("/login");
-        // 응답 커밋을 방지하기 위해 다음 두 줄을 추가
-        response.reset(); // 응답 리셋
-        response.sendRedirect(requestURI);
-        return true;
+        return false;
 
 
 
