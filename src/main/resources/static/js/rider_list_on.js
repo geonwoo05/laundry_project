@@ -243,13 +243,14 @@ function getList(){
         var cnt = map.cnt;
 
         console.log(cnt[1]['RESULT']);
-        $('.active').html().split('(')[1] = cnt[1]['RESULT'] + ')';
+//        $('.active').html().split('(')[1] = cnt[1]['RESULT'] + ')';
 
         var page = '';
-
+        var cnt = 0;
         if(info.length != 0){
             info.forEach((list, index)=>{
             var page = '';
+
             var endX;
             var endY;
             var dis;
@@ -333,20 +334,25 @@ function getList(){
                                         }
                                 });
                                 if(10 >= dis){
-
+                                cnt++;
                                  page += `
-                                                                            <a href='/ride/orders/${list.ordersId}'>
-                                                                              <li>
-                                                                                  <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
-                                                                                  <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
-                                                                                  <div class='space'>
-                                                                                      <span class='delivery_time'>${list.ordersDate}</span>
-                                                                                      <span class='delivery_dis'>${tDistance}</span>
-                                                                                  </div>
-                                                                              </li>
-                                                                            </a>`;
+                                    <a href='/ride/orders/${list.ordersId}'>
+                                      <li>
+                                          <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
+                                          <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
+                                          <div class='space'>
+                                              <span class='delivery_time'>${list.ordersDate}</span>
+                                              <span class='delivery_dis'>${tDistance}</span>
+                                          </div>
+                                      </li>
+                                    </a>`;
                                 $('.delivery_list ul').prepend(page);
                                 }
+                                console.log(info.length);
+                                console.log("cnt : " + cnt);
+
+                                $('.active').html('대기중(' + cnt + ')');
+                                $(".ride_num").text(cnt + "건");
                             });
             },
             error: function(xhr, status, error) {

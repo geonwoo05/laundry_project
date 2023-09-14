@@ -25,7 +25,7 @@
     <script src="/js/rider_list_on.js"></script>
     <title>Document</title>
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
+<header th:replace="~{/common/project_back_header :: header}"></header>
 <body>
     <div class='container'>
 <!--        <div th:text="${id}"></div>-->
@@ -35,12 +35,14 @@
                 <div class='ride_head'>배달</div><br>
                 <div class='ride_txt'>
                     <div class='ch'>대기중인 배달 건수 : </div>
-                    <div class='ride_num' th:text="${cnt[1]['RESULT']} + '건'">0건</div>
+<!--                    <div class='ride_num' th:text="${cnt[1]['RESULT']} + '건'">0건</div>-->
+                    <div class='ride_num'>0건</div>
                 </div>
             </div>
             <div class='select_category'>
                 <ul>
-                    <a href="/ride/wait"><li class='active' th:text="${'대기중(' + cnt[1]['RESULT']} + ')'">대기중(0)</li></a>
+                    <!--                    <a href="/ride/wait"><li class='active' th:text="${'대기중(' + cnt[1]['RESULT']} + ')'">대기중(0)</li></a>-->
+                                        <a href="/ride/wait"><li class='active'>대기중(0)</li></a>
                     <a href="/ride/accept"><li th:text="${'진행중(' + cnt[0]['RESULT']} + ')'">진행중(16)</li></a>
                     <a href="/ride/finish"><li th:text="${'완료(' + cnt[2]['RESULT']} + ')'">완료(7)</li></a>
                 </ul>

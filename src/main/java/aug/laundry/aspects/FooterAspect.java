@@ -36,4 +36,16 @@ public class FooterAspect {
             }
         }
     }
+
+    @Before("execution(* aug.laundry.controller.RiderController.*routine*(..))")
+    public void rider(JoinPoint joinPoint) {
+        System.out.println("RiderController실행----------------------------------");
+
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            if (arg instanceof Model) {
+                ((Model) arg).addAttribute("head", "routine");
+            }
+        }
+    }
 }
