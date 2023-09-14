@@ -61,6 +61,11 @@
         WHERE MEMBER_ACCOUNT = #{memberAccount}
     </insert>
 
+    <insert id="giveCoupon">
+        INSERT INTO COUPON_LIST VALUES
+        (SEQ_COUPON_LIST_ID.NEXTVAL, #{memberId}, #{couponId}, SYSDATE, 1, null,ADD_MONTHS(SYSDATE, 1))
+    </insert>
+
 
 
 </mapper>

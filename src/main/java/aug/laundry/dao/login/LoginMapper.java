@@ -31,4 +31,8 @@ public interface LoginMapper {
 
     public MemberDto checkUserWithSessionId(String sessionId);
 
+    public int renewLoginTime (Long memberId);
+
+
+
 }

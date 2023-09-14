@@ -46,4 +46,12 @@
         AND SESSION_LIMIT > sysdate
     </select>
 
+    <update id="renewLoginTime">
+        update MEMBER set MEMBER_RECENTLY_DATE = sysdate where MEMBER_ID = #{memberId}
+    </update>
+
+
+
+
+
 </mapper>

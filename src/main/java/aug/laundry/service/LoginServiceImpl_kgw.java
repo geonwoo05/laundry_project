@@ -1,7 +1,10 @@
 package aug.laundry.service;
 
 import aug.laundry.commom.SessionConstant;
+import aug.laundry.dao.login.LoginDao;
 import aug.laundry.dao.login.LoginMapper;
+import aug.laundry.dao.member.MemberDao;
+import aug.laundry.dao.member.MemberMapper;
 import aug.laundry.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -29,7 +32,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LoginServiceImpl_kgw implements LoginService_kgw{
     private final ApiExamMemberProfile apiExam;
-    private final LoginMapper loginMapper;
+    private final LoginDao loginDao;
+    private final MemberDao memberDao;
     private final MemberDto memberDto;
     private final BCryptService_kgw bc;
 
@@ -59,8 +63,9 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             System.out.println(memberAccount);
             System.out.println("=============================");
 
-            int checkRes = loginMapper.checkSocialId(response.get("id"));
-
+            int checkRes = loginDao.checkSocialId(response.get("id"));
+            
+            // 첫 소셜로그인 -> 회원정보 DB에 저장
             if(checkRes <= 0){
                 System.out.println("naver 유저정보 db에 저장");
                 // memberDto에 담기
@@ -69,17 +74,25 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 memberDto.setMemberSocial("naver");
                 String formattedPhoneNumber = formatPhoneNumber(response.get("mobile"));
                 memberDto.setMemberPhone(formattedPhoneNumber);
-
+                
+                // DB에 등록
                 int registerUserInfoRes = registerSocialUser(memberDto);
                 int registerSocialNumRes = registerSocialNumber(response.get("id"));
 
+                // 웰컴쿠폰 지급
+                Long welcomeCoupon1 = 1L;
+                Long welcomeCoupon2 = 2L;
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
+    
                 // memberId를 받아 session에 저장하기
-                Long memberId = loginMapper.socialLogin(memberAccount, "naver").getMemberId();
+                Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
 
             }else{
+                // 한 번 이상 소셜로그인 -> 세션에 저장하고 로그인 처리
                 // memberId를 받아 session에 저장하기
-                Long memberId = loginMapper.socialLogin(memberAccount, "naver").getMemberId();
+                Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
             }
 
@@ -243,7 +256,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             Long SocialId = kakaoProfile.getId();
             String memberSocialId = String.valueOf(SocialId);
 
-            int checkRes = loginMapper.checkSocialId(memberSocialId);
+            int checkRes = loginDao.checkSocialId(memberSocialId);
 
             if(checkRes <= 0){
                 System.out.println("kakao 유저정보 db에 저장");
@@ -257,15 +270,21 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 int registerUserInfoRes = registerSocialUser(memberDto);
                 int registerSocialNumRes = registerSocialNumber(memberSocialId);
 
-                System.out.println(registerUserInfoRes);
-                System.out.println(registerSocialNumRes);
+//                System.out.println(registerUserInfoRes);
+//                System.out.println(registerSocialNumRes);
+
+                // 웰컴쿠폰 지급
+                Long welcomeCoupon1 = 1L;
+                Long welcomeCoupon2 = 2L;
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
 
                 // memberId를 가져와서 session에 저장하기
-                Long memberId = loginMapper.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
+                Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
             }else{
                 // memberId를 가져와서 session에 저장하기
-                Long memberId = loginMapper.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
+                Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
 
             }
@@ -276,14 +295,14 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         }
     }
     public int registerSocialUser(MemberDto memberDto){
-        int res = loginMapper.registerSocialUser(memberDto);
+        int res = loginDao.registerSocialUser(memberDto);
 
 
         return res;
     }
 
     public int registerSocialNumber(String id){
-        int res = loginMapper.registerSocialNumber(id);
+        int res = loginDao.registerSocialNumber(id);
 
         return res;
     }
@@ -306,7 +325,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     public MemberDto login(MemberDto memberDto){
         String password = memberDto.getMemberPassword();
 
-        MemberDto member = loginMapper.login(memberDto.getMemberAccount());
+        MemberDto member = loginDao.login(memberDto.getMemberAccount());
 
         if(member != null){
             String encodedPassword = member.getMemberPassword();
@@ -322,31 +341,36 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
     @Override
     public AdminDto adminLogin(String adminEmail, String adminPassword) {
-        AdminDto adminDto = loginMapper.adminLogin(adminEmail, adminPassword);
+        AdminDto adminDto = loginDao.adminLogin(adminEmail, adminPassword);
         return adminDto;
     }
 
     @Override
     public RiderDto riderLogin(String riderEmail , String riderPassword) {
-        RiderDto riderDto = loginMapper.riderLogin(riderEmail, riderPassword);
+        RiderDto riderDto = loginDao.riderLogin(riderEmail, riderPassword);
         return riderDto;
     }
 
     @Override
     public QuickRiderDto quickRiderLogin(String quickRiderEmail, String quickRiderPassword) {
-        QuickRiderDto quickRiderDto = loginMapper.quickRiderLogin(quickRiderEmail, quickRiderPassword);
+        QuickRiderDto quickRiderDto = loginDao.quickRiderLogin(quickRiderEmail, quickRiderPassword);
         return quickRiderDto;
     }
 
     @Override
     public int keepLogin(String sessionId, Date limit, Long memberId) {
-        int res = loginMapper.keepLogin(sessionId, limit, memberId);
+        int res = loginDao.keepLogin(sessionId, limit, memberId);
         return res;
     }
 
     @Override
     public MemberDto checkUserWithSessionId(String sessionId) {
-        return loginMapper.checkUserWithSessionId(sessionId);
+        return loginDao.checkUserWithSessionId(sessionId);
+    }
+
+    @Override
+    public int renewLoginTime(Long memberId) {
+        return loginDao.renewLoginTime(memberId);
     }
 
 }

@@ -3,6 +3,7 @@ package aug.laundry.service;
 import aug.laundry.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -24,6 +25,7 @@ public interface MemberService_kgw {
     public List<MemberDto> confirmId(String memberName, String memberPhone, String memberAccount);
 
     public int updatePassword(MemberDto memberDto);
+    public int giveCoupon(Long memberId,Long couponId);
 
 
 

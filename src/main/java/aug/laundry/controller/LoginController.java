@@ -32,7 +32,7 @@ import java.util.Objects;
 @RequestMapping("/login")
 public class LoginController {
     private final LoginService_kgw service;
-    private final MemberService_kgw memberServce;
+    private final MemberService_kgw memberService;
 
     @GetMapping("/naver_callback")
     public String naverLogin_callback(HttpServletRequest request, Model model, HttpSession session, String state) {
@@ -40,20 +40,21 @@ public class LoginController {
         System.out.println("naverLogin =======");
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
 
-//        String redirectURL = state;
-//        System.out.println("redirectURL : " + redirectURL);
-//        if(redirectURL != null){
-//            return "redirect:" + redirectURL;
-//        }
+
+        // 인터셉터에서 온 redirectURL이 있다면 로그인 후 redirectURL의 경로로 이동
+        String redirectURL = state;
+        if(redirectURL != null && !redirectURL.isEmpty()){
+            return "redirect:" + redirectURL;
+        }
         return "redirect:/";
     }
     @GetMapping("/kakaoLogin")
     public String kakaoLogin_Redirect(String code, Model model, HttpSession session, String state){
         service.kakaoProcess(code, session);
 
+        // 인터셉터에서 온 redirectURL이 있다면 로그인 후 redirectURL의 경로로 이동
         String redirectURL = state;
-        System.out.println("redirectURL : " + redirectURL);
-        if(redirectURL != null){
+        if(redirectURL != null && !redirectURL.isEmpty()){
             return "redirect:" + redirectURL;
         }
 
@@ -71,6 +72,17 @@ public class LoginController {
         String redirectURL = request.getParameter("redirectURL");
         // 로그인 성공
         if (userDto != null) {
+            if(userDto.getMemberRecentlyDate() == null){
+                // 웰컴쿠폰 지급
+                Long welcomeCoupon1 = 1L;
+                Long welcomeCoupon2 = 2L;
+                memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon1);
+                memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon2);
+            }
+
+            // 최근 로그인 시간 갱신
+            service.renewLoginTime(userDto.getMemberId());
+
             // 세션에 memberId 저장
             session.setAttribute(SessionConstant.LOGIN_MEMBER, userDto.getMemberId());
             Cookie cookie = new Cookie("loginCookie", session.getId());
@@ -109,7 +121,7 @@ public class LoginController {
     @PostMapping("/find-account")
     public String confirmId(ConfirmIdDto confirmIdDto, Model model){
         System.out.println("memberAccount : " + confirmIdDto.getMemberAccount());
-        List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone(), confirmIdDto.getMemberAccount());
+        List<MemberDto> list = memberService.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone(), confirmIdDto.getMemberAccount());
         model.addAttribute("list", list);
         return "project_search_id_result";
     }
@@ -117,7 +129,7 @@ public class LoginController {
     @ResponseBody
     @PostMapping("/find-pw")
     public Map<String, Object> confirmId(@RequestBody @Valid ConfirmIdDto confirmIdDto){
-        List<MemberDto> list = memberServce.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone(), confirmIdDto.getMemberAccount());
+        List<MemberDto> list = memberService.confirmId(confirmIdDto.getMemberName(), confirmIdDto.getMemberPhone(), confirmIdDto.getMemberAccount());
         Map<String, Object> map = new HashMap<>();
         map.put("list", list);
         return map;
@@ -126,7 +138,7 @@ public class LoginController {
     @PostMapping("/find-pw/update")
     public String updatePassword(MemberDto memberDto){
         System.out.println("memberDto : " + memberDto);
-        int res = memberServce.updatePassword(memberDto);
+        int res = memberService.updatePassword(memberDto);
         System.out.println("비밀번호 변경 : " + res);
         return "redirect:/login";
     }
