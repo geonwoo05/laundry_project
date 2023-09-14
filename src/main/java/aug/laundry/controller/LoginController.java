@@ -126,6 +126,7 @@ public class LoginController {
         return "project_search_id_result";
     }
 
+
     @ResponseBody
     @PostMapping("/find-pw")
     public Map<String, Object> confirmId(@RequestBody @Valid ConfirmIdDto confirmIdDto){
