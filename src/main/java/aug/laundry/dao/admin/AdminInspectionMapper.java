@@ -22,7 +22,8 @@ public interface AdminInspectionMapper {
     // 드라이클리닝
     List<Drycleaning> getDrycleaningInfo(Long orderDetailId);
     //수선
-    List<RepairInfoDto> getRepairInfo(Long orderDetailId);
+    List<Repair> getRepairInfo(Long orderDetailId);
+    List<String> getRepairImage(Long repairId);
     AdminInspectionDto getOrderSearchInfo(@Param("ordersId") Long ordersId,@Param("ordersStatus") Long ordersStatus);
     List<InspectionImage> getInspectionImageList(Long ordersId);
     int updateCommon(CommonLaundryDto commonLaundryDto);

@@ -38,7 +38,7 @@ public class InspectionTest {
 
         CommonLaundry commonLaundry = inspection.getCommonLaundryInfo(orderDetailId);
         List<Drycleaning> drycleanings = inspection.getDrycleaningInfo(orderDetailId);
-        List<RepairInfoDto> repairInfoDtos = inspection.getRepairInfo(orderDetailId);
+        List<Repair> repair = inspection.getRepairInfo(orderDetailId);
 
         Assertions.assertThat(3L).isEqualTo(orderDetailId);
         Assertions.assertThat(4L).isEqualTo(commonLaundry.getCommonLaundryId());
@@ -70,8 +70,8 @@ public class InspectionTest {
         repairs.add(re);
         repairs.add(re1);
 
-        int res2=0;
-        for(int i=0; i<repairs.size(); i++) {
+        int res2 = 0;
+        for (int i = 0; i < repairs.size(); i++) {
             res2 += inspection.updateRepair(repairs.get(i));
         }
 
@@ -91,7 +91,7 @@ public class InspectionTest {
         drycleanings.add(dry1);
         drycleanings.add(dry2);
 
-        int res3=0;
+        int res3 = 0;
         for (Drycleaning drycleaning : drycleanings) {
             res3 += inspection.updateDrycleaning(drycleaning);
         }
@@ -102,5 +102,16 @@ public class InspectionTest {
 
         int res5 = inspection.updateOrderStatus(ordersId);
         Assertions.assertThat(res5).isEqualTo(1);
+    }
+
+    @Test
+    public void imageListTest() {
+        Long repairId = 8L;
+
+        List<String> list = inspection.getRepairImage(repairId);
+
+        list.forEach(name -> {
+            System.out.println("name = " + name);            
+        });
     }
 }
