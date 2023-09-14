@@ -36,6 +36,8 @@ public class MypageController_osc {
 
   @GetMapping("/{memberId}/mypage")
   public String MypageMain(@PathVariable Long memberId, Model model){
+
+    System.out.println("MypageMain");
     MypageDto mypageDto = mypageService.findByNameAndPass(memberId);
 
     // 패스 기간 비교를 위해 날짜 형식 변경
@@ -53,7 +55,6 @@ public class MypageController_osc {
       model.addAttribute("userPass", null);
       return "project_mypage_list";
     }
-
     if(sysdate.compareTo(enddate) > 0){ // 패스 종료기간이 지났을 경우
       model.addAttribute("userName",name);
       model.addAttribute("userPass", null);

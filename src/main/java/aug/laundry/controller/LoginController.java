@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 
 import javax.servlet.http.Cookie;
@@ -39,11 +40,11 @@ public class LoginController {
         System.out.println("naverLogin =======");
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
 
-        String redirectURL = state;
-        System.out.println("redirectURL : " + redirectURL);
-        if(redirectURL != null){
-            return "redirect:" + redirectURL;
-        }
+//        String redirectURL = state;
+//        System.out.println("redirectURL : " + redirectURL);
+//        if(redirectURL != null){
+//            return "redirect:" + redirectURL;
+//        }
         return "redirect:/";
     }
     @GetMapping("/kakaoLogin")
@@ -67,25 +68,21 @@ public class LoginController {
         RiderDto riderDto = service.riderLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
         QuickRiderDto quickRiderDto = service.quickRiderLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
 
-        System.out.println("쿠키사용 : " + request.getParameter("useCookie"));
-
         String redirectURL = request.getParameter("redirectURL");
-
         // 로그인 성공
         if (userDto != null) {
             // 세션에 memberId 저장
             session.setAttribute(SessionConstant.LOGIN_MEMBER, userDto.getMemberId());
-            if(request.getParameter("useCookie") != null){
-                Cookie cookie = new Cookie("loginCookie", session.getId());
-                cookie.setPath("/");
-                int amount = 60 * 60 * 24 * 7;
-                cookie.setMaxAge(amount); // 단위는 (초)임으로 7일정도로 유효시간을 설정해 준다.
-                // 쿠키를 적용해 준다.
-                response.addCookie(cookie);
-                Date limit = new Date(System.currentTimeMillis() + (1000*amount));
-                // 현재 세션 id와 유효시간을 사용자 테이블에 저장한다.
-                service.keepLogin(session.getId(), limit, userDto.getMemberId());
-            }
+            Cookie cookie = new Cookie("loginCookie", session.getId());
+            cookie.setPath("/");
+            int amount = 60 * 60 * 24 * 7;
+            cookie.setMaxAge(amount); // 단위는 (초)임으로 7일정도로 유효시간을 설정해 준다.
+            // 쿠키를 적용해 준다.
+            response.addCookie(cookie);
+            Date limit = new Date(System.currentTimeMillis() + (1000*amount));
+            // 현재 세션 id와 유효시간을 사용자 테이블에 저장한다.
+            service.keepLogin(session.getId(), limit, userDto.getMemberId());
+
             if(redirectURL != null && !redirectURL.isEmpty()){
                 return "redirect:" + redirectURL;
             }
@@ -151,9 +148,23 @@ public class LoginController {
     public String goFindPassword(){return "project_search_password";}
 
     @GetMapping
-    public String goLogin(){
+    public String goLogin(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
+        if(loginCookie != null){
+            if(loginCookie != null){
+                String sessionId = loginCookie.getValue();
+                MemberDto memberDto = service.checkUserWithSessionId(sessionId);
+                if(memberDto != null){
+                    session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
+                    return "redirect:/";
+                }
+            }
+        }
         return "project_login";
     }
+
+
 }
 
 

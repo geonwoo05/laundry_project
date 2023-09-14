@@ -28,13 +28,14 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class LoginServiceImpl_kgw implements LoginService_kgw{
-
-
     private final ApiExamMemberProfile apiExam;
     private final LoginMapper loginMapper;
     private final MemberDto memberDto;
     private final BCryptService_kgw bc;
-    private final MemberService_kgw memberService;
+
+    public static final String NAVER_REDIRECT_URL = "http://localhost:8080/login/naver_callback";
+    public static final String KAKAO_REDIRECT_URL = "http://localhost:8080/login/kakaoLogin";
+
 
     @Override
     public void naverLogin(HttpServletRequest request, Model model, HttpSession session) {
@@ -94,7 +95,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         String code = request.getParameter("code");
         String state = request.getParameter("state");
         try {
-            String redirectURI = URLEncoder.encode("http://localhost:8080/login/naver_callback", "UTF-8");
+            String redirectURI = URLEncoder.encode(NAVER_REDIRECT_URL, "UTF-8");
             String apiURL;
             apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
             apiURL += "client_id=" + clientId;
@@ -173,7 +174,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("grant_type", "authorization_code");
             jsonBody.put("client_id", "6ceec1b5aece169e4582fd82601abd44");
-            jsonBody.put("redirect_uri", "http://localhost:8080/login/kakaoLogin");
+            jsonBody.put("redirect_uri", KAKAO_REDIRECT_URL);
             jsonBody.put("code",code);
 
             String queryString = encodeParameters(jsonBody);
@@ -197,7 +198,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     }
 
     public String encodeParameters(JSONObject params) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://localhost:8080/login/kakaoLogin").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(KAKAO_REDIRECT_URL).newBuilder();
         for (String key : params.keySet()) {
             urlBuilder.addQueryParameter(key, params.getString(key));
         }
@@ -345,8 +346,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
     @Override
     public MemberDto checkUserWithSessionId(String sessionId) {
-        MemberDto memberDto = loginMapper.checkUserWithSessionId(sessionId);
-        return memberDto;
+        return loginMapper.checkUserWithSessionId(sessionId);
     }
 
 }

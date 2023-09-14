@@ -3,6 +3,7 @@ package aug.laundry.dao;
 import aug.laundry.dao.login.LoginMapper;
 import aug.laundry.dao.member.MemberMapper;
 import aug.laundry.dto.MemberDto;
+import aug.laundry.service.LoginService_kgw;
 import aug.laundry.service.MemberService_kgw;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,9 @@ class TestTest {
 
     @Autowired
     private LoginMapper loginMapper;
+
+    @Autowired
+    private LoginService_kgw loginService;
 
     @Test
     void test(){
@@ -60,5 +64,12 @@ class TestTest {
         member = loginMapper.login("rlarjsdn531@naver.com");
         System.out.println(member);
 
+    }
+    @Test
+    void cookieTest(){
+
+       Long member = loginService.checkUserWithSessionId("7FE471AC9C7B61C7837B70BF9BF612C3");
+
+        System.out.println(member);
     }
 }

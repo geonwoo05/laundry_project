@@ -43,7 +43,7 @@
         SELECT *
         FROM MEMBER
         WHERE SESSION_ID = #{sessionId}
-        AND SESSION_LIMIT > now()
+        AND SESSION_LIMIT > sysdate
     </select>
 
 </mapper>
