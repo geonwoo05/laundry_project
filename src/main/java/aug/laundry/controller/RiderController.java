@@ -66,6 +66,7 @@ public class RiderController {
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
+        model.addAttribute("riderInfo",riderInfo);
 
         return "project_rider_using_list";
     }
@@ -82,6 +83,7 @@ public class RiderController {
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("cnt", cnt);
+        model.addAttribute("riderInfo",riderInfo);
 
         return "project_rider_complete";
     }

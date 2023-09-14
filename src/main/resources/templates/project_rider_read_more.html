@@ -58,7 +58,7 @@
 
     <title>Document</title>
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
+<header th:replace="~{/common/project_back_header :: header}"></header>
 <!--<body th:if="${info.ordersStatus == 2 or info.ordersStatus == 3 or info.ordersStatus == 10 or info.ordersStatus == 11}" onload="initTmap();">-->
 <!--<body th:if="${info.ordersStatus == 4 or info.ordersStatus == 12}">-->
 <body id="uploadBody">
@@ -68,7 +68,7 @@
 <!-- 완료 : 배송완료 사진 / 대기중 : 이동경로 표시 -->
 <div class='address_map' id="map_div" >
     <img id="selectedImage" src="" alt="선택한 이미지" style='display: none;' th:if="${info.ordersStatus == 12}"/>
-    <img id="ig" th:src="@{/images/} + ${img.deliveryImageStoreName}" alt="선택한 이미지" th:if="${info.ordersStatus == 13}" style="width: 100%; height: 100%"/>
+    <img id="ig" th:src="@{/images/delivery_images/} + ${img.deliveryImageStoreName}" alt="선택한 이미지" th:if="${info.ordersStatus == 13}" style="width: 100%; height: 100%"/>
     <img id="ig2" src="https://cdn-icons-png.flaticon.com/512/3847/3847871.png" alt="선택한 이미지" th:if="${info.ordersStatus == 5}" style="width: 100%; height: 100%;"/>
 </div>
 <div class='agree_zone'>
@@ -127,9 +127,9 @@
     <p>주문시간</p>
     <input type="text" name="" id="pickUpTime" value='비밀번호 없음' readonly th:value="${info.ordersDate ?: '비밀번호 없음'}">
     <br>
-    <p>요청시간</p>
-    <input type="text" name="" id="requestTime" value='요청시간 없음' th:value="'금일 ' + ${info.ordersPickupDate} + '까지'">
-    <br>
+<!--    <p>요청시간</p>-->
+<!--    <input type="text" name="" id="requestTime" value='요청시간 없음' th:value="'금일 ' + ${info.ordersPickupDate} + '까지'">-->
+<!--    <br>-->
     <p>요청사항</p>
     <input type="text" name="" id="requestInfo" value='요청사항 없음' readonly th:value="${info.ordersRequest ?: '요청사항 없음'}">
     <br>

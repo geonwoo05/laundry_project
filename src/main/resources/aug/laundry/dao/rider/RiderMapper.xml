@@ -67,8 +67,8 @@
         o.orders_request,
         o.orders_pickup,
         o.orders_info,
-        o.rider_id,
-        ql.quick_laundry_take_time as ordersPickupDate
+        o.rider_id
+<!--        ,ql.quick_laundry_take_time as ordersPickupDate-->
         FROM
         orders o
         INNER JOIN

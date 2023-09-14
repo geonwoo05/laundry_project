@@ -13,7 +13,7 @@
     <script src="/js/rider_using_list.js"></script>
     <title>Document</title>
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
+<header th:replace="~{/common/project_back_header :: header}"></header>
 <body>
     <div class='container'>
         <div class='rider_header'>
@@ -25,7 +25,8 @@
         </div>
         <div class='select_category'>
             <ul>
-                <a href="/ride/wait"><li th:text="${'대기중(' + cnt[1]['RESULT']} + ')'">대기중(0)</li></a>
+<!--                <a href="/ride/wait"><li th:text="${'대기중(' + cnt[1]['RESULT']} + ')'">대기중(0)</li></a>-->
+                <a href="/ride/wait"><li id="waitNum">대기중(0)</li></a>
                 <a href="/ride/accept"><li class='active' th:text="${'진행중(' + cnt[0]['RESULT']} + ')'">진행중(16)</li></a>
                 <a href="/ride/finish"><li th:text="${'완료(' + cnt[2]['RESULT']} + ')'">완료(7)</li></a>
             </ul>
@@ -53,6 +54,8 @@
                 </ul>
             </div>
     </div>
+    <input type="hidden" name="workingArea" id="workingArea" value="" th:value="${riderInfo.workingArea}">
+    <input type="hidden" name="quickRiderId" id="quickRiderId" value="" th:value="${riderInfo.riderId}">
 </body>
 <!--<footer th:replace="~{/common/project_footer :: footer}"> </footer>-->
 <footer th:replace="~{/common/project_rider_footer :: footer}"> </footer>
