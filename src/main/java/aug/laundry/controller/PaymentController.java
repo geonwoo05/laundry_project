@@ -9,7 +9,6 @@ import aug.laundry.service.OrdersService_kdh;
 import aug.laundry.service.PaymentService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Optional;
 
 @Controller
@@ -58,7 +54,7 @@ public class PaymentController {
         if(payment.isImp_success() == false){
             return "redirect:/orders/" + ordersId +"/payment";
         }
-        
+
 
         Optional<Paymentinfo> paymentinfoFromDB = paymentDao.findPaymentinfoByImpUid(payment.getImp_uid());
 
@@ -131,10 +127,6 @@ public class PaymentController {
     }
 
     private void updateSeveralRegardingOrders(Long finalPrice, Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice) {
-//        // 주문상태 결제완료로 변경
-//        ordersServiceKdh.updateOrdersStatusToCompletePayment(ordersId);
-//        // orders테이블의 paymentinfoId 변경
-//        ordersServiceKdh.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
 
         ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
 
@@ -146,7 +138,8 @@ public class PaymentController {
         if(pointPrice != null){
             //음수로 변환
             Long pointValue = -pointPrice;
-            ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
+            Long pointId = ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
+            ordersServiceKdh.updatePointIdByOrdersId(pointId, ordersId);
         }
     }
 

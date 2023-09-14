@@ -136,6 +136,15 @@ public class OrdersController_kdh {
                 new QuickLaundryResponseDto(Delivery.QUICK_DELIVERY, isQuickLaundry));
         model.addAttribute("delivery", delivery);
 
+        Integer ordersStatus = ordersResponseDto.getOrdersStatus();
+        //8:결제완료 9:세탁중: 10:배송전 11:배송완료
+        if(ordersStatus==8 || ordersStatus==9 || ordersStatus==10 || ordersStatus==11){
+            PriceResponseDto price = ordersServiceKdh.findPricesByOrdersId(ordersId);
+            log.info("price={}",price);
+            model.addAttribute("price", price);
+        }
+
+
         return "project_order_view";
     }
 

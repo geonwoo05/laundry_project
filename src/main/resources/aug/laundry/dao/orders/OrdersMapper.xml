@@ -84,12 +84,12 @@
     </update>
 
     <insert id="addPoint">
-        <selectKey keyProperty="pointId" resultType="Long" order="BEFORE">
+        <selectKey keyProperty="pointDto.pointId" resultType="Long" order="BEFORE">
             SELECT SEQ_POINT_ID.NEXTVAL
             FROM DUAL
         </selectKey>
         INSERT INTO POINT(POINT_ID, MEMBER_ID, POINT_STACK, POINT_STACK_REASON, POINT_STACK_DATE, POINT_NOW)
-        VALUES(#{pointId}, #{memberId}, #{pointStack}, #{pointStackReason}, SYSDATE, (SELECT
+        VALUES(#{pointDto.pointId}, #{pointDto.memberId}, #{pointDto.pointStack}, #{pointDto.pointStackReason}, SYSDATE, (SELECT
         POINT_NOW
         FROM
         (SELECT
@@ -99,9 +99,9 @@
         FROM
         POINT
         WHERE
-        MEMBER_ID = #{memberId})
+        MEMBER_ID = #{pointDto.memberId})
         WHERE
-        rn = 1) + #{pointStack})
+        rn = 1) + #{pointDto.pointStack})
     </insert>
 
     <select id="findOrdersByMemberIdAndCri" resultType="aug.laundry.dto.OrdersListResponseDto">
@@ -135,6 +135,24 @@
     <update id="updatePaymentinfoIdByOrdersId">
         UPDATE ORDERS
         SET PAYMENTINFO_ID = #{paymentinfoId}
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+
+    <select id="findPricesByOrdersId" resultType="aug.laundry.dto.PriceResponseDto">
+        SELECT ABS(NVL(C.POINT_STACK,0)) AS POINT_STACK, NVL(D.COUPON_PRICE,0) AS COUPON_PRICE, A.ORDERS_FINAL_PRICE
+        FROM ORDERS A
+        LEFT JOIN COUPON_LIST B
+        ON A.ORDERS_ID = B.ORDERS_ID
+        LEFT JOIN POINT C
+        ON A.POINT_ID = C.POINT_ID
+        LEFT JOIN COUPON D
+        ON B.COUPON_ID = D.COUPON_ID
+        WHERE A.ORDERS_ID = #{ordersId}
+    </select>
+    
+    <update id="updatePointIdByOrdersId">
+        UPDATE ORDERS
+        SET POINT_ID = #{pointId}
         WHERE ORDERS_ID = #{ordersId}
     </update>
 </mapper>

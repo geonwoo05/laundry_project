@@ -3,9 +3,7 @@ package aug.laundry.dao.orders;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
-import aug.laundry.dto.Criteria;
-import aug.laundry.dto.OrdersListResponseDto;
-import aug.laundry.dto.OrdersResponseDto;
+import aug.laundry.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -79,8 +77,8 @@ public class OrdersDao {
         return ordersMapper.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
     }
 
-    public int addPoint(Long memberId, Long pointStack, String pointStackReason){
-        return ordersMapper.addPoint(memberId, pointStack, pointStackReason);
+    public int addPoint(AddPointResponseDto pointDto){
+        return ordersMapper.addPoint(pointDto);
     }
 
     public List<OrdersListResponseDto> findOrdersByMemberIdAndCri(Criteria cri, Long memberId){
@@ -102,6 +100,15 @@ public class OrdersDao {
 
     public int updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId){
         return ordersMapper.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId);
+    }
+
+    public PriceResponseDto findPricesByOrdersId(Long ordersId){
+        return ordersMapper.findPricesByOrdersId(ordersId)
+                .orElseThrow(() -> new IllegalArgumentException("결제금액, 포인트, 쿠폰가격을 찾을 수 없습니다."));
+    }
+
+    public int updatePointIdByOrdersId(Long pointId, Long ordersId){
+        return ordersMapper.updatePointIdByOrdersId(pointId, ordersId);
     }
 
 

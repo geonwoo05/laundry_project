@@ -8,6 +8,7 @@ import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.orderStatus.OrderStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrdersService_kdh {
 
     private final OrdersDao ordersDao;
@@ -166,11 +168,14 @@ public class OrdersService_kdh {
     }
 
     @Transactional
-    public void addPoint(Long memberId, Long pointStack, String pointStackReason){
-        int result = ordersDao.addPoint(memberId, pointStack, pointStackReason);
+    public Long addPoint(Long memberId, Long pointStack, String pointStackReason){
+        AddPointResponseDto pointDto = new AddPointResponseDto(memberId, pointStack, pointStackReason);
+        int result = ordersDao.addPoint(pointDto);
         if(result==0) {
             throw new IllegalArgumentException("포인트 적립/사용이 업데이트 되지 않았습니다.");
         }
+        log.info("pointDto={}", pointDto);
+        return pointDto.getPointId();
     }
 
     public Long findExpectedPriceByOrdersId(Long ordersId){
@@ -227,5 +232,18 @@ public class OrdersService_kdh {
             throw new IllegalArgumentException("주문테이블의 최종결제금액, 주문상태, 결제정보Id가 업데이트 되지 않았습니다.");
         }
     }
+
+    public PriceResponseDto findPricesByOrdersId(Long ordersId){
+        return ordersDao.findPricesByOrdersId(ordersId);
+    }
+
+    @Transactional
+    public void updatePointIdByOrdersId(Long pointId, Long ordersId){
+        int result = ordersDao.updatePointIdByOrdersId(pointId, ordersId);
+        if(result==0) {
+            throw new IllegalArgumentException("주문테이블의 pointId가 업데이트 되지 않았습니다.");
+        }
+    }
+
 
 }
