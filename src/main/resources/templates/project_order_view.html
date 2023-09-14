@@ -25,8 +25,8 @@
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>일정</span>
-            <span th:text="${order.ordersPickupDate}" class='basicinfoContent'>수거 : 2023/08/23(화) 23시</span>
-            <span th:text="${order.ordersReturnDate}" class='basicinfoContent'>반납 : 2023/08/24(수) 07시</span>
+            <span th:text="|수거 : ${order.ordersPickupDate}|" class='basicinfoContent'>수거 : 2023/08/23(화) 23시</span>
+            <span th:text="|반납 : ${order.ordersReturnDate}|" class='basicinfoContent'>반납 : 2023/08/24(수) 07시</span>
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>주소</span>
