@@ -69,12 +69,6 @@
                         </div>
                     </td>
                 <tr>
-                <tr>
-                    <th class='content'>요청사항</th>
-                </tr>
-                <tr>
-                    <th th:text="${dry.drycleaningRequest}"/>
-                </tr>
 
                 <tr >
                     <th class='reason selectD' th:id="|dpos${dryIndex.index}box|">
@@ -94,9 +88,9 @@
                 <tr>
                     <th class='content' th:text="${repair.repairCategory}">소분류 이름</th>
                 </tr>
-                <tr>
+                <tr th:if="${repair.repairImageStoreName != null}" th:each="img : ${repair.repairImageStoreName}">
                     <td>
-                        <img class='imgSize' th:src="@{'/images/' + ${repair.repairImageStoreName}}">
+                        <img class='imgSize' th:src="@{'/images/repairImages/' + ${img}}">
                     </td>
                 </tr>
                 <tr>

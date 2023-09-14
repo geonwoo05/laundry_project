@@ -37,10 +37,12 @@ public class AdminInspectionDao {
         return mapper.getDrycleaningInfo(orderDetailId);
     }
 
-    public List<RepairInfoDto> getRepairInfo(Long orderDetailId) {
+    public List<Repair> getRepairInfo(Long orderDetailId) {
         return mapper.getRepairInfo(orderDetailId);
     }
-
+    public List<String> getRepairImage(Long repairId){
+        return mapper.getRepairImage(repairId);
+    }
     public int updateCommon(CommonLaundryDto commonLaundryDto){
         return mapper.updateCommon(commonLaundryDto);
     }
