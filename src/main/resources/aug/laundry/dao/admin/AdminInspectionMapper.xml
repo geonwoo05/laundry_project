@@ -97,4 +97,8 @@
         )
     </select>
 
+    <delete id="deleteImage">
+        DELETE FROM inspection_image WHERE inspection_image_store_name = #{inspectionImageStoreName}
+    </delete>
+
 </mapper>

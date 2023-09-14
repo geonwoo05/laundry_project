@@ -74,7 +74,7 @@ public class SubscribeController {
             model.addAttribute("first", first);
             model.addAttribute("data", data);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            model.addAttribute("error", e.getMessage());
         }
 
         model.addAttribute("result", result);
@@ -162,7 +162,7 @@ public class SubscribeController {
                 return "redirect:/subscription/order?result=" + result;
             }
         }
-        catch (Exception e) {
+        catch (IOException e) {
             // 오류 -> 관리자 문의
             return "redirect:/subscription/order?result=" + e.getMessage();
         }
@@ -274,7 +274,7 @@ public class SubscribeController {
                 result = "Fraudulent payment attempt refund "+refundRes;
             }
         }
-        catch (Exception e) {
+        catch (IOException e) {
             // 오류 -> 관리자 문의
             result = e.getMessage();
         }
@@ -335,7 +335,7 @@ public class SubscribeController {
                 result = "Fraudulent payment attempt refund "+refundRes;
             }
         }
-        catch (Exception e) {
+        catch (IOException e) {
             // 오류 -> 관리자 문의
             result = e.getMessage();
         }

@@ -2,6 +2,7 @@ package aug.laundry.dao.admin;
 
 import aug.laundry.domain.*;
 import aug.laundry.dto.AdminInspectionDto;
+import aug.laundry.dto.CommonLaundryDto;
 import aug.laundry.dto.Criteria;
 import aug.laundry.dto.RepairInfoDto;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +41,8 @@ public class AdminInspectionDao {
         return mapper.getRepairInfo(orderDetailId);
     }
 
-    public int updateCommon(CommonLaundry commonLaundry){
-        return mapper.updateCommon(commonLaundry);
+    public int updateCommon(CommonLaundryDto commonLaundryDto){
+        return mapper.updateCommon(commonLaundryDto);
     }
     public int updateRepair(Repair repair){
         return mapper.updateRepair(repair);
@@ -60,5 +61,9 @@ public class AdminInspectionDao {
     }
     public List<InspectionImage> getInspectionImageList(Long ordersId){
         return mapper.getInspectionImageList(ordersId);
+    }
+
+    public int deleteImage(String inspectionImageStoreName) {
+        return mapper.deleteImage(inspectionImageStoreName);
     }
 }

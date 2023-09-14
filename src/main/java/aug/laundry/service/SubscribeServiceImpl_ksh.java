@@ -93,8 +93,9 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
         postRequest.setHeader("Authorization", getAccessToken());
         postRequest.setEntity(json);
 
-        // 요청 후 데이터 받기
+        // 요청 후 응답 받기
         HttpResponse response = httpClient.execute(postRequest);
+        // 응답 본문 가져오기
         HttpEntity getEntity = response.getEntity();
 
         // 응답데이터를 String으로 변환
@@ -257,12 +258,10 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
         }
         return subDto;
     }
-
     @Override
     public int updateFailReason(String merchantUid, String failReason) {
         return subscribeDao.updateFailReason(merchantUid, failReason);
     }
-
     @Override
     public int getPrice(int selectMonth) {
 
@@ -280,7 +279,6 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
         }
         return getPrice;
     }
-
     private String getDate() {
         LocalDateTime today = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmmssSSS");

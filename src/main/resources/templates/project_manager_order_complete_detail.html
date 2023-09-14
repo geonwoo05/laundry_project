@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_manager_order_detail.css">
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const memberId = [[${session.memberId != null ? session.memberId : 'null'}]];
+        const ordersId = [[${info['orderInfo'].ordersId != null ? info['orderInfo'].ordersId : 'null'}]];
+        /*]]>*/
+
+        function goEdit() {
+            window.location.href = `/admin/edit/${memberId}/${ordersId}`;
+        }
+    </script>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
@@ -45,9 +56,16 @@
 
     <h4 th:if="${info['drycleaningInfo'] != null}">드라이클리닝</h4>
     <table th:if="${info['drycleaningInfo'] != null}" th:each="dry, dryIndex : ${info['drycleaningInfo']}">
-        <input type="text" class="hidden" th:value="${dry.drycleaningId}" th:name="|drycleaningList[${dryIndex.index}].drycleaningId|">
+        <tr>
+            <td>
+                <input type="text" class="hidden" th:value="${dry.drycleaningId}" th:name="|drycleaningList[${dryIndex.index}].drycleaningId|">
+
+            </td>
+        </tr>
         <tr>
             <th class='content' th:text="${dry.drycleaningCategory}"></th>
+        </tr>
+        <tr>
             <td class='content drycleaning_result'>
                 <div>
                     <input type="radio" value="Y" th:checked="${dry.drycleaningPossibility.toString() == 'Y'}">
@@ -78,9 +96,20 @@
     <hr>
     <h4 th:if="${info['repairInfo'] != null}">수선</h4>
     <table th:if="${info['repairInfo'] != null}" th:each="repair, repairIndex : ${info['repairInfo']}">
-        <input type="text" class="hidden" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
+        <tr>
+            <td>
+                <input type="text" class="hidden" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
+            </td>
+        </tr>
         <tr>
             <th class='content' th:text="${repair.repairCategory}">소분류 이름</th>
+        </tr>
+        <tr>
+            <td>
+                <img class='imgSize' th:src="@{'/images/' + ${repair.repairImageStoreName}}">
+            </td>
+        </tr>
+        <tr>
             <td class='content drycleaning_result' th:id="|rpos${repairIndex.index}b|">
                 <div>
                     <input type="radio" value="Y"  th:checked="${repair.repairPossibility.toString() == 'Y'}" >
@@ -111,12 +140,13 @@
     </table>
 
     <!-- 사진 -->
+    <h4>검수사진</h4>
     <div id="imagePreview" th:if="${info['imageList'] != null}" th:each="imageList, imageListIndex : ${info['imageList']}">
         <img class='imgSize' th:src="@{'/images/'+${imageList.inspectionImageStoreName}}">
     </div>
 
     <div class='fixbox'>
-        <input type="button" class="btnEdit" value="검수수정">
+        <input type="button" class="btnEdit" value="검수수정" th:onclick="goEdit()">
     </div>
 </div>
 </body>

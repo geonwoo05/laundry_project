@@ -184,10 +184,11 @@
         }
 
     </style>
-    <script>
+    <script th:inline="javascript">
         /*<![CDATA[*/
         const memberId = [[${session.memberId != null ? session.memberId : 'null'}]];
         const expire = '[[${data != null ? data.subscriptionExpireDate : null}]]';
+        /*]]>*/
         function firstPass() {
             if(memberId !== null && expire !== '') {
                 alert("신규 회원 대상 이벤트입니다.");
@@ -212,7 +213,7 @@
                 location.href='/subscription/order/'+memberId;
             }
         }
-        /*]]>*/
+
     </script>
     <title>Document</title>
 </head>

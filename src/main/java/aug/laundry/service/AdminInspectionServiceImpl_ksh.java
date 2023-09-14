@@ -4,16 +4,21 @@ import aug.laundry.dao.admin.AdminInspectionDao;
 import aug.laundry.domain.CommonLaundry;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.InspectionImage;
-import aug.laundry.domain.Repair;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.fileUpload.FileUploadType;
+import aug.laundry.enums.repair.Repair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +27,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ksh{
+
+    @Value("${file.dir}")
+    private String fileDir;
 
     private final AdminInspectionDao adminInspectionDao;
     private final FileUploadService_ksh fileUpload;
@@ -70,7 +78,7 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
             detailInfo.put("repairInfo", null);
         } else {
             for (RepairInfoDto repairInfoDto : repairInfo) {
-                repairInfoDto.setRepairCategory(Category.valueOf(repairInfoDto.getRepairCategory()).getTitle());
+                repairInfoDto.setRepairCategory(Repair.valueOf(repairInfoDto.getRepairCategory()).getTitle());
             }
             detailInfo.put("repairInfo", repairInfo);
         }
@@ -92,31 +100,49 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
 
     @Transactional
     @Override
-    public int updateInspectionResult(AdminInspectionDto adminInfo, CommonLaundry commonLaundry, Long adminId,
-                                      List<Drycleaning> drycleanings, List<Repair> repairs, List<MultipartFile> files) throws Exception {
-        // 검수 저장
+    public void updateInspectionResult(Long adminId, Long ordersId, InspectionDataDto inspectionDataDto,
+                                      List<MultipartFile> files){
 
-        int res = 0;
-
-        if(commonLaundry.getCommonLaundryId() != null) {
-            adminInspectionDao.updateCommon(commonLaundry);
+        // 호출자 try catch로 예외처리하기 RuntimeException e
+        if(inspectionDataDto.getCommonLaundryDto() != null) {
+            adminInspectionDao.updateCommon(inspectionDataDto.getCommonLaundryDto());
         }
-        if(repairs != null) {
-            for (Repair repair : repairs) {
-                adminInspectionDao.updateRepair(repair);
-            }
+        if(inspectionDataDto.getRepairList() != null) {
+           inspectionDataDto.getRepairList().forEach(repair -> adminInspectionDao.updateRepair(repair));
         }
-        if(drycleanings != null) {
-            for (Drycleaning drycleaning : drycleanings) {
-                adminInspectionDao.updateDrycleaning(drycleaning);
-            }
+
+        if(inspectionDataDto.getDrycleaningList() != null) {
+            inspectionDataDto.getDrycleaningList().forEach(drycleaning -> adminInspectionDao.updateDrycleaning(drycleaning));
         }
-        adminInspectionDao.updateInspectionStatus(adminInfo.getOrdersId(), adminId);
-        adminInspectionDao.updateOrderStatus(adminInfo.getOrdersId());
 
-        fileUpload.saveFile(files, adminInfo.getInspectionId(), FileUploadType.INSPECTION);
+        if (inspectionDataDto.getDeleteFileList() != null) {
+            inspectionDataDto.getDeleteFileList().forEach(fileName -> adminInspectionDao.deleteImage(fileName));
+        }
+        adminInspectionDao.updateInspectionStatus(ordersId, adminId);
+        adminInspectionDao.updateOrderStatus(ordersId);
 
-        return res;
+        if (files != null) {
+            fileUpload.saveFile(files, inspectionDataDto.getInspectionId(), FileUploadType.INSPECTION);
+        }
     }
 
+    @Override
+    public Map<String, String> deleteImageFile(List<String> fileNames) {
+
+        Map<String, String> map = new HashMap<>();
+
+        fileNames.forEach(fileName -> {
+            int index=0;
+            // 경로 지정
+            Path imagePath = Paths.get(fileDir+fileName);
+            try {
+                Files.deleteIfExists(imagePath);
+            } catch (IOException e) {
+                map.put("result", "fail");
+                map.put("error"+index, fileName+"="+e.getMessage());
+            }
+        });
+
+        return map;
+    }
 }
