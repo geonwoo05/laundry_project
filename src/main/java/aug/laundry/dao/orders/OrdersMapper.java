@@ -30,7 +30,7 @@ public interface OrdersMapper {
 
     int updateCouponListStatusToUsedCoupon(@Param("couponListId") Long couponListId, @Param("ordersId") Long ordersId);
 
-    int addPoint(@Param("memberId") Long memberId, @Param("pointStack") Long pointStack, @Param("pointStackReason") String pointStackReason);
+    int addPoint(@Param("pointDto") AddPointResponseDto pointDto);
 
     List<OrdersListResponseDto> findOrdersByMemberIdAndCri(@Param("cri") Criteria cri, @Param("memberId") Long memberId);
 
@@ -44,4 +44,6 @@ public interface OrdersMapper {
             @Param("ordersFinalPrice") Long ordersFinalPrice, @Param("paymentinfoId") Long paymentinfoId, @Param("ordersId") Long ordersId);
 
     Optional<PriceResponseDto> findPricesByOrdersId(Long ordersId);
+
+    int updatePointIdByOrdersId(@Param("pointId") Long pointId, @Param("ordersId") Long ordersId);
 }

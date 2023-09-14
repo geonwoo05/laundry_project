@@ -138,7 +138,8 @@ public class PaymentController {
         if(pointPrice != null){
             //음수로 변환
             Long pointValue = -pointPrice;
-            ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
+            Long pointId = ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
+            ordersServiceKdh.updatePointIdByOrdersId(pointId, ordersId);
         }
     }
 
