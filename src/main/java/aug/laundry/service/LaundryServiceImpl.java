@@ -7,12 +7,15 @@ import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.Delivery;
 import aug.laundry.enums.category.MemberShip;
+import aug.laundry.enums.fileUpload.FileUploadType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
@@ -27,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LaundryServiceImpl implements LaundryService{
 
     private final LaundryRepository laundryRepository;
+    private final FileUploadService_ksh fileUploadService;
 
     @Override
     public OrderInfo firstInfo(Long memberId) {
@@ -75,10 +79,10 @@ public class LaundryServiceImpl implements LaundryService{
         OrderInfo orderInfo = laundryRepository.firstInfo(memberId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선
 
         // 빠른배송 or 일반배송
-        expectedPrice += orderInfo.getIsQuick() != null && orderInfo.getIsQuick() != 0 ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice();
-        if (orderInfo.getIsCommon() != 0) expectedPrice += memberShip.apply(Category.BASIC.getPrice());
-        if (orderInfo.getIsDry() != 0) expectedPrice += memberShip.apply(laundryRepository.getDry(memberId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
-        if (orderInfo.getIsRepair() != 0) expectedPrice += memberShip.apply(laundryRepository.getRepair(memberId).stream().map(x -> x.getPrice()).reduce((a,b) -> a + b).get());
+        expectedPrice += orderInfo.isQuick() ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice();
+        if (orderInfo.isCommon()) expectedPrice += memberShip.apply(Category.BASIC.getPrice());
+        if (orderInfo.isDry()) expectedPrice += memberShip.apply(laundryRepository.getDry(memberId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
+        if (orderInfo.isRepair()) expectedPrice += memberShip.apply(laundryRepository.getRepair(memberId).stream().map(x -> x.getPrice()).reduce((a,b) -> a + b).get());
 
 
         orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100);
@@ -157,17 +161,51 @@ public class LaundryServiceImpl implements LaundryService{
         Long check = laundryRepository.check(memberId, ordersDetailId);
         if (check == null || check == 0L) return false;
 
-        laundryRepository.removeRepair(ordersDetailId); // 기존에 존재하던 드라이클리닝 장바구니 삭제
+//        laundryRepository.removeRepair(ordersDetailId); // 기존에 존재하던 수선 장바구니 삭제
 
         if (repairData.isEmpty()){ // 기존에 있던 수선 목록을 다 지우고 빈 장바구니일경우 resultMap에 empty값 추가 후 true 반환
             resultMap.put("empty", true);
-            return true;
+        } else {
+            Long repairId = laundryRepository.insertRepair(ordersDetailId, repairData, files);// 수선 장바구니 추가하고 repairId 반환
+//            Long repairId = laundryRepository.getRepairId(ordersDetailId); // 수선 장바구니 추가된 repairId 가져오기
+//            laundryRepository.insertRepairImages(repairId, files); // repairId에 이미지 추가
+            int saveFile = fileUploadService.saveFile(files, repairId, FileUploadType.REPAIR);
+            System.out.println("saveFile = " + saveFile);
+
+
+        }
+        return true;
+    }
+
+    @Override
+    public void insertCommon(Long ordersDetailId) {
+        laundryRepository.insertCommon(ordersDetailId);
+    }
+
+    @Override
+    public void insertQuickLaundry(Long ordersDetailId) {
+        laundryRepository.insertQuickLaundry(ordersDetailId);
+    }
+
+    @Override
+    public OrderInfo orderInfo(Model model) {
+        OrderInfo orderInfo = new OrderInfo();
+        String quick = (String) model.getAttribute("quick");
+        if (quick.equals("fast")){
+            orderInfo.setQuick(true);
         }
 
-
-        laundryRepository.insertRepair(ordersDetailId, repairData, files);
-
-        return true;
+        List<String> service = (List<String>) model.getAttribute("service");
+        for (String s : service) {
+            if (s.equals("dry")){
+                orderInfo.setDry(true);
+            } else if (s.equals("common")){
+                orderInfo.setCommon(true);
+            } else if (s.equals("repair")){
+                orderInfo.setRepair(true);
+            }
+        }
+        return orderInfo;
     }
 
     @NotNull

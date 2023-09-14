@@ -138,3 +138,22 @@ input[type=submit]{
     text-align: center;
     margin: 0.5rem 0 0 1rem;
 }
+.notice{
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: 2px 2px 5px #dadada;
+}
+.notice span{
+    width:initial;
+    display:initial;
+    height:initial;
+}
+
+.notice.none{
+    display: none;
+}

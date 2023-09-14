@@ -79,13 +79,13 @@ function callback(map){
 
         // 비어있을때 선택해제
         if (map.empty){
-            opener.document.querySelector('#drycleaning').value = 0;
+            opener.document.querySelector('#drycleaning').checked = true;
             opener.document.querySelector('#dryBtn svg').style.fill = ''
             opener.document.querySelector('#dryBtn').classList.remove('select1');
         } else {
             opener.document.querySelector('#dryBtn svg').style.fill = 'var(--main-color)'
             opener.document.querySelector('#dryBtn').classList.add('select1');
-            opener.document.querySelector('#drycleaning').value = 1;
+            opener.document.querySelector('#drycleaning').checked = true;
         }
         window.close();
     } else {

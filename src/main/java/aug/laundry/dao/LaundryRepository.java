@@ -2,16 +2,18 @@ package aug.laundry.dao;
 
 import aug.laundry.domain.CouponList;
 import aug.laundry.domain.Orders;
-import aug.laundry.domain.Repair;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.Pass;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,8 +24,19 @@ public class LaundryRepository {
 
     private final LaundryMapper laundryMapper;
 
+    @Value("${file.dir}")
+    private String directory;
+
+
     public OrderInfo firstInfo(Long memberId) {
-        return laundryMapper.firstInfo(memberId);
+        OrderInfo orderInfo = new OrderInfo();
+
+        OrderInfoDB orderInfoDB = laundryMapper.firstInfo(memberId);
+        if (orderInfoDB.getIsQuick() != null) orderInfo.setQuick(true);
+        if (orderInfoDB.getIsDry() != null) orderInfo.setDry(true);
+        if (orderInfoDB.getIsCommon() != null) orderInfo.setCommon(true);
+        if (orderInfoDB.getIsRepair() != null) orderInfo.setRepair(true);
+        return orderInfo;
     }
 
     public List<MyCoupon> getCoupon(Long memberId) {
@@ -78,10 +91,28 @@ public class LaundryRepository {
         log.info("remove Drycleaning");
         laundryMapper.removeCommon(ordersDetailId); // 생활빨래 장바구니 삭제
         log.info("remove Common");
+        List<Long> repairIdAll = laundryMapper.getRepairId(ordersDetailId);
+        for (Long repairId : repairIdAll) {
+            List<String> repairImageStoreNames = laundryMapper.getRepairImageStoreName(repairId); // 실제 이미지 파일 삭제
+            removeRepairImageFile(repairImageStoreNames);
+            laundryMapper.removeRepairImages(repairId); // RepairImage DB에서 삭제
+        }
+        log.info("remove RepairImage");
         laundryMapper.removeRepair(ordersDetailId); // 수선 장바구니 삭제
         log.info("remove Repair");
+        laundryMapper.removeQuickLaundry(ordersDetailId);
+        log.info("remove QuickLaundry");
         laundryMapper.removeOrdersDetail(ordersDetailId); // 장바구니 삭제
         log.info("remove OrdersDetail");
+    }
+
+    private void removeRepairImageFile(List<String> repairImageStoreNames) {
+        // 실제저장된 Repair Image 파일 삭제
+        for (String storeName : repairImageStoreNames) {
+            String srcFileName = URLDecoder.decode(directory + storeName);
+            File file = new File(srcFileName);
+            boolean delete = file.delete();
+        }
     }
 
     public void createOrdersDetail(Long memberId) {
@@ -117,14 +148,28 @@ public class LaundryRepository {
         return laundryMapper.getRepairImage(repairId);
     }
 
-    public void insertRepair(Long ordersDetailId, Map<String, RepairFormData> repairData, List<MultipartFile> files) {
-        for (String s : repairData.keySet()) {
-            laundryMapper.insertRepair(ordersDetailId, repairData.get(s).getRequest(), repairData.get(s).getTitle());
-            Long repairId = laundryMapper.getRepairId(ordersDetailId);
-            // 가공해서 들고가야한다!
-//            laundryMapper.insertRepairImage(repairId, files);
-            break;
+    public Long insertRepair(Long ordersDetailId, Map<String, RepairFormData> repairData, List<MultipartFile> files) {
+        for (String s : repairData.keySet()) { // s = 1 ~ 시작되는 숫자
+            InsertRepairDto insertRepairDto = new InsertRepairDto();
+            insertRepairDto.setOrdersDetailId(ordersDetailId);
+            insertRepairDto.setRequest(repairData.get(s).getRequest());
+            insertRepairDto.setCategory(repairData.get(s).getTitle());
+            laundryMapper.insertRepair(insertRepairDto);
+            log.info("InsertRepairDto.getRepairId = {}", insertRepairDto.getRepairId());
+            return insertRepairDto.getRepairId();
         }
+        return null;
+    }
 
+    public List<Long> getRepairId(Long ordersDetailId) {
+        return laundryMapper.getRepairId(ordersDetailId);
+    }
+
+    public void insertCommon(Long ordersDetailId) {
+        laundryMapper.insertCommon(ordersDetailId);
+    }
+
+    public void insertQuickLaundry(Long ordersDetailId) {
+        laundryMapper.insertQuickLaundry(ordersDetailId);
     }
 }
