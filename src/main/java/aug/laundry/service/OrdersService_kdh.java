@@ -207,7 +207,7 @@ public class OrdersService_kdh {
             ordersList.stream()
                     .forEach(order -> {
                         order.setStatusEnum(
-                                OrderStatus.valueOf("R"+order.getOrdersStatus()));
+                                OrderStatus.valueOf("L"+order.getOrdersStatus()));
                     });
             return ordersList;
         }

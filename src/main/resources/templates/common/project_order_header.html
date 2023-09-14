@@ -16,10 +16,10 @@
       window.addEventListener('load', function () {
         getList();
 
-        const bthSearch = document.querySelector('#bthSearch');
-        const btnReset = document.querySelector('#btnReset');
+<!--        const bthSearch = document.querySelector('#bthSearch');-->
+<!--        const btnReset = document.querySelector('#btnReset');-->
 
-        bthSearch.addEventListener('click', searchEvent);
+<!--        bthSearch.addEventListener('click', searchEvent);-->
 
         btnReset.addEventListener('click', function () {
           document.querySelector('#resBox').innerHTML = '';
@@ -76,11 +76,13 @@
 <!--              const quick = order.quickLaundryId!=null ? '빠른세탁' : '';-->
               divlist+='<div class="order_box" onclick="location.href=\''+url+'\'">'
                       + '<div class="date_status">'
-                      + '<p class="date_text">'+ 'a' +'</p>'
-                      + '<p class="status">'+ 'a' +'</p>'
+                      + order.ordersDate
                       + '</div>'
-                      + '<div class="image_box">'
-                      + '<p class="status_text">주문번호 : ' + order.ordersId + '</p>'
+                      + '<div class="date_status">'
+                      + order.statusEnumTitle
+                      + '</div>'
+                      + '<div class="date_status">'
+                      + order.statusEnumContent
                       + '</div>'
                       + '</div>';
             });
@@ -93,36 +95,36 @@
       }
 
 
-      function searchEvent() {
-        const orderIdSearch = document.querySelector('#orderIdSearch').value;
-        const orderStatus = document.querySelector('#inspectionStatus').value;
+<!--      function searchEvent() {-->
+<!--        const orderIdSearch = document.querySelector('#orderIdSearch').value;-->
+<!--        const orderStatus = document.querySelector('#inspectionStatus').value;-->
 
-        fetchGet(`/searchOrder/${orderIdSearch}/${orderStatus}`, searchResult);
-      }
+<!--        fetchGet(`/searchOrder/${orderIdSearch}/${orderStatus}`, searchResult);-->
+<!--      }-->
 
-      function searchResult(map) {
-        const resBox = document.querySelector('#resBox');
-        const orderStatus = document.querySelector('#inspectionStatus').value;
-        const orderInfo = map.orderInfo;
-        const res = map.res;
+<!--      function searchResult(map) {-->
+<!--        const resBox = document.querySelector('#resBox');-->
+<!--        const orderStatus = document.querySelector('#inspectionStatus').value;-->
+<!--        const orderInfo = map.orderInfo;-->
+<!--        const res = map.res;-->
 
-        if(res === 'success') {
-          const url = orderStatus == 5 ? '/admin/9/'+orderInfo.ordersId : '/admin/complete/'+orderInfo.ordersId;
-          const quick = orderInfo.quickLaundryId!=null ? '빠른세탁' : '';
-          resBox.innerHTML='<div class="order_box" onclick="location.href=\''+url+'\'">'
-                    + '<div class="date_status">'
-                    + '<p class="date_text">'+orderInfo.ordersDate+'</p>'
-                    + '<p class="status">'+quick+'</p>'
-                    + '</div>'
-                    + '<div class="image_box">'
-                    + '<p class="status_text">주문번호 : ' + orderInfo.ordersId + '</p>'
-                    + '</div>'
-                    + '</div>';
-        } else {
-          resBox.innerHTML= '찾으시는 주문번호가 존재하지 않습니다.';
-        }
-        document.querySelector('#orderIdSearch').value='';
-      }
+<!--        if(res === 'success') {-->
+<!--          const url = orderStatus == 5 ? '/admin/9/'+orderInfo.ordersId : '/admin/complete/'+orderInfo.ordersId;-->
+<!--          const quick = orderInfo.quickLaundryId!=null ? '빠른세탁' : '';-->
+<!--          resBox.innerHTML='<div class="order_box" onclick="location.href=\''+url+'\'">'-->
+<!--                    + '<div class="date_status">'-->
+<!--                    + '<p class="date_text">'+orderInfo.ordersDate+'</p>'-->
+<!--                    + '<p class="status">'+quick+'</p>'-->
+<!--                    + '</div>'-->
+<!--                    + '<div class="image_box">'-->
+<!--                    + '<p class="status_text">주문번호 : ' + orderInfo.ordersId + '</p>'-->
+<!--                    + '</div>'-->
+<!--                    + '</div>';-->
+<!--        } else {-->
+<!--          resBox.innerHTML= '찾으시는 주문번호가 존재하지 않습니다.';-->
+<!--        }-->
+<!--        document.querySelector('#orderIdSearch').value='';-->
+<!--      }-->
     </script>
 
     <div class='select_category'>
@@ -136,17 +138,24 @@
       </ul>
     </div>
 
-    <div class='o_text_box1'>
-      <input type='text' class='searchbox' id='orderIdSearch' placeholder='주문번호 검색'>
-      <button type='button' id="bthSearch">검색</button>
-      <button type='button' id="btnReset">초기화</button>
-      <!--초기화는 전체검색으로 전환-->
-      <!-- JAX로 검색할 것-->
-    </div>
+<!--    <div class='o_text_box1'>-->
+<!--      <input type='text' class='searchbox' id='orderIdSearch' placeholder='주문번호 검색'>-->
+<!--      <button type='button' id="bthSearch">검색</button>-->
+<!--      <button type='button' id="btnReset">초기화</button>-->
+<!--      &lt;!&ndash;초기화는 전체검색으로 전환&ndash;&gt;-->
+<!--      &lt;!&ndash; JAX로 검색할 것&ndash;&gt;-->
+<!--    </div>-->
     <hr>
-    <div class="order_box">
-      aaa
-    </div>
+
+<!--    <div class="order_box">-->
+<!--      <div class="date_status">-->
+<!--        11월 7일(월) 주문-->
+<!--      </div>-->
+<!--      <div class="date_status">-->
+<!--        세탁물이 집에 돌아갈 준비를 하고 있어요.-->
+<!--      </div>-->
+<!--    </div>-->
+
   </aside>
 </body>
 
