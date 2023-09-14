@@ -64,7 +64,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             System.out.println("=============================");
 
             int checkRes = loginDao.checkSocialId(response.get("id"));
-            
+
             // 첫 소셜로그인 -> 회원정보 DB에 저장
             if(checkRes <= 0){
                 System.out.println("naver 유저정보 db에 저장");
@@ -74,7 +74,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 memberDto.setMemberSocial("naver");
                 String formattedPhoneNumber = formatPhoneNumber(response.get("mobile"));
                 memberDto.setMemberPhone(formattedPhoneNumber);
-                
+
                 // DB에 등록
                 int registerUserInfoRes = registerSocialUser(memberDto);
                 int registerSocialNumRes = registerSocialNumber(response.get("id"));
@@ -84,7 +84,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 Long welcomeCoupon2 = 2L;
                 memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
                 memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
-    
+
                 // memberId를 받아 session에 저장하기
                 Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
@@ -108,7 +108,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         String code = request.getParameter("code");
         String state = request.getParameter("state");
         try {
-            String redirectURI = URLEncoder.encode(NAVER_REDIRECT_URL, "UTF-8");
+            String redirectURI = URLEncoder.encode("http://localhost:8080/login/naver_callback", "UTF-8");
             String apiURL;
             apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
             apiURL += "client_id=" + clientId;
@@ -333,7 +333,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             if(isLogin){
                 return member;
             }
-           return null;
+            return null;
         }else{
             return null;
         }

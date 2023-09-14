@@ -18,5 +18,8 @@ function naverLogin(){
     }else{
         window.location.href = "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=1zyMGeTLflNJkh2bmICN&state="+ redirectURL +"redirect_uri=" + naverRedirectUrl;
     }
+}
 
+function formSubmit(){
+    document.querySelector('.login_form').submit();
 }
