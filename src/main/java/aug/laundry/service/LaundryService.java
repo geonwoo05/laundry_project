@@ -3,7 +3,9 @@ package aug.laundry.service;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.MemberShip;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -38,4 +40,9 @@ public interface LaundryService {
 
     boolean insertRepair(Long memberId, Long ordersDetailId, HashMap<String, Boolean> resultMap, Map<String, RepairFormData> repairData, List<MultipartFile> files);
 
+    void insertCommon(Long ordersDetailId);
+
+    void insertQuickLaundry(Long ordersDetailId);
+
+    OrderInfo orderInfo(Model model);
 }

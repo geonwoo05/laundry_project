@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="aug.laundry.dao.LaundryMapper">
 
-    <select id="firstInfo" resultType="aug.laundry.dto.OrderInfo">
+    <select id="firstInfo" resultType="aug.laundry.dto.OrderInfoDB">
         SELECT DISTINCT Q.ORDERS_DETAIL_ID as isQuick, COALESCE(C.ORDERS_DETAIL_ID,0) as isDry, COALESCE(D.ORDERS_DETAIL_ID,0) as isCommon, COALESCE(R.ORDERS_DETAIL_ID, 0) as isRepair
         FROM ORDERS_DETAIL O
         LEFT JOIN QUICK_LAUNDRY Q ON (O.ORDERS_DETAIL_ID = Q.ORDERS_DETAIL_ID)
@@ -98,8 +98,16 @@
         DELETE FROM COMMON_LAUNDRY
         WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
     </delete>
+    <delete id="removeRepairImages">
+        DELETE FROM REPAIR_IMAGE
+        WHERE REPAIR_ID = #{repairId}
+    </delete>
     <delete id="removeRepair">
         DELETE FROM REPAIR
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </delete>
+    <delete id="removeQuickLaundry">
+        DELETE FROM QUICK_LAUNDRY
         WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
     </delete>
     <delete id="removeOrdersDetail">
@@ -133,12 +141,31 @@
     </select>
 
     <insert id="insertRepair">
+        <selectKey keyProperty="repairId" resultType="Long" order="BEFORE">
+            SELECT SEQ_REPAIR_ID.NEXTVAL
+            FROM DUAL
+        </selectKey>
         INSERT INTO REPAIR (REPAIR_ID, ORDERS_DETAIL_ID, REPAIR_REQUEST, REPAIR_CATEGORY)
-        VALUES (SEQ_REPAIR_ID.NEXTVAL, #{ordersDetailId}, #{request}, #{category})
+        VALUES (#{repairId}, #{ordersDetailId}, #{request}, #{category})
     </insert>
     <select id="getRepairId">
-        SELECT REPAIR_ID
+        SELECT DISTINCT REPAIR_ID
         FROM REPAIR
         WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
     </select>
+
+    <select id="getRepairImageStoreName">
+        SELECT REPAIR_IMAGE_STORE_NAME
+        FROM REPAIR_IMAGE
+        WHERE REPAIR_ID = #{repairId}
+    </select>
+
+    <insert id="insertCommon">
+        INSERT INTO COMMON_LAUNDRY ( COMMON_LAUNDRY_ID, ORDERS_DETAIL_ID )
+        VALUES (SEQ_COMMON_LAUNDRY_ID.NEXTVAL, #{ordersDetailId})
+    </insert>
+    <insert id="insertQuickLaundry">
+        INSERT INTO QUICK_LAUNDRY ( QUICK_LAUNDRY_ID, QUICK_LAUNDRY_TAKE_DATE, ORDERS_DETAIL_ID )
+        VALUES (SEQ_QUICK_LAUNDRY_ID.NEXTVAL, SYSDATE, #{ordersDetailId})
+    </insert>
 </mapper>

@@ -18,7 +18,7 @@ import java.util.Map;
 @Mapper
 public interface LaundryMapper {
 
-    OrderInfo firstInfo(Long memberId);
+    OrderInfoDB firstInfo(Long memberId);
 
     Integer isQuick(Long memberId);
     Integer isDry(Long memberId);
@@ -63,9 +63,19 @@ public interface LaundryMapper {
 
     List<String> getRepairImage(Long repairId);
 
-    void insertRepair(@Param("ordersDetailId") Long ordersDetailId, @Param("request") String request, @Param("category") String title);
+    void insertRepair(InsertRepairDto insertRepairDto);
 
-    Long getRepairId(Long ordersDetailId);
+    List<Long> getRepairId(Long ordersDetailId);
 
 
+    void removeRepairImages(Long ordersDetailId);
+
+
+    List<String> getRepairImageStoreName(Long repairId);
+
+    void insertCommon(Long ordersDetailId);
+
+    void insertQuickLaundry(Long ordersDetailId);
+
+    void removeQuickLaundry(Long ordersDetailId);
 }

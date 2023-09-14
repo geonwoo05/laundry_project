@@ -105,7 +105,17 @@ function apiFetchFile(url, params) {
 
 function callback(map){
     return new Promise((resolve, reject) => {
-        console.log(map.result);
+            // 비어있을때 선택해제
+            if (map.empty){
+                opener.document.querySelector('#repair').checked = true;
+                opener.document.querySelector('#repairBtn svg').style.fill = ''
+                opener.document.querySelector('#repairBtn').classList.remove('select1');
+            } else {
+                opener.document.querySelector('#repairBtn svg').style.fill = 'var(--main-color)'
+                opener.document.querySelector('#repairBtn').classList.add('select1');
+                opener.document.querySelector('#repair').checked = true;
+            }
+            window.close();
         resolve();
     })
 

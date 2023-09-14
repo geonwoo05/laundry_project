@@ -12,6 +12,19 @@ window.addEventListener('load', function(){
 
             let addLabel = document.querySelector(`label[for="${event.target.id}"]`);
             addLabel.classList.add('select1');
+
+            let cal = document.querySelectorAll('.subCal_location');
+            if (event.target.id == 'fast'){
+                cal.forEach(nav => {
+                    nav.style = 'display : none'
+                })
+                document.querySelector('.notice').classList.remove('none');
+            } else {
+                cal.forEach(nav => {
+                    nav.style = 'display : inline-block'
+                })
+                document.querySelector('.notice').classList.add('none');
+            }
         }
     });
 
@@ -32,10 +45,10 @@ window.addEventListener('load', function(){
         this.classList.toggle('select1');
         if (this.classList.contains('select1')){
             document.querySelector('#commonBtn svg').style.fill = 'var(--main-color)'
-            document.querySelector('#common_laundry').value = '1';
+            document.querySelector('#common_laundry').checked = true;
         } else {
             document.querySelector('#commonBtn svg').style.fill = ''
-            document.querySelector('#common_laundry').value = '0';
+            document.querySelector('#common_laundry').checked = true;
         }
 
     })
@@ -43,4 +56,28 @@ window.addEventListener('load', function(){
         var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
         window.open('/laundry/repair', '_blank')
     })
+
+
+    // submit 클릭시 예외처리
+    let submitBtn = document.querySelector('#laundryForm');
+    submitBtn.addEventListener('submit', function(event){
+
+
+        let service = document.querySelectorAll('input[name=service]');
+
+        service.forEach(input => {
+            if (input.checked){
+                submitBtn.submit();
+                return;
+            }
+        })
+
+        let error = document.querySelector('.error');
+        error.innerHTML = '종류에서 한가지 이상 선택해주세요.';
+        error.scrollIntoView({ behavior : 'smooth'});
+        event.preventDefault();
+        return;
+
+    })
+
 })
