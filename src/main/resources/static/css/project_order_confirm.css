@@ -63,6 +63,14 @@ span, .location{
     width: 90%;
 }
 
+.content_name{
+    display: initial;
+    text-overflow: initial;
+    overflow: initial;
+    white-space: initial;
+    width: initial;
+}
+
 .coupon{
     width: 100%;
     height: 2.5rem;
@@ -206,7 +214,7 @@ input[type=text]{
     outline: none;
     margin: 0.5rem 1rem;
     font-size: 1rem;
-
+    background-color: white;
 }
 
 .addressDetails{

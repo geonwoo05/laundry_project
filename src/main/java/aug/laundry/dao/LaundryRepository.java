@@ -5,6 +5,7 @@ import aug.laundry.domain.Orders;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.Pass;
+import aug.laundry.enums.repair.RepairCategory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,8 +53,8 @@ public class LaundryRepository {
         return laundryMapper.getDry(memberId).stream().map(x -> Category.valueOf(x)).collect(Collectors.toList());
     }
 
-    public List<Category> getRepair(Long memberId) {
-        return laundryMapper.getRepair(memberId).stream().map(x -> Category.valueOf(x)).collect(Collectors.toList());
+    public List<RepairCategory> getRepair(Long memberId) {
+        return laundryMapper.getRepair(memberId).stream().map(x -> RepairCategory.valueOf(x)).collect(Collectors.toList());
     }
 
     public Pass isPass(Long memberId) {
@@ -61,6 +62,7 @@ public class LaundryRepository {
     }
 
     public boolean validCoupon(Long memberId, Long couponListId) {
+        if (couponListId == null) return false;
         CouponList couponList = laundryMapper.validCoupon(memberId, couponListId);
         if (couponList == null || couponList.getMemberId() != memberId || couponList.getCouponListId() != couponListId || couponList.getCouponListStatus() != 1) {
             return false;

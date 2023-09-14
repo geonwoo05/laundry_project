@@ -4,7 +4,7 @@
 <mapper namespace="aug.laundry.dao.LaundryMapper">
 
     <select id="firstInfo" resultType="aug.laundry.dto.OrderInfoDB">
-        SELECT DISTINCT Q.ORDERS_DETAIL_ID as isQuick, COALESCE(C.ORDERS_DETAIL_ID,0) as isDry, COALESCE(D.ORDERS_DETAIL_ID,0) as isCommon, COALESCE(R.ORDERS_DETAIL_ID, 0) as isRepair
+        SELECT DISTINCT Q.ORDERS_DETAIL_ID as isQuick, D.ORDERS_DETAIL_ID as isDry, C.ORDERS_DETAIL_ID as isCommon, R.ORDERS_DETAIL_ID as isRepair
         FROM ORDERS_DETAIL O
         LEFT JOIN QUICK_LAUNDRY Q ON (O.ORDERS_DETAIL_ID = Q.ORDERS_DETAIL_ID)
         LEFT JOIN COMMON_LAUNDRY C ON (O.ORDERS_DETAIL_ID = C.ORDERS_DETAIL_ID)
@@ -50,6 +50,19 @@
         WHERE MEMBER_ID = #{memberId}
     </select>
 
+    <insert id="insert">
+        INSERT INTO ORDERS (ORDERS_ID, MEMBER_ID, ORDERS_DATE, ORDERS_ADDRESS, ORDERS_ADDRESS_DETAILS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE,
+        <if test="ordersInfo != null">
+            ORDERS_INFO,
+        </if>
+        ORDERS_REQUEST, ORDERS_EXPECTED_PRICE, ORDERS_STATUS)
+        VALUES (SEQ_ORDERS_ID.NEXTVAL, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup}, TO_DATE(#{ordersPickupDate}, 'yyyy-MM-dd HH24:mi') , TO_DATE(#{ordersReturnDate}, 'yyyy-MM-dd HH24:mi'),
+        <if test="ordersInfo != null">
+            #{ordersInfo},
+        </if>
+        #{ordersRequest},#{ordersExpectedPrice}, 2)
+    </insert>
+
     <select id="validCoupon" resultType="aug.laundry.domain.CouponList">
         SELECT DISTINCT COUPON_LIST_ID, MEMBER_ID, COUPON_ID, COUPON_LIST_CREATE_DATE, COUPON_LIST_STATUS, ORDERS_ID, COUPON_END_DATE
         FROM COUPON_LIST
@@ -61,11 +74,6 @@
         SET COUPON_LIST_STATUS = COUPON_LIST_STATUS + 1
         WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_ID = #{couponListId} AND COUPON_LIST_STATUS = 1 AND (COUPON_END_DATE IS NULL OR COUPON_END_DATE > SYSDATE)
     </update>
-
-    <insert id="insert">
-        INSERT INTO ORDERS (ORDERS_ID, MEMBER_ID, ORDERS_DATE, ORDERS_ADDRESS, ORDERS_ADDRESS_DETAILS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE, ORDERS_INFO, ORDERS_REQUEST, ORDERS_EXPECTED_PRICE, ORDERS_STATUS)
-        VALUES (SEQ_ORDERS_ID.NEXTVAL, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup}, TO_DATE(#{ordersPickupDate}, 'yyyy-MM-dd HH24:mi') , TO_DATE(#{ordersReturnDate}, 'yyyy-MM-dd HH24:mi'), #{ordersInfo}, #{ordersRequest},#{ordersExpectedPrice}, 2)
-    </insert>
 
     <select id="getCouponDiscount">
         SELECT COUPON_PRICE

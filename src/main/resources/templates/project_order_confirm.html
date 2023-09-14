@@ -12,9 +12,6 @@
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/project_order_confirm.js"></script>
-    <script src="/js/startCalendar.js"></script>
-    <script src="/js/endCalendar.js"></script>
-    <script src="/js/CalendarHandler.js"></script>
 </head>
 <header th:replace="~{/common/project_header :: header}"></header>
 <body>
@@ -48,24 +45,22 @@
         <th:block th:if="${quickLaundry}">
             <div class="notice">
                 <span>빠른세탁은 주문이 완료되는대로 기사님이 배정됩니다.</span>
-                <input>
             </div>
         </th:block>
         <th:block th:unless="${quickLaundry}">
-            <input type="hidden" name="takeDate" th:value="${dateTime.pickup} + ${dateTime.pickupTime}">
-            <input type="hidden" name="deliveryDate" th:value="${dateTime.returns} + ${dateTime.returnsTime}">
+            <input type="hidden" name="takeDate" th:value="${dateTime.takeDate} + ' ' + ${dateTime.takeDateTime}">
+            <input type="hidden" name="deliveryDate" th:value="${dateTime.deliveryDate} + ' ' + ${dateTime.deliveryDateTime}">
 
             <nav class="subCal_location start">
                 <div class='modal startModal'>
-                    <span class='content subCal_span' th:text="'수거 ' + ${dateTime.pickup} + ' ' + ${dateTime.pickupTime} + '시 부터'" id='pickup'></span>
+                    <span class='content subCal_span' th:text="'수거 ' + ${dateTime.takeDate} + ' ' + ${dateTime.takeDateTime} + '시 부터'" id='pickup'></span>
                 </div>
             </nav>
             <nav class="subCal_location end">
                 <div class='modal endModal'>
-                    <span class='content subCal_span' th:text="'배송 ' + ${dateTime.returns} + ' ' + ${dateTime.returnsTime} +  '시 까지'" id='returns'></span>
+                    <span class='content subCal_span' th:text="'배송 ' + ${dateTime.deliveryDate} + ' ' + ${dateTime.deliveryDateTime} +  '시 까지'" id='returns'></span>
                 </div>
             </nav>
-
         </th:block>
 
         <hr>
@@ -135,12 +130,12 @@
                 <th class='content' th:text="${delivery.title}">배송비</th>
                 <td class='content' th:text="'+ ' + ${#numbers.formatInteger(delivery.price, 3, 'COMMA') + '원'}"></td>
             </tr>
-            <tr th:if="${infoPrice.isCommon != 0}">
+            <tr th:if="${infoPrice.isCommon}">
                 <th class='content' th:text="${common.title} + ' 기준'"></th>
                 <td class='content' th:text="'+ ' + ${#numbers.formatInteger(common.price, 3, 'COMMA')} + '원'"></td>
             </tr>
         </table>
-        <table class='additional dry' th:if="${infoPrice.isDry != 0}">
+        <table class='additional dry' th:if="${infoPrice.isDry}">
             <tr>
                 <th class='content'>드라이클리닝</th>
 <!--                <td class='content' th:text="'+ ' + ${#numbers.formatInteger(dryTotalPrice, 3, 'COMMA')} + '원'"></td>-->
@@ -156,7 +151,7 @@
                 </table>
             </tr>
         </table>
-        <table class='additional repair' th:if="${infoPrice.isRepair != 0}">
+        <table class='additional repair' th:if="${infoPrice.isRepair}">
             <tr>
                 <th class='content'>수선</th>
 <!--                <td class='content' th:text="'+ ' + ${#numbers.formatInteger(repairTotalPrice, 3, 'COMMA')} + '원'"></td>-->
@@ -175,7 +170,7 @@
 
         <h4>예상 할인 금액</h4>
         <table>
-            <tr th:if="${memberShip == 1}">
+            <tr th:if="${memberShip}">
                 <th class='content'>패스</th>
                 <td class='content'  th:text="'- ' + ${#numbers.formatInteger(discount, 3, 'COMMA')} + '원'"></td>
             </tr>
