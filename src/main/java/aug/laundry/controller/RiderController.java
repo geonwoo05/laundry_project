@@ -40,10 +40,9 @@ public class RiderController {
         HttpSession session = request.getSession();
         Long quickRiderId = (Long)session.getAttribute("memberId");
 
-
-//        List<OrdersEnum> orderList = riderService.OrderListEnum("대기중", quickRiderId);
-
         Rider riderInfo = riderService.riderInfo(quickRiderId);
+//        List<OrdersEnum> orderList = riderService.OrderListEnum("대기중", quickRiderId, riderInfo.getWorkingArea());
+
         List<Map<String, Integer>> cnt = riderService.orderListCnt(quickRiderId, riderInfo.getWorkingArea());
 
         System.out.println(quickRiderId);
@@ -100,8 +99,8 @@ public class RiderController {
         orders.setOrdersId(37L);
         orders.setOrdersDate("2023/08/31");
         orders.setOrdersStatus(2);
-        orders.setOrdersAddress("서울 서대문구 남가좌동 거북골로 84");
-//        orders.setOrdersAddress("서울시 서대문구 홍은동 454");
+//        orders.setOrdersAddress("서울 서대문구 남가좌동 거북골로 84");
+        orders.setOrdersAddress("서울시 서대문구 홍은동 454");
 //        orders.setOrdersAddress("서울시 강북구 번동 657");
         orders.setOrdersAddressDetails("108동 505호");
 

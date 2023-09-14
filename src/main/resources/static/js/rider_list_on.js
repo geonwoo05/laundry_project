@@ -249,7 +249,7 @@ function getList(){
 
         if(info.length != 0){
             info.forEach((list, index)=>{
-
+            var page = '';
             var endX;
             var endY;
             var dis;
@@ -310,105 +310,49 @@ function getList(){
                                                      .toFixed(1) + "km";
                                         console.log(tDistance);
 
-                                        page += `
-                                                                        <a href='/ride/routine/${list.ordersId}'>
-                                                                          <li>
-                                                                              <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
-                                                                              <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
-                                                                              <div class='space'>
-                                                                                  <span class='delivery_time'>${list.ordersDate}</span>
-                                                                                  <span class='delivery_dis'>${tDistance}</span>
-                                                                              </div>
-                                                                          </li>
-                                                                        </a>`;
-
                                         dis = (resultData[0].properties.totalDistance / 1000).toFixed(1);
 
+//                                        if(5 > dis){
+
+//                                        page += `
+//                                            <a href='/ride/orders/${list.ordersId}'>
+//                                              <li>
+//                                                  <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
+//                                                  <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
+//                                                  <div class='space'>
+//                                                      <span class='delivery_time'>${list.ordersDate}</span>
+//                                                      <span class='delivery_dis'>${tDistance}</span>
+//                                                  </div>
+//                                              </li>
+//                                            </a>`;
+
+//}
                                         },
                                         error: function(xhr, status, error) {
                                             console.error(error);
                                         }
                                 });
-                                if (index === info.length - 1) {
-                                                    $('.delivery_list ul').prepend(page);
-                                                }
-                            });
-                            console.log("dis : " + dis);
+                                if(10 >= dis){
 
-//                                page += `
-//                                <a href='/ride/routine/${list.ordersId}'>
-//                                  <li>
-//                                      <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
-//                                      <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
-//                                      <div class='space'>
-//                                          <span class='delivery_time'>${list.ordersDate}</span>
-//                                          <span class='delivery_dis'>${tDistance}</span>
-//                                      </div>
-//                                  </li>
-//                                </a>`;
+                                 page += `
+                                                                            <a href='/ride/orders/${list.ordersId}'>
+                                                                              <li>
+                                                                                  <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
+                                                                                  <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
+                                                                                  <div class='space'>
+                                                                                      <span class='delivery_time'>${list.ordersDate}</span>
+                                                                                      <span class='delivery_dis'>${tDistance}</span>
+                                                                                  </div>
+                                                                              </li>
+                                                                            </a>`;
+                                $('.delivery_list ul').prepend(page);
+                                }
+                            });
             },
             error: function(xhr, status, error) {
                 console.error(error);
             }
         });
-
-//        navigator.geolocation.getCurrentPosition((position) => {
-//
-//                    console.log(position.coords.latitude);
-//                    console.log(position.coords.longitude);
-//                    var searchOption = "12";
-//
-//                    var trafficInfochk = "N";
-//
-//                    var headers = {};
-//                    headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
-//
-//                    $.ajax({
-//                    type : "POST",
-//                    headers : headers,
-//                    url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1",
-//                    async : false,
-//                    data : {
-//                         "startX" : position.coords.longitude,
-//                         "startY" : position.coords.latitude,
-//                         "endX" : endX,
-//                         "endY" : endY,
-//                         "reqCoordType" : "WGS84GEO",
-//                         "resCoordType" : "EPSG3857",
-//                         "searchOption" : searchOption,
-//                         "trafficInfo" : trafficInfochk
-//                    },
-//                    success : function(response) {
-//
-//                     var resultData = response.features;
-//
-//                     tDistance = "거리 : " + (resultData[0].properties.totalDistance / 1000)
-//                                 .toFixed(1) + "km";
-//                    console.log(tDistance);
-//
-//
-//                    dis = (resultData[0].properties.totalDistance / 1000).toFixed(1);
-//
-//                    },
-//                    error: function(xhr, status, error) {
-//                        console.error(error);
-//                    }
-//            });
-//        });
-//        console.log("dis : " + dis);
-//
-//            page += `
-//            <a href='/ride/routine/${list.ordersId}'>
-//              <li>
-//                  <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
-//                  <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
-//                  <div class='space'>
-//                      <span class='delivery_time'>${list.ordersDate}</span>
-//                      <span class='delivery_dis'>100km</span>
-//                  </div>
-//              </li>
-//            </a>`;
-
         });
         }else{
             page =`<li class='drive_none'><span>현재 배달 요청이 없습니다!</span></li>`;
