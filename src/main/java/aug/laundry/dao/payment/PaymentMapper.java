@@ -16,11 +16,11 @@ public interface PaymentMapper {
 
     CouponCheckDto findCouponByCouponListId(Long couponListId);
 
-    void savePaymentInfo(Paymentinfo paymentinfo);
+    void savePaymentInfo(@Param("paymentinfo") Paymentinfo paymentinfo, @Param("constPaymentStatus") int constPaymentStatus);
 
     Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId);
 
-    int updateRefundInfoBypaymentinfoId(
+    int updateRefundInfoBypaymentinfoId(@Param("constPaymentStatus") int constPaymentStatus,
             @Param("paymentinfoId") Long paymentinfoId, @Param("errorMessage") String errorMessage);
 
     Optional<Paymentinfo> findPaymentinfoByImpUid(String impUid);

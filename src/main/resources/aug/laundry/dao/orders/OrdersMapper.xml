@@ -60,21 +60,21 @@
 
     <update id="updateOrdersStatusToCompletePayment">
         UPDATE ORDERS
-        SET ORDERS_STATUS = 8
+        SET ORDERS_STATUS = #{constPaySuccess}
         WHERE ORDERS_ID = #{ordersId}
     </update>
 
     <update id="updatePriceNStatusNPaymentinfo">
         UPDATE ORDERS
         SET ORDERS_FINAL_PRICE = #{ordersFinalPrice},
-        ORDERS_STATUS = 8,
+        ORDERS_STATUS = #{constPaySuccess},
         PAYMENTINFO_ID = #{paymentinfoId}
         WHERE ORDERS_ID = #{ordersId}
     </update>
 
     <update id="updateCouponListStatusToUsedCoupon">
         UPDATE COUPON_LIST
-        SET COUPON_LIST_STATUS = 3,
+        SET COUPON_LIST_STATUS = #{constCouponListStatus},
             ORDERS_ID = #{ordersId}
         WHERE COUPON_LIST_ID = (SELECT A.COUPON_LIST_ID
         FROM COUPON_LIST A
@@ -129,7 +129,7 @@
     <select id="getTotalCount" resultType="int">
         SELECT COUNT(*)
         FROM ORDERS
-        WHERE MEMBER_ID = #{memberId}AND ORDERS_STATUS NOT IN(1)
+        WHERE MEMBER_ID = #{memberId} AND ORDERS_STATUS NOT IN(#{constOrderStatus})
     </select>
 
     <update id="updatePaymentinfoIdByOrdersId">
@@ -155,4 +155,13 @@
         SET POINT_ID = #{pointId}
         WHERE ORDERS_ID = #{ordersId}
     </update>
+
+    <update id="updateCouponStatusNOrdersId">
+        UPDATE COUPON_LIST
+        SET COUPON_LIST_STATUS = #{couponListStatus},
+            ORDERS_ID = #{ordersId}
+        WHERE COUPON_LIST_ID = #{couponListId}
+    </update>
+
+
 </mapper>

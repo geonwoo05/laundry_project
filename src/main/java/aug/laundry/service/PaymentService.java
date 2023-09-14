@@ -1,5 +1,6 @@
 package aug.laundry.service;
 
+import aug.laundry.commom.ConstPaymentStatus;
 import aug.laundry.dao.orders.OrdersDao;
 import aug.laundry.dao.payment.PaymentDao;
 import aug.laundry.dao.point.PointDao;
@@ -105,8 +106,7 @@ public class PaymentService {
     public Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId){
         Paymentinfo paymentinfo = paymentDao.findPaymentinfoByPaymentinfoId(paymentinfoId);
         if(paymentinfo != null){
-            //1:결제완료 2:환불. 숫자의미가 바뀌었을수있으므로 erd확인
-            if(paymentinfo.getPaymentStatus() == 2){
+            if(paymentinfo.getPaymentStatus() == ConstPaymentStatus.REFUND_SUCCESS){
                 throw new IllegalStateException("이미 환불된 결제정보입니다.");
             }
         }

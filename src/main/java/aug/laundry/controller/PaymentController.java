@@ -55,7 +55,6 @@ public class PaymentController {
             return "redirect:/orders/" + ordersId +"/payment";
         }
 
-
         Optional<Paymentinfo> paymentinfoFromDB = paymentDao.findPaymentinfoByImpUid(payment.getImp_uid());
 
         //모바일 리다이렉트로직이랑 웹훅에 의해 결제정보 2건저장 방지로직
@@ -131,8 +130,10 @@ public class PaymentController {
         ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
 
         if(couponListId != null){
-            log.info("쿠폰상태변경");
-            ordersServiceKdh.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
+
+//            ordersServiceKdh.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
+            //            log.info("쿠폰리스트 상태 변경");
+            ordersServiceKdh.updateCouponStatusNOrdersId(ordersId, couponListId);
         }
 
         if(pointPrice != null){
