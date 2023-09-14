@@ -152,6 +152,7 @@ input[type=submit]{
     width:initial;
     display:initial;
     height:initial;
+    color: var(--gray);
 }
 
 .notice.none{

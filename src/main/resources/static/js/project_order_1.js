@@ -65,12 +65,8 @@ window.addEventListener('load', function(){
 
         let service = document.querySelectorAll('input[name=service]');
 
-        service.forEach(input => {
-            if (input.checked){
-                submitBtn.submit();
-                return;
-            }
-        })
+        checkService(service, submitBtn);
+
 
         let error = document.querySelector('.error');
         error.innerHTML = '종류에서 한가지 이상 선택해주세요.';
@@ -81,3 +77,16 @@ window.addEventListener('load', function(){
     })
 
 })
+
+function checkService(service, submitBtn){
+    return new Promise( (resolve, reject) => {
+        for (let i=0;i<service.length;i++){
+           if (service[i].checked){
+                submitBtn.submit();
+                resolve();
+           }
+        }
+
+        resolve();
+    })
+}

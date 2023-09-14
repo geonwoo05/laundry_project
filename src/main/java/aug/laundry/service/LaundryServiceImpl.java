@@ -8,6 +8,7 @@ import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.Delivery;
 import aug.laundry.enums.category.MemberShip;
 import aug.laundry.enums.fileUpload.FileUploadType;
+import aug.laundry.enums.repair.RepairCategory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,7 @@ public class LaundryServiceImpl implements LaundryService{
     }
 
     @Override
-    public List<Category> getRepair(Long memberId) {
+    public List<RepairCategory> getRepair(Long memberId) {
         return laundryRepository.getRepair(memberId);
     }
 
@@ -65,6 +66,7 @@ public class LaundryServiceImpl implements LaundryService{
     @Transactional
     @Override
     public void update(Long memberId, Long couponListId, OrderPost orderPost) {
+
         boolean validCoupon = laundryRepository.validCoupon(memberId, couponListId); // 쿠폰 유효성 검사
         Long expectedPrice = 0L;
         if (validCoupon) {
@@ -74,10 +76,9 @@ public class LaundryServiceImpl implements LaundryService{
         System.out.println("orderPost = " + orderPost);
         Orders orders = getOrders(memberId, orderPost);
 
-
         MemberShip memberShip = new MemberShip(laundryRepository.isPass(memberId));
         OrderInfo orderInfo = laundryRepository.firstInfo(memberId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선
-
+        System.out.println("orderInfo = " + orderInfo);
         // 빠른배송 or 일반배송
         expectedPrice += orderInfo.isQuick() ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice();
         if (orderInfo.isCommon()) expectedPrice += memberShip.apply(Category.BASIC.getPrice());
@@ -191,17 +192,18 @@ public class LaundryServiceImpl implements LaundryService{
     public OrderInfo orderInfo(Model model) {
         OrderInfo orderInfo = new OrderInfo();
         String quick = (String) model.getAttribute("quick");
-        if (quick.equals("fast")){
+        if ("fast".equals(quick)){
             orderInfo.setQuick(true);
         }
 
         List<String> service = (List<String>) model.getAttribute("service");
+        if (service == null) return orderInfo;
         for (String s : service) {
-            if (s.equals("dry")){
+            if ("dry".equals(s)){
                 orderInfo.setDry(true);
-            } else if (s.equals("common")){
+            } else if ("common".equals(s)){
                 orderInfo.setCommon(true);
-            } else if (s.equals("repair")){
+            } else if ("repair".equals(s)){
                 orderInfo.setRepair(true);
             }
         }

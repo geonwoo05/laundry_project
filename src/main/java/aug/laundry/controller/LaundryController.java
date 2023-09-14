@@ -4,6 +4,7 @@ import aug.laundry.commom.SessionConstant;
 import aug.laundry.domain.CouponList;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.*;
+import aug.laundry.enums.repair.RepairCategory;
 import aug.laundry.service.LaundryService;
 import aug.laundry.validator.OrderPostValidator;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,11 @@ public class LaundryController {
         MemberShip memberShip = laundryService.isPass(memberId); // 패스 여부
 
         OrderInfo info = laundryService.orderInfo(model);
+        if (checkInfo(info)){
+            return "redirect:/laundry";
+        }
 //        laundryService.firstInfo(memberId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
-
+        System.out.println("info = " + info);
         Long totalPrice = 0L;
         Long discount = 0L;
 
@@ -51,7 +55,7 @@ public class LaundryController {
 
         List<MyCoupon> coupon = laundryService.getCoupon(memberId); // 내가 보유한 쿠폰
         Address address = laundryService.getAddress(memberId); // 주소 가져오기
-        DateForm dateForm = new DateForm(); // 날짜 가져오기
+        FormatDate dateForm = (FormatDate) model.getAttribute("dateTime");
 
         if (info.isCommon()) {
             model.addAttribute("common", Category.BASIC);
@@ -67,7 +71,7 @@ public class LaundryController {
             discount += dryTotalPrice - memberShip.apply(dryTotalPrice); // 할인금액
         }
         if (info.isRepair()) {
-            List<Category> getRepair = laundryService.getRepair(memberId);
+            List<RepairCategory> getRepair = laundryService.getRepair(memberId);
             model.addAttribute("repair", getRepair);
             Long repairTotalPrice = getRepair.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
             model.addAttribute("repairTotalPrice", repairTotalPrice);
@@ -76,8 +80,8 @@ public class LaundryController {
         }
 
 
-        model.addAttribute("delivery", info.isQuick() ? Delivery.COMMON_DELIVERY : Delivery.QUICK_DELIVERY);
-        model.addAttribute("memberShip", memberShip.getCheck() == Pass.PASS ? 1 : null);
+        model.addAttribute("delivery", info.isQuick() ? Delivery.QUICK_DELIVERY : Delivery.COMMON_DELIVERY);
+        model.addAttribute("memberShip", memberShip.getCheck() == Pass.PASS);
         model.addAttribute("totalPrice", Math.round(totalPrice / 100) * 100);
         model.addAttribute("discount", discount);
         model.addAttribute("quickLaundry", info.isQuick());
@@ -88,6 +92,11 @@ public class LaundryController {
         model.addAttribute("coupon", coupon);
         model.addAttribute("couponCount", coupon.size());
         return "project_order_confirm";
+    }
+
+    private boolean checkInfo(OrderInfo info) {
+        // 전부 false 라면 true 반환
+        return !info.isQuick() && !info.isDry() && !info.isCommon() && !info.isRepair();
     }
 
     @PostMapping("/order")

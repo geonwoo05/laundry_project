@@ -67,15 +67,21 @@
             opener.document.querySelector('.couponName').textContent = '선택안함';
             opener.document.querySelector('input[name=coupon]').value = '';
             opener.document.querySelector('.couponPrice').innerHTML = '- 0원';
+            var inputTotal = opener.document.querySelector('#total');
+            var tdTotal = opener.document.querySelector('#totalTd');
+            tdTotal.value = Number(inputTotal.value).toLocaleString() + '원';
         } else {
             opener.document.querySelector('.couponName').textContent = radio.parentElement.parentElement.children.item(1).textContent;
             opener.document.querySelector('input[name=coupon]').value = radio.value;
             opener.document.querySelector('.couponPrice').innerHTML = '- ' + Number(radio.parentElement.children.item(1).textContent).toLocaleString() + '원';
-            var total = opener.document.querySelector('#total');
-            total.value = Number(total.value) - Number(radio.parentElement.children.item(1).textContent);
-            opener.document.querySelector('#totalTd').innerHTML = Number(total.value).toLocaleString() + '원';
 
+
+            var inputTotal = opener.document.querySelector('#total');
+            var tdTotal = opener.document.querySelector('#totalTd');
+
+            tdTotal.innerHTML = (Number(inputTotal.value) - Number(radio.parentElement.children.item(1).textContent)).toLocaleString() + '원';
         }
+
         window.close();
     })
 

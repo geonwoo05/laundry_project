@@ -3,6 +3,7 @@ package aug.laundry.service;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.MemberShip;
+import aug.laundry.enums.repair.RepairCategory;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,7 +23,7 @@ public interface LaundryService {
 
     List<Category> getDry(Long memberId);
 
-    List<Category> getRepair(Long memberId);
+    List<RepairCategory> getRepair(Long memberId);
 
     MemberShip isPass(Long memberId);
 
