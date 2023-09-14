@@ -26,10 +26,13 @@ public class SubscribeController {
     @GetMapping(value={"/subscription/{memberId}", "/subscription"})
     public String subscribeInfo(@PathVariable(required = false) Long memberId, Model model) {
 
+        log.info("memberId={}", memberId);
+
         SubscriptionPayDto data = null;
         if(memberId != null) {
             data = subscribeService_ksh.getSubscribeInfo(memberId);
         }
+        log.info("data={}",data);
         model.addAttribute("data", data);
         return "project_subscribe";
     }

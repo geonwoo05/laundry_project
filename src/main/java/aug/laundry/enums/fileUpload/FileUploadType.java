@@ -1,9 +1,9 @@
 package aug.laundry.enums.fileUpload;
 
 public enum FileUploadType {
-    DELIVERY("DELIVERY", "deliveryImages"),
-    REPAIR("REPAIR", "repairImages"),
-    INSPECTION("INSPECTION", "inspectionImages");
+    DELIVERY("DELIVERY", "delivery_images"),
+    REPAIR("REPAIR", "repair_images"),
+    INSPECTION("INSPECTION", "inspection_images");
 
     private final String tableType;
     private final String folderName;

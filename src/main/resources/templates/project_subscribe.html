@@ -190,7 +190,10 @@
         const expire = '[[${data != null ? data.subscriptionExpireDate : null}]]';
         /*]]>*/
         function firstPass() {
-            if(memberId !== null && expire !== '') {
+            console.log("memberId=",memberId);
+            console.log("expire=",expire);
+
+            if(memberId !== null && expire !== 'null') {
                 alert("신규 회원 대상 이벤트입니다.");
                 return;
             } else if(memberId !== null) {
@@ -201,6 +204,8 @@
         }
 
         function secondPass() {
+            console.log("memberId=",memberId);
+            console.log("expire=",expire);
             const expireDate = new Date(expire);
             const nowDate = new Date();
 
