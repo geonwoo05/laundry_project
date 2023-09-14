@@ -41,7 +41,7 @@ public class LaundryController {
     @GetMapping("/order")
     public String order(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
         MemberShip memberShip = laundryService.isPass(memberId); // 패스 여부
-
+        Long ordersDetailId = (Long) model.getAttribute("ordersDetailId");
         OrderInfo info = laundryService.orderInfo(model);
         if (checkInfo(info)){
             return "redirect:/laundry";
@@ -63,7 +63,7 @@ public class LaundryController {
             discount += Category.BASIC.getPrice() - memberShip.apply(Category.BASIC.getPrice()); // 할인금액
         }
         if (info.isDry()) {
-            List<Category> getDry = laundryService.getDry(memberId);
+            List<Category> getDry = laundryService.getDry(memberId, ordersDetailId);
             model.addAttribute("dry", getDry);
             Long dryTotalPrice = getDry.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
             model.addAttribute("dryTotalPrice", dryTotalPrice);
@@ -71,7 +71,7 @@ public class LaundryController {
             discount += dryTotalPrice - memberShip.apply(dryTotalPrice); // 할인금액
         }
         if (info.isRepair()) {
-            List<RepairCategory> getRepair = laundryService.getRepair(memberId);
+            List<RepairCategory> getRepair = laundryService.getRepair(memberId, ordersDetailId);
             model.addAttribute("repair", getRepair);
             Long repairTotalPrice = getRepair.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
             model.addAttribute("repairTotalPrice", repairTotalPrice);
@@ -100,7 +100,9 @@ public class LaundryController {
     }
 
     @PostMapping("/order")
-    public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId) {
+    public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model,
+                            @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
+                            @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId) {
 
         System.out.println("orderPost = " + orderPost);
         if (bindingResult.hasErrors()) {
@@ -108,7 +110,7 @@ public class LaundryController {
             System.out.println(bindingResult.getAllErrors());
             return "redirect:/laundry/order";
         }
-        laundryService.update(memberId, orderPost.getCoupon(), orderPost); // 쿠폰 유효성 검사
+        laundryService.update(memberId, orderPost.getCoupon(), orderPost, ordersDetailId); // 쿠폰 유효성 검사
 
 
         return "redirect:/";

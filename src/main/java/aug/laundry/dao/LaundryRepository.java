@@ -29,10 +29,10 @@ public class LaundryRepository {
     private String directory;
 
 
-    public OrderInfo firstInfo(Long memberId) {
+    public OrderInfo firstInfo(Long memberId, Long ordersDetailId) {
         OrderInfo orderInfo = new OrderInfo();
 
-        OrderInfoDB orderInfoDB = laundryMapper.firstInfo(memberId);
+        OrderInfoDB orderInfoDB = laundryMapper.firstInfo(memberId, ordersDetailId);
         if (orderInfoDB.getIsQuick() != null) orderInfo.setQuick(true);
         if (orderInfoDB.getIsDry() != null) orderInfo.setDry(true);
         if (orderInfoDB.getIsCommon() != null) orderInfo.setCommon(true);
@@ -49,12 +49,12 @@ public class LaundryRepository {
         return laundryMapper.getAddress(memberId);
     }
 
-    public List<Category> getDry(Long memberId) {
-        return laundryMapper.getDry(memberId).stream().map(x -> Category.valueOf(x)).collect(Collectors.toList());
+    public List<Category> getDry(Long memberId, Long ordersDetailId) {
+        return laundryMapper.getDry(memberId, ordersDetailId).stream().map(x -> Category.valueOf(x)).collect(Collectors.toList());
     }
 
-    public List<RepairCategory> getRepair(Long memberId) {
-        return laundryMapper.getRepair(memberId).stream().map(x -> RepairCategory.valueOf(x)).collect(Collectors.toList());
+    public List<RepairCategory> getRepair(Long memberId, Long ordersDetailId) {
+        return laundryMapper.getRepair(memberId, ordersDetailId).stream().map(x -> RepairCategory.valueOf(x)).collect(Collectors.toList());
     }
 
     public Pass isPass(Long memberId) {

@@ -1,24 +1,17 @@
 package aug.laundry.dao;
 
-import aug.laundry.controller.LaundryController;
 import aug.laundry.domain.CouponList;
 import aug.laundry.domain.Orders;
 import aug.laundry.dto.*;
-import aug.laundry.enums.category.Category;
-import aug.laundry.service.LaundryServiceImpl;
-import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface LaundryMapper {
 
-    OrderInfoDB firstInfo(Long memberId);
+    OrderInfoDB firstInfo(@Param("memberId") Long memberId, @Param("ordersDetailId") Long ordersDetailId);
 
     Integer isQuick(Long memberId);
     Integer isDry(Long memberId);
@@ -29,9 +22,9 @@ public interface LaundryMapper {
 
     Address getAddress(Long memberId);
 
-    List<String> getDry(Long memberId);
+    List<String> getDry(@Param("memberId") Long memberId, @Param("ordersDetailId") Long ordersDetailId);
 
-    List<String> getRepair(Long memberId);
+    List<String> getRepair(@Param("memberId") Long memberId, @Param("ordersDetailId") Long ordersDetailId);
 
     Integer isPass(Long memberId);
 
