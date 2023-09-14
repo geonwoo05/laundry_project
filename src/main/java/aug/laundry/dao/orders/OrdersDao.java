@@ -1,5 +1,7 @@
 package aug.laundry.dao.orders;
 
+import aug.laundry.commom.ConstCouponListStatus;
+import aug.laundry.commom.ConstOrderStatus;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
@@ -70,11 +72,11 @@ public class OrdersDao {
     }
 
     public int updateOrdersStatusToCompletePayment(Long ordersId){
-        return ordersMapper.updateOrdersStatusToCompletePayment(ordersId);
+        return ordersMapper.updateOrdersStatusToCompletePayment(ordersId, ConstOrderStatus.PAY_SUCCESS);
     }
 
     public int updateCouponListStatusToUsedCoupon(Long couponListId, Long ordersId){
-        return ordersMapper.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
+        return ordersMapper.updateCouponListStatusToUsedCoupon(couponListId, ordersId, ConstCouponListStatus.USED);
     }
 
     public int addPoint(AddPointResponseDto pointDto){
@@ -91,7 +93,7 @@ public class OrdersDao {
 
 
     public int getTotalCount(Long memberId) {
-        return ordersMapper.getTotalCount(memberId);
+        return ordersMapper.getTotalCount(memberId, ConstOrderStatus.ORDERS_CANCEL);
     }
 
     public int updatePaymentinfoIdByOrdersId(Long paymentinfoId, Long ordersId){
@@ -99,17 +101,25 @@ public class OrdersDao {
     }
 
     public int updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId){
-        return ordersMapper.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId);
+        return ordersMapper.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId,
+                ordersId, ConstOrderStatus.PAY_SUCCESS);
     }
 
     public PriceResponseDto findPricesByOrdersId(Long ordersId){
-        return ordersMapper.findPricesByOrdersId(ordersId)
+        PriceResponseDto priceResponseDto = ordersMapper.findPricesByOrdersId(ordersId)
                 .orElseThrow(() -> new IllegalArgumentException("결제금액, 포인트, 쿠폰가격을 찾을 수 없습니다."));
+        log.info("price=============={}", priceResponseDto);
+        return priceResponseDto;
     }
 
     public int updatePointIdByOrdersId(Long pointId, Long ordersId){
         return ordersMapper.updatePointIdByOrdersId(pointId, ordersId);
     }
+
+    public int updateCouponStatusNOrdersId(Long ordersId, Long couponListId){
+        return ordersMapper.updateCouponStatusNOrdersId(ConstCouponListStatus.USED, ordersId, couponListId);
+    }
+
 
 
 

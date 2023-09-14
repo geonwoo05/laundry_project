@@ -1,5 +1,6 @@
 package aug.laundry.controller;
 
+import aug.laundry.commom.ConstOrderStatus;
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.member.MemberMapper;
 import aug.laundry.dto.*;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static aug.laundry.commom.ConstOrderStatus.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -52,9 +55,11 @@ public class OrdersController_kdh {
 
         List<OrdersListResponseDto> list = null;
         log.info("orderStatus ========================={}", orderStatus);
+        //project_order_list.html의 input태그 id=inspectionStatus 인 값이 1
         if(orderStatus == 1){
             list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, memberId);
             log.info("orderStatus=1, list={}", list);
+            //project_order_list.html의 input태그 id=inspectionStatus 인 값이 2
         } else if(orderStatus == 2){
             list = ordersServiceKdh.findOrdersFinishedByMemberIdAndCri(cri, memberId);
             log.info("orderStatus=2, list={}", list);
@@ -136,8 +141,10 @@ public class OrdersController_kdh {
         model.addAttribute("delivery", delivery);
 
         Integer ordersStatus = ordersResponseDto.getOrdersStatus();
-        //8:결제완료 9:세탁중: 10:배송전 11:배송완료
-        if(ordersStatus==8 || ordersStatus==9 || ordersStatus==10 || ordersStatus==11){
+
+        if(ordersStatus==PAY_SUCCESS || ordersStatus==WASH_ING ||
+                ordersStatus==BEFORE_TAKE_WHEN_WASH_SUCCESS || ordersStatus==BEFORE_TAKE_WHEN_WASH_SUCCESS ||
+                ordersStatus==TAKE_SUCCESS_AFTER_WASH_SUCCESS || ordersStatus==DELIVERY_SUCCESS){
             PriceResponseDto price = ordersServiceKdh.findPricesByOrdersId(ordersId);
             log.info("price={}",price);
             model.addAttribute("price", price);

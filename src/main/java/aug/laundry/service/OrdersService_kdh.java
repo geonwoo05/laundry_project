@@ -243,6 +243,14 @@ public class OrdersService_kdh {
             throw new IllegalArgumentException("주문테이블의 pointId가 업데이트 되지 않았습니다.");
         }
     }
+    
+    @Transactional
+    public void updateCouponStatusNOrdersId(Long ordersId, Long couponListId){
+        int result = ordersDao.updateCouponStatusNOrdersId(ordersId, couponListId);
+        if(result==0) {
+            throw new IllegalArgumentException("CouponList테이블의 쿠폰상태가 업데이트 되지 않았습니다.");
+        }
+    }
 
 
 }

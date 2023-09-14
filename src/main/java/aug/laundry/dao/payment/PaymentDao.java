@@ -1,5 +1,6 @@
 package aug.laundry.dao.payment;
 
+import aug.laundry.commom.ConstPaymentStatus;
 import aug.laundry.dao.orders.OrdersMapper;
 import aug.laundry.domain.Drycleaning;
 import aug.laundry.domain.Paymentinfo;
@@ -29,7 +30,7 @@ public class PaymentDao {
     }
 
     public void savePaymentInfo(Paymentinfo paymentinfo) {
-            paymentMapper.savePaymentInfo(paymentinfo);
+            paymentMapper.savePaymentInfo(paymentinfo, ConstPaymentStatus.PAY_SUCCESS);
     }
 
     public Paymentinfo findPaymentinfoByPaymentinfoId(Long paymentinfoId){
@@ -39,7 +40,7 @@ public class PaymentDao {
     }
 
     public int updateRefundInfoBypaymentinfoId(Long paymentinfoId, String errorMessage){
-        return paymentMapper.updateRefundInfoBypaymentinfoId(paymentinfoId, errorMessage);
+        return paymentMapper.updateRefundInfoBypaymentinfoId(ConstPaymentStatus.REFUND_SUCCESS, paymentinfoId, errorMessage);
     }
 
     public Optional<Paymentinfo> findPaymentinfoByImpUid(String impUid){
