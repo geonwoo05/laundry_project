@@ -25,8 +25,8 @@
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>일정</span>
-            <span th:text="${order.ordersPickupDate}" class='basicinfoContent'>수거 : 2023/08/23(화) 23시</span>
-            <span th:text="${order.ordersReturnDate}" class='basicinfoContent'>반납 : 2023/08/24(수) 07시</span>
+            <span th:text="|수거 : ${order.ordersPickupDate}|" class='basicinfoContent'>수거 : 2023/08/23(화) 23시</span>
+            <span th:text="|반납 : ${order.ordersReturnDate}|" class='basicinfoContent'>반납 : 2023/08/24(수) 07시</span>
         </div>
         <div class='basicinfo'>
             <span class='basicinfoTitle'>주소</span>
@@ -52,7 +52,7 @@
                 <th th:text="|생활빨래 ${order.commonLaundryWeight}L|" class='content'>생활빨래 2.7kg</th>
                 <td th:text="|+ ${{order.commonLaundryPrice}}원|" class='content'>+ 4,000원</td>
                 </th:block>
-                <th:block th:if="${order.ordersStatus} == 1 or ${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} == 5">
+                <th:block th:if="${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} == 5">
                 <th:block th:if="${order.commonLaundryId} != null or ${order.commonLaundryWeight} == null">
                     <th class='content'>생활빨래</th>
                     <td class='content'>검수중</td>
@@ -83,7 +83,7 @@
                             </th>
                             <td th:if="${dry.drycleaningPossibility} == 'Y'" th:text="|+ ${{dry.drycleaningPrice}}원|" class='detailcontent'>+ 10,000원</td>
                             <td th:if="${dry.drycleaningPossibility} == 'N'" class='detailcontent'>+ 0원</td>
-                            <td th:if="${order.ordersStatus} == 1 or ${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} == 5">검수중</td>
+                            <td th:if="${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} == 5">검수중</td>
                         </tr>
 
                     </th:block>
@@ -113,7 +113,7 @@
                             </th>
                             <td th:if="${repair.repairPossibility} == 'Y'" th:text="|+ ${{repair.repairPrice}}원|" class='detailcontent'>+ 10,000원</td>
                             <td th:if="${repair.repairPossibility} == 'N'" class='detailcontent'>+ 0원</td>
-                            <td th:if="${order.ordersStatus} == 1 or ${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} == 5">검수중</td>
+                            <td th:if="${order.ordersStatus} == 2 or ${order.ordersStatus} == 3 or ${order.ordersStatus} == 4 or ${order.ordersStatus} == 5">검수중</td>
                         </tr>
 
                     </th:block>

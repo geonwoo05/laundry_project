@@ -9,7 +9,6 @@ import aug.laundry.enums.category.Category;
 import aug.laundry.enums.orderStatus.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,10 +126,10 @@ public class OrdersService_kdh {
     private static List<RepairResponseDto> mapToRepairResponseDto(List<Repair> repairList) {
         return repairList.stream()
                 .map(repair -> new RepairResponseDto(
-                        aug.laundry.enums.repair.Repair.valueOf(repair.getRepairCategory()),
+                        aug.laundry.enums.repair.RepairCategory.valueOf(repair.getRepairCategory()),
                         repair.getRepairPossibility(),
                         repair.getRepairNotReason(),
-                        aug.laundry.enums.repair.Repair.valueOf(repair.getRepairCategory()).getPrice()
+                        aug.laundry.enums.repair.RepairCategory.valueOf(repair.getRepairCategory()).getPrice()
                 )).collect(Collectors.toList());
     }
 
@@ -207,7 +206,7 @@ public class OrdersService_kdh {
             ordersList.stream()
                     .forEach(order -> {
                         order.setStatusEnum(
-                                OrderStatus.valueOf("R"+order.getOrdersStatus()));
+                                OrderStatus.valueOf("L"+order.getOrdersStatus()));
                     });
             return ordersList;
         }

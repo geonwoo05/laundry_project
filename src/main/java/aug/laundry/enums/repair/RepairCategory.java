@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Repair {
+public enum RepairCategory {
 
     RE_SEALING("재박음질", 3000L),
     RE_SEALING_INNER("재박음질 (안감)", 7000L),
@@ -62,7 +62,7 @@ public enum Repair {
     private final String title;
     private final Long price;
 
-    Repair(String title, Long price) {
+    RepairCategory(String title, Long price) {
         this.title = title;
         this.price = price;
     }

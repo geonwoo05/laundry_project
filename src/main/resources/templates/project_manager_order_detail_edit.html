@@ -71,12 +71,6 @@
                     </div>
                 </td>
             <tr>
-            <tr>
-                <th class='content'>요청사항</th>
-            </tr>
-            <tr>
-                <th th:text="${dry.drycleaningRequest}"/>
-            </tr>
 
             <tr th:if="${dry.drycleaningPossibility.toString() == 'N'}">
                 <th class='content'>불가능 이유</th>
@@ -100,9 +94,9 @@
             <tr>
                 <th class='content' th:text="${repair.repairCategory}">소분류 이름</th>
             </tr>
-            <tr>
+            <tr th:if="${repair.repairImageStoreName != null}" th:each="img : ${repair.repairImageStoreName}">
                 <td>
-                    <img class='imgSize' th:src="@{'/images/' + ${repair.repairImageStoreName}}">
+                    <img class='imgSize' th:src="@{'/images/repairImages/' + ${img}}">
                 </td>
             </tr>
             <tr>
@@ -146,7 +140,7 @@
 
         <div id="imagePreview1" th:if="${info['imageList'] != null}" th:each="imageList, imageListIndex : ${info['imageList']}">
             <div class='imageGroup' >
-                <img class='imgSize' th:src="@{'/images/'+${imageList.inspectionImageStoreName}}" th:id="|img${imageListIndex.index}|">
+                <img class='imgSize' th:src="@{'/images/inspectionImages/'+${imageList.inspectionImageStoreName}}" th:id="|img${imageListIndex.index}|">
                 <span class="hidden" th:text="${imageList.inspectionImageStoreName}" th:id="|imgName${imageListIndex.index}|"></span>
                 <button onclick="deleteImg(this)">X</button>
             </div>
@@ -270,7 +264,6 @@
             inspectionDataDto.repairList.push(repair);
         });
 
-        // formData.append("inspectionDataDto", JSON.stringify(inspectionDataDto));
         formData.append("inspectionDataDto", new Blob([JSON.stringify(inspectionDataDto)], { type: 'application/json' }));
 
         selectedFiles.forEach(file => {
@@ -284,7 +277,13 @@
             body: formData
         })
             .then(response=>response.json())
-            .then(data=> console.log(data));
+            .then(data=> {
+                if(data.result === 'success') {
+                    window.location.href = "/admin/complete/" + memberId;
+                } else {
+                    alert("등록 실패. 다시 시도해주세요.");
+                }
+            });
     });
 
     function toogleRadio(element) {
@@ -309,6 +308,7 @@
         for(let i=0; i<reasonBox.length; i++) {
             if(element.id+"ox" == reasonBox[i].id) {
                 reasonBox[i].style.display='none';
+                reasonBox[i].querySelector('.reason1').value='';
             }
         }
     }
@@ -327,6 +327,7 @@
         for(let i=0; i<repairBox.length; i++) {
             if(element.id+"ox" == repairBox[i].id) {
                 repairBox[i].style.display='none';
+                repairBox[i].querySelector('.reason1').value='';
             }
         }
     }

@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,20 +42,21 @@ public class OrdersController_kdh {
 
     @GetMapping("/getList/{pageNo}/{orderStatus}")
     @ResponseBody
-    public Map<String, Object> getOrdersList(@PathVariable("pageNo") int pageNo, @PathVariable("orderStatus") int orderStatus, Model model){
+    public Map<String, Object> getOrdersList(@PathVariable("pageNo") int pageNo, @PathVariable("orderStatus") int orderStatus,
+                                             @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId){
 
         Map<String, Object> ordersMap = new HashMap<>();
 
         Criteria cri = new Criteria();
-        cri.setPageNo(pageNo, ordersServiceKdh.getTotalCount(4L)); //memberId 수정
+        cri.setPageNo(pageNo, ordersServiceKdh.getTotalCount(memberId));
 
         List<OrdersListResponseDto> list = null;
         log.info("orderStatus ========================={}", orderStatus);
         if(orderStatus == 1){
-            list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, 4L);
+            list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, memberId);
             log.info("orderStatus=1, list={}", list);
         } else if(orderStatus == 2){
-            list = ordersServiceKdh.findOrdersFinishedByMemberIdAndCri(cri, 4L);
+            list = ordersServiceKdh.findOrdersFinishedByMemberIdAndCri(cri, memberId);
             log.info("orderStatus=2, list={}", list);
         }
 

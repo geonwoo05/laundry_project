@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -205,7 +205,7 @@
             const nowDate = new Date();
 
             if(memberId === null) {
-               // location.href='/login';
+               location.href='/login';
             } else if(expireDate>=nowDate) {
                 alert("이미 패스에 가입중입니다.");
                 return;

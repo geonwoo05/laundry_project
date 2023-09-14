@@ -121,7 +121,7 @@ public class AdminInspectionController {
         try {
             adminInspectionService_ksh.updateInspectionResult(adminId, ordersId, inspectionDataDto, files);
             data.put("result", "success");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             data.put("result", "fail");
             data.put("error", e.getMessage());
         }

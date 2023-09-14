@@ -20,4 +20,12 @@ public class OrdersListResponseDto {
 
     public OrdersListResponseDto() {
     }
+
+    public String getStatusEnumTitle(){
+        return statusEnum.getTitle();
+    }
+
+    public String getStatusEnumContent(){
+        return statusEnum.getContent();
+    }
 }

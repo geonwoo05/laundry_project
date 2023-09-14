@@ -1,32 +1,24 @@
 package aug.laundry.controller;
 
 import aug.laundry.commom.SessionConstant;
-import aug.laundry.domain.RepairImage;
 import aug.laundry.dto.DateForm;
 import aug.laundry.dto.OrderDrycleaning;
 import aug.laundry.dto.OrderRepair;
 import aug.laundry.dto.RepairFormData;
-import aug.laundry.enums.category.Category;
 import aug.laundry.enums.category.CategoryPriceCalculator;
 import aug.laundry.enums.category.MemberShip;
 import aug.laundry.enums.category.Pass;
-import aug.laundry.enums.repair.Repair;
+import aug.laundry.enums.repair.RepairCategory;
 import aug.laundry.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.servlet.server.Session;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +74,7 @@ public class LaundryOrderController {
         if (memberShip.getCheck() == Pass.PASS){
             model.addAttribute("percent", CategoryPriceCalculator.PASS.percent());
         }
-        Repair[] repairCategory = Repair.values();
+        RepairCategory[] repairCategory = RepairCategory.values();
 
         List<OrderRepair> reload = laundryService.reloadRepair(orderDetailId);
         if (reload != null && !reload.isEmpty()) {

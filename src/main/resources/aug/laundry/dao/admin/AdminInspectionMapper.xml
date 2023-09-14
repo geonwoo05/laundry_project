@@ -34,17 +34,16 @@
     </select>
 
     <select id="getDrycleaningInfo" resultType="Drycleaning">
-        SELECT d.drycleaning_id, d.orders_detail_id, d.drycleaning_request, d.drycleaning_category, d.drycleaning_possibility, d.drycleaning_not_reason
+        SELECT d.drycleaning_id, d.orders_detail_id, d.drycleaning_category, d.drycleaning_possibility, d.drycleaning_not_reason
         FROM orders_detail od
                  INNER JOIN drycleaning d ON od.orders_detail_id = d.orders_detail_id
         WHERE od.orders_detail_id = #{orderDetailId}
     </select>
 
-    <select id="getRepairInfo" resultType="aug.laundry.dto.RepairInfoDto">
-        SELECT r.repair_id, r.orders_detail_id, r.repair_request, r.repair_category, r.repair_possibility, r.repair_not_reason, ri.repair_image_upload_name, ri.repair_image_store_name
+    <select id="getRepairInfo" resultType="Repair">
+        SELECT r.repair_id, r.orders_detail_id, r.repair_request, r.repair_category, r.repair_possibility, r.repair_not_reason
         FROM orders_detail od
                  INNER JOIN repair r ON od.orders_detail_id = r.orders_detail_id
-                 LEFT OUTER JOIN repair_image ri ON r.repair_id = ri.repair_id
         WHERE od.orders_detail_id = #{orderDetailId}
     </select>
 
@@ -55,6 +54,12 @@
                  LEFT OUTER JOIN quick_laundry q ON od.orders_detail_id = q.orders_detail_id
                  INNER JOIN inspection ins ON o.orders_id = ins.orders_id
         WHERE o.orders_id = #{ordersId} AND o.orders_status = #{ordersStatus}
+    </select>
+
+    <select id="getRepairImage" resultType="String">
+        SELECT repair_image_store_name
+        FROM repair_image
+        WHERE repair_id = #{repairId}
     </select>
 
     <update id="updateCommon">
