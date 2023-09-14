@@ -1,6 +1,6 @@
 package aug.laundry.dto;
 
-import aug.laundry.enums.repair.Repair;
+import aug.laundry.enums.repair.RepairCategory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,11 +13,11 @@ public class OrderRepair {
     private Long repairId;
     private Long ordersDetailId;
     private String repairRequest;
-    private Repair repairCategory;
+    private RepairCategory repairCategory;
     private char repairPossibility;
     private String repairNotReason;
 
-    public OrderRepair(Long repairId, Long ordersDetailId, String repairRequest, Repair repairCategory, char repairPossibility, String repairNotReason) {
+    public OrderRepair(Long repairId, Long ordersDetailId, String repairRequest, RepairCategory repairCategory, char repairPossibility, String repairNotReason) {
         this.repairId = repairId;
         this.ordersDetailId = ordersDetailId;
         this.repairRequest = repairRequest;
