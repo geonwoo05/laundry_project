@@ -41,11 +41,6 @@ public class LoginController {
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
 
 
-        // 인터셉터에서 온 redirectURL이 있다면 로그인 후 redirectURL의 경로로 이동
-        String redirectURL = state;
-        if(redirectURL != null && !redirectURL.isEmpty()){
-            return "redirect:" + redirectURL;
-        }
         return "redirect:/";
     }
     @GetMapping("/kakaoLogin")
