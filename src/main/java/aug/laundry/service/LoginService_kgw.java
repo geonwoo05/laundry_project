@@ -34,5 +34,7 @@ public interface LoginService_kgw {
 
     public MemberDto checkUserWithSessionId(String sessionId);
 
+    public int renewLoginTime (Long memberId);
+
 
 }

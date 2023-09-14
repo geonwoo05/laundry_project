@@ -4,7 +4,6 @@ import aug.laundry.commom.SessionConstant;
 import aug.laundry.dto.MemberDto;
 import aug.laundry.service.LoginService_kgw;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.*;
@@ -26,12 +25,11 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
-        HttpSession session = req.getSession();
         Cookie loginCookie = WebUtils.getCookie(req,"loginCookie");
         if(loginCookie != null){
+            HttpSession session = req.getSession();
             String sessionId = loginCookie.getValue();
             MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
-            System.out.println("==========memberId : "  + memberDto.getMemberId());
             session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
         }
         chain.doFilter(request, response);
