@@ -6,7 +6,6 @@ import aug.laundry.enums.category.MemberShip;
 import aug.laundry.enums.repair.RepairCategory;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -15,19 +14,18 @@ import java.util.Map;
 
 public interface LaundryService {
 
-    OrderInfo firstInfo(Long memberId);
 
     List<MyCoupon> getCoupon(Long memberId);
 
     Address getAddress(Long memberId);
 
-    List<Category> getDry(Long memberId);
+    List<Category> getDry(Long memberId, Long ordersDetailId);
 
-    List<RepairCategory> getRepair(Long memberId);
+    List<RepairCategory> getRepair(Long memberId, Long ordersDetailId);
 
     MemberShip isPass(Long memberId);
 
-    void update(Long memberId, Long couponListId, OrderPost orderPost);
+    void update(Long memberId, Long couponListId, OrderPost orderPost, Long ordersDetailId);
 
     void check(Long memberId, HttpSession session);
 

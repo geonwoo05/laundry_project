@@ -10,7 +10,7 @@
         LEFT JOIN COMMON_LAUNDRY C ON (O.ORDERS_DETAIL_ID = C.ORDERS_DETAIL_ID)
         LEFT JOIN DRYCLEANING D ON (O.ORDERS_DETAIL_ID = D.ORDERS_DETAIL_ID)
         LEFT JOIN REPAIR R ON (O.ORDERS_DETAIL_ID = R.ORDERS_DETAIL_ID)
-        WHERE MEMBER_ID = #{memberId}
+        WHERE MEMBER_ID = #{memberId} AND O.ORDERS_DETAIL_ID = #{ordersDetailId}
     </select>
 
     <select id="getCoupon" resultType="aug.laundry.dto.MyCoupon">
@@ -34,14 +34,14 @@
         SELECT DRYCLEANING_CATEGORY
         FROM ORDERS_DETAIL
         JOIN DRYCLEANING ON (ORDERS_DETAIL.ORDERS_DETAIL_ID = DRYCLEANING.ORDERS_DETAIL_ID)
-        WHERE MEMBER_ID = #{memberId}
+        WHERE MEMBER_ID = #{memberId} AND ORDERS_DETAIL.ORDERS_DETAIL_ID = #{ordersDetailId}
     </select>
 
     <select id="getRepair" resultType="string">
         SELECT REPAIR_CATEGORY
         FROM ORDERS_DETAIL
         JOIN REPAIR ON (ORDERS_DETAIL.ORDERS_DETAIL_ID = REPAIR.ORDERS_DETAIL_ID)
-        WHERE MEMBER_ID = #{memberId}
+        WHERE MEMBER_ID = #{memberId} AND ORDERS_DETAIL.ORDERS_DETAIL_ID = #{ordersDetailId}
     </select>
 
     <select id="isPass" resultType="Integer">
@@ -56,7 +56,10 @@
             ORDERS_INFO,
         </if>
         ORDERS_REQUEST, ORDERS_EXPECTED_PRICE, ORDERS_STATUS)
-        VALUES (SEQ_ORDERS_ID.NEXTVAL, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup}, TO_DATE(#{ordersPickupDate}, 'yyyy-MM-dd HH24:mi') , TO_DATE(#{ordersReturnDate}, 'yyyy-MM-dd HH24:mi'),
+        VALUES (SEQ_ORDERS_ID.NEXTVAL, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup},
+        <if test="ordersPickupDate != null"> TO_DATE(#{ordersPickupDate}, 'yyyy-MM-dd HH24:mi') , TO_DATE(#{ordersReturnDate}, 'yyyy-MM-dd HH24:mi'),</if>
+        <if test="ordersPickupDate == null"> TO_DATE(sysdate, 'yyyy-MM-dd HH24:mi') , TO_DATE(sysdate+1, 'yyyy-MM-dd HH24:mi'),</if>
+
         <if test="ordersInfo != null">
             #{ordersInfo},
         </if>
@@ -72,7 +75,7 @@
     <update id="useCoupon">
         UPDATE COUPON_LIST
         SET COUPON_LIST_STATUS = COUPON_LIST_STATUS + 1
-        WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_ID = #{couponListId} AND COUPON_LIST_STATUS = 1 AND (COUPON_END_DATE IS NULL OR COUPON_END_DATE > SYSDATE)
+        WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_ID = #{couponListId} AND (COUPON_END_DATE IS NULL OR COUPON_END_DATE > SYSDATE)
     </update>
 
     <select id="getCouponDiscount">
