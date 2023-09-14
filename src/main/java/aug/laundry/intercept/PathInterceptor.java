@@ -22,10 +22,10 @@ public class PathInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         String requestURI = request.getRequestURI();
         Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
-        if (loginCookie != null) {
+        if (loginCookie == null & session == null) {
             String sessionId = loginCookie.getValue();
             MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
             if(memberDto != null){
@@ -39,14 +39,9 @@ public class PathInterceptor implements HandlerInterceptor {
                 // 응답 커밋을 방지하기 위해 다음 두 줄을 추가
                 response.reset(); // 응답 리셋
                 response.sendRedirect(requestURI);
-                return false;
+
             }
         }
-         log.info("비정상적인 경로입니다. = {}", requestURI);
-//        response.sendRedirect("/login");
         return false;
-
-
-
     }
 }
