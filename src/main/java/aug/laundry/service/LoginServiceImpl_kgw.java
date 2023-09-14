@@ -43,6 +43,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
     @Override
     public void naverLogin(HttpServletRequest request, Model model, HttpSession session) {
+        System.out.println("==================네이버 로그인 시작 ===========================");
         try {
             // callback처리 -> access_token
             Map<String, String> callbackRes = callback(request);
@@ -103,12 +104,14 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     }
 
     public Map<String, String > callback(HttpServletRequest request) throws Exception{
+        System.out.println("==================네이버 callback ===========================");
         String clientId = "1zyMGeTLflNJkh2bmICN";//애플리케이션 클라이언트 아이디값";
         String clientSecret = "6DzM78FFO9";//애플리케이션 클라이언트 시크릿값";
         String code = request.getParameter("code");
         String state = request.getParameter("state");
+
         try {
-            String redirectURI = URLEncoder.encode("http://localhost:8080/login/naver_callback", "UTF-8");
+            String redirectURI = URLEncoder.encode(NAVER_REDIRECT_URL, "UTF-8");
             String apiURL;
             apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
             apiURL += "client_id=" + clientId;
