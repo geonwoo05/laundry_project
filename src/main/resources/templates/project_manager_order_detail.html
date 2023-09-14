@@ -45,10 +45,17 @@
             </table>
 
             <h4 th:if="${info['drycleaningInfo'] != null}">드라이클리닝</h4>
-            <table th:if="${info['drycleaningInfo'] != null}" th:each="dry, dryIndex : ${info['drycleaningInfo']}">
-                <input type="text" class="hidden" th:value="${dry.drycleaningId}" th:name="|drycleaningList[${dryIndex.index}].drycleaningId|">
+            <table th:if="${info['drycleaningInfo'] != null}" th:each="dry, dryIndex : ${info['drycleaningInfo']}" th:id="|dryTable${dryIndex.index}|">
+                <tr>
+                    <td>
+                        <input type="text" class="hidden" th:value="${dry.drycleaningId}" th:name="|drycleaningList[${dryIndex.index}].drycleaningId|">
+
+                    </td>
+                </tr>
                 <tr>
                     <th class='content' th:text="${dry.drycleaningCategory}"></th>
+                </tr>
+                <tr>
                     <td class='content drycleaning_result'>
                         <div onchange="hiddenInput(this)" th:id="|dpos${dryIndex.index}b|">
                             <input type="radio" th:name="|drycleaningList[${dryIndex.index}].drycleaningPossibility|" th:id="|dpos${dryIndex.index}|" value="Y">
@@ -78,11 +85,21 @@
 
             <hr>
             <h4 th:if="${info['repairInfo'] != null}">수선</h4>
-            <table th:if="${info['repairInfo'] != null}" th:each="repair, repairIndex : ${info['repairInfo']}">
-                <input type="text" class="hidden" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
+            <table th:if="${info['repairInfo'] != null}" th:each="repair, repairIndex : ${info['repairInfo']}" th:id="|repairTable${repairIndex.index}|">
+                <tr>
+                    <td>
+                        <input type="text" class="hidden" th:value="${repair.repairId}" th:name="|repairList[${repairIndex.index}].repairId|">
+                    </td>
+                </tr>
                 <tr>
                     <th class='content' th:text="${repair.repairCategory}">소분류 이름</th>
-                    <img class='imgSize' th:src="@{'/images/' + ${repair.repairImageStoreName}}">
+                </tr>
+                <tr>
+                    <td>
+                        <img class='imgSize' th:src="@{'/images/' + ${repair.repairImageStoreName}}">
+                    </td>
+                </tr>
+                <tr>
                     <td class='content drycleaning_result'>
                         <div onchange="rhiddenInput(this)" th:id="|rpos${repairIndex.index}b|">
                             <input type="radio" th:name="|repairList[${repairIndex.index}].repairPossibility|" th:id="|rpos${repairIndex.index}|" value="Y">
@@ -115,32 +132,40 @@
             </div>
 
             <div class='fixbox'>
-                <input type="submit" value="검수완료">
+                <input type="submit" id="btnSubmit" value="검수완료">
             </div>
         </form>
     </div>
 </body>
 <footer th:replace="~{/common/project_manager_order_footer :: footer}"> </footer>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const memberId = [[${session.memberId != null ? session.memberId : 'null'}]];
+    const ordersId = [[${info['orderInfo'].ordersId != null ? info['orderInfo'].ordersId : 'null'}]];
+    /*]]>*/
 
     let selectedFiles = [];
-    // 이미지 미리보기, 삭제
+
+    // 이미지 미리보기, 삭제, 이미지 배열 추가
     document.querySelector('#btnUpload').addEventListener('change', function () {
+        // btnUpload를 가르키는 변수 input
         let input = this;
+
         if (input.files && input.files.length) {
+            // 사용자가 파일을 선택했으면 수행
             for (let i = 0; i < input.files.length; i++) {
                 let file = input.files[i];
-                selectedFiles.push(file); // 선택한파일 배열에 추가
+                selectedFiles.push(file); // 선택한파일을 배열에 추가
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     let container = document.createElement('div');
                     container.className = 'image-container';
 
                     let img = document.createElement('img');
-                    img.className = 'thumb';
+                    // 파일 url
                     img.src = e.target.result;
-                    img.width = 100;
-                    img.height = 100;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
 
                     // 삭제 버튼
                     let deleteButton = document.createElement('button');
@@ -166,6 +191,56 @@
         }
     });
 
+    document.querySelector('#btnSubmit').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        let formData = new FormData();
+
+        let inspectionDataDto = {
+            inspectionId: document.querySelector('[name=inspectionId]').value,
+            commonLaundryDto : {
+                commonLaundryId: document.querySelector('[name=commonLaundryId]').value,
+                commonLaundryWeight: document.querySelector('[name=commonLaundryWeight]').value
+            },
+            drycleaningList: [],
+            repairList: [],
+        }
+        document.querySelectorAll('table[id^="dryTable"]').forEach(function (element, dryIndex) {
+            let dry = {
+                drycleaningId: element.querySelector('input[name$="drycleaningId"]').value,
+                drycleaningPossibility: element.querySelector('input[name$="drycleaningPossibility"]:checked').value,
+                drycleaningNotReason: element.querySelector('input[name$="drycleaningNotReason"]').value
+            };
+            inspectionDataDto.drycleaningList.push(dry);
+        });
+        document.querySelectorAll('table[id^="repairTable"]').forEach(function (element, repairIndex) {
+            let repair = {
+                repairId: element.querySelector('input[name$="repairId"]').value,
+                repairPossibility: element.querySelector('input[name$="repairPossibility"]:checked').value,
+                repairNotReason: element.querySelector('input[name$="repairNotReason"]').value
+            };
+            inspectionDataDto.repairList.push(repair);
+        });
+
+        formData.append("inspectionDataDto", new Blob([JSON.stringify(inspectionDataDto)], { type: 'application/json' }));
+
+        selectedFiles.forEach(file => {
+            formData.append("file", file);
+        });
+        fetch(`/admin/${memberId}/${ordersId}`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response=>response.json())
+            .then(data=> {
+                if(data.result === 'success') {
+                    window.location.href = "/admin/" + memberId;
+                } else {
+                    alert("등록 실패. 다시 시도해주세요.");
+                }
+            });
+    });
+
     function toogleRadio(element) {
         const radio = element.previousElementSibling;
         if (!radio.checked){
@@ -176,7 +251,6 @@
 
     function showInput(element) {
         const reasonBox = document.querySelectorAll(".selectD");
-        console.log("showInput");
         for(let i=0; i<reasonBox.length; i++) {
             if(element.id+"ox" == "i"+reasonBox[i].id) {
                 reasonBox[i].style.display='block';
@@ -186,7 +260,6 @@
 
     function hiddenInput(element) {
         const reasonBox = document.querySelectorAll(".selectD");
-        console.log("hiddenInput");
         for(let i=0; i<reasonBox.length; i++) {
             if(element.id+"ox" == reasonBox[i].id) {
                 reasonBox[i].style.display='none';
@@ -196,7 +269,6 @@
 
     function rshowInput(element) {
         const repairBox = document.querySelectorAll(".selectR");
-        console.log("rshowInput");
         for(let i=0; i<repairBox.length; i++) {
             if(element.id+"ox" == "i"+repairBox[i].id) {
                 repairBox[i].style.display='block';
@@ -206,7 +278,6 @@
 
     function rhiddenInput(element) {
         const repairBox = document.querySelectorAll(".selectR");
-        console.log("rhiddenInput");
         for(let i=0; i<repairBox.length; i++) {
             if(element.id+"ox" == repairBox[i].id) {
                 repairBox[i].style.display='none';

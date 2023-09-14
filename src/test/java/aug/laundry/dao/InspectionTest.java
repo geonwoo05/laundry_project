@@ -3,11 +3,10 @@ package aug.laundry.dao;
 import aug.laundry.dao.admin.AdminInspectionMapper;
 import aug.laundry.domain.CommonLaundry;
 import aug.laundry.domain.Drycleaning;
-import aug.laundry.domain.Orders;
 import aug.laundry.domain.Repair;
 import aug.laundry.dto.AdminInspectionDto;
+import aug.laundry.dto.CommonLaundryDto;
 import aug.laundry.dto.RepairInfoDto;
-import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class InspectionTest {
         Long ordersId = 8L;
         Long adminId = 9L;
 
-        CommonLaundry commonLaundry = new CommonLaundry();
+        CommonLaundryDto commonLaundry = new CommonLaundryDto();
         commonLaundry.setCommonLaundryId(4L);
         commonLaundry.setCommonLaundryWeight(3.0);
 
