@@ -100,7 +100,7 @@
         </tr>
         <tr th:if="${repair.repairImageStoreName != null}" th:each="img : ${repair.repairImageStoreName}">
             <td>
-                <img class='imgSize' th:src="@{'/images/repairImages/' + ${img}}">
+                <img class='imgSize' th:src="@{'/images/repair_images/' + ${img}}">
             </td>
         </tr>
         <tr>
@@ -136,7 +136,7 @@
     <!-- 사진 -->
     <h4>검수사진</h4>
     <div id="imagePreview" th:if="${info['imageList'] != null}" th:each="imageList, imageListIndex : ${info['imageList']}">
-        <img class='imgSize' th:src="@{'/images/inspectionImages/'+${imageList.inspectionImageStoreName}}">
+        <img class='imgSize' th:src="@{'/images/inspection_images/'+${imageList.inspectionImageStoreName}}">
     </div>
 
     <div class='fixbox'>

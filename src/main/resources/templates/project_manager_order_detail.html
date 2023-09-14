@@ -38,7 +38,7 @@
                     <th class='content'>세탁무게</th>
                     <td class='content laundry_result'>
                         <input type="text" class="hidden" name="commonLaundryId" th:value="${info['commonLaundryInfo'].commonLaundryId}">
-                        <input type="text" name="commonLaundryWeight" id="laundryWeight">
+                        <input type="text" pattern="[0-9]+(\.[0-9]+)?" name="commonLaundryWeight" id="laundryWeight">
                         <span>kg</span>
                     </td>
                 </tr>
@@ -90,7 +90,7 @@
                 </tr>
                 <tr th:if="${repair.repairImageStoreName != null}" th:each="img : ${repair.repairImageStoreName}">
                     <td>
-                        <img class='imgSize' th:src="@{'/images/repairImages/' + ${img}}">
+                        <img class='imgSize' th:src="@{'/images/repair_images/' + ${img}}">
                     </td>
                 </tr>
                 <tr>

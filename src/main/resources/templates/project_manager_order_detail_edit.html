@@ -96,7 +96,7 @@
             </tr>
             <tr th:if="${repair.repairImageStoreName != null}" th:each="img : ${repair.repairImageStoreName}">
                 <td>
-                    <img class='imgSize' th:src="@{'/images/repairImages/' + ${img}}">
+                    <img class='imgSize' th:src="@{'/images/repair_images/' + ${img}}">
                 </td>
             </tr>
             <tr>
@@ -140,7 +140,7 @@
 
         <div id="imagePreview1" th:if="${info['imageList'] != null}" th:each="imageList, imageListIndex : ${info['imageList']}">
             <div class='imageGroup' >
-                <img class='imgSize' th:src="@{'/images/inspectionImages/'+${imageList.inspectionImageStoreName}}" th:id="|img${imageListIndex.index}|">
+                <img class='imgSize' th:src="@{'/images/inspection_images/'+${imageList.inspectionImageStoreName}}" th:id="|img${imageListIndex.index}|">
                 <span class="hidden" th:text="${imageList.inspectionImageStoreName}" th:id="|imgName${imageListIndex.index}|"></span>
                 <button onclick="deleteImg(this)">X</button>
             </div>

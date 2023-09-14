@@ -40,7 +40,6 @@ public class FileUploadService_ksh {
                         String originalFilename = file.getOriginalFilename();
                         String storeFileName = createFileName(originalFilename);
 
-//                        file.transferTo(new File(getFullPath(storeFileName)));
                         file.transferTo(new File(getFullPath(storeFileName, fileUpload.getfolderName())));
 
                         // 데이터베이스 등록
