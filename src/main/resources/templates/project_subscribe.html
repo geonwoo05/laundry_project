@@ -186,7 +186,7 @@
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const memberId = [[${session.memberId != null ? session.memberId : 'null'}]];
+        const memberId = [[${session.memberId != null ? session.memberId : null}]];
         const expire = '[[${data != null ? data.subscriptionExpireDate : null}]]';
         /*]]>*/
         function firstPass() {
@@ -199,7 +199,7 @@
             } else if(memberId !== null) {
                 location.href='/subscription/order/'+memberId;
             } else {
-                location.href='/login';
+                // location.href='/login';
             }
         }
 
@@ -210,7 +210,7 @@
             const nowDate = new Date();
 
             if(memberId === null) {
-               location.href='/login';
+               // location.href='/login';
             } else if(expireDate>=nowDate) {
                 alert("이미 패스에 가입중입니다.");
                 return;
@@ -218,7 +218,6 @@
                 location.href='/subscription/order/'+memberId;
             }
         }
-
     </script>
     <title>Document</title>
 </head>
@@ -264,7 +263,7 @@
     </div>
 
     <div class='promotion-target'>신규회원이라면?</div>
-    <a onclick="firstPass()">
+    <a href="#" onclick="firstPass()">
         <div class='subscribe-promotion-content'>
             <div class='subscribe-promotion-content_info'>세탁 특공대를 처음이라면 <br>무조건 첫 달 무료</div>
             <div class='subscribe-promotion-content_btn'>신규회원</div>
@@ -272,7 +271,7 @@
     </a>
 
     <div class='promotion-target'>기존가입 고객이라면?</div>
-    <a onclick="secondPass()">
+    <a href="#" onclick="secondPass()">
         <div class='subscribe-promotion-content'>
             <div class='subscribe-promotion-content_info'>계속해서 혜탁을 받고 싶다면</div>
             <div class='subscribe-promotion-content_btn2'>월간구독</div>
