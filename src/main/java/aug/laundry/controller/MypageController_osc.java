@@ -137,7 +137,7 @@ public class MypageController_osc {
   }
 
   @GetMapping("{memberId}/address/update")
-  public String addressUpdate(@PathVariable Long memberId){
+  public String addressUpdate(@PathVariable Long memberId, Model model){
     return "project_update_address";
   }
 
@@ -155,7 +155,7 @@ public class MypageController_osc {
   }
 
   @GetMapping("{memberId}/phone/update")
-  public String phoneUpdate(@PathVariable Long memberId){
+  public String phoneUpdate(@PathVariable Long memberId, Model model){
     return "project_update_phone";
   }
 
@@ -179,11 +179,11 @@ public class MypageController_osc {
     // 회원 탈퇴
     MemberDto memberDto = memberService.selectOne(memberId);
     int res = mypageService.unregister(memberDto.getMemberId());
-    return "redirect:/login";
+    return "redirect:/logout";
   }
 
   @GetMapping("{memberId}/password/update")
-  public  String passwordUpdate(@PathVariable Long memberId){
+  public  String passwordUpdate(@PathVariable Long memberId, Model model){
     return "project_update_password";
   }
 
