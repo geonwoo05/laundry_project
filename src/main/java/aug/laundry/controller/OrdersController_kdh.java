@@ -120,7 +120,8 @@ public class OrdersController_kdh {
             totalPriceWithDeliveryPrice = deliveryPrice + totalPriceWithPassApplied;
         }
 
-        ordersServiceKdh.updateExpectedPriceByOrdersId(ordersId, totalPriceWithDeliveryPrice);
+        ordersServiceKdh.updateExpectedNDiscountPriceByOrdersId(ordersId,
+                totalPriceWithDeliveryPrice, totalPrice - totalPriceWithPassApplied);
 
         model.addAttribute("totalPriceWithDeliveryPrice", totalPriceWithDeliveryPrice);
 

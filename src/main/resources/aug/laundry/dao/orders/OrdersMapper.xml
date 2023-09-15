@@ -46,9 +46,10 @@
         WHERE B.ORDERS_ID = #{ordersId}
     </select>
 
-    <update id="updateExpectedPriceByOrdersId">
+    <update id="updateExpectedNDiscountPriceByOrdersId">
         UPDATE ORDERS
-        SET ORDERS_EXPECTED_PRICE = #{expectedPrice}
+        SET ORDERS_EXPECTED_PRICE = #{expectedPrice},
+            SUBSCRIPTION_DISCOUNT_PRICE = #{subscriptionDiscountPrice}
         WHERE ORDERS_ID = #{ordersId}
     </update>
 

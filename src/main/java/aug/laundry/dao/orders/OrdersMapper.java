@@ -22,7 +22,9 @@ public interface OrdersMapper {
 
     int findQuickLaundryByOrdersId(Long ordersId);
 
-    int updateExpectedPriceByOrdersId(@Param("ordersId") Long ordersId, @Param("expectedPrice") Long expectedPrice);
+    int updateExpectedNDiscountPriceByOrdersId(@Param("ordersId") Long ordersId,
+                                      @Param("expectedPrice") Long expectedPrice,
+                                      @Param("subscriptionDiscountPrice") Long subscriptionDiscountPrice);
 
     Optional<Long> findExpectedPriceByOrdersId(Long ordersId);
 

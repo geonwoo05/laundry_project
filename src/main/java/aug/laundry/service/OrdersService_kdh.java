@@ -143,8 +143,8 @@ public class OrdersService_kdh {
 
 
     @Transactional
-    public void updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice) {
-        int result = ordersDao.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
+    public void updateExpectedNDiscountPriceByOrdersId(Long ordersId, Long expectedPrice, Long subscriptionDiscountPrice) {
+        int result = ordersDao.updateExpectedNDiscountPriceByOrdersId(ordersId, expectedPrice, subscriptionDiscountPrice);
         if(result==0) {
             throw new IllegalArgumentException("예상금액이 업데이트 되지 않았습니다.");
         }
