@@ -319,7 +319,11 @@
     height: 100%;
     left: 0;
     top: 0;
+    z-index:-5;
     flex-wrap: wrap;
+}
+#left, #right{
+    z-index: 200;
 }
 
 .arrow #right{
