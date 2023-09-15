@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
@@ -34,11 +33,6 @@ public class LaundryServiceImpl implements LaundryService{
     private final FileUploadService_ksh fileUploadService;
 
     @Override
-    public OrderInfo firstInfo(Long memberId) {
-        return laundryRepository.firstInfo(memberId);
-    }
-
-    @Override
     public List<MyCoupon> getCoupon(Long memberId) {
         return laundryRepository.getCoupon(memberId);
     }
@@ -49,13 +43,13 @@ public class LaundryServiceImpl implements LaundryService{
     }
 
     @Override
-    public List<Category> getDry(Long memberId) {
-        return laundryRepository.getDry(memberId);
+    public List<Category> getDry(Long memberId, Long ordersDetailId) {
+        return laundryRepository.getDry(memberId, ordersDetailId);
     }
 
     @Override
-    public List<RepairCategory> getRepair(Long memberId) {
-        return laundryRepository.getRepair(memberId);
+    public List<RepairCategory> getRepair(Long memberId, Long ordersDetailId) {
+        return laundryRepository.getRepair(memberId, ordersDetailId);
     }
 
     @Override
@@ -65,7 +59,7 @@ public class LaundryServiceImpl implements LaundryService{
 
     @Transactional
     @Override
-    public void update(Long memberId, Long couponListId, OrderPost orderPost) {
+    public void update(Long memberId, Long couponListId, OrderPost orderPost, Long ordersDetailId) {
 
         boolean validCoupon = laundryRepository.validCoupon(memberId, couponListId); // 쿠폰 유효성 검사
         Long expectedPrice = 0L;
@@ -77,13 +71,13 @@ public class LaundryServiceImpl implements LaundryService{
         Orders orders = getOrders(memberId, orderPost);
 
         MemberShip memberShip = new MemberShip(laundryRepository.isPass(memberId));
-        OrderInfo orderInfo = laundryRepository.firstInfo(memberId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선
+        OrderInfo orderInfo = laundryRepository.firstInfo(memberId, ordersDetailId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선
         System.out.println("orderInfo = " + orderInfo);
         // 빠른배송 or 일반배송
         expectedPrice += orderInfo.isQuick() ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice();
         if (orderInfo.isCommon()) expectedPrice += memberShip.apply(Category.BASIC.getPrice());
-        if (orderInfo.isDry()) expectedPrice += memberShip.apply(laundryRepository.getDry(memberId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
-        if (orderInfo.isRepair()) expectedPrice += memberShip.apply(laundryRepository.getRepair(memberId).stream().map(x -> x.getPrice()).reduce((a,b) -> a + b).get());
+        if (orderInfo.isDry()) expectedPrice += memberShip.apply(laundryRepository.getDry(memberId, ordersDetailId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
+        if (orderInfo.isRepair()) expectedPrice += memberShip.apply(laundryRepository.getRepair(memberId, ordersDetailId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
 
 
         orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100);
@@ -225,6 +219,7 @@ public class LaundryServiceImpl implements LaundryService{
     }
 
     public String getDateString(LocalDateTime dateTime) {
+        if (dateTime == null) return null;
         String date = dateTime.toString();
         return date.substring(0, date.indexOf(":") + 3).replaceAll("T", " ");
     }

@@ -60,6 +60,7 @@ public class LaundryOrderController {
         redirectAttributes.addFlashAttribute("quick", option); // 빠른세탁이면 true 아니면 false
         redirectAttributes.addFlashAttribute("service", service); // 드라이클리닝, 생활빨, 수선 선택여부
         redirectAttributes.addFlashAttribute("dateTime", formatDate);
+        redirectAttributes.addFlashAttribute("ordersDetailId", ordersDetailId);
 
         System.out.println("option = " + option);
         System.out.println("formatDate = " + formatDate);

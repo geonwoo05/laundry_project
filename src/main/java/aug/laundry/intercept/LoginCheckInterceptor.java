@@ -42,6 +42,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
                     session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
                     return true;
                 }
+            }else{
+                log.info("인증되지않은 사용자 요청");
+                response.sendRedirect("/login?redirectURL=" + requestURI);
+                return false;
             }
             log.info("인증되지않은 사용자 요청");
             response.sendRedirect("/login?redirectURL=" + requestURI);
