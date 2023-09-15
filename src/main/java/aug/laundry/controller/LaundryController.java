@@ -70,6 +70,7 @@ public class LaundryController {
         }
         if (info.isRepair()) {
             List<RepairCategory> getRepair = laundryService.getRepair(memberId, ordersDetailId);
+            System.out.println("getRepair = " + getRepair);
             model.addAttribute("repair", getRepair);
             Long repairTotalPrice = getRepair.stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get();
             model.addAttribute("repairTotalPrice", repairTotalPrice);
