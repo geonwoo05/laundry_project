@@ -13,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberDao {
     private final MemberMapper memberMapper;
-
     public MemberDto selectOne(Long memberId){return memberMapper.selectOne(memberId);}
     public int checkId(String memberAccount){return memberMapper.checkId(memberAccount);}
     public Integer registerUser(MemberDto memberDto){return memberMapper.registerUser(memberDto);}

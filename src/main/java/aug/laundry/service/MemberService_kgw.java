@@ -16,6 +16,8 @@ import java.util.List;
 public interface MemberService_kgw {
     public MemberDto selectOne(Long memberId);
 
+    public MemberDto selectId(String memberAccount);
+
     public int checkId(String memberAccount);
 
     public Integer registerUser(MemberDto memberDto);
