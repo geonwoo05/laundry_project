@@ -51,7 +51,7 @@
             SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone}
         </if>
         <if test="memberAccount != null">
-            SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone} AND MEMBER_ACCOUNT = #{memberAccount}
+            SELECT * FROM MEMBER WHERE MEMBER_NAME = #{memberName} AND MEMBER_PHONE = #{memberPhone} AND MEMBER_ACCOUNT = #{memberAccount} AND MEMBER_DELETE_STATUS = 'N'
         </if>
     </select>
 
