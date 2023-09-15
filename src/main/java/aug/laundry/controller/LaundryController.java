@@ -40,14 +40,12 @@ public class LaundryController {
 
     @GetMapping("/order")
     public String order(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, Model model) {
-        MemberShip memberShip = laundryService.isPass(memberId); // 패스 여부
+        MemberShip memberShip = laundryService.isPass(memberId); // 패스 확인
         Long ordersDetailId = (Long) model.getAttribute("ordersDetailId");
         OrderInfo info = laundryService.orderInfo(model);
-        if (checkInfo(info)){
-            return "redirect:/laundry";
-        }
-//        laundryService.firstInfo(memberId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부
-        System.out.println("info = " + info);
+
+        if (checkInfo(info)) return "redirect:/laundry"; // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부가 전부 null이면 /laundry 로 redirect
+
         Long totalPrice = 0L;
         Long discount = 0L;
 
@@ -102,7 +100,8 @@ public class LaundryController {
     @PostMapping("/order")
     public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model,
                             @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
-                            @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId) {
+                            @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId,
+                            RedirectAttributes redirectAttributes) {
 
         System.out.println("orderPost = " + orderPost);
         if (bindingResult.hasErrors()) {
@@ -111,6 +110,7 @@ public class LaundryController {
             return "redirect:/laundry/order";
         }
         laundryService.update(memberId, orderPost.getCoupon(), orderPost, ordersDetailId); // 쿠폰 유효성 검사
+
 
 
         return "redirect:/";

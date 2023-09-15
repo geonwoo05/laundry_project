@@ -32,7 +32,7 @@ public interface LaundryMapper {
 
     Integer useCoupon(@Param("memberId") Long memberId, @Param("couponListId") Long couponListId);
 
-    Integer insert(Orders orders);
+    Long insert(Orders orders);
 
     Long getCouponDiscount(@Param("memberId") Long memberId, @Param("couponListId") Long couponListId);
 
@@ -71,4 +71,8 @@ public interface LaundryMapper {
     void insertQuickLaundry(Long ordersDetailId);
 
     void removeQuickLaundry(Long ordersDetailId);
+
+    void updateOrdersDetail(@Param("ordersId") Long ordersId, @Param("ordersDetailId") Long ordersDetailId);
+
+    void insertInspection(Long ordersId);
 }

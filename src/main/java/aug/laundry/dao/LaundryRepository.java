@@ -75,7 +75,7 @@ public class LaundryRepository {
     }
 
 
-    public Integer insert(Orders orders) {
+    public Long insert(Orders orders) {
         return laundryMapper.insert(orders);
     }
 
@@ -173,5 +173,13 @@ public class LaundryRepository {
 
     public void insertQuickLaundry(Long ordersDetailId) {
         laundryMapper.insertQuickLaundry(ordersDetailId);
+    }
+
+    public void updateOrdersDetail(Long ordersId, Long ordersDetailId) {
+        laundryMapper.updateOrdersDetail(ordersId, ordersDetailId);
+    }
+
+    public void insertInspection(Long ordersId) {
+        laundryMapper.insertInspection(ordersId);
     }
 }
