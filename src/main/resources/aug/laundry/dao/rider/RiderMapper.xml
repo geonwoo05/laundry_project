@@ -73,8 +73,8 @@
         orders o
         INNER JOIN
         orders_detail od ON o.orders_id = od.orders_id
-        INNER JOIN
-        quick_laundry ql ON od.orders_detail_id = ql.orders_detail_id
+<!--        INNER JOIN-->
+<!--        quick_laundry ql ON od.orders_detail_id = ql.orders_detail_id-->
         WHERE
         o.orders_id = #{ordersId}
 <!--        o.orders_pay_status in(2, 10) and o.orders_id = #{ordersId}-->

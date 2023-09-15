@@ -7,8 +7,10 @@
             const stompClient = Stomp.over(socket);
             stompClient.connect({}, function() {
 
-            const storeId = '63';
-            stompClient.subscribe('/topic/order-complete/'+storeId, function(message) {
+//            const storeId = '63';
+
+//            stompClient.subscribe('/topic/order-complete/'+ordersId, function(message) {
+            stompClient.subscribe('/topic/order-complete', function(message) {
 
             const messageBody = JSON.parse(message.body);
 

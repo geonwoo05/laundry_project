@@ -8,10 +8,7 @@ import aug.laundry.service.FileUploadService_ksh;
 import aug.laundry.service.RiderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +51,14 @@ public class RiderRestController {
 
         map.put("info", info);
         map.put("cnt", cnt);
+        return map;
+    }
+
+    @PostMapping("/rider/test")
+    public Map<String, Object> test(@RequestBody Orders orders){
+        Map<String, Object> map = new HashMap<>();
+        System.out.println(orders);
+        map.put("orders",orders);
         return map;
     }
 }

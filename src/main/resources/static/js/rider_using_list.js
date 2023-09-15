@@ -49,8 +49,10 @@
                                     endX = resultInfo.coordinate[0].lon;
                                     endY = resultInfo.coordinate[0].lat;
                                 }
-
-                                distance(endY, endX, index);
+                                console.log($('#ordersStatus').val());
+                                if($('#ordersStatus').val() === "수거전"){
+                                    distance(endY, endX, index);
+                                }
                             },
                             error: function(xhr, status, error) {
                                 console.error(error);
