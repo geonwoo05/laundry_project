@@ -108,7 +108,6 @@ public class OrdersController_kdh {
 
         DeliveryResponseDto delivery = setDeliveryPrice(totalPrice, isQuickLaundry);
 
-
         Long deliveryPrice = calcDeliveryPrice(isQuickLaundry, totalPrice);
 
         Long totalPriceWithDeliveryPrice = deliveryPrice + totalPrice;
