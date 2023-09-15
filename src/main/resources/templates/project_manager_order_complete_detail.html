@@ -16,11 +16,11 @@
         /*]]>*/
 
         function goEdit() {
-            window.location.href = `/admin/edit/${memberId}/${ordersId}`;
+            window.location.href = `/admin/edit/view/${memberId}/${ordersId}`;
         }
     </script>
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
+<header th:replace="~{/common/project_manager_header :: header}"></header>
 <body>
 
 <div class='container'>
@@ -140,7 +140,7 @@
     </div>
 
     <div class='fixbox'>
-        <input type="button" class="btnEdit" value="검수수정" th:onclick="goEdit()">
+        <input type="button" class="btnEdit" value="검수수정" onclick="goEdit()">
     </div>
 </div>
 </body>

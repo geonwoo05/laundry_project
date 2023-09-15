@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_manager_order_detail.css">
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
+<header th:replace="~{/common/project_manager_header :: header}"></header>
 <body>
 
 <div class='container'>
-    <form th:action="@{'/admin/9/' + ${info['orderInfo'].ordersId}}" method="post" enctype="multipart/form-data">
+    <form th:action="@{'/admin/'+${session.memberId}+'/' + ${info['orderInfo'].ordersId}}" method="post" enctype="multipart/form-data">
         <input type="text" class="hidden" th:value="${info['orderInfo'].ordersId}" name="ordersId">
         <input type="text" class="hidden" th:value="${info['orderInfo'].inspectionId}" name="inspectionId">
         <input type="text" value="9" name="adminId" class="hidden" >
@@ -272,7 +272,7 @@
 
         console.log("inspectionDataDto=", inspectionDataDto);
 
-        fetch(`/admin/edit/${memberId}/${ordersId}`, {
+        fetch(`/admin/edit/view/${memberId}/${ordersId}`, {
             method: 'POST',
             body: formData
         })

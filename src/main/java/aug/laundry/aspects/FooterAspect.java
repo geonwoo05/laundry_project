@@ -48,4 +48,16 @@ public class FooterAspect {
             }
         }
     }
+
+    @Before("execution(* aug.laundry.controller.AdminInspectionController.*view*(..))")
+    public void admin(JoinPoint joinPoint) {
+        log.info("AdminInspectionController실행");
+
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            if (arg instanceof Model) {
+                ((Model) arg).addAttribute("head", "view");
+            }
+        }
+    }
 }

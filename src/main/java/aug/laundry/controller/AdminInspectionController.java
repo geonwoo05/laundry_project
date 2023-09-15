@@ -67,7 +67,7 @@ public class AdminInspectionController {
         return searchOrder;
     }
 
-    @GetMapping("/admin/{adminId}/{ordersId}")
+    @GetMapping("/admin/view/{adminId}/{ordersId}")
     public String viewInspectionDetail(@PathVariable("adminId") Long adminId,
                                       @PathVariable("ordersId") Long ordersId, Model model) {
 
@@ -76,7 +76,7 @@ public class AdminInspectionController {
         return "project_manager_order_detail";
     }
 
-    @PostMapping("/admin/{adminId}/{ordersId}")
+    @PostMapping("/admin/view/{adminId}/{ordersId}")
     public @ResponseBody Map<String, String> writeInspection( @PathVariable("adminId") Long adminId, @PathVariable("ordersId") Long ordersId,
                                                  @RequestPart("inspectionDataDto")  InspectionDataDto inspectionDataDto,
                                                  @RequestPart("file") List<MultipartFile> files) {
@@ -92,7 +92,7 @@ public class AdminInspectionController {
         return data;
     }
 
-    @GetMapping("/admin/complete/{adminId}/{ordersId}")
+    @GetMapping("/admin/complete/view/{adminId}/{ordersId}")
     public String viewInspectionCompleteDetail(@PathVariable("adminId") Long adminId,
                                                @PathVariable("ordersId") Long ordersId, Model model) {
 
@@ -101,17 +101,15 @@ public class AdminInspectionController {
         return "project_manager_order_complete_detail";
     }
 
-    @GetMapping("/admin/edit/{adminId}/{ordersId}")
-    public String editInspectionDetail(@PathVariable("adminId") Long adminId, @PathVariable("ordersId") Long ordersId,
+    @GetMapping("/admin/edit/view/{adminId}/{ordersId}")
+    public String viewEditInspectionDetail(@PathVariable("adminId") Long adminId, @PathVariable("ordersId") Long ordersId,
                                        Model model) {
-
-        log.info("editController Call");
 
         model.addAttribute("info", adminInspectionService_ksh.getInspectionDetail(ordersId));
         return "project_manager_order_detail_edit";
     }
 
-    @PostMapping("/admin/edit/{adminId}/{ordersId}")
+    @PostMapping("/admin/edit/view/{adminId}/{ordersId}")
     public @ResponseBody Map<String, String> editInspection(@PathVariable("adminId") Long adminId, @PathVariable("ordersId") Long ordersId,
                                                             @RequestPart("inspectionDataDto")  InspectionDataDto inspectionDataDto,
                                                             @RequestPart(name="file", required = false) List<MultipartFile> files) {

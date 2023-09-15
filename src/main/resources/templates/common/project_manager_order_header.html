@@ -72,7 +72,7 @@
         if(res === 'success') {
           if(list.length>0) {
             list.forEach(order=>{
-              const url = orderStatus == 5 ? '/admin/'+memberId+'/'+order.ordersId : '/admin/complete/'+memberId+'/'+order.ordersId;
+              const url = orderStatus == 5 ? '/admin/view/'+memberId+'/'+order.ordersId : '/admin/complete/view/'+memberId+'/'+order.ordersId;
               const quick = order.quickLaundryId!=null ? '빠른세탁' : '';
               divlist+='<div class="order_box" onclick="location.href=\''+url+'\'">'
                       + '<div class="date_status">'
@@ -107,7 +107,7 @@
         const res = map.res;
 
         if(res === 'success') {
-          const url = orderStatus == 5 ? '/admin/9/'+orderInfo.ordersId : '/admin/complete/'+orderInfo.ordersId;
+          const url = orderStatus == 5 ? '/admin/view/'+memberId+'/'+orderInfo.ordersId : '/admin/complete/view/'+orderInfo.ordersId;
           const quick = orderInfo.quickLaundryId!=null ? '빠른세탁' : '';
           resBox.innerHTML='<div class="order_box" onclick="location.href=\''+url+'\'">'
                     + '<div class="date_status">'
