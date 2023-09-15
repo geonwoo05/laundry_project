@@ -32,7 +32,12 @@ public class LoginFilter implements Filter {
             HttpSession session = req.getSession();
             String sessionId = loginCookie.getValue();
             MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
-            session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
+            if(memberDto != null){
+                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
+            }else{
+                return;
+            }
+
         }
         chain.doFilter(request, response);
     }
