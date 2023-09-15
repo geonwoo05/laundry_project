@@ -127,8 +127,9 @@ public class RiderController {
     public String http33(@PathVariable Long ordersId, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
 //        model.addAttribute("ordersId", ordersId);
 
-        System.out.println(ordersId);
-        redirectAttributes.addFlashAttribute("storeId", ordersId);
+        System.out.println("------------------------------------------------------------------------------ordersId : " + ordersId);
+        redirectAttributes.addFlashAttribute("ordersId", ordersId);
+//        model.addAttribute("ordersId", ordersId);
         return "redirect:/gogo";
     }
 

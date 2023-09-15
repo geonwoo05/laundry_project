@@ -14,27 +14,27 @@
     <script> Kakao.init('5658a574a621b53dc23388793fa3f81b'); // 사용하려는 앱의 JavaScript 키 입력</script>
     <script>
       window.addEventListener('load', function() {
-            const orderId = $('#ordersId').val();
-<!--swal('주문 성공!',"세탁을 말끔히 해줄게~",'success').then();-->
+          const orderId = $('#ordersId').val();
 
           if(orderId != null && orderId != ""){
             swal('주문 성공!',"세탁을 말끔히 해줄게~",'success').then((result)=>{
-                let socket = new SockJS('/websocket');
+            let socket = new SockJS('/websocket');
 
-                let stompClient = Stomp.over(socket);
+            let stompClient = Stomp.over(socket);
 
-                stompClient.connect({}, function() {
-                    const message = {
-                        message : "새 주문이 들어왔습니다"
-                }
-                    stompClient.send("/message/order-complete-message/" + orderId, {}, JSON.stringify(message));
-                    stompClient.disconnect();
-                });
+            stompClient.connect({}, function() {
+                const message = {
+                    message : "새 주문이 들어왔습니다"
+            }
+                stompClient.send("/message/order-complete-message/" + orderId, {}, JSON.stringify(message));
+                stompClient.disconnect();
+                location.href = "/";
+            });
           });
         }
       });
     </script>
 <body>
-<input type="hidden" name="" id="ordersId" value="37">
+<input type="hidden" name="" id="ordersId" value="" th:value="${ordersId}">
 </body>
 </html>
