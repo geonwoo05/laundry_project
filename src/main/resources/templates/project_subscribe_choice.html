@@ -99,7 +99,8 @@
 
         function requestPay(memberId, merchant_uid) {
             IMP.request_pay({
-                pg : "kakaopay.TCSUBSCRIP", // 실제 계약 후에는 실제 상점아이디로 변경
+                pg : "html5_inicis.INIBillTst",
+                // pg : "kakaopay.TCSUBSCRIP", // 실제 계약 후에는 실제 상점아이디로 변경
                 pay_method : 'card', // 'card'만 지원됩니다.
                 merchant_uid: merchant_uid, // 상점에서 관리하는 주문 번호
                 name : productName,

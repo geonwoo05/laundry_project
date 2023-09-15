@@ -219,9 +219,10 @@
         }
 
         let weight = /^\d+(\.\d+)?$/;
-        let laundryW = document.querySelector('#laundryWeight').value;
+        let laundryElement = document.querySelector('#laundryWeight');
+        let laundryW = laundryElement ? laundryElement.value : null;
 
-        if(!weight.test(laundryW)) {
+        if(laundryW !== null && !weight.test(laundryW)) {
             alert("일반세탁 무게 확인이 필요합니다..");
             return;
         }else if(cnt!==radioArr.length) {
@@ -235,14 +236,18 @@
         let formData = new FormData();
 
         let inspectionDataDto = {
-            inspectionId: document.querySelector('[name=inspectionId]').value,
-            commonLaundryDto : {
+            inspectionId: document.querySelector('[name=inspectionId]').value
+        }
+
+        if(laundryW !== null){
+            inspectionDataDto.commonLaundryDto = {
                 commonLaundryId: document.querySelector('[name=commonLaundryId]').value,
                 commonLaundryWeight: document.querySelector('[name=commonLaundryWeight]').value
-            },
-            drycleaningList: [],
-            repairList: [],
+            };
         }
+        inspectionDataDto.drycleaningList = [];
+        inspectionDataDto.repairList = [];
+
         document.querySelectorAll('table[id^="dryTable"]').forEach(function (element, dryIndex) {
             let dry = {
                 drycleaningId: element.querySelector('input[name$="drycleaningId"]').value,
