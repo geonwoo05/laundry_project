@@ -17,4 +17,8 @@ public class PointDao {
     public int registerPoint(Long memberId) { return pointMapper.registerPoint(memberId); }
 
     public int addRecommandPoint(Long memberId, int point, String reason){return pointMapper.addRecommandPoint(memberId, point,reason); }
+
+    public int addBonusPoint(Long memberId, Long pointStack){
+        return pointMapper.addBonusPoint(memberId, pointStack);
+    }
 }

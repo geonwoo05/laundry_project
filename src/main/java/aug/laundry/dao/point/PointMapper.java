@@ -16,4 +16,6 @@ public interface PointMapper {
     int registerPoint(Long memberId);
     int addRecommandPoint(@Param("memberId") Long memberId, @Param("point") int point, @Param("reason") String reason);
 
+    int addBonusPoint(@Param("memberId") Long memberId, @Param("point") Long point);
+
 }

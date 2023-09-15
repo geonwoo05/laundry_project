@@ -5,6 +5,9 @@ import aug.laundry.dao.payment.PaymentDao;
 import aug.laundry.domain.Paymentinfo;
 import aug.laundry.dto.PaymentCheckRequestDto;
 import aug.laundry.dto.WebHook;
+import aug.laundry.enums.category.MemberShip;
+import aug.laundry.enums.category.Pass;
+import aug.laundry.service.LaundryService;
 import aug.laundry.service.OrdersService_kdh;
 import aug.laundry.service.PaymentService;
 import com.siot.IamportRestClient.IamportClient;
@@ -38,12 +41,15 @@ public class PaymentController {
     private OrdersService_kdh ordersServiceKdh;
     private PaymentDao paymentDao;
 
+    private LaundryService laundryService;
+
     @Autowired
     public PaymentController(PaymentService paymentService, OrdersService_kdh ordersService_kdh,
-                             PaymentDao paymentDao) {
+                             PaymentDao paymentDao, LaundryService laundryService) {
         this.paymentService = paymentService;
         this.ordersServiceKdh = ordersService_kdh;
         this.paymentDao = paymentDao;
+        this.laundryService = laundryService;
     }
 
 
@@ -130,9 +136,6 @@ public class PaymentController {
         ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
 
         if(couponListId != null){
-
-//            ordersServiceKdh.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
-            //            log.info("쿠폰리스트 상태 변경");
             ordersServiceKdh.updateCouponStatusNOrdersId(ordersId, couponListId);
         }
 
@@ -142,6 +145,20 @@ public class PaymentController {
             Long pointId = ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
             ordersServiceKdh.updatePointIdByOrdersId(pointId, ordersId);
         }
+
+
+        MemberShip memberShip = laundryService.isPass(memberId);
+        Pass pass = memberShip.getCheck();
+        Long bonusPoint = null;
+        if(pass == Pass.PASS){
+            bonusPoint = memberShip.applyPoint(finalPrice);
+            paymentService.addBonusPoint(memberId, bonusPoint);
+        } else {
+            bonusPoint = memberShip.applyPoint(finalPrice);
+            paymentService.addBonusPoint(memberId, bonusPoint);
+        }
+
+
     }
 
     private Paymentinfo makePaymentinfoFromIamPort(IamportClient iamportClient, String impUid, String restApi, String restApiSecret, Long memberId) throws IamportResponseException, IOException {
