@@ -89,22 +89,26 @@ public class RiderController {
     }
 
 
-    @MessageMapping("/order-complete-message/{storeId}")
-    @SendTo("/topic/order-complete/{storeId}")
-    public Map<String, Object> message(@DestinationVariable long storeId, String message) {
-        System.out.println("가게번호 : " + storeId);
+    @MessageMapping("/order-complete-message/{ordersId}")
+//    @SendTo("/topic/order-complete/{ordersId}")
+    @SendTo("/topic/order-complete")
+    public Map<String, Object> message(@DestinationVariable long ordersId, String message) {
+        System.out.println("주문번호 : " + ordersId);
         System.out.println("메세지 도착 :" + message);
+
+        Orders orders = riderService.orderInfo(ordersId);
+        System.out.println("==========================info : " + orders);
 
         Map<String, Object> map = new HashMap<>();
 
-        Orders orders = new Orders();
-        orders.setOrdersId(37L);
-        orders.setOrdersDate("2023/08/31");
-        orders.setOrdersStatus(2);
-//        orders.setOrdersAddress("서울 서대문구 남가좌동 거북골로 84");
-        orders.setOrdersAddress("서울시 서대문구 홍은동 454");
-//        orders.setOrdersAddress("서울시 강북구 번동 657");
-        orders.setOrdersAddressDetails("108동 505호");
+//        Orders orders = new Orders();
+//        orders.setOrdersId(37L);
+//        orders.setOrdersDate("2023/08/31");
+//        orders.setOrdersStatus(2);
+////        orders.setOrdersAddress("서울 서대문구 남가좌동 거북골로 84");
+//        orders.setOrdersAddress("서울시 서대문구 홍은동 454");
+////        orders.setOrdersAddress("서울시 강북구 번동 657");
+//        orders.setOrdersAddressDetails("108동 505호");
 
         System.out.println(orders.getOrdersAddress());
         System.out.println(riderService.riderInfo(5L).getWorkingArea());
@@ -112,17 +116,21 @@ public class RiderController {
         if(riderService.riderInfo(5L).getWorkingArea().equals(orders.getOrdersAddress().split(" ")[1])
         ){
             map.put("a",orders);
-            map.put("storeId", storeId);
+            map.put("ordersId", ordersId);
             return map;
         }else{
             return null;
         }
     }
 
-    @GetMapping("/oo/kk/{storeId}")
-    public String http33(@PathVariable Long storeId, HttpSession session, Model model) {
-        model.addAttribute("storeId", storeId);
-        return "redirect:/oo/63";
+    @GetMapping("/oo/63/{ordersId}")
+    public String http33(@PathVariable Long ordersId, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+//        model.addAttribute("ordersId", ordersId);
+
+        System.out.println("------------------------------------------------------------------------------ordersId : " + ordersId);
+        redirectAttributes.addFlashAttribute("ordersId", ordersId);
+//        model.addAttribute("ordersId", ordersId);
+        return "redirect:/gogo";
     }
 
     @GetMapping("/oo/63")
@@ -286,5 +294,10 @@ public class RiderController {
         model.addAttribute("info", info);
 
         return "project_rider_routine_read_more";
+    }
+
+    @GetMapping("/gogo")
+    public String gogo(){
+        return "project_order_complete";
     }
 }

@@ -18,7 +18,10 @@
         <div class='res_box' id="resBox">
         </div>
     </div>
-
+<script>
+    document.querySelector('#liOne').classList.add('active');
+    document.querySelector('#liTwo').classList.remove('active');
+</script>
 </body>
 <footer th:replace="~{/common/project_manager_order_footer :: footer}"> </footer>
 </html>

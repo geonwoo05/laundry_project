@@ -181,8 +181,13 @@ input[type=submit]{
     left: 0rem;
     width: 100%;
     position: fixed;
-    background-color: white;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    border:none;
+    background-color: var(--container-color);
 }
 
 .address{

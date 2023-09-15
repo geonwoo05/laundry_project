@@ -41,6 +41,11 @@
 
 }
 
+#banner4{
+    background-image: url(/images/banner2.png);
+
+}
+
 #banner3{
     background-image: url(/images/banner3.png);
    /*animation: fadeOut 5s;*/
@@ -91,6 +96,11 @@
     background-color: var(--main-color);
     color: white;
 }
+#pass2{
+    width: 180%;
+    background-color: var(--main-color);
+    color: white;
+}
 
 .imgBox{
     width: 4rem;
@@ -116,6 +126,10 @@
     align-items: center;
 }
 
+#pass2{
+    display: flex;
+    align-items: center;
+}
 
 .friend{
     display: flex;
@@ -309,26 +323,19 @@
     margin: 0;
 }
 
-.arrow{
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-    z-index: 100;
-    position: absolute;
-    width:100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    z-index:-5;
-    flex-wrap: wrap;
-}
 #left, #right{
-    z-index: 200;
+    position: absolute;
+    top: calc(50% - 1rem);
+    margin: 0;
+}
+
+.arrow svg{
+    width: 1rem;
 }
 
 .arrow #right{
-    margin: 0 1rem 0 0;
+    right: 0.5rem
 }
 .arrow #left{
-    margin: 0 0 0 1rem;
+    left: 0.5rem;
 }
