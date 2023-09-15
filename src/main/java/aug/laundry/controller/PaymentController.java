@@ -137,7 +137,6 @@ public class PaymentController {
         Long subscriptionDiscountPrice = (totalPriceWithPassApplied==null) ? 0L : (totalPrice - totalPriceWithPassApplied);
 
         ordersServiceKdh.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
-
         ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
 
         if(couponListId != null){
