@@ -219,9 +219,9 @@
             </th:block>
 
 
-            <tr th:if="${totalPriceWithPassApplied != null}">
+            <tr th:if="${subscriptionDiscount!=0}">
                 <th class='content'>패스할인</th>
-                <td th:text="|- ${#numbers.formatDecimal(totalPrice - totalPriceWithPassApplied,3,'COMMA',0,'COMMA')}원|" class='content discount'>- 3,000원</td>
+                <td th:text="|- ${#numbers.formatDecimal(subscriptionDiscount,3,'COMMA',0,'COMMA')}원|" class='content discount'>- 3,000원</td>
             </tr>
         </table>
         <table class='totalPrice'>

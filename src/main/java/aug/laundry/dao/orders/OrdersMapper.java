@@ -52,4 +52,6 @@ public interface OrdersMapper {
     int updatePointIdByOrdersId(@Param("pointId") Long pointId, @Param("ordersId") Long ordersId);
 
     int updateCouponStatusNOrdersId(@Param("couponListStatus") int couponListStatus, @Param("ordersId") Long ordersId, @Param("couponListId") Long couponListId);
+
+    Long findSubscriptionDiscountPrice(Long ordersId);
 }

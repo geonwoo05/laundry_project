@@ -164,5 +164,11 @@
         WHERE COUPON_LIST_ID = #{couponListId}
     </update>
 
+    <select id="findSubscriptionDiscountPrice" resultType="Long">
+        SELECT SUBSCRIPTION_DISCOUNT_PRICE
+        FROM ORDERS
+        WHERE ORDERS_ID = #{ordersId}
+    </select>
+
 
 </mapper>

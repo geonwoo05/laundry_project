@@ -252,5 +252,9 @@ public class OrdersService_kdh {
         }
     }
 
+    public Long findSubscriptionDiscountPrice(Long ordersId){
+        return ordersDao.findSubscriptionDiscountPrice(ordersId);
+    }
+
 
 }

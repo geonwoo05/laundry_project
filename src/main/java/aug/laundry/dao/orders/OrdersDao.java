@@ -120,6 +120,10 @@ public class OrdersDao {
         return ordersMapper.updateCouponStatusNOrdersId(ConstCouponListStatus.USED, ordersId, couponListId);
     }
 
+    public Long findSubscriptionDiscountPrice(Long ordersId){
+        return ordersMapper.findSubscriptionDiscountPrice(ordersId);
+    }
+
 
 
 
