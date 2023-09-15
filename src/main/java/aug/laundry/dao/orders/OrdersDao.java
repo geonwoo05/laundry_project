@@ -124,6 +124,10 @@ public class OrdersDao {
         return ordersMapper.findSubscriptionDiscountPrice(ordersId);
     }
 
+    public int updateSubscriptionDiscountPrice(Long subscriptionDiscountPrice, Long ordersId){
+        return ordersMapper.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
+    }
+
 
 
 

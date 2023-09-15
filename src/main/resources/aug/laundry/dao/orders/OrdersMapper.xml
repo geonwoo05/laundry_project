@@ -53,6 +53,12 @@
         WHERE ORDERS_ID = #{ordersId}
     </update>
 
+    <update id="updateSubscriptionDiscountPrice">
+        UPDATE ORDERS
+        SET SUBSCRIPTION_DISCOUNT_PRICE = #{subscriptionDiscountPrice}
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+
     <select id="findExpectedPriceByOrdersId" resultType="Long">
         SELECT ORDERS_EXPECTED_PRICE
         FROM ORDERS

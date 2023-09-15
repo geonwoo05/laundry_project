@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -79,14 +80,14 @@ public class PaymentController {
             }
 
             //검증
-            paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
+            Map<String, Long> prices = paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
 
             Long paymentinfoId = paymentinfo.getPaymentinfoId();
             Long couponListId = payment.getCouponListId();
             Long pointPrice = payment.getPointPrice();
             Long finalPrice = paymentinfo.getAmount();
 
-            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
+            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, prices.get("totalPrice"), prices.get("totalPriceWithPassApplied"));
         }
         return "redirect:/payment/complete";
     }
@@ -119,19 +120,23 @@ public class PaymentController {
                 }
 
                 //검증
-                paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId,
+                Map<String, Long> prices = paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId,
                         new PaymentCheckRequestDto(couponListId, couponPrice, pointPrice, irsp.getResponse().getImpUid(), irsp.getResponse().getMerchantUid(), true));
 
                 Long paymentinfoId = paymentinfo.getPaymentinfoId();
                 Long finalPrice = paymentinfo.getAmount();
 
-                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
+                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, prices.get("totalPrice"), prices.get("totalPriceWithPassApplied"));
             }
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void updateSeveralRegardingOrders(Long finalPrice, Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice) {
+    private void updateSeveralRegardingOrders(Long finalPrice, Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice, Long totalPrice, Long totalPriceWithPassApplied) {
+
+        Long subscriptionDiscountPrice = (totalPriceWithPassApplied==null) ? 0L : (totalPrice - totalPriceWithPassApplied);
+
+        ordersServiceKdh.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
 
         ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
 

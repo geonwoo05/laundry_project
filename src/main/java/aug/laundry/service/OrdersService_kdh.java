@@ -256,5 +256,14 @@ public class OrdersService_kdh {
         return ordersDao.findSubscriptionDiscountPrice(ordersId);
     }
 
+    @Transactional
+    public void updateSubscriptionDiscountPrice(Long subscriptionDiscountPrice, Long ordersId){
+        int result = ordersDao.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
+
+        if(result==0) {
+            throw new IllegalArgumentException("구독할인금액이 업데이트 되지 않았습니다.");
+        }
+
+    }
 
 }

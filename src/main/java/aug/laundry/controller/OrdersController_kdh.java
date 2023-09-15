@@ -121,16 +121,16 @@ public class OrdersController_kdh {
             totalPriceWithDeliveryPrice = deliveryPrice + totalPriceWithPassApplied;
         }
 
-        Long temp = (totalPriceWithPassApplied==null) ? 0L : (totalPrice - totalPriceWithPassApplied);
+        Long subscriptionDiscountPrice = (totalPriceWithPassApplied==null) ? 0L : (totalPrice - totalPriceWithPassApplied);
 
         // 결제대기 상태일때만 업데이트, 금액검증을 해야하는데 복잡한 금액을 DB에서 가져온 값으로 동적으로 계산한값이 컨트롤러에 있어서
         // 그 값을 컨트롤러에서 요청하여 DB에 업데이트 해줌. 이부분 나중에 리팩토링 염두.
-        if(ordersResponseDto.getOrdersStatus() == PAY_WAIT){
-            ordersServiceKdh.updateExpectedNDiscountPriceByOrdersId(ordersId,
-                    totalPriceWithDeliveryPrice, temp);
-        }
+//        if(ordersResponseDto.getOrdersStatus() == PAY_WAIT){
+//            ordersServiceKdh.updateExpectedNDiscountPriceByOrdersId(ordersId,
+//                    totalPriceWithDeliveryPrice, temp);
+//        }
 
-        Long subscriptionDiscountPrice = ordersServiceKdh.findSubscriptionDiscountPrice(ordersId);
+//        Long subscriptionDiscountPrice = ordersServiceKdh.findSubscriptionDiscountPrice(ordersId);
         model.addAttribute("subscriptionDiscount", subscriptionDiscountPrice);
         log.info("subscriptionDiscount={}", subscriptionDiscountPrice);
 
