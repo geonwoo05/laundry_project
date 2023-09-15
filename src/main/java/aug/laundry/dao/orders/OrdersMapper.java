@@ -22,7 +22,9 @@ public interface OrdersMapper {
 
     int findQuickLaundryByOrdersId(Long ordersId);
 
-    int updateExpectedPriceByOrdersId(@Param("ordersId") Long ordersId, @Param("expectedPrice") Long expectedPrice);
+    int updateExpectedNDiscountPriceByOrdersId(@Param("ordersId") Long ordersId,
+                                      @Param("expectedPrice") Long expectedPrice,
+                                      @Param("subscriptionDiscountPrice") Long subscriptionDiscountPrice);
 
     Optional<Long> findExpectedPriceByOrdersId(Long ordersId);
 
@@ -50,4 +52,8 @@ public interface OrdersMapper {
     int updatePointIdByOrdersId(@Param("pointId") Long pointId, @Param("ordersId") Long ordersId);
 
     int updateCouponStatusNOrdersId(@Param("couponListStatus") int couponListStatus, @Param("ordersId") Long ordersId, @Param("couponListId") Long couponListId);
+
+    Long findSubscriptionDiscountPrice(Long ordersId);
+
+    int updateSubscriptionDiscountPrice(@Param("subscriptionDiscountPrice") Long subscriptionDiscountPrice, @Param("ordersId") Long ordersId);
 }

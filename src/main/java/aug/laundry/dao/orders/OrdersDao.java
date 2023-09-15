@@ -61,8 +61,8 @@ public class OrdersDao {
         }
     }
 
-    public int updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice){
-        int i = ordersMapper.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
+    public int updateExpectedNDiscountPriceByOrdersId(Long ordersId, Long expectedPrice, Long subscriptionDiscountPrice){
+        int i = ordersMapper.updateExpectedNDiscountPriceByOrdersId(ordersId, expectedPrice, subscriptionDiscountPrice);
         log.info("updateExpectedPriceByOrdersId={}", i);
         return i;
     }
@@ -118,6 +118,14 @@ public class OrdersDao {
 
     public int updateCouponStatusNOrdersId(Long ordersId, Long couponListId){
         return ordersMapper.updateCouponStatusNOrdersId(ConstCouponListStatus.USED, ordersId, couponListId);
+    }
+
+    public Long findSubscriptionDiscountPrice(Long ordersId){
+        return ordersMapper.findSubscriptionDiscountPrice(ordersId);
+    }
+
+    public int updateSubscriptionDiscountPrice(Long subscriptionDiscountPrice, Long ordersId){
+        return ordersMapper.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
     }
 
 

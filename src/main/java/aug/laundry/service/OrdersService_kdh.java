@@ -143,8 +143,8 @@ public class OrdersService_kdh {
 
 
     @Transactional
-    public void updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice) {
-        int result = ordersDao.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
+    public void updateExpectedNDiscountPriceByOrdersId(Long ordersId, Long expectedPrice, Long subscriptionDiscountPrice) {
+        int result = ordersDao.updateExpectedNDiscountPriceByOrdersId(ordersId, expectedPrice, subscriptionDiscountPrice);
         if(result==0) {
             throw new IllegalArgumentException("예상금액이 업데이트 되지 않았습니다.");
         }
@@ -252,5 +252,18 @@ public class OrdersService_kdh {
         }
     }
 
+    public Long findSubscriptionDiscountPrice(Long ordersId){
+        return ordersDao.findSubscriptionDiscountPrice(ordersId);
+    }
+
+    @Transactional
+    public void updateSubscriptionDiscountPrice(Long subscriptionDiscountPrice, Long ordersId){
+        int result = ordersDao.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
+
+        if(result==0) {
+            throw new IllegalArgumentException("구독할인금액이 업데이트 되지 않았습니다.");
+        }
+
+    }
 
 }

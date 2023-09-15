@@ -5,6 +5,9 @@ import aug.laundry.dao.payment.PaymentDao;
 import aug.laundry.domain.Paymentinfo;
 import aug.laundry.dto.PaymentCheckRequestDto;
 import aug.laundry.dto.WebHook;
+import aug.laundry.enums.category.MemberShip;
+import aug.laundry.enums.category.Pass;
+import aug.laundry.service.LaundryService;
 import aug.laundry.service.OrdersService_kdh;
 import aug.laundry.service.PaymentService;
 import com.siot.IamportRestClient.IamportClient;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -38,12 +42,15 @@ public class PaymentController {
     private OrdersService_kdh ordersServiceKdh;
     private PaymentDao paymentDao;
 
+    private LaundryService laundryService;
+
     @Autowired
     public PaymentController(PaymentService paymentService, OrdersService_kdh ordersService_kdh,
-                             PaymentDao paymentDao) {
+                             PaymentDao paymentDao, LaundryService laundryService) {
         this.paymentService = paymentService;
         this.ordersServiceKdh = ordersService_kdh;
         this.paymentDao = paymentDao;
+        this.laundryService = laundryService;
     }
 
 
@@ -73,14 +80,14 @@ public class PaymentController {
             }
 
             //검증
-            paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
+            Map<String, Long> prices = paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId, payment);
 
             Long paymentinfoId = paymentinfo.getPaymentinfoId();
             Long couponListId = payment.getCouponListId();
             Long pointPrice = payment.getPointPrice();
             Long finalPrice = paymentinfo.getAmount();
 
-            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
+            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, prices.get("totalPrice"), prices.get("totalPriceWithPassApplied"));
         }
         return "redirect:/payment/complete";
     }
@@ -113,26 +120,27 @@ public class PaymentController {
                 }
 
                 //검증
-                paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId,
+                Map<String, Long> prices = paymentService.isValid(irsp, paymentinfo.getPaymentinfoId(), memberId, ordersId,
                         new PaymentCheckRequestDto(couponListId, couponPrice, pointPrice, irsp.getResponse().getImpUid(), irsp.getResponse().getMerchantUid(), true));
 
                 Long paymentinfoId = paymentinfo.getPaymentinfoId();
                 Long finalPrice = paymentinfo.getAmount();
 
-                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice);
+                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, prices.get("totalPrice"), prices.get("totalPriceWithPassApplied"));
             }
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void updateSeveralRegardingOrders(Long finalPrice, Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice) {
+    private void updateSeveralRegardingOrders(Long finalPrice, Long ordersId, Long memberId, Long paymentinfoId, Long couponListId, Long pointPrice, Long totalPrice, Long totalPriceWithPassApplied) {
+
+        Long subscriptionDiscountPrice = (totalPriceWithPassApplied==null) ? 0L : (totalPrice - totalPriceWithPassApplied);
+
+        ordersServiceKdh.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
 
         ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
 
         if(couponListId != null){
-
-//            ordersServiceKdh.updateCouponListStatusToUsedCoupon(couponListId, ordersId);
-            //            log.info("쿠폰리스트 상태 변경");
             ordersServiceKdh.updateCouponStatusNOrdersId(ordersId, couponListId);
         }
 
@@ -141,6 +149,24 @@ public class PaymentController {
             Long pointValue = -pointPrice;
             Long pointId = ordersServiceKdh.addPoint(memberId, pointValue, "포인트 사용");
             ordersServiceKdh.updatePointIdByOrdersId(pointId, ordersId);
+        }
+
+        addBonusPoint(finalPrice, memberId);
+
+    }
+
+    private void addBonusPoint(Long finalPrice, Long memberId) {
+        MemberShip memberShip = laundryService.isPass(memberId);
+        Pass pass = memberShip.getCheck();
+
+        Long bonusPoint = null;
+
+        if(pass == Pass.PASS){
+            bonusPoint = memberShip.applyPoint(finalPrice);
+            paymentService.addBonusPoint(memberId, bonusPoint);
+        } else {
+            bonusPoint = memberShip.applyPoint(finalPrice);
+            paymentService.addBonusPoint(memberId, bonusPoint);
         }
     }
 

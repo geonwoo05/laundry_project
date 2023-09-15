@@ -46,9 +46,16 @@
         WHERE B.ORDERS_ID = #{ordersId}
     </select>
 
-    <update id="updateExpectedPriceByOrdersId">
+    <update id="updateExpectedNDiscountPriceByOrdersId">
         UPDATE ORDERS
-        SET ORDERS_EXPECTED_PRICE = #{expectedPrice}
+        SET ORDERS_EXPECTED_PRICE = #{expectedPrice},
+            SUBSCRIPTION_DISCOUNT_PRICE = #{subscriptionDiscountPrice}
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+
+    <update id="updateSubscriptionDiscountPrice">
+        UPDATE ORDERS
+        SET SUBSCRIPTION_DISCOUNT_PRICE = #{subscriptionDiscountPrice}
         WHERE ORDERS_ID = #{ordersId}
     </update>
 
@@ -162,6 +169,12 @@
             ORDERS_ID = #{ordersId}
         WHERE COUPON_LIST_ID = #{couponListId}
     </update>
+
+    <select id="findSubscriptionDiscountPrice" resultType="Long">
+        SELECT SUBSCRIPTION_DISCOUNT_PRICE
+        FROM ORDERS
+        WHERE ORDERS_ID = #{ordersId}
+    </select>
 
 
 </mapper>
