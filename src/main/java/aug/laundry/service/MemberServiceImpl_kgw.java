@@ -29,6 +29,11 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
         return memberDto;
     }
 
+    @Override
+    public MemberDto selectId(String memberAccount) {
+        return memberDao.selectId(memberAccount);
+    }
+
     public int checkId(String memberAccount){
         int res = memberDao.checkId(memberAccount);
 

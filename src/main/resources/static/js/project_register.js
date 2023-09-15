@@ -67,27 +67,31 @@ function sendSms(){
     let sendSmsBtn = document.querySelector('#sendSmsBtn');
     let resultMsg = document.querySelector('#phonenumber-check-warn');
 
+    if(subPhonenumber.value != null && subPhonenumber.value !== ''){
+        fetch("/sendSms?phonenumber="+phonenumber)
+        .then(response => response.json())
+        .then(map => {
+        		alert("인증번호가 전송되었습니다.");
+        		phone_check_number = map.number;
+        		//document.querySelector('.phonenumber-check-input').disabled = false;
+        		document.querySelector('.phonenumber-check-button').addEventListener('click', function(){
+        			let inputCode = document.querySelector('.phonenumber-check-input');
 
-    fetch("/sendSms?phonenumber="+phonenumber)
-    .then(response => response.json())
-    .then(map => {
-    		alert("인증번호가 전송되었습니다.");
-    		phone_check_number = map.number;
-    		//document.querySelector('.phonenumber-check-input').disabled = false;
-    		document.querySelector('.phonenumber-check-button').addEventListener('click', function(){
-    			let inputCode = document.querySelector('.phonenumber-check-input');
-
-    			if(phone_check_number == inputCode.value){
-    		        alert('인증되었습니다.');
-    		        document.querySelector('.validation-phonenumber').value=1;
+        			if(phone_check_number == inputCode.value){
+        		        alert('인증되었습니다.');
+        		        document.querySelector('.validation-phonenumber').value=1;
 
 
-    			}else{
-    				resultMsg.innerHTML = '인증번호가 불일치 합니다. 다시 확인해주세요!';
-    		        resultMsg.style.color = 'red';
-    			}
-    		})
-    	})
+        			}else{
+        				resultMsg.innerHTML = '인증번호가 불일치 합니다. 다시 확인해주세요!';
+        		        resultMsg.style.color = 'red';
+        			}
+        		})
+        	})
+    }else{
+        alert('전화번호를 입력하세요.');
+    }
+
 }
 
 //

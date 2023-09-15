@@ -106,8 +106,12 @@ public class LoginController {
             session.setAttribute(SessionConstant.LOGIN_MEMBER, quickRiderDto.getQuickRiderId());
             return "redirect:/ride/wait";
         }else{
-            model.addAttribute("memberAccount", memberDto.getMemberAccount());
-            model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+            if(memberService.selectId(memberDto.getMemberAccount()).getMemberDeleteStatus() == 'Y'){
+                model.addAttribute("errorMsg", "이미 탈퇴한 회원입니다.");
+            }else{
+                model.addAttribute("memberAccount", memberDto.getMemberAccount());
+                model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+            }
             return "project_login";
         }
 

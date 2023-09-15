@@ -20,7 +20,7 @@
     </select>
 
     <select id="login" resultType="aug.laundry.dto.MemberDto">
-        select * from member where MEMBER_ACCOUNT = #{memberAccount}
+        select * from member where MEMBER_ACCOUNT = #{memberAccount} and MEMBER_DELETE_STATUS = 'N'
     </select>
 
     <select id="adminLogin" resultType="aug.laundry.dto.AdminDto">
