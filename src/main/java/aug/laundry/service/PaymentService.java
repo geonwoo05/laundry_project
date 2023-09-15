@@ -31,9 +31,6 @@ public class PaymentService {
     private final PointDao pointDao;
     private final PaymentDao paymentDao;
     private final OrdersDao ordersDao;
-
-
-    //
     private final OrdersService_kdh ordersServiceKdh;
     private final LaundryService laundryService;
 
@@ -107,11 +104,6 @@ public class PaymentService {
         return delivery;
     }
 
-    //
-
-
-
-
     public Map<String, Long> isValid(IamportResponse<Payment> irsp, Long paymentinfoId, Long memberId, Long ordersId, PaymentCheckRequestDto payment) {
 
         Map<String, Long> prices = makePrices(ordersId, memberId);
@@ -129,8 +121,6 @@ public class PaymentService {
         isValidCoupon(paymentinfoId, couponListId, couponPrice);
         
         //금액 계산후 검증해야함
-//        Long finalValidPrice = ordersDao.findExpectedPriceByOrdersId(ordersId)
-//                .orElseThrow(() -> new IsNotValidException("예상금액이 존재하지 않습니다.[" + paymentinfoId + "]"));
         Long finalValidPrice = prices.get("totalPriceWithDeliveryPrice");
 
         if (pointPrice == null) {
