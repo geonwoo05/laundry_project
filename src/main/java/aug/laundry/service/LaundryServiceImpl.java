@@ -73,18 +73,25 @@ public class LaundryServiceImpl implements LaundryService{
         MemberShip memberShip = new MemberShip(laundryRepository.isPass(memberId));
         OrderInfo orderInfo = laundryRepository.firstInfo(memberId, ordersDetailId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선
         System.out.println("orderInfo = " + orderInfo);
-        // 빠른배송 or 일반배송
-        expectedPrice += orderInfo.isQuick() ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice();
-        if (orderInfo.isCommon()) expectedPrice += memberShip.apply(Category.BASIC.getPrice());
-        if (orderInfo.isDry()) expectedPrice += memberShip.apply(laundryRepository.getDry(memberId, ordersDetailId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
-        if (orderInfo.isRepair()) expectedPrice += memberShip.apply(laundryRepository.getRepair(memberId, ordersDetailId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
+        expectedPrice = getExpectedPrice(memberId, ordersDetailId, expectedPrice, orderInfo, memberShip);
 
 
         orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100);
         orders.setOrdersStatus(2);
         System.out.println("최종 orders = " + orders);
-        Integer result = laundryRepository.insert(orders);
+        Long ordersId = laundryRepository.insert(orders); // orders에 값을 넣고 ordersId 가져오기
+        laundryRepository.updateOrdersDetail(ordersId, ordersDetailId); // ORDERS_DETAIL 안에 ORDERS_ID 업데이트
         System.out.println("성공!");
+        laundryRepository.insertInspection(ordersId);
+    }
+
+    @NotNull
+    private Long getExpectedPrice(Long memberId, Long ordersDetailId, Long expectedPrice, OrderInfo orderInfo, MemberShip memberShip) {
+        expectedPrice += orderInfo.isQuick() ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice();
+        if (orderInfo.isCommon()) expectedPrice += memberShip.apply(Category.BASIC.getPrice());
+        if (orderInfo.isDry()) expectedPrice += memberShip.apply(laundryRepository.getDry(memberId, ordersDetailId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
+        if (orderInfo.isRepair()) expectedPrice += memberShip.apply(laundryRepository.getRepair(memberId, ordersDetailId).stream().map(x -> x.getPrice()).reduce((a, b) -> a + b).get());
+        return expectedPrice;
     }
 
     @Transactional

@@ -250,6 +250,7 @@ function createBox(name, price, title, count) {
                 inputFile.setAttribute('id', name + '-' + count);
                 inputFile.setAttribute('multiple', true);
                 inputFile.setAttribute('hidden', true);
+                inputFile.setAttribute('accept', '.jpg,.png');
 
                 imgbox.appendChild(inputFile);
 

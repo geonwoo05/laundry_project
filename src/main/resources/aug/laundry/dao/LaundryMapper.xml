@@ -50,13 +50,18 @@
         WHERE MEMBER_ID = #{memberId}
     </select>
 
+
     <insert id="insert">
+        <selectKey keyProperty="ordersId" resultType="Long" order="BEFORE">
+            SELECT SEQ_ORDERS_ID.NEXTVAL
+            FROM DUAL
+        </selectKey>
         INSERT INTO ORDERS (ORDERS_ID, MEMBER_ID, ORDERS_DATE, ORDERS_ADDRESS, ORDERS_ADDRESS_DETAILS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE,
         <if test="ordersInfo != null">
             ORDERS_INFO,
         </if>
         ORDERS_REQUEST, ORDERS_EXPECTED_PRICE, ORDERS_STATUS)
-        VALUES (SEQ_ORDERS_ID.NEXTVAL, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup},
+        VALUES (#{ordersId}, #{memberId}, SYSDATE, #{ordersAddress}, #{ordersAddressDetails}, #{ordersPickup},
         <if test="ordersPickupDate != null"> TO_DATE(#{ordersPickupDate}, 'yyyy-MM-dd HH24:mi') , TO_DATE(#{ordersReturnDate}, 'yyyy-MM-dd HH24:mi'),</if>
         <if test="ordersPickupDate == null"> TO_DATE(sysdate, 'yyyy-MM-dd HH24:mi') , TO_DATE(sysdate+1, 'yyyy-MM-dd HH24:mi'),</if>
 
@@ -65,6 +70,13 @@
         </if>
         #{ordersRequest},#{ordersExpectedPrice}, 2)
     </insert>
+
+    <insert id="insertInspection">
+        Insert into INSPECTION (INSPECTION_ID,ADMIN_ID,INSPECTION_STATUS, ORDERS_ID)
+        values (seq_inspection_id.nextval, null, 'N', #{ordersId})
+    </insert>
+
+
 
     <select id="validCoupon" resultType="aug.laundry.domain.CouponList">
         SELECT DISTINCT COUPON_LIST_ID, MEMBER_ID, COUPON_ID, COUPON_LIST_CREATE_DATE, COUPON_LIST_STATUS, ORDERS_ID, COUPON_END_DATE
@@ -179,4 +191,10 @@
         INSERT INTO QUICK_LAUNDRY ( QUICK_LAUNDRY_ID, QUICK_LAUNDRY_TAKE_DATE, ORDERS_DETAIL_ID )
         VALUES (SEQ_QUICK_LAUNDRY_ID.NEXTVAL, SYSDATE, #{ordersDetailId})
     </insert>
+
+    <update id="updateOrdersDetail">
+        UPDATE ORDERS_DETAIL
+        SET ORDERS_ID = #{ordersId}
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </update>
 </mapper>
