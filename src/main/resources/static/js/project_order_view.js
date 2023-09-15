@@ -30,7 +30,13 @@ window.addEventListener('load', function(){
     let totalPriceFromServer = tPrice;
     let couponId = parseInt(document.querySelector('#coupon').value);
 
+    //숫자이외의 문자 입력 불가
+    document.querySelector('#point').addEventListener('keypress', function(event){
 
+        if(event.which < 48 || event.which > 57){
+            event.preventDefault();
+        }
+    })
 
     document.querySelector('#point').addEventListener('input', function(){
 
@@ -42,7 +48,7 @@ window.addEventListener('load', function(){
             document.querySelector('#point-row').style.display = 'none';
         }
 
-        if(document.querySelector('#point').value != ''){
+            if(document.querySelector('#point').value != ''){
             pointRow.style.display = '';
             pointRow.querySelector('.content.discount').textContent = '- ' + Number(document.querySelector('#point').value).toLocaleString() + '원';
         }
