@@ -75,8 +75,8 @@ public class LaundryRepository {
     }
 
 
-    public Long insert(Orders orders) {
-        return laundryMapper.insert(orders);
+    public void insert(Orders orders) {
+        laundryMapper.insert(orders);
     }
 
     public Long getCouponDiscount(Long memberId, Long couponListId) {

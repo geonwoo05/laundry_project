@@ -79,10 +79,11 @@ public class LaundryServiceImpl implements LaundryService{
         orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100);
         orders.setOrdersStatus(2);
         System.out.println("최종 orders = " + orders);
-        Long ordersId = laundryRepository.insert(orders); // orders에 값을 넣고 ordersId 가져오기
-        laundryRepository.updateOrdersDetail(ordersId, ordersDetailId); // ORDERS_DETAIL 안에 ORDERS_ID 업데이트
+        laundryRepository.insert(orders); // orders에 값을 넣고 ordersId 가져오기
+        System.out.println("ordersId = " + orders.getOrdersId());
+        laundryRepository.updateOrdersDetail(orders.getOrdersId(), ordersDetailId); // ORDERS_DETAIL 안에 ORDERS_ID 업데이트
         System.out.println("성공!");
-        laundryRepository.insertInspection(ordersId);
+        laundryRepository.insertInspection(orders.getOrdersId());
     }
 
     @NotNull
