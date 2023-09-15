@@ -124,12 +124,11 @@ public class AdminInspectionController {
             data.put("error", e.getMessage());
         }
 
-        if(result.isEmpty()) {
-            // 에러 테이블
-            result.forEach((key, value) -> {
-                log.info("error={}", value);
-            });
-        }
+//        if(result.isEmpty()) {
+//            result.forEach((key, value) -> {
+//                log.info("error={}", value);
+//            });
+//        }
 
         return data;
     }
