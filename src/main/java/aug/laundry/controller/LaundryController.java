@@ -46,14 +46,12 @@ public class LaundryController {
 
         if (checkInfo(info)) return "redirect:/laundry"; // 빠른세탁, 드라이클리닝, 생활빨래, 수선 선택여부가 전부 null이면 /laundry 로 redirect
 
-        Long totalPrice = 0L;
+        Long totalPrice = info.isQuick() ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice(); // 빠른배송이면 적용되는 가격
         Long discount = 0L;
-
-        totalPrice += info.isQuick() ? Delivery.QUICK_DELIVERY.getPrice() : Delivery.COMMON_DELIVERY.getPrice(); // 빠른배송이면 적용되는 가격
 
         List<MyCoupon> coupon = laundryService.getCoupon(memberId); // 내가 보유한 쿠폰
         Address address = laundryService.getAddress(memberId); // 주소 가져오기
-        FormatDate dateForm = (FormatDate) model.getAttribute("dateTime");
+        FormatDate dateForm = (FormatDate) model.getAttribute("dateTime"); //  project_order_1 에서 받아온 수거, 배송시간
 
         if (info.isCommon()) {
             model.addAttribute("common", Category.BASIC);

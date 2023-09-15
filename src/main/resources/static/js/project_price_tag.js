@@ -20,4 +20,32 @@ window.addEventListener('load',function(){
         drycleaningBtn.classList.remove('select');
     })
 
+    let clothes = document.querySelector('.clothes');
+    let bedding = document.querySelector('.bedding');
+    let shoes = document.querySelector('.shoes');
+    let categoryName = document.querySelectorAll('.categoryFocus');
+    clothes.addEventListener('click', function(){
+        for (let i=0;i<categoryName.length;i++){
+            if (categoryName[i].textContent == clothes.textContent){
+                categoryName[i].scrollIntoView({ behavior : 'smooth'});
+            }
+        }
+    })
+
+    bedding.addEventListener('click', function(){
+        for (let i=0;i<categoryName.length;i++){
+            if (categoryName[i].textContent == bedding.textContent){
+                categoryName[i].scrollIntoView({ behavior : 'smooth'});
+            }
+        }
+    })
+
+    shoes.addEventListener('click', function(){
+        for (let i=0;i<categoryName.length;i++){
+            if (categoryName[i].textContent == shoes.textContent){
+                categoryName[i].scrollIntoView({ behavior : 'smooth'});
+            }
+        }
+    })
+
 })

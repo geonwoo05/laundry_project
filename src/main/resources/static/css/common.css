@@ -158,3 +158,8 @@ input[type=submit]{
 .notice.none{
     display: none;
 }
+
+header img{
+    width: 8rem;
+    margin: 1rem auto 0.5rem auto;
+}
