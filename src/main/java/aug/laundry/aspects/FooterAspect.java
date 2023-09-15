@@ -20,7 +20,14 @@ public class FooterAspect {
         for (Object arg : args) {
             if (arg instanceof Model){
                 ((Model) arg).addAttribute("footer", "mypage");
-                break;
+            }
+            if (arg instanceof Long) {
+
+                Long memberId = (Long) arg;
+                if (memberId == null) {
+                    // 자동 로그인을 Application 형태로 바꾸면 여기에다가 추가작성해야됨
+                }
+
             }
         }
     }
@@ -34,6 +41,7 @@ public class FooterAspect {
             if (arg instanceof Model) {
                 ((Model) arg).addAttribute("footer", "main");
             }
+
         }
     }
 
