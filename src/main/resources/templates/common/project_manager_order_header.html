@@ -127,10 +127,10 @@
 
     <div class='select_category'>
       <ul>
-        <li class='active'>
+        <li class="active" id="liOne">
           <a th:href="@{'/admin/'+${session.memberId}}">검수대기</a>
         </li>
-        <li>
+        <li id="liTwo">
           <a th:href="@{'/admin/complete/'+${session.memberId}}">검수완료</a>
         </li>
       </ul>
@@ -140,8 +140,6 @@
       <input type='text' class='searchbox' id='orderIdSearch' placeholder='주문번호 검색'>
       <button type='button' id="bthSearch">검색</button>
       <button type='button' id="btnReset">초기화</button>
-      <!--초기화는 전체검색으로 전환-->
-      <!-- JAX로 검색할 것-->
     </div>
     <hr>
   </aside>
