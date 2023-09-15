@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_manager_order_detail.css">
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
+<header th:replace="~{/common/project_manager_header :: header}"></header>
 <body>
     
     <div class='container'>
@@ -38,7 +38,7 @@
                     <th class='content'>세탁무게</th>
                     <td class='content laundry_result'>
                         <input type="text" class="hidden" name="commonLaundryId" th:value="${info['commonLaundryInfo'].commonLaundryId}">
-                        <input type="text" pattern="[0-9]+(\.[0-9]+)?" name="commonLaundryWeight" id="laundryWeight">
+                        <input type="text" pattern="[0-9]*(\.[0-9]+)?" name="commonLaundryWeight" id="laundryWeight">
                         <span>kg</span>
                     </td>
                 </tr>
@@ -188,6 +188,50 @@
     document.querySelector('#btnSubmit').addEventListener('click', function (e) {
         e.preventDefault();
 
+        // 모든 라디오 버튼을 선택
+        let radios = document.querySelectorAll('input[type="radio"]');
+        let radiosNameArr = [];
+
+        radios.forEach(function(radio) {
+            radiosNameArr.push(radio.getAttribute('name'));
+        });
+
+        let radioArr = Array.from(new Set(radiosNameArr));
+        let validRadio = false;
+        let validRadioAll= [];
+        radioArr.forEach(function (radioName) {
+            let radio = document.querySelectorAll(`input[type="radio"][name="${radioName}"]`);
+
+            for (let i = 0; i < radio.length; i++) {
+                if(radio[i].checked) {
+                    validRadio = true;
+                    validRadioAll.push(validRadio);
+                    return;
+                }
+            }
+        });
+
+        let cnt=0;
+        for (let j = 0; j < validRadioAll.length; j++) {
+            if (validRadio == true) {
+                cnt++;
+            }
+        }
+
+        let weight = /^\d+(\.\d+)?$/;
+        let laundryW = document.querySelector('#laundryWeight').value;
+
+        if(!weight.test(laundryW)) {
+            alert("일반세탁 무게 확인이 필요합니다..");
+            return;
+        }else if(cnt!==radioArr.length) {
+            alert("검수 체크가 필요합니다.");
+            return;
+        }else if(selectedFiles.length === 0) {
+            alert("이미지 첨부가 필요합니다.");
+            return;
+        }
+
         let formData = new FormData();
 
         let inspectionDataDto = {
@@ -221,7 +265,7 @@
         selectedFiles.forEach(file => {
             formData.append("file", file);
         });
-        fetch(`/admin/${memberId}/${ordersId}`, {
+        fetch(`/admin/view/${memberId}/${ordersId}`, {
             method: 'POST',
             body: formData
         })
