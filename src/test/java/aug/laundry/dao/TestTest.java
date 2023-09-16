@@ -65,11 +65,4 @@ class TestTest {
         System.out.println(member);
 
     }
-    @Test
-    void cookieTest(){
-
-       Long member = loginService.checkUserWithSessionId("7FE471AC9C7B61C7837B70BF9BF612C3");
-
-        System.out.println(member);
-    }
 }

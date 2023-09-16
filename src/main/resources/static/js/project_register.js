@@ -68,11 +68,11 @@ function sendSms(){
     let resultMsg = document.querySelector('#phonenumber-check-warn');
 
     if(subPhonenumber.value != null && subPhonenumber.value !== ''){
-        fetch("/sendSms?phonenumber="+phonenumber)
+        fetch("/check/sendSMS?to="+phonenumber)
         .then(response => response.json())
         .then(map => {
         		alert("인증번호가 전송되었습니다.");
-        		phone_check_number = map.number;
+        		phone_check_number = map;
         		//document.querySelector('.phonenumber-check-input').disabled = false;
         		document.querySelector('.phonenumber-check-button').addEventListener('click', function(){
         			let inputCode = document.querySelector('.phonenumber-check-input');
