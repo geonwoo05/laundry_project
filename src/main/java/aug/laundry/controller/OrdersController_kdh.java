@@ -1,6 +1,5 @@
 package aug.laundry.controller;
 
-import aug.laundry.commom.ConstOrderStatus;
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.member.MemberMapper;
 import aug.laundry.dto.*;
@@ -15,10 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static aug.laundry.commom.ConstOrderStatus.*;
 
@@ -36,63 +33,40 @@ public class OrdersController_kdh {
     public String orders(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId){
 
         List<CategoryForOrdersListDto> category = ordersServiceKdh.findCategoryByMemberId(memberId);
-        List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(memberId);
+//        List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(memberId);
         List<OrdersForOrdersListDto> orders = ordersServiceKdh.findOrders(memberId);
-        List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(memberId);
-
-
+//        List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(memberId);
 
         log.info("category={}", category);
         log.info("orders={}",orders);
-        log.info("ordersFinsihed={}",ordersFinished);
+//        log.info("ordersFinsihed={}",ordersFinished);
         model.addAttribute("categories", category);
-        model.addAttribute("categoriesFinished", categoryFinished);
+//        model.addAttribute("categoriesFinished", categoryFinished);
         model.addAttribute("orders", orders);
-        model.addAttribute("ordersFinished", ordersFinished);
+//        model.addAttribute("ordersFinished", ordersFinished);
 
         return "project_order_list_2";
     }
 
+
     @GetMapping("/complete")
-    public String ordersComplete(){
+    public String complete(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId){
+
+//        List<CategoryForOrdersListDto> category = ordersServiceKdh.findCategoryByMemberId(memberId);
+        List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(memberId);
+//        List<OrdersForOrdersListDto> orders = ordersServiceKdh.findOrders(memberId);
+        List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(memberId);
+
+//        log.info("category={}", category);
+//        log.info("orders={}",orders);
+        log.info("ordersFinsihed={}",ordersFinished);
+//        model.addAttribute("categories", category);
+        model.addAttribute("categoriesFinished", categoryFinished);
+//        model.addAttribute("orders", orders);
+        model.addAttribute("ordersFinished", ordersFinished);
+
         return "project_order_list_complete";
     }
-
-
-
-    @GetMapping("/getList/{pageNo}/{orderStatus}")
-    @ResponseBody
-    public Map<String, Object> getOrdersList(@PathVariable("pageNo") int pageNo, @PathVariable("orderStatus") int orderStatus,
-                                             @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId){
-
-        Map<String, Object> ordersMap = new HashMap<>();
-
-        Criteria cri = new Criteria();
-        cri.setPageNo(pageNo, ordersServiceKdh.getTotalCount(memberId));
-
-        List<OrdersListResponseDto> list = null;
-        log.info("orderStatus ========================={}", orderStatus);
-        //project_order_list.html의 input태그 id=inspectionStatus 인 값이 1
-        if(orderStatus == 1){
-            list = ordersServiceKdh.findOrdersByMemberIdAndCri(cri, memberId);
-            log.info("orderStatus=1, list={}", list);
-            //project_order_list.html의 input태그 id=inspectionStatus 인 값이 2
-        } else if(orderStatus == 2){
-            list = ordersServiceKdh.findOrdersFinishedByMemberIdAndCri(cri, memberId);
-            log.info("orderStatus=2, list={}", list);
-        }
-
-        if(!list.isEmpty()) {
-            ordersMap.put("res", "success");
-            ordersMap.put("list", list);
-            ordersMap.put("realEnd", cri.getRealEnd());
-        }else {
-            ordersMap.put("res", "fail");        }
-
-        return ordersMap;
-    }
-
-
 
     @GetMapping("/{ordersId}/payment")
     public String payOrder(@PathVariable Long ordersId,
