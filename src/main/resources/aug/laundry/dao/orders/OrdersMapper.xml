@@ -117,7 +117,7 @@
         from(SELECT ORDERS_ID, TO_CHAR(TO_NUMBER(TO_CHAR(ORDERS_DATE, 'MM'))) || '월 ' || TO_CHAR(ORDERS_DATE, 'DD') || '일' || TO_CHAR(ORDERS_DATE, '(DY)') AS ORDERS_DATE,
         ORDERS_STATUS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE
         FROM ORDERS
-        WHERE MEMBER_ID = #{memberId} AND ORDERS_STATUS NOT IN(1,11)
+        WHERE MEMBER_ID = #{memberId} AND ORDERS_STATUS NOT IN(1,13)
         ORDER BY ORDERS_DATE DESC) t)
         WHERE rn BETWEEN #{cri.startNo} and #{cri.endNo}
     </select>
@@ -128,7 +128,7 @@
         from(SELECT ORDERS_ID, TO_CHAR(TO_NUMBER(TO_CHAR(ORDERS_DATE, 'MM'))) || '월 ' || TO_CHAR(ORDERS_DATE, 'DD') || '일' || TO_CHAR(ORDERS_DATE, '(DY)') AS ORDERS_DATE,
         ORDERS_STATUS, ORDERS_PICKUP, ORDERS_PICKUP_DATE, ORDERS_RETURN_DATE
         FROM ORDERS
-        WHERE MEMBER_ID = #{memberId} AND ORDERS_STATUS IN(1,11)
+        WHERE MEMBER_ID = #{memberId} AND ORDERS_STATUS IN(1,13)
         ORDER BY ORDERS_DATE DESC) t)
         WHERE rn BETWEEN #{cri.startNo} and #{cri.endNo}
     </select>
@@ -175,6 +175,121 @@
         FROM ORDERS
         WHERE ORDERS_ID = #{ordersId}
     </select>
+
+    <select id="findCountOfQuickDelivery" resultType="int">
+        SELECT COUNT(*)
+        FROM QUICK_LAUNDRY A
+        LEFT JOIN ORDERS_DETAIL B
+        ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
+        WHERE B.ORDERS_ID = #{ordersId}
+    </select>
+
+    <select id="findCategoryByMemberId" resultType="aug.laundry.dto.CategoryForOrdersListDto">
+        SELECT ORDERS_ID,
+        CASE WHEN COUNT(*) = 1 THEN MAX(CATEGORY) || ' (' || MAX(F) || ')'
+        ELSE MAX(CATEGORY) || ' 외 ' || TO_CHAR(COUNT(*)-1) || '건' || ' (' || MAX(F) || ')'
+        END AS CATEGORY
+        FROM
+        ( SELECT A.ORDERS_ID, B.DRYCLEANING_CATEGORY AS CATEGORY, 'DRYCLEANING' AS F
+        FROM ORDERS_DETAIL A
+        INNER JOIN DRYCLEANING B
+        ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
+        INNER JOIN ORDERS C
+        ON A.ORDERS_ID = C.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS != #{orderCancel} AND C.ORDERS_STATUS != #{deliverySuccess}
+
+        UNION ALL
+
+        SELECT A.ORDERS_ID, B.REPAIR_CATEGORY AS CATEGORY, 'REPAIR' AS F
+        FROM ORDERS_DETAIL A
+        INNER JOIN REPAIR B
+        ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
+        INNER JOIN ORDERS C
+        ON A.ORDERS_ID = C.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS != #{orderCancel} AND C.ORDERS_STATUS != #{deliverySuccess}
+
+        UNION ALL
+
+        SELECT A.ORDERS_ID,
+        CASE WHEN COUNT(*) = 0 THEN 'EMPTY'
+        ELSE 'BASIC'
+        END AS CATEGORY,
+        'COMMON' AS F
+        FROM ORDERS_DETAIL A
+        INNER JOIN COMMON_LAUNDRY B
+        ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
+        INNER JOIN ORDERS C
+        ON A.ORDERS_ID = C.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS != #{orderCancel} AND C.ORDERS_STATUS != #{deliverySuccess}
+        GROUP BY A.ORDERS_ID
+        )
+        GROUP BY ORDERS_ID
+        ORDER BY ORDERS_ID DESC
+    </select>
+
+    <select id="findCategoryFinishedByMemberId" resultType="aug.laundry.dto.CategoryForOrdersListDto">
+        SELECT ORDERS_ID,
+        CASE WHEN COUNT(*) = 1 THEN MAX(CATEGORY) || ' (' || MAX(F) || ')'
+        ELSE MAX(CATEGORY) || ' 외 ' || TO_CHAR(COUNT(*)-1) || '건' || ' (' || MAX(F) || ')'
+        END AS CATEGORY
+        FROM
+        ( SELECT A.ORDERS_ID, B.DRYCLEANING_CATEGORY AS CATEGORY, 'DRYCLEANING' AS F
+        FROM ORDERS_DETAIL A
+        INNER JOIN DRYCLEANING B
+        ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
+        INNER JOIN ORDERS C
+        ON A.ORDERS_ID = C.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess}
+
+        UNION ALL
+
+        SELECT A.ORDERS_ID, B.REPAIR_CATEGORY AS CATEGORY, 'REPAIR' AS F
+        FROM ORDERS_DETAIL A
+        INNER JOIN REPAIR B
+        ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
+        INNER JOIN ORDERS C
+        ON A.ORDERS_ID = C.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess}
+
+        UNION ALL
+
+        SELECT A.ORDERS_ID,
+        CASE WHEN COUNT(*) = 0 THEN 'EMPTY'
+        ELSE 'BASIC'
+        END AS CATEGORY,
+        'COMMON' AS F
+        FROM ORDERS_DETAIL A
+        INNER JOIN COMMON_LAUNDRY B
+        ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
+        INNER JOIN ORDERS C
+        ON A.ORDERS_ID = C.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess}
+        GROUP BY A.ORDERS_ID
+        )
+        GROUP BY ORDERS_ID
+        ORDER BY ORDERS_ID DESC
+    </select>
+    
+    <select id="findOrders" resultType="aug.laundry.dto.OrdersForOrdersListDto">
+        SELECT A.ORDERS_ID, TO_CHAR(TO_NUMBER(TO_CHAR(A.ORDERS_DATE, 'MM'))) || '월 ' || TO_CHAR(A.ORDERS_DATE, 'DD') || '일' || TO_CHAR(A.ORDERS_DATE, '(DY)') AS ORDERS_DATE,
+                'R' || A.ORDERS_STATUS AS ORDERSTATUS
+        FROM ORDERS A
+        INNER JOIN ORDERS B
+        ON A.ORDERS_ID = B.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND A.ORDERS_STATUS != #{orderCancel} AND A.ORDERS_STATUS != #{deliverySuccess}
+        ORDER BY A.ORDERS_ID DESC
+    </select>
+
+    <select id="findOrdersFinished" resultType="aug.laundry.dto.OrdersForOrdersListDto">
+        SELECT A.ORDERS_ID, TO_CHAR(TO_NUMBER(TO_CHAR(A.ORDERS_DATE, 'MM'))) || '월 ' || TO_CHAR(A.ORDERS_DATE, 'DD') || '일' || TO_CHAR(A.ORDERS_DATE, '(DY)') AS ORDERS_DATE,
+                'R' || A.ORDERS_STATUS AS ORDERSTATUS
+        FROM ORDERS A
+        INNER JOIN ORDERS B
+        ON A.ORDERS_ID = B.ORDERS_ID
+        WHERE A.MEMBER_ID = #{memberId} AND A.ORDERS_STATUS = #{orderCancel} OR A.ORDERS_STATUS = #{deliverySuccess}
+        ORDER BY A.ORDERS_ID DESC
+    </select>
+
 
 
 </mapper>
