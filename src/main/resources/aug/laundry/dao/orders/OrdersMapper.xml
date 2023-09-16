@@ -239,7 +239,7 @@
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
         INNER JOIN ORDERS C
         ON A.ORDERS_ID = C.ORDERS_ID
-        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess}
+        WHERE A.MEMBER_ID = #{memberId} AND (C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess})
 
         UNION ALL
 
@@ -249,7 +249,7 @@
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
         INNER JOIN ORDERS C
         ON A.ORDERS_ID = C.ORDERS_ID
-        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess}
+        WHERE A.MEMBER_ID = #{memberId} AND (C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess})
 
         UNION ALL
 
@@ -263,7 +263,7 @@
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
         INNER JOIN ORDERS C
         ON A.ORDERS_ID = C.ORDERS_ID
-        WHERE A.MEMBER_ID = #{memberId} AND C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess}
+        WHERE A.MEMBER_ID = #{memberId} AND (C.ORDERS_STATUS = #{orderCancel} OR C.ORDERS_STATUS = #{deliverySuccess})
         GROUP BY A.ORDERS_ID
         )
         GROUP BY ORDERS_ID
@@ -286,7 +286,7 @@
         FROM ORDERS A
         INNER JOIN ORDERS B
         ON A.ORDERS_ID = B.ORDERS_ID
-        WHERE A.MEMBER_ID = #{memberId} AND A.ORDERS_STATUS = #{orderCancel} OR A.ORDERS_STATUS = #{deliverySuccess}
+        WHERE A.MEMBER_ID = #{memberId} AND (A.ORDERS_STATUS = #{orderCancel} OR A.ORDERS_STATUS = #{deliverySuccess})
         ORDER BY A.ORDERS_ID DESC
     </select>
 
