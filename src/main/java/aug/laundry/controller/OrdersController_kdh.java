@@ -33,8 +33,23 @@ public class OrdersController_kdh {
     private final MemberMapper memberMapper;
 
     @GetMapping
-    public String orders(){
-        return "project_order_list";
+    public String orders(Model model){
+        List<CategoryForOrdersListDto> category = ordersServiceKdh.findCategoryByMemberId(4L);
+        List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(4L);
+        List<OrdersForOrdersListDto> orders = ordersServiceKdh.findOrders(4L);
+        List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(4L);
+
+
+
+        log.info("category={}", category);
+        log.info("orders={}",orders);
+        log.info("ordersFinsihed={}",ordersFinished);
+        model.addAttribute("categories", category);
+        model.addAttribute("categoriesFinished", categoryFinished);
+        model.addAttribute("orders", orders);
+        model.addAttribute("ordersFinished", ordersFinished);
+
+        return "project_order_list_2";
     }
 
     @GetMapping("/complete")

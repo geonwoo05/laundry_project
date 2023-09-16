@@ -1,5 +1,6 @@
 package aug.laundry.controller;
 
+import aug.laundry.commom.ConstOrderStatus;
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.payment.PaymentDao;
 import aug.laundry.domain.Paymentinfo;
@@ -86,8 +87,10 @@ public class PaymentController {
             Long couponListId = payment.getCouponListId();
             Long pointPrice = payment.getPointPrice();
             Long finalPrice = paymentinfo.getAmount();
+            Long totalPrice = prices.get("totalPrice");
+            Long totalPriceWithPassApplied = prices.get("totalPriceWithPassApplied");
 
-            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, prices.get("totalPrice"), prices.get("totalPriceWithPassApplied"));
+            updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, totalPrice, totalPriceWithPassApplied);
         }
         return "redirect:/payment/complete";
     }
@@ -125,8 +128,10 @@ public class PaymentController {
 
                 Long paymentinfoId = paymentinfo.getPaymentinfoId();
                 Long finalPrice = paymentinfo.getAmount();
+                Long totalPrice = prices.get("totalPrice");
+                Long totalPriceWithPassApplied = prices.get("totalPriceWithPassApplied");
 
-                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, prices.get("totalPrice"), prices.get("totalPriceWithPassApplied"));
+                updateSeveralRegardingOrders(finalPrice, ordersId, memberId, paymentinfoId, couponListId, pointPrice, totalPrice, totalPriceWithPassApplied);
             }
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -137,7 +142,14 @@ public class PaymentController {
         Long subscriptionDiscountPrice = (totalPriceWithPassApplied==null) ? 0L : (totalPrice - totalPriceWithPassApplied);
 
         ordersServiceKdh.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
-        ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId);
+        
+        //빠른배송이 1건 조회 된다면
+        if(ordersServiceKdh.findCountOfQuickDelivery(ordersId) == 1){
+            ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId, ConstOrderStatus.WASH_SUCCESS);
+        }
+        else { //일반배송
+            ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId, ConstOrderStatus.TAKE_SUCCESS_AFTER_WASH_SUCCESS);
+        }
 
         if(couponListId != null){
             ordersServiceKdh.updateCouponStatusNOrdersId(ordersId, couponListId);

@@ -7,6 +7,7 @@ import aug.laundry.domain.Repair;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
 import aug.laundry.enums.orderStatus.OrderStatus;
+import aug.laundry.enums.repair.RepairCategory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,8 @@ public class OrdersService_kdh {
 
     private final OrdersDao ordersDao;
     private final PointDao pointDao;
+
+
 
 
     public OrdersResponseDto findByOrdersId(Long ordersId){
@@ -225,8 +228,8 @@ public class OrdersService_kdh {
     }
 
     @Transactional
-    public void updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId){
-        int result = ordersDao.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId);
+    public void updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId, int constOrderStatus){
+        int result = ordersDao.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId, constOrderStatus);
         if(result==0) {
             throw new IllegalArgumentException("주문테이블의 최종결제금액, 주문상태, 결제정보Id가 업데이트 되지 않았습니다.");
         }
@@ -263,7 +266,72 @@ public class OrdersService_kdh {
         if(result==0) {
             throw new IllegalArgumentException("구독할인금액이 업데이트 되지 않았습니다.");
         }
-
     }
 
+    public int findCountOfQuickDelivery(Long ordersId){
+        return ordersDao.findCountOfQuickDelivery(ordersId);
+    }
+
+    public List<CategoryForOrdersListDto> findCategoryByMemberId(Long memberId){
+        List<CategoryForOrdersListDto> category = ordersDao.findCategoryByMemberId(memberId);
+
+        setEnglishCategoryToKorean(category);
+        return category;
+    }
+
+    public List<CategoryForOrdersListDto> findCategoryFinishedByMemberId(Long memberId){
+        List<CategoryForOrdersListDto> category = ordersDao.findCategoryFinishedByMemberId(memberId);
+
+        setEnglishCategoryToKorean(category);
+        return category;
+    }
+
+    private static void setEnglishCategoryToKorean(List<CategoryForOrdersListDto> category) {
+        category.stream()
+                .forEach(dto -> {
+                    String c = dto.getCategory();
+
+
+                    // 'OVERHANGING 외 2건 (REPAIR)' 에서 REPAIR
+                    String cg = c.substring(c.indexOf("(")+1, c.indexOf(")"));
+
+                    // 'OVERHANGING 외 2건 (REPAIR)' 에서 OVERHANGING
+                    String first = c.substring(0, c.indexOf(" "));
+
+
+                    if("DRYCLEANING".equals(cg)){
+                        Category category1 = Category.valueOf(first);
+                        String title = category1.getTitle();
+                        c = c.replace(first, title + " 드라이클리닝");
+                        c = c.substring(0, c.indexOf("("));
+
+                        dto.setCategory(c);
+
+                    }
+                    else if("REPAIR".equals(cg)){
+                        RepairCategory repair = RepairCategory.valueOf(first);
+                        String title = repair.getTitle();
+                        c = c.replace(first, title + " 수선");
+                        c = c.substring(0, c.indexOf("("));
+
+                        dto.setCategory(c);
+                    }
+                    else if("COMMON".equals(cg)){
+                        Category category1 = Category.valueOf(first);
+                        String title = category1.getTitle();
+                        c = c.replace(first, title);
+                        c = c.substring(0, c.indexOf("("));
+
+                        dto.setCategory(c);
+                    }
+                });
+    }
+
+    public List<OrdersForOrdersListDto> findOrders(Long memberId){
+        return ordersDao.findOrders(memberId);
+    }
+
+    public List<OrdersForOrdersListDto> findOrdersFinished(Long memberId){
+        return ordersDao.findOrdersFinished(memberId);
+    }
 }

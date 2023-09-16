@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -100,9 +101,9 @@ public class OrdersDao {
         return ordersMapper.updatePaymentinfoIdByOrdersId(paymentinfoId, ordersId);
     }
 
-    public int updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId){
+    public int updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId, int constOrderStatus){
         return ordersMapper.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId,
-                ordersId, ConstOrderStatus.PAY_SUCCESS);
+                ordersId, constOrderStatus);
     }
 
     public PriceResponseDto findPricesByOrdersId(Long ordersId){
@@ -126,6 +127,46 @@ public class OrdersDao {
 
     public int updateSubscriptionDiscountPrice(Long subscriptionDiscountPrice, Long ordersId){
         return ordersMapper.updateSubscriptionDiscountPrice(subscriptionDiscountPrice, ordersId);
+    }
+
+    public int findCountOfQuickDelivery(Long ordersId){
+        return ordersMapper.findCountOfQuickDelivery(ordersId);
+    }
+
+    public List<CategoryForOrdersListDto> findCategoryByMemberId(Long memberId){
+        List<CategoryForOrdersListDto> category = ordersMapper.findCategoryByMemberId(
+                memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
+        if(category == null || category.isEmpty()){
+            throw new IllegalArgumentException("카테고리 리스트를 찾을 수 없습니다.");
+        }
+        return category;
+    }
+
+    public List<CategoryForOrdersListDto> findCategoryFinishedByMemberId(Long memberId){
+        List<CategoryForOrdersListDto> categoryFinished = ordersMapper.findCategoryFinishedByMemberId(
+                memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
+        if(categoryFinished == null || categoryFinished.isEmpty()){
+            throw new IllegalArgumentException("카테고리 리스트를 찾을 수 없습니다.");
+        }
+        return categoryFinished;
+    }
+
+    public List<OrdersForOrdersListDto> findOrders(Long memberId){
+        List<OrdersForOrdersListDto> orders = ordersMapper.findOrders(
+                memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
+        if(orders == null || orders.isEmpty()){
+            throw new IllegalArgumentException("주문리스트를 찾을 수 없습니다.");
+        }
+        return orders;
+    }
+
+    public List<OrdersForOrdersListDto> findOrdersFinished(Long memberId){
+        List<OrdersForOrdersListDto> ordersFinished = ordersMapper.findOrdersFinished(
+                memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
+        if(ordersFinished == null || ordersFinished.isEmpty()){
+            throw new IllegalArgumentException("주문리스트를 찾을 수 없습니다.");
+        }
+        return ordersFinished;
     }
 
 

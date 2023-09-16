@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -56,4 +57,15 @@ public interface OrdersMapper {
     Long findSubscriptionDiscountPrice(Long ordersId);
 
     int updateSubscriptionDiscountPrice(@Param("subscriptionDiscountPrice") Long subscriptionDiscountPrice, @Param("ordersId") Long ordersId);
+
+    int findCountOfQuickDelivery(Long ordersId);
+
+    List<CategoryForOrdersListDto> findCategoryByMemberId(@Param("memberId") Long memberId, @Param("orderCancel") int orderCancel, @Param("deliverySuccess") int deliverySuccess);
+
+    List<CategoryForOrdersListDto> findCategoryFinishedByMemberId(@Param("memberId") Long memberId, @Param("orderCancel") int orderCancel, @Param("deliverySuccess") int deliverySuccess);
+
+    List<OrdersForOrdersListDto> findOrders(@Param("memberId") Long memberId, @Param("orderCancel") int orderCancel, @Param("deliverySuccess") int deliverySuccess);
+
+    List<OrdersForOrdersListDto> findOrdersFinished(@Param("memberId") Long memberId, @Param("orderCancel") int orderCancel, @Param("deliverySuccess") int deliverySuccess);
+
 }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public enum Category {
 
         COMMON("일반", null, null),
-            BASIC("생활빨래 10L", 4000L, COMMON),
+            BASIC("생활빨래", 4000L, COMMON),
             ADDITIONAL("생활빨래 20L 초과시 10L 당", 3800L, COMMON),
 
         CLOTHES("의류", null, null),
