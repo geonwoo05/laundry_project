@@ -24,7 +24,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+<<<<<<< Updated upstream
 import java.sql.Date;
+=======
+import java.util.Date;
+>>>>>>> Stashed changes
 import java.util.HashMap;
 import java.util.Map;
 
@@ -361,12 +365,18 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     }
 
     @Override
+<<<<<<< Updated upstream
     public int keepLogin(String sessionId, Date limit, Long memberId) {
         int res = loginDao.keepLogin(sessionId, limit, memberId);
+=======
+    public int keepLogin(String sessionId, Date limit, String memberId) {
+        int res = loginMapper.keepLogin(sessionId, limit, memberId);
+>>>>>>> Stashed changes
         return res;
     }
 
     @Override
+<<<<<<< Updated upstream
     public MemberDto checkUserWithSessionId(String sessionId) {
         return loginDao.checkUserWithSessionId(sessionId);
     }
@@ -374,6 +384,11 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     @Override
     public int renewLoginTime(Long memberId) {
         return loginDao.renewLoginTime(memberId);
+=======
+    public MemberDto checkUserWithSessionId(String memberId) {
+        MemberDto memberDto = loginMapper.checkUserWithSessionId(memberId);
+        return memberDto;
+>>>>>>> Stashed changes
     }
 
 }

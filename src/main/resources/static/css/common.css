@@ -56,9 +56,6 @@ button{
     cursor: pointer;
 }
 
-button:hover{
-    background-color: var(--background-color-hover);
-}
 
 button svg{
     width: clamp(1.3rem, 3vw, 2rem);

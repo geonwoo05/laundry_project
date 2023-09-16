@@ -58,7 +58,8 @@
                 <ul id="orderList">
                     <th:block th:each="list : ${orderList}">
                     <a th:href="@{/ride/orders/{ordersId}(ordersId=${list.ordersId})}">
-                        <li>
+                        <li th:if="${list.ordersStatus == 2 or list.ordersStatus == 3 or list.ordersStatus == 4}" >
+                        <li th:if="${list.ordersStatus == 10 or list.ordersStatus == 11 or list.ordersStatus == 12}" style="background-color: #00ffff38;">
                             <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" th:text="${list.ordersId}">1119</span><br>
                             <span class='delivery_address' th:text="${list.ordersAddress + ' ' + list.ordersAddressDetails}">서울특별시 서대문구 대현동 777-8 508동 116호</span>
                             <div class='space'>

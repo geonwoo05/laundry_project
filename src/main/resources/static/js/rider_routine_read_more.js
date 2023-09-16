@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                      function initTmap() {
                         map = new Tmapv2.Map("map_div", {
-<!--                           center : new Tmapv2.LatLng(37.54882398563218, 126.99276886231617),-->
-                           center : new Tmapv2.LatLng(35.16075155863797, 129.1473492875082),
+                           center : new Tmapv2.LatLng(37.54882398563218, 126.99276886231617),
+//                           center : new Tmapv2.LatLng(35.16075155863797, 129.1473492875082),
                            width : "100%",
                            height : "400px",
                            zoom : 10,
@@ -60,14 +60,14 @@ document.addEventListener('DOMContentLoaded', function() {
                               });
                                 });
 
-                        marker_e = new Tmapv2.Marker(
-                              {
-                                 position : new Tmapv2.LatLng(37.403049076341794,
-                                       127.10331814639885),
-                                 icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
-                                 iconSize : new Tmapv2.Size(24, 38),
-                                 map : map
-                              });
+//                        marker_e = new Tmapv2.Marker(
+//                              {
+//                                 position : new Tmapv2.LatLng(37.403049076341794,
+//                                       127.10331814639885),
+//                                 icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_e.png",
+//                                 iconSize : new Tmapv2.Size(24, 38),
+//                                 map : map
+//                              });
 
                         $(document).ready(function(){
                                        navigator.geolocation.getCurrentPosition((position) => {
@@ -151,10 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                           url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1",
                                           async : false,
                                           data : {
-<!--                                             "startX" : position.coords.longitude,-->
-<!--                                             "startY" : position.coords.latitude,-->
-                                             "startX" : "129.1473492875082",
-                                             "startY" : "35.16075155863797",
+                                             "startX" : position.coords.longitude,
+                                             "startY" : position.coords.latitude,
+//                                             "startX" : "129.1473492875082",
+//                                             "startY" : "35.16075155863797",
                                              "endX" : endX,
                                              "endY" : endY,
                                              "reqCoordType" : "WGS84GEO",
