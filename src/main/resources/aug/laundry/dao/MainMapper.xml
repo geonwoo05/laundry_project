@@ -8,4 +8,6 @@
         WHERE MEMBER_ID = #{memberId} AND ORDERS_STATUS BETWEEN 2 AND 13
         ORDER BY ORDERS_DATE
     </select>
+
+
 </mapper>

@@ -33,12 +33,7 @@ body{
     border-radius: var(--border-radius);
     background-color: #eeeeee;
     font-size: 0.9rem;
-}
-.clothes, .shoes{
-    width: 3rem;
-}
-.bedding{
-    width: 4rem;
+    padding: 0 1rem;
 }
 /* 카테고리 선택시, 카테고리가 화면에 있으면*/
 .category.selected{

@@ -343,4 +343,5 @@
 }
 .arrow #left{
     left: 0.5rem;
+    transform: rotate(180deg);
 }

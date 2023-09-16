@@ -2,6 +2,7 @@ package aug.laundry.controller;
 
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.EnumDao;
+import aug.laundry.domain.Admin;
 import aug.laundry.dto.MemberDto;
 import aug.laundry.dto.OrdersEnum2;
 import aug.laundry.enums.category.CategoryPriceCalculator;
@@ -34,10 +35,12 @@ public class MainController {
 
 
         if (memberId != null){
-            MemberDto memberDto = memberServiceKgw.selectOne(memberId);
-            List<OrdersEnum2> orders = mainService.getOrders(memberId);
-            model.addAttribute("name", memberDto.getMemberName());
-            model.addAttribute("orders", orders);
+            MemberDto memberDto = memberServiceKgw.selectOne(memberId); // 일반회원
+            if (memberDto != null) {
+                List<OrdersEnum2> orders = mainService.getOrders(memberId);
+                model.addAttribute("name", memberDto.getMemberName());
+                model.addAttribute("orders", orders);
+            }
         }
 
 
