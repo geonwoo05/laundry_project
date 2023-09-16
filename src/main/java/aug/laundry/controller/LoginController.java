@@ -40,16 +40,26 @@ public class LoginController {
         System.out.println("naverLogin =======");
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
 
-
+        String redirectURL = state;
+        System.out.println("redirectURL : " + redirectURL);
+        if(redirectURL != null){
+            return "redirect:" + redirectURL;
+        }
         return "redirect:/";
     }
     @GetMapping("/kakaoLogin")
     public String kakaoLogin_Redirect(String code, Model model, HttpSession session, String state){
         service.kakaoProcess(code, session);
 
+<<<<<<< Updated upstream
         // 인터셉터에서 온 redirectURL이 있다면 로그인 후 redirectURL의 경로로 이동
         String redirectURL = state;
         if(redirectURL != null && !redirectURL.isEmpty()){
+=======
+        String redirectURL = state;
+        System.out.println("redirectURL : " + redirectURL);
+        if(redirectURL != null){
+>>>>>>> Stashed changes
             return "redirect:" + redirectURL;
         }
 
@@ -57,13 +67,19 @@ public class LoginController {
     }
 
     @PostMapping("/loginAction")
+<<<<<<< Updated upstream
     public  String login(MemberDto memberDto, HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response) {
         MemberDto userDto = service.login(memberDto);
+=======
+    public  String login(MemberDto memberDto, HttpSession session, Model model, HttpServletRequest request) {
+        MemberDto userdto = service.login(memberDto, session);
+>>>>>>> Stashed changes
 
         AdminDto adminDto = service.adminLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
         RiderDto riderDto = service.riderLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
         QuickRiderDto quickRiderDto = service.quickRiderLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
 
+<<<<<<< Updated upstream
         String redirectURL = request.getParameter("redirectURL");
         // 로그인 성공
         if (userDto != null) {
@@ -94,6 +110,16 @@ public class LoginController {
                 return "redirect:" + redirectURL;
             }
             request.setAttribute("useCookie", request.getParameter("useCookie"));
+=======
+        if (userdto != null && userdto.getMemberDeleteStatus() != 'Y') {
+            String redirectURL = request.getParameter("redirectURL");
+            System.out.println("redirectURL : " + redirectURL);
+            if(redirectURL != null){
+                session.setAttribute(SessionConstant.LOGIN_MEMBER, userdto.getMemberId());
+                return "redirect:" + redirectURL;
+            }
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, userdto.getMemberId());
+>>>>>>> Stashed changes
             return "redirect:/";
 
         }else if(adminDto != null){
@@ -106,12 +132,20 @@ public class LoginController {
             session.setAttribute(SessionConstant.LOGIN_MEMBER, quickRiderDto.getQuickRiderId());
             return "redirect:/ride/wait";
         }else{
+<<<<<<< Updated upstream
             if(memberService.selectId(memberDto.getMemberAccount()).getMemberDeleteStatus() == 'Y'){
                 model.addAttribute("errorMsg", "이미 탈퇴한 회원입니다.");
             }else{
                 model.addAttribute("memberAccount", memberDto.getMemberAccount());
                 model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
             }
+=======
+            if(userdto.getMemberDeleteStatus() == 'Y'){
+                model.addAttribute("errorMsg", "탈퇴한 회원입니다.");
+            }
+            model.addAttribute("memberAccount", memberDto.getMemberAccount());
+            model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+>>>>>>> Stashed changes
             return "project_login";
         }
 
