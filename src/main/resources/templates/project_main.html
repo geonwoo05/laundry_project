@@ -20,7 +20,12 @@
                 <svg transform='rotate(180)' id='left' onclick="javascript:prevSlide()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
                 <svg id='right' onclick="javascript:nextSlide()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg>
             </div>
+            <th:block th:if="${session.memberId == null}">
+                <a href="/login" class="slide" id="banner5"></a>
+            </th:block>
+            <th:block th:if="${session.memberId != null}">
             <a th:href="@{members/{memberId}/invite(memberId=${session.memberId})}" class="slide" id="banner1"></a>
+            </th:block>
             <th:block th:if="${session.memberId == null}">
                 <a href="/subscription" class="slide" id="banner2"></a>
             </th:block>
@@ -102,21 +107,40 @@
             <span>가격표</span>
         </a>
     </div>
-    <div class='floor'>
-        <a th:href="@{/members/{memberId}/invite(memberId=${session.memberId})}" class='friend'>
-            <div class='warp'>
-                <span class='title'>친구초대</span>
-                <span class='content'>5,000원 쿠폰 받으러가기</span>
-            </div>
-            <div class='inviteCoupon first'>
-                <span class='couponTitle'>POINT</span>
-                <span class='couponPrice'>
-                        <span>5,000</span>
-                        <div class='priceBox'>P</div>
-                    </span>
-            </div>
-        </a>
-    </div>
+    <th:block th:if="${session.memberId != null}">
+        <div class='floor'>
+            <a th:href="@{/members/{memberId}/invite(memberId=${session.memberId})}" class='friend'>
+                <div class='warp'>
+                    <span class='title'>친구초대</span>
+                    <span class='content'>5,000원 쿠폰 받으러가기</span>
+                </div>
+                <div class='inviteCoupon first'>
+                    <span class='couponTitle'>POINT</span>
+                    <span class='couponPrice'>
+                            <span>5,000</span>
+                            <div class='priceBox'>P</div>
+                        </span>
+                </div>
+            </a>
+        </div>
+    </th:block>
+    <th:block th:if="${session.memberId == null}">
+        <div class='floor'>
+            <a href="/login" class='friend'>
+                <div class='warp'>
+                    <span class='title'>친구초대</span>
+                    <span class='content'>5,000원 쿠폰 받으러가기</span>
+                </div>
+                <div class='inviteCoupon first'>
+                    <span class='couponTitle'>POINT</span>
+                    <span class='couponPrice'>
+                            <span>5,000</span>
+                            <div class='priceBox'>P</div>
+                        </span>
+                </div>
+            </a>
+        </div>
+    </th:block>
 </div>
 <script src="/js/project_main.js"></script>
 </body>
