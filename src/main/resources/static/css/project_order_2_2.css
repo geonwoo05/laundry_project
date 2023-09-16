@@ -192,3 +192,9 @@ hr{
     min-height: 5rem;
 }
 
+.message{
+    color: red;
+    font-size: 0.9rem;
+    margin-left: 0.3rem;
+}
+

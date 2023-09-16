@@ -108,11 +108,18 @@ public class LaundryController {
             System.out.println(bindingResult.getAllErrors());
             return "redirect:/laundry/order";
         }
-        laundryService.update(memberId, orderPost.getCoupon(), orderPost, ordersDetailId); // 쿠폰 유효성 검사
+        Long ordersId = laundryService.update(memberId, orderPost.getCoupon(), orderPost, ordersDetailId);// 쿠폰 유효성 검사
 
 
+        redirectAttributes.addFlashAttribute("ordersId", ordersId);
+        return "redirect:/laundry/complete";
+    }
 
-        return "redirect:/";
+    @GetMapping("/complete")
+    public String complete(Model model) {
+        Long ordersId = (Long) model.getAttribute("ordersId");
+        System.out.println("ordersId = " + ordersId);
+        return "project_order_complete";
     }
 
     @GetMapping("/order/pickup")

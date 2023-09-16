@@ -59,7 +59,7 @@ public class LaundryServiceImpl implements LaundryService{
 
     @Transactional
     @Override
-    public void update(Long memberId, Long couponListId, OrderPost orderPost, Long ordersDetailId) {
+    public Long update(Long memberId, Long couponListId, OrderPost orderPost, Long ordersDetailId) {
 
         boolean validCoupon = laundryRepository.validCoupon(memberId, couponListId); // 쿠폰 유효성 검사
         Long expectedPrice = 0L;
@@ -84,6 +84,8 @@ public class LaundryServiceImpl implements LaundryService{
         laundryRepository.updateOrdersDetail(orders.getOrdersId(), ordersDetailId); // ORDERS_DETAIL 안에 ORDERS_ID 업데이트
         System.out.println("성공!");
         laundryRepository.insertInspection(orders.getOrdersId());
+
+        return orders.getOrdersId();
     }
 
     @NotNull
@@ -99,6 +101,7 @@ public class LaundryServiceImpl implements LaundryService{
     @Override
     public void check(Long memberId, HttpSession session) {
         Long orders_detail_id =  laundryRepository.check(memberId, null);
+        System.out.println("orders_detail_id = " + orders_detail_id);
         if (orders_detail_id != null && orders_detail_id != 0){ // 장바구니가 존재한다면
             laundryRepository.removeOrdersDetail(orders_detail_id.longValue()); // 삭제
             log.info("removeAll OrdersDetail");

@@ -25,7 +25,7 @@ public class LaundryRepository {
 
     private final LaundryMapper laundryMapper;
 
-    @Value("${file.dir}")
+    @Value("${repair.images}")
     private String directory;
 
 
@@ -96,6 +96,7 @@ public class LaundryRepository {
         List<Long> repairIdAll = laundryMapper.getRepairId(ordersDetailId);
         for (Long repairId : repairIdAll) {
             List<String> repairImageStoreNames = laundryMapper.getRepairImageStoreName(repairId); // 실제 이미지 파일 삭제
+            System.out.println("repairImageStoreNames = " + repairImageStoreNames);
             removeRepairImageFile(repairImageStoreNames);
             laundryMapper.removeRepairImages(repairId); // RepairImage DB에서 삭제
         }
@@ -112,6 +113,7 @@ public class LaundryRepository {
         // 실제저장된 Repair Image 파일 삭제
         for (String storeName : repairImageStoreNames) {
             String srcFileName = URLDecoder.decode(directory + storeName);
+            System.out.println("srcFileName = " + srcFileName);
             File file = new File(srcFileName);
             boolean delete = file.delete();
         }
