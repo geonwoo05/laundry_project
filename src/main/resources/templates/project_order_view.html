@@ -132,7 +132,7 @@
             </tr>
         </table>
         <div class='point'>
-            <input type="text" name="point" id="point" th:placeholder="|보유 포인트 : ${#numbers.formatDecimal(point,3,'COMMA',0,'COMMA')}P|" placeholder='보유 포인트 : 400P'>
+            <input type="text" name="point" id="point" th:placeholder="|보유 포인트 : ${point == 0 ? '0' : #numbers.formatDecimal(point,3,'COMMA',0,'COMMA')}P|" placeholder='보유 포인트 : 400P'>
             <button type='button' class='pointbtn'>전부사용</button>
         </div>
 
