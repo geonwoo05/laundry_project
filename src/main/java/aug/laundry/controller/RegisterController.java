@@ -58,7 +58,6 @@ public class RegisterController {
                     });
             return "/register";
 
-
         } else {
             validation.put("validation", "성공");
             memberService.registerUser(memberDto);
@@ -86,8 +85,6 @@ public class RegisterController {
 
     @GetMapping("/register")
     public String goRegister(){
-
-
         return "project_register";
     }
 
