@@ -42,6 +42,9 @@ window.onload = function() {
                      var endX;
                      var endY;
 
+                     var startX;
+                     var startY;
+
 
                      function initTmap() {
                         map = new Tmapv2.Map("map_div", {
@@ -53,15 +56,15 @@ window.onload = function() {
                            scrollwheel : true
                         });
 
-                        navigator.geolocation.getCurrentPosition((position) => {
-                        marker_s = new Tmapv2.Marker(
-                                {
-                                 position : new Tmapv2.LatLng(position.coords.latitude, position.coords.longitude),
-                                 icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
-                                 iconSize : new Tmapv2.Size(24, 38),
-                                 map : map
-                              });
-                                });
+//                        navigator.geolocation.getCurrentPosition((position) => {
+//                        marker_s = new Tmapv2.Marker(
+//                                {
+//                                 position : new Tmapv2.LatLng(position.coords.latitude, position.coords.longitude),
+//                                 icon : "https://tmapapi.sktelecom.com/upload/tmap/marker/pin_r_m_s.png",
+//                                 iconSize : new Tmapv2.Size(24, 38),
+//                                 map : map
+//                              });
+//                                });
 
 //                        marker_e = new Tmapv2.Marker(
 //                              {
@@ -119,9 +122,19 @@ window.onload = function() {
                             console.log(resultInfo);
                             console.log("위도: " + resultInfo.coordinate[0].newLatEntr);
                             console.log("경도: " + resultInfo.coordinate[0].newLonEntr);
+                             console.log($('#orderStatus').val());
+                            console.log($('#orderStatus').val() == 10);
+                            if($('#orderStatus').val() == 10){
+                                 startX = 126.97371230861432;
+                                 startY = 37.564496383758915;
+                            }else{
+                                startX = position.coords.longitude;
+                                startY = position.coords.latitude;
+                            }
 
-                            console.log(resultInfo.coordinate[0].lon);
-                            console.log(resultInfo.coordinate[0].lat);
+                            console.log("===================" + startX);
+                            console.log("===================" + startY);
+
 
                             console.log(resultInfo.coordinate[0].adminDong);
 
@@ -139,8 +152,14 @@ window.onload = function() {
                             console.error(error);
                         }
                     });
+                    console.log($('#orderStatus').val());
+                    if($('#orderStatus').val() == 4 || $('#orderStatus').val() == 11){
+                        endX = 126.97371230861432
+                        endY = 37.564496383758915
+                    }
                     console.log(endX);
                     console.log(endY);
+
 
 //                    $('#start-navigation').click(function(e){
 //                        e.preventDefault();
@@ -169,8 +188,8 @@ window.onload = function() {
                                           url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1",
                                           async : false,
                                           data : {
-                                             "startX" : position.coords.longitude,
-                                             "startY" : position.coords.latitude,
+                                             "startX" : startX,
+                                             "startY" : startY,
                                              "endX" : endX,
                                              "endY" : endY,
 //                                           "endX" : 126.97548410130028,
@@ -286,8 +305,7 @@ window.onload = function() {
                                                          drawInfoArr
                                                                .push(convertChange);
                                                       }
-                                                      drawLine(drawInfoArr,
-                                                            "0");
+                                                      drawLine(drawInfoArr, "0");
                                                    } else {
 
                                                       var markerImg = "";
@@ -556,7 +574,12 @@ window.onload = function() {
                                           xx = resultInfo.coordinate[0].lon;
                                           yy = resultInfo.coordinate[0].lat;
                                       }
-                                startNavigation(xx, yy, aa);
+
+                                if($('#orderStatus').val() == 4 || $('#orderStatus').val() == 11){
+                                    goEnterpriseNavi();
+                                }else{
+                                    startNavigation(xx, yy, aa);
+                                }
                               },
                               error: function(xhr, status, error) {
                                   console.error(error);
@@ -571,16 +594,43 @@ window.onload = function() {
                     console.log(yy);
                     console.log(address);
                     if(xx != null && yy != null && address != null){
-        //                Kakao.Navi.share({
                         Kakao.Navi.start({
                               name: address,
                               x : Number(xx),
                               y : Number(yy),
                               vehicleType : 7,
                               rpOption : 2,
-        //                      sX : 126.9433486,
-        //                      sY : 37.5605672,
                             coordType: 'wgs84',
                           });
                         }
                     }
+
+                    function goEnterpriseNavi(){
+                    Kakao.Navi.start({
+                          name: '서울특별시 중구 세종대로 110',
+                          x : 126.97371230861432,
+                          y : 37.564496383758915,
+                          vehicleType : 7,
+                          rpOption : 2,
+                        coordType: 'wgs84',
+                      });
+                    }
+
+//                    function goHomeNavi(xx, yy, address){
+//                    console.log(xx);
+//                    console.log(yy);
+//                    console.log(address);
+//                    if(xx != null && yy != null && address != null){
+//                        Kakao.Navi.start({
+//                              name: address,
+//                              x : Number(xx),
+//                              y : Number(yy),
+//                              vehicleType : 7,
+//                              rpOption : 2,
+//                              sX : 126.97371230861432,
+//                              sY : 37.564496383758915,
+//                            coordType: 'wgs84',
+//                          });
+//                        }
+//                    }
+

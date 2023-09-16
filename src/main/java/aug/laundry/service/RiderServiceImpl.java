@@ -106,6 +106,11 @@ public class RiderServiceImpl implements RiderService{
         return riderMapper.acceptCheck(ordersId);
     }
 
+    @Override
+    public int updateStatus(Long riderId) {
+        return riderMapper.updateStatus(riderId);
+    }
+
 
 //    @Override
 //    public List<Map<String, Integer>> dongCnt(String ordersAddress) {

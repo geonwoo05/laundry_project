@@ -300,4 +300,11 @@ public class RiderController {
     public String gogo(){
         return "project_order_complete";
     }
+
+    @PostMapping("/ride/update")
+    public String update(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId){
+        int res = riderService.updateStatus(memberId);
+        System.out.println(res);
+        return "redirect:/ride/routine";
+    }
 }

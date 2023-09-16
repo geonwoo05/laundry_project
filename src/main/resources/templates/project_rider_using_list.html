@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_rider.css">
+    <style>
+         .delivery-done {
+            background-color: #00ffff38;
+        }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1"></script>
@@ -42,8 +47,10 @@
                 <ul>
                     <th:block th:each="list : ${orderList}">
                         <a th:href="@{/ride/orders/{ordersId}(ordersId=${list.ordersId})}" >
-                            <li>
-                                <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" th:text="${list.ordersId}">1119</span><br>
+                            <li th:class="${list.ordersStatus == '세탁 수거전' or list.ordersStatus == '세탁 수거완료'} ? 'delivery-done' : ''">
+                                <span class='order_num'>주문번호 :&nbsp;</span>
+                                <span class='order_num' name="ordersId" th:if="${list.ordersStatus == '세탁 수거전' or list.ordersStatus == '세탁 수거완료'}" th:text="${list.ordersId} + ' (집)'">1119</span>
+                                <span class='order_num' name="ordersId" th:if="${list.ordersStatus == '업체 수거전' or list.ordersStatus == '업체 수거완료'}" th:text="${list.ordersId} + ' (업체)'">1119</span><br>
                                 <span class='delivery_address' th:text="${list.ordersAddress + ' ' + list.ordersAddressDetails}">서울특별시 서대문구 대현동 777-8 508동 116호</span>
                                 <div class='space'>
                                     <span class='delivery_time' th:text="${list.ordersStatus}"></span>

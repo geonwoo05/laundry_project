@@ -67,7 +67,9 @@
         o.orders_request,
         o.orders_pickup,
         o.orders_info,
-        o.rider_id
+        o.rider_id,
+        o.orders_return_date,
+        o.orders_pickup_date
 <!--        ,ql.quick_laundry_take_time as ordersPickupDate-->
         FROM
         orders o
@@ -107,10 +109,10 @@
         where rider_id = #{riderId} and quick_rider_id is null
         and orders_address like CONCAT(CONCAT('%', #{ordersAddress}), '%')
         <if test="status == '진행중'">
-            and orders_status in (3,12)
+            and orders_status in (3,12) and rider_id is not null
         </if>
         <if test="status == '완료'">
-            and orders_status in (4,13)
+            and orders_status in (4,13) and rider_id is not null
         </if>
     </select>
 
@@ -138,14 +140,18 @@
 <!--        SELECT 'dongCnt' AS query_name, COUNT(*) AS result from orders where orders_address LIKE '%' || #{ordersAddress} || '%'-->
         SELECT COUNT(*) AS result from orders where orders_address LIKE '%' || #{ordersAddress} || '%'
         <if test="status == '진행중'">
-            and orders_Status in (3, 12)
+            and orders_Status in (3, 12) and rider_id is not null
         </if>
         <if test="status == '완료'">
-            and orders_Status in (4, 13)
+            and orders_Status in (4, 13) and rider_id is not null
         </if>
     </select>
 
     <select id="acceptCheck" resultType="Integer">
         select orders_status from orders where orders_id = #{ordersId}
     </select>
+
+    <update id="updateStatus">
+        update orders set orders_status = orders_status+1 where rider_id = (rider_id)
+    </update>
 </mapper>

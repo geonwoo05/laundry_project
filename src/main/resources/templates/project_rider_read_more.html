@@ -125,10 +125,10 @@
     <input type="text" name="" id="address" value='주소를 확인해 주세요.' readonly th:value="${info.ordersAddress + ' ' + info.ordersAddressDetails ?: '주소를 확인해 주세요.'}">
     <br>
     <p>주문시간</p>
-    <input type="text" name="" id="pickUpTime" value='비밀번호 없음' readonly th:value="${info.ordersDate ?: '비밀번호 없음'}">
+    <input type="text" name="" id="pickUpTime" value='시간을 확인해주세요' readonly  th:value="${info.ordersDate ?: '주문시간'}">
     <br>
-<!--    <p>요청시간</p>-->
-<!--    <input type="text" name="" id="requestTime" value='요청시간 없음' th:value="'금일 ' + ${info.ordersPickupDate} + '까지'">-->
+<!--    <p>배달완료시간</p>-->
+<!--    <input type="text" name="" id="finishTime" value='시간을 확인해주세요' readonly th:value="${info.ordersReturnDate ?: '-'}">-->
 <!--    <br>-->
     <p>요청사항</p>
     <input type="text" name="" id="requestInfo" value='요청사항 없음' readonly th:value="${info.ordersRequest ?: '요청사항 없음'}">
@@ -137,7 +137,7 @@
     <input type="text" name="" id="pickUpRegion" value='문 앞' readonly th:value="${info.ordersPickup ?: '문 앞'}">
     <br>
     <p>공동현관 비밀번호</p><input type="text" name="" id="doorPw" value='비밀번호 없음' readonly th:value="${info.ordersInfo ?: '비밀번호 없음'}">
-    <input type="hidden" name="" id="orderStatus" value="" th:value="${info.ordersStatus ?: '2'}">
+    <input type="hidden" name="" id="orderStatus" value="" th:value="${info.ordersStatus ?: ''}">
     <input type="hidden" name="" id="addressValue" value="" th:value="${info.ordersAddress}">
 
 </div>
