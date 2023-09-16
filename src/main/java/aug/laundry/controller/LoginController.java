@@ -133,18 +133,35 @@ public class LoginController {
             return "redirect:/ride/wait";
         }else{
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             if(memberService.selectId(memberDto.getMemberAccount()).getMemberDeleteStatus() == 'Y'){
                 model.addAttribute("errorMsg", "이미 탈퇴한 회원입니다.");
             }else{
                 model.addAttribute("memberAccount", memberDto.getMemberAccount());
+=======
+            try {
+                char isDelete = memberService.selectId(memberDto.getMemberAccount()).getMemberDeleteStatus();
+                if(isDelete == 'Y'){
+                    model.addAttribute("errorMsg", "이미 탈퇴한 회원입니다.");
+                }else{
+                    model.addAttribute("memberAccount", memberDto.getMemberAccount());
+                    model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+                }
+            }catch (NullPointerException e){
+>>>>>>> Stashed changes
                 model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+                return "project_login";
             }
+<<<<<<< Updated upstream
 =======
             if(userdto.getMemberDeleteStatus() == 'Y'){
                 model.addAttribute("errorMsg", "탈퇴한 회원입니다.");
             }
             model.addAttribute("memberAccount", memberDto.getMemberAccount());
             model.addAttribute("errorMsg", "아이디 또는 비밀번호를 잘못 입력했습니다.");
+>>>>>>> Stashed changes
+=======
+
 >>>>>>> Stashed changes
             return "project_login";
         }
