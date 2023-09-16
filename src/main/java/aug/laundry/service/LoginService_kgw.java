@@ -9,7 +9,11 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+<<<<<<< Updated upstream
 import java.sql.Date;
+=======
+import java.util.Date;
+>>>>>>> Stashed changes
 
 @Service
 public interface LoginService_kgw {
@@ -35,6 +39,10 @@ public interface LoginService_kgw {
     public MemberDto checkUserWithSessionId(String sessionId);
 
     public int renewLoginTime (Long memberId);
+
+    public int keepLogin(String sessionId, Date limit, String memberId);
+
+    public MemberDto checkUserWithSessionId(String memberId);
 
 
 }
