@@ -39,7 +39,10 @@ public class LoginController {
         service.naverLogin(request, model, session);
         System.out.println("naverLogin =======");
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
-
+        String redirectURL = state;
+        if(state != null){
+            return "redirect:" + redirectURL;
+        }
 
         return "redirect:/";
     }
