@@ -72,10 +72,9 @@ public class LoginController {
         if (userDto != null) {
             if(userDto.getMemberRecentlyDate() == null){
                 // 웰컴쿠폰 지급
-                Long welcomeCoupon1 = 1L;
-                Long welcomeCoupon2 = 2L;
-                memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon1);
-                memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon2);
+                Long welcomeCoupon = 1L;
+
+                memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon);
             }
 
             // 최근 로그인 시간 갱신
