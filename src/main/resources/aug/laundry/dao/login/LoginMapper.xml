@@ -36,16 +36,11 @@
     </select>
 
     <update id="keepLogin">
-<<<<<<< Updated upstream
         update MEMBER set SESSION_ID = #{sessionId}, SESSION_LIMIT = #{limit} where MEMBER_ID = #{memberId}
-=======
-        update USER_SESSION set SESSION_ID = #{sessionId}, SESSION_LIMIT = #{next} where MEMBER_ID=#{memberId}
->>>>>>> Stashed changes
     </update>
 
     <select id="checkUserWithSessionId" resultType="aug.laundry.dto.MemberDto">
         SELECT *
-<<<<<<< Updated upstream
         FROM MEMBER
         WHERE SESSION_ID = #{sessionId}
         AND SESSION_LIMIT > sysdate
@@ -59,12 +54,4 @@
 
 
 
-=======
-        FROM MEMBER M, USER_SESSION S
-        WHERE M.MEMBER_ID = S.MEMBER_ID
-        AND M.MEMBER_ID = #{memberId}
-        AND S.SESSION_LIMIT > now()
-    </select>
-
->>>>>>> Stashed changes
 </mapper>

@@ -7,11 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 
-<<<<<<< Updated upstream
 import java.sql.Date;
-=======
-import java.util.Date;
->>>>>>> Stashed changes
 
 @Mapper
 public interface LoginMapper {
@@ -38,9 +34,5 @@ public interface LoginMapper {
     public int renewLoginTime (Long memberId);
 
 
-
-    public int keepLogin(@Param("sessionId") String sessionId, @Param("limit") Date limit, @Param("memberId") String memberId);
-
-    public MemberDto checkUserWithSessionId(String memberId);
 
 }
