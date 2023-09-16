@@ -8,9 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,9 +81,15 @@ public class AdminInspectionController {
 
     @PostMapping("/admin/view/{adminId}/{ordersId}")
     public @ResponseBody Map<String, String> writeInspection( @PathVariable("adminId") Long adminId, @PathVariable("ordersId") Long ordersId,
-                                                 @RequestPart("inspectionDataDto")  InspectionDataDto inspectionDataDto,
+                                                 @Valid @RequestPart("inspectionDataDto")  InspectionDataDto inspectionDataDto, BindingResult bindingResult,
                                                  @RequestPart("file") List<MultipartFile> files) {
         Map<String, String> data = new HashMap<>();
+
+        if(bindingResult.hasErrors()){
+            data.put("result", "errors");
+            data.put("errors", bindingResult.getFieldError().getDefaultMessage());
+            return data;
+        }
 
         try {
             adminInspectionService_ksh.updateInspectionResult(adminId, ordersId, inspectionDataDto, files);
@@ -111,10 +120,16 @@ public class AdminInspectionController {
 
     @PostMapping("/admin/edit/view/{adminId}/{ordersId}")
     public @ResponseBody Map<String, String> editInspection(@PathVariable("adminId") Long adminId, @PathVariable("ordersId") Long ordersId,
-                                                            @RequestPart("inspectionDataDto")  InspectionDataDto inspectionDataDto,
+                                                            @Valid @RequestPart("inspectionDataDto")  InspectionDataDto inspectionDataDto, BindingResult bindingResult,
                                                             @RequestPart(name="file", required = false) List<MultipartFile> files) {
         Map<String, String> data = new HashMap<>();
         Map<String, String> result = adminInspectionService_ksh.deleteImageFile(inspectionDataDto.getDeleteFileList());
+
+        if(bindingResult.hasErrors()){
+            data.put("result", "errors");
+            data.put("errors", bindingResult.getFieldError().getDefaultMessage());
+            return data;
+        }
 
         try {
             adminInspectionService_ksh.updateInspectionResult(adminId, ordersId, inspectionDataDto, files);
@@ -124,11 +139,11 @@ public class AdminInspectionController {
             data.put("error", e.getMessage());
         }
 
-//        if(result.isEmpty()) {
-//            result.forEach((key, value) -> {
-//                log.info("error={}", value);
-//            });
-//        }
+        if(result.isEmpty()) {
+            result.forEach((key, value) -> {
+                log.info("error={}", value);
+            });
+        }
 
         return data;
     }

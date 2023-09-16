@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -13,10 +15,14 @@ import java.util.List;
 @ToString
 public class InspectionDataDto {
 
+    @NotNull
     Long inspectionId;
-    CommonLaundryDto commonLaundryDto ;
-    private List<Drycleaning> drycleaningList;
-    private List<Repair> repairList;
+    @Valid
+    AdminCommonLoundryDto commonLaundryDto ;
+    @Valid
+    private List<AdminDrycleaningDto> drycleaningList;
+    @Valid
+    private List<AdminRepairDto> repairList;
     private List<String> deleteFileList;
 
     public InspectionDataDto() {

@@ -57,24 +57,24 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
 
         detailInfo.put("orderInfo", adminInspectionDao.getOrderInfo(ordersId));
 
-        CommonLaundry commonLaundry = adminInspectionDao.getCommonLaundryInfo(orderDetailId);
+        AdminCommonLoundryDto commonLaundry = adminInspectionDao.getCommonLaundryInfo(orderDetailId);
         if(commonLaundry == null){
             detailInfo.put("commonLaundryInfo", null);
         } else {
             detailInfo.put("commonLaundryInfo", commonLaundry);
         }
 
-        List<Drycleaning> drycleaningInfo = adminInspectionDao.getDrycleaningInfo(orderDetailId);
+        List<AdminDrycleaningDto> drycleaningInfo = adminInspectionDao.getDrycleaningInfo(orderDetailId);
         if(drycleaningInfo.size() == 0){
             detailInfo.put("drycleaningInfo", null);
         } else {
-            for (Drycleaning drycleaning : drycleaningInfo) {
+            for (AdminDrycleaningDto drycleaning : drycleaningInfo) {
                 drycleaning.setDrycleaningCategory(Category.valueOf(drycleaning.getDrycleaningCategory()).getTitle());
             }
             detailInfo.put("drycleaningInfo", drycleaningInfo);
         }
 
-        List<Repair> repairInfo = adminInspectionDao.getRepairInfo(orderDetailId);
+        List<AdminRepairDto> repairInfo = adminInspectionDao.getRepairInfo(orderDetailId);
 
         // 수선 주문에 대한 이미지
         List<RepairInfoDto> repairInfoDtos = repairInfo.stream().map(repair -> {
@@ -118,7 +118,6 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
     public void updateInspectionResult(Long adminId, Long ordersId, InspectionDataDto inspectionDataDto,
                                       List<MultipartFile> files){
 
-        // 호출자 try catch로 예외처리하기 RuntimeException e
         if(inspectionDataDto.getCommonLaundryDto() != null) {
             adminInspectionDao.updateCommon(inspectionDataDto.getCommonLaundryDto());
         }
