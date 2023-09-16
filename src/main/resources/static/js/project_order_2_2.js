@@ -47,12 +47,11 @@ window.addEventListener('load', function(){
                     jsonObject[index].title = name;
                 }
          }
+         console.log(jsonObject);
 
          for (let key in jsonObject){
-            console.log('key = ', key);
             let getJson = {};
             getJson[key] = jsonObject[key];
-            console.log(getJson);
             let newJson = new Blob([JSON.stringify(getJson)], {type : 'application/json'});
             let fileData = document.querySelectorAll('input[type=file]');
             let newForm = new FormData();
@@ -67,7 +66,8 @@ window.addEventListener('load', function(){
             }
             newForm.append('repairData', newJson);
 
-            apiFetchFile("./repair/order", newForm)
+            let result = apiFetchFile("./repair/order", newForm);
+            console.log(result);
          }
 
     })

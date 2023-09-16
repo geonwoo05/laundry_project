@@ -25,7 +25,7 @@ public interface LaundryService {
 
     MemberShip isPass(Long memberId);
 
-    void update(Long memberId, Long couponListId, OrderPost orderPost, Long ordersDetailId);
+    Long update(Long memberId, Long couponListId, OrderPost orderPost, Long ordersDetailId);
 
     void check(Long memberId, HttpSession session);
 
