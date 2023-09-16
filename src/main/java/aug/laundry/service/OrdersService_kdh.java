@@ -289,40 +289,59 @@ public class OrdersService_kdh {
     private static void setEnglishCategoryToKorean(List<CategoryForOrdersListDto> category) {
         category.stream()
                 .forEach(dto -> {
+
                     String c = dto.getCategory();
 
-
-                    // 'OVERHANGING 외 2건 (REPAIR)' 에서 REPAIR
+                    // 'OVERHANGING (REPAIR) 외 2건' 에서 REPAIR
                     String cg = c.substring(c.indexOf("(")+1, c.indexOf(")"));
 
-                    // 'OVERHANGING 외 2건 (REPAIR)' 에서 OVERHANGING
+                    // 'OVERHANGING (REPAIR) 외 2건' 에서 OVERHANGING
                     String first = c.substring(0, c.indexOf(" "));
 
-
                     if("DRYCLEANING".equals(cg)){
+
                         Category category1 = Category.valueOf(first);
                         String title = category1.getTitle();
-                        c = c.replace(first, title + " 드라이클리닝");
-                        c = c.substring(0, c.indexOf("("));
 
-                        dto.setCategory(c);
+                        String str = c.replace(first, title + " 드라이클리닝");
+
+                        String temp1 = str.substring(0, str.indexOf("("));
+                        int i = c.indexOf(")");
+                        String temp2 = "";
+
+                        if(i!=-1){
+                            temp2 = c.substring(c.indexOf(")") + 1);
+
+                        }
+
+                        String result = temp1.concat(temp2);
+                        dto.setCategory(result);
 
                     }
                     else if("REPAIR".equals(cg)){
                         RepairCategory repair = RepairCategory.valueOf(first);
                         String title = repair.getTitle();
-                        c = c.replace(first, title + " 수선");
-                        c = c.substring(0, c.indexOf("("));
+                        String str = c.replace(first, title + " 수선");
 
-                        dto.setCategory(c);
+                        String temp1 = str.substring(0, str.indexOf("("));
+                        int i = c.indexOf(")");
+                        String temp2 = "";
+
+                        if(i!=-1){
+                            temp2 = c.substring(c.indexOf(")") + 1);
+
+                        }
+
+                        String result = temp1.concat(temp2);
+                        dto.setCategory(result);
                     }
                     else if("COMMON".equals(cg)){
                         Category category1 = Category.valueOf(first);
                         String title = category1.getTitle();
                         c = c.replace(first, title);
-                        c = c.substring(0, c.indexOf("("));
+                        String result = c.substring(0, c.indexOf("("));
 
-                        dto.setCategory(c);
+                        dto.setCategory(result);
                     }
                 });
     }
