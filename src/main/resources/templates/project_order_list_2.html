@@ -34,7 +34,7 @@
     </div>
 
     <div th:each="category, stat : ${categoriesFinished}" class='orderList hidden' id='complete'>
-        <a class='order'>
+        <a th:href="@{/orders/{ordersId}/payment(ordersId=${category.ordersId})}" class='order'>
             <div class='orderTop'>
                 <div class='orderBox'>
                     <span th:text="${ordersFinished[stat.index].ordersDate}" class='orderDate'>9월 15일(금)</span>

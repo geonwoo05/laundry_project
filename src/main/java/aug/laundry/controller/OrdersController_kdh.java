@@ -33,11 +33,12 @@ public class OrdersController_kdh {
     private final MemberMapper memberMapper;
 
     @GetMapping
-    public String orders(Model model){
-        List<CategoryForOrdersListDto> category = ordersServiceKdh.findCategoryByMemberId(4L);
-        List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(4L);
-        List<OrdersForOrdersListDto> orders = ordersServiceKdh.findOrders(4L);
-        List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(4L);
+    public String orders(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId){
+
+        List<CategoryForOrdersListDto> category = ordersServiceKdh.findCategoryByMemberId(memberId);
+        List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(memberId);
+        List<OrdersForOrdersListDto> orders = ordersServiceKdh.findOrders(memberId);
+        List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(memberId);
 
 
 
