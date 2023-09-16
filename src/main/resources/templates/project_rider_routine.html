@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_rider_routine.css">
+    <style>
+        #orderCheck{
+            border-left: 1px dotted #8080804f;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script>
         window.addEventListener('load', function () {
@@ -175,7 +180,7 @@
                         <li>
                             <div class='order_num'>주문번호 : ${list.ordersId}</div><br>
                             <div class='delivery_address'>${list.ordersAddress}&nbsp${list.ordersAddressDetails}</div><br>
-                            <div class='delivery_time'>${list.ordersStatus}</div>
+                            <div class='delivery_time'>${list.ordersStatus == '업체 수거완료' ? '배송예정' : list.ordersStatus}</div>
                             <div class='delivery_dis'>거리 : 1.2km</div>
                         </li>
                     </a>`;
@@ -333,7 +338,7 @@
                 <li>
                     <div class='order_num' th:text="'주문번호 : '+ ${list.ordersId}">주문번호</div><br>
                     <div class='delivery_address' id="delivery_address" th:text="${list.ordersAddress} + ' ' + ${list.ordersAddressDetails}">서울</div><br>
-                    <div class='delivery_time' th:text="${list.ordersStatus}">수거전</div>
+                    <div class='delivery_time' th:text="${list.ordersStatus == '업체 수거완료' ? '배송예정' : list.ordersStatus}">수거전</div>
                     <div class='delivery_dis'>거리 : 1.2km</div>
                 </li>
             </a>

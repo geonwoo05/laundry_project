@@ -41,4 +41,6 @@ public interface RiderService {
     List<Integer> dongCnt(String ordersAddress, String status);
 
     int acceptCheck(Long ordersId);
+
+    int updateStatus(Long riderId);
 }

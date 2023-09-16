@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
     <link rel="stylesheet" href="/css/project_rider.css">
+    <style>
+        .delivery-done {
+            background-color: #00ffff38;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1"></script>
     <script>
@@ -103,6 +108,7 @@ window.addEventListener('load', function() {
     });
 });
     </script>
+
     <title>Document</title>
 </head>
 <!--<header th:replace="~{/common/project_back_header :: header}"></header>-->
@@ -135,8 +141,12 @@ window.addEventListener('load', function() {
                 <ul>
                     <th:block th:each="list : ${orderList}">
                         <a th:href="@{/ride/orders/{ordersId}(ordersId=${list.ordersId})}" >
-                            <li>
-                                <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" th:text="${list.ordersId}">1119</span><br>
+<!--                            <li>-->
+<!--                            <li th:if="${list.ordersStatus == '배송완료'}" style="background-color: #00ffff38;">-->
+                            <li th:class="${list.ordersStatus == '배송완료'} ? 'delivery-done' : ''">
+                                <span class='order_num'>주문번호 :&nbsp;</span>
+                                <span class='order_num' name="ordersId" th:if="${list.ordersStatus == '배송완료'}" th:text="${list.ordersId} + ' (집)'">1119</span>
+                                <span class='order_num' name="ordersId" th:if="${list.ordersStatus == '배달완료'}" th:text="${list.ordersId} + ' (업체)'">1119</span><br>
                                 <span class='delivery_address' th:text="${list.ordersAddress + ' ' + list.ordersAddressDetails}">서울특별시 서대문구 대현동 777-8 508동 116호</span>
                                 <div class='space'>
                                     <span class='delivery_time' th:text="${list.ordersDate}">2023-08-26 18:57:11</span>

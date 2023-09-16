@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Title</title>
     <!-- sock js -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
@@ -28,7 +30,7 @@
             }
                 stompClient.send("/message/order-complete-message/" + orderId, {}, JSON.stringify(message));
                 stompClient.disconnect();
-                location.href = "/";
+                location.href = "/login";
             });
           });
         }

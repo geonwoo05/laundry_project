@@ -40,4 +40,6 @@ public interface RiderMapper {
     int dongCnt(@Param("ordersAddress")String ordersAddress, @Param("status")String status);
 
     int acceptCheck(Long ordersId);
+
+    int updateStatus(Long riderId);
 }

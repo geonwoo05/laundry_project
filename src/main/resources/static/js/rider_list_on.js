@@ -45,6 +45,10 @@
                 "fullAddr": address
             },
             success: function(response) {
+            if(orders.ordersStatus === 10){
+                 endX = 126.97371230861432
+                  endY = 37.564496383758915
+            }else{
                 var resultInfo = response.coordinateInfo;
                 console.log(resultInfo);
                 console.log("위도: " + resultInfo.coordinate[0].newLatEntr);
@@ -62,14 +66,21 @@
                         endX = resultInfo.coordinate[0].lon;
                         endY = resultInfo.coordinate[0].lat;
                     }
+            }
             },
             error: function(xhr, status, error) {
                 console.error(error);
             }
         });
-        console.log(endY);
-        console.log(endX);
-
+//        console.log(endY);
+//        console.log(endX);
+//        console.log("=================================" + orders.ordersStatus);
+//        if($('#orderStatus').val() === 10){
+//              endX = 126.97371230861432
+//              endY = 37.564496383758915
+//        }
+                console.log("변경 : " + endY);
+                console.log("변경 : " + endX);
 
         navigator.geolocation.getCurrentPosition((position) => {
 
@@ -134,8 +145,8 @@
 
                             listItem = `
                             <a href='/ride/orders/${orders.ordersId}'>
-                                <li>
-                                    <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${orders.ordersId}</span><br>
+                                 <li style="${orders.ordersStatus == '2' ? 'background-color: #00ffff38;' : ''}">
+                                    <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${orders.ordersId} (${orders.ordersStatus == '2' ? '집' : '업체'})</span><br>
                                     <span class='delivery_address'>${orders.ordersAddress} ${orders.ordersAddressDetails}</span>
                                     <div class='space'>
                                         <span class='delivery_time'>${orders.ordersDate}</span>
@@ -279,6 +290,11 @@ function getList(){
                         endX = resultInfo.coordinate[0].lon;
                         endY = resultInfo.coordinate[0].lat;
                     }
+                    console.log("!!!!!!!!!!!!!" + list.ordersStatus);
+                    if(list.ordersStatus == '세탁완료'){
+                        endX = 126.97371230861432
+                        endY = 37.564496383758915
+                    }
                            navigator.geolocation.getCurrentPosition((position) => {
 
                                         console.log(position.coords.latitude);
@@ -339,8 +355,8 @@ function getList(){
                                 cnt++;
                                  page += `
                                     <a href='/ride/orders/${list.ordersId}'>
-                                      <li>
-                                          <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId}</span><br>
+                                        <li style="${list.ordersStatus == '주문완료' ? 'background-color: #00ffff38;' : ''}">
+                                          <span class='order_num'>주문번호 :&nbsp;</span><span class='order_num' name="ordersId" >${list.ordersId} (${list.ordersStatus == '주문완료' ? '집' : '업체'})</span><br>
                                           <span class='delivery_address'>${list.ordersAddress} ${list.ordersAddressDetails}</span>
                                           <div class='space'>
                                               <span class='delivery_time'>${list.ordersDate}</span>
