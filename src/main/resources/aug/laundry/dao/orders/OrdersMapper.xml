@@ -186,11 +186,12 @@
 
     <select id="findCategoryByMemberId" resultType="aug.laundry.dto.CategoryForOrdersListDto">
         SELECT ORDERS_ID,
-        CASE WHEN COUNT(*) = 1 THEN MAX(CATEGORY) || ' (' || MAX(F) || ')'
-        ELSE MAX(CATEGORY) || ' 외 ' || TO_CHAR(COUNT(*)-1) || '건' || ' (' || MAX(F) || ')'
+        CASE WHEN COUNT(*) = 1 THEN MAX(CATEGORY)
+        ELSE MAX(CATEGORY) || ' 외 ' || TO_CHAR(COUNT(*)-1) || '건'
         END AS CATEGORY
         FROM
-        ( SELECT A.ORDERS_ID, B.DRYCLEANING_CATEGORY AS CATEGORY, 'DRYCLEANING' AS F
+        (
+        SELECT A.ORDERS_ID, B.DRYCLEANING_CATEGORY || ' (DRYCLEANING)' AS CATEGORY
         FROM ORDERS_DETAIL A
         INNER JOIN DRYCLEANING B
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
@@ -200,7 +201,7 @@
 
         UNION ALL
 
-        SELECT A.ORDERS_ID, B.REPAIR_CATEGORY AS CATEGORY, 'REPAIR' AS F
+        SELECT A.ORDERS_ID, B.REPAIR_CATEGORY || ' (REPAIR)'AS CATEGORY
         FROM ORDERS_DETAIL A
         INNER JOIN REPAIR B
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
@@ -212,9 +213,8 @@
 
         SELECT A.ORDERS_ID,
         CASE WHEN COUNT(*) = 0 THEN 'EMPTY'
-        ELSE 'BASIC'
-        END AS CATEGORY,
-        'COMMON' AS F
+        ELSE 'BASIC' || ' (COMMON)'
+        END AS CATEGORY
         FROM ORDERS_DETAIL A
         INNER JOIN COMMON_LAUNDRY B
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
@@ -229,11 +229,12 @@
 
     <select id="findCategoryFinishedByMemberId" resultType="aug.laundry.dto.CategoryForOrdersListDto">
         SELECT ORDERS_ID,
-        CASE WHEN COUNT(*) = 1 THEN MAX(CATEGORY) || ' (' || MAX(F) || ')'
-        ELSE MAX(CATEGORY) || ' 외 ' || TO_CHAR(COUNT(*)-1) || '건' || ' (' || MAX(F) || ')'
+        CASE WHEN COUNT(*) = 1 THEN MAX(CATEGORY)
+        ELSE MAX(CATEGORY) || ' 외 ' || TO_CHAR(COUNT(*)-1) || '건'
         END AS CATEGORY
         FROM
-        ( SELECT A.ORDERS_ID, B.DRYCLEANING_CATEGORY AS CATEGORY, 'DRYCLEANING' AS F
+        (
+        SELECT A.ORDERS_ID, B.DRYCLEANING_CATEGORY || ' (DRYCLEANING)' AS CATEGORY
         FROM ORDERS_DETAIL A
         INNER JOIN DRYCLEANING B
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
@@ -243,7 +244,7 @@
 
         UNION ALL
 
-        SELECT A.ORDERS_ID, B.REPAIR_CATEGORY AS CATEGORY, 'REPAIR' AS F
+        SELECT A.ORDERS_ID, B.REPAIR_CATEGORY || ' (REPAIR)'AS CATEGORY
         FROM ORDERS_DETAIL A
         INNER JOIN REPAIR B
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
@@ -255,9 +256,8 @@
 
         SELECT A.ORDERS_ID,
         CASE WHEN COUNT(*) = 0 THEN 'EMPTY'
-        ELSE 'BASIC'
-        END AS CATEGORY,
-        'COMMON' AS F
+        ELSE 'BASIC' || ' (COMMON)'
+        END AS CATEGORY
         FROM ORDERS_DETAIL A
         INNER JOIN COMMON_LAUNDRY B
         ON A.ORDERS_DETAIL_ID = B.ORDERS_DETAIL_ID
