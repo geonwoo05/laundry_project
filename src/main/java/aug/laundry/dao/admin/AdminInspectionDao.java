@@ -1,10 +1,7 @@
 package aug.laundry.dao.admin;
 
 import aug.laundry.domain.*;
-import aug.laundry.dto.AdminInspectionDto;
-import aug.laundry.dto.CommonLaundryDto;
-import aug.laundry.dto.Criteria;
-import aug.laundry.dto.RepairInfoDto;
+import aug.laundry.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -29,27 +26,27 @@ public class AdminInspectionDao {
         return mapper.getOrderInfo(ordersId);
     }
 
-    public CommonLaundry getCommonLaundryInfo(Long orderDetailId) {
+    public AdminCommonLoundryDto getCommonLaundryInfo(Long orderDetailId) {
         return mapper.getCommonLaundryInfo(orderDetailId);
     }
 
-    public List<Drycleaning> getDrycleaningInfo(Long orderDetailId) {
+    public List<AdminDrycleaningDto> getDrycleaningInfo(Long orderDetailId) {
         return mapper.getDrycleaningInfo(orderDetailId);
     }
 
-    public List<Repair> getRepairInfo(Long orderDetailId) {
+    public List<AdminRepairDto> getRepairInfo(Long orderDetailId) {
         return mapper.getRepairInfo(orderDetailId);
     }
     public List<String> getRepairImage(Long repairId){
         return mapper.getRepairImage(repairId);
     }
-    public int updateCommon(CommonLaundryDto commonLaundryDto){
+    public int updateCommon(AdminCommonLoundryDto commonLaundryDto){
         return mapper.updateCommon(commonLaundryDto);
     }
-    public int updateRepair(Repair repair){
+    public int updateRepair(AdminRepairDto repair){
         return mapper.updateRepair(repair);
     }
-    public int updateDrycleaning(Drycleaning drycleaning){
+    public int updateDrycleaning(AdminDrycleaningDto drycleaning){
         return mapper.updateDrycleaning(drycleaning);
     }
     public int updateInspectionStatus(Long ordersId, Long adminId){

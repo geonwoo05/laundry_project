@@ -217,7 +217,6 @@
                 cnt++;
             }
         }
-
         let weight = /^\d+(\.\d+)?$/;
         let laundryElement = document.querySelector('#laundryWeight');
         let laundryW = laundryElement ? laundryElement.value : null;
@@ -278,6 +277,8 @@
             .then(data=> {
                 if(data.result === 'success') {
                     window.location.href = "/admin/" + memberId;
+                } else if (data.result === 'errors') {
+                    alert(data.errors);
                 } else {
                     alert("등록 실패. 다시 시도해주세요.");
                 }

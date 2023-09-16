@@ -26,21 +26,21 @@
         where o.orders_id = #{ordersId}
     </select>
 
-    <select id="getCommonLaundryInfo" resultType="CommonLaundry">
+    <select id="getCommonLaundryInfo" resultType="aug.laundry.dto.AdminCommonLoundryDto">
         SELECT cl.common_laundry_id, cl.common_laundry_weight, cl.orders_detail_id
         FROM orders_detail od
                  INNER JOIN common_laundry cl ON od.orders_detail_id = cl.orders_detail_id
         WHERE od.orders_detail_id = #{orderDetailId}
     </select>
 
-    <select id="getDrycleaningInfo" resultType="Drycleaning">
+    <select id="getDrycleaningInfo" resultType="aug.laundry.dto.AdminDrycleaningDto">
         SELECT d.drycleaning_id, d.orders_detail_id, d.drycleaning_category, d.drycleaning_possibility, d.drycleaning_not_reason
         FROM orders_detail od
                  INNER JOIN drycleaning d ON od.orders_detail_id = d.orders_detail_id
         WHERE od.orders_detail_id = #{orderDetailId}
     </select>
 
-    <select id="getRepairInfo" resultType="Repair">
+    <select id="getRepairInfo" resultType="aug.laundry.dto.AdminRepairDto">
         SELECT r.repair_id, r.orders_detail_id, r.repair_request, r.repair_category, r.repair_possibility, r.repair_not_reason
         FROM orders_detail od
                  INNER JOIN repair r ON od.orders_detail_id = r.orders_detail_id
