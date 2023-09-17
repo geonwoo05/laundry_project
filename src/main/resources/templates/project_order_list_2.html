@@ -18,6 +18,8 @@
         <button type='button' th:onclick="|location.href='@{/orders}'|" class='leftBtn selected'>진행중인 주문</button>
         <button type='button' th:onclick="|location.href='@{/orders/complete}'|" class='rightBtn'>완료된 주문</button>
     </div>
+
+    <th:block th:if="${!orders.isEmpty()}">
     <div th:each="category, stat : ${categories}" class='orderList' id='now'>
         <a th:href="@{/orders/{ordersId}/payment(ordersId=${category.ordersId})}" class='order'>
             <div class='orderTop'>
@@ -32,7 +34,7 @@
             </div>
         </a>
     </div>
-
+    </th:block>
 <!--    <div th:each="category, stat : ${categoriesFinished}" class='orderList hidden' id='complete'>-->
 <!--        <a th:href="@{/orders/{ordersId}/payment(ordersId=${category.ordersId})}" class='order'>-->
 <!--            <div class='orderTop'>-->

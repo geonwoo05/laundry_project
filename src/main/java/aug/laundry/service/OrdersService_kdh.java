@@ -274,15 +274,19 @@ public class OrdersService_kdh {
 
     public List<CategoryForOrdersListDto> findCategoryByMemberId(Long memberId){
         List<CategoryForOrdersListDto> category = ordersDao.findCategoryByMemberId(memberId);
+        if(category != null & !category.isEmpty()){
+            setEnglishCategoryToKorean(category);
+        }
 
-        setEnglishCategoryToKorean(category);
         return category;
     }
 
     public List<CategoryForOrdersListDto> findCategoryFinishedByMemberId(Long memberId){
         List<CategoryForOrdersListDto> category = ordersDao.findCategoryFinishedByMemberId(memberId);
+        if(category != null & !category.isEmpty()){
+            setEnglishCategoryToKorean(category);
+        }
 
-        setEnglishCategoryToKorean(category);
         return category;
     }
 

@@ -33,17 +33,12 @@ public class OrdersController_kdh {
     public String orders(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId){
 
         List<CategoryForOrdersListDto> category = ordersServiceKdh.findCategoryByMemberId(memberId);
-//        List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(memberId);
         List<OrdersForOrdersListDto> orders = ordersServiceKdh.findOrders(memberId);
-//        List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(memberId);
 
         log.info("category={}", category);
         log.info("orders={}",orders);
-//        log.info("ordersFinsihed={}",ordersFinished);
         model.addAttribute("categories", category);
-//        model.addAttribute("categoriesFinished", categoryFinished);
         model.addAttribute("orders", orders);
-//        model.addAttribute("ordersFinished", ordersFinished);
 
         return "project_order_list_2";
     }
@@ -52,17 +47,11 @@ public class OrdersController_kdh {
     @GetMapping("/complete")
     public String complete(Model model, @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false)Long memberId){
 
-//        List<CategoryForOrdersListDto> category = ordersServiceKdh.findCategoryByMemberId(memberId);
         List<CategoryForOrdersListDto> categoryFinished = ordersServiceKdh.findCategoryFinishedByMemberId(memberId);
-//        List<OrdersForOrdersListDto> orders = ordersServiceKdh.findOrders(memberId);
         List<OrdersForOrdersListDto> ordersFinished = ordersServiceKdh.findOrdersFinished(memberId);
 
-//        log.info("category={}", category);
-//        log.info("orders={}",orders);
         log.info("ordersFinsihed={}",ordersFinished);
-//        model.addAttribute("categories", category);
         model.addAttribute("categoriesFinished", categoryFinished);
-//        model.addAttribute("orders", orders);
         model.addAttribute("ordersFinished", ordersFinished);
 
         return "project_order_list_complete";
