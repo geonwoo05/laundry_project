@@ -198,4 +198,10 @@ public class LaundryRepository {
         System.out.println("repairImageStoreNames = " + repairImageStoreNames);
         removeRepairImageFile(repairImageStoreNames);
     }
+  
+   public List<MyCoupon> getCoupon2(Long memberId) {
+        List<MyCoupon> coupon = laundryMapper.getCoupon2(memberId);
+        log.info("getCoupon2={}", coupon);
+        return coupon;
+    }
 }

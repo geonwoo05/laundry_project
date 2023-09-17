@@ -53,6 +53,12 @@
         WHERE ORDERS_ID = #{ordersId}
     </update>
 
+    <update id="updateExpectedPriceByOrdersId">
+        UPDATE ORDERS
+        SET ORDERS_EXPECTED_PRICE = #{expectedPrice}
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+
     <update id="updateSubscriptionDiscountPrice">
         UPDATE ORDERS
         SET SUBSCRIPTION_DISCOUNT_PRICE = #{subscriptionDiscountPrice}
@@ -289,6 +295,21 @@
         WHERE A.MEMBER_ID = #{memberId} AND (A.ORDERS_STATUS = #{orderCancel} OR A.ORDERS_STATUS = #{deliverySuccess})
         ORDER BY A.ORDERS_ID DESC
     </select>
+    
+    <select id="findCouponListIdByOrdersId" resultType="Long">
+        SELECT A.COUPON_LIST_ID
+        FROM COUPON_LIST A
+        LEFT JOIN ORDERS B
+        ON A.ORDERS_ID = B.ORDERS_ID
+        WHERE B.ORDERS_ID = #{ordersId}
+    </select>
+
+    <update id="updateCouponList">
+        UPDATE COUPON_LIST
+        SET COUPON_LIST_STATUS = #{notUsed},
+        ORDERS_ID = NULL
+        WHERE COUPON_LIST_ID = #{couponListId}
+    </update>
 
 
 

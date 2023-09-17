@@ -68,6 +68,10 @@ public class OrdersDao {
         return i;
     }
 
+    public int updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice){
+        return ordersMapper.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
+    }
+
     public Optional<Long> findExpectedPriceByOrdersId(Long ordersId){
         return ordersMapper.findExpectedPriceByOrdersId(ordersId);
     }
@@ -169,6 +173,13 @@ public class OrdersDao {
         return ordersFinished;
     }
 
+    public Long findCouponListIdByOrdersId(Long ordersId){
+        return ordersMapper.findCouponListIdByOrdersId(ordersId);
+    }
+
+    public int updateCouponList(Long couponListId){
+        return ordersMapper.updateCouponList(ConstCouponListStatus.NOT_USED, couponListId);
+    }
 
 
 

@@ -170,7 +170,8 @@ public class OrdersController_kdh {
     public String coupons(@PathVariable Long ordersId, @PathVariable Long memberId, Model model, String takeDate){
 
         Long expectedPrice = ordersServiceKdh.findExpectedPriceByOrdersId(ordersId);
-        List<MyCoupon> getCoupon = laundryService.getCoupon(memberId);
+        List<MyCoupon> getCoupon = ordersServiceKdh.getCoupon(memberId);
+        log.info("getCoupon={}",getCoupon);
 
         model.addAttribute("memberId", memberId);
         model.addAttribute("coupon", getCoupon);

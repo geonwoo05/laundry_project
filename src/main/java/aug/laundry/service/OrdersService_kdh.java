@@ -1,5 +1,6 @@
 package aug.laundry.service;
 
+import aug.laundry.dao.LaundryRepository;
 import aug.laundry.dao.orders.OrdersDao;
 import aug.laundry.dao.point.PointDao;
 import aug.laundry.domain.Drycleaning;
@@ -24,9 +25,7 @@ public class OrdersService_kdh {
 
     private final OrdersDao ordersDao;
     private final PointDao pointDao;
-
-
-
+    private final LaundryRepository laundryRepository;
 
     public OrdersResponseDto findByOrdersId(Long ordersId){
         OrdersResponseDto ordersResponseDto = ordersDao.findByOrdersId(ordersId);
@@ -148,6 +147,14 @@ public class OrdersService_kdh {
     @Transactional
     public void updateExpectedNDiscountPriceByOrdersId(Long ordersId, Long expectedPrice, Long subscriptionDiscountPrice) {
         int result = ordersDao.updateExpectedNDiscountPriceByOrdersId(ordersId, expectedPrice, subscriptionDiscountPrice);
+        if(result==0) {
+            throw new IllegalArgumentException("예상금액이 업데이트 되지 않았습니다.");
+        }
+    }
+
+    @Transactional
+    public void updateExpectedPriceByOrdersId(Long ordersId, Long expectedPrice) {
+        int result = ordersDao.updateExpectedPriceByOrdersId(ordersId, expectedPrice);
         if(result==0) {
             throw new IllegalArgumentException("예상금액이 업데이트 되지 않았습니다.");
         }
@@ -356,5 +363,20 @@ public class OrdersService_kdh {
 
     public List<OrdersForOrdersListDto> findOrdersFinished(Long memberId){
         return ordersDao.findOrdersFinished(memberId);
+    }
+
+    public List<MyCoupon> getCoupon(Long memberId) {
+        return laundryRepository.getCoupon2(memberId);
+    }
+
+    public Long findCouponListIdByOrdersId(Long ordersId){
+        return ordersDao.findCouponListIdByOrdersId(ordersId);
+    }
+
+    public void updateCouponList(Long couponListId){
+        int result = ordersDao.updateCouponList(couponListId);
+        if(result==0) {
+            throw new IllegalArgumentException("CouponList테이블의 쿠폰상태와 주문아이디가 업데이트 되지 않았습니다.");
+        }
     }
 }

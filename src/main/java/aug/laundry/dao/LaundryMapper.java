@@ -77,4 +77,7 @@ public interface LaundryMapper {
     void insertInspection(Long ordersId);
 
     List<Long> findByRepairId(Long ordersDetailId);
+  
+    List<MyCoupon> getCoupon2(Long memberId);
+  
 }

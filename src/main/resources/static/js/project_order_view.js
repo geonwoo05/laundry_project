@@ -30,13 +30,13 @@ window.addEventListener('load', function(){
     let totalPriceFromServer = tPrice;
     let couponId = parseInt(document.querySelector('#coupon').value);
 
-    //숫자이외의 문자 입력 불가
-    document.querySelector('#point').addEventListener('keypress', function(event){
-
-        if(event.which < 48 || event.which > 57){
-            event.preventDefault();
-        }
-    })
+//    //숫자이외의 문자 입력 불가
+//    document.querySelector('#point').addEventListener('keypress', function(event){
+//
+//        if(event.which < 48 || event.which > 57){
+//            event.preventDefault();
+//        }
+//    })
 
     document.querySelector('#point').addEventListener('input', function(){
 
