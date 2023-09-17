@@ -276,10 +276,8 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 //                System.out.println(registerSocialNumRes);
 
                 // 웰컴쿠폰 지급
-                Long welcomeCoupon1 = 1L;
-                Long welcomeCoupon2 = 2L;
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
+                Long welcomeCoupon = 1L;
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon);
 
                 // memberId를 가져와서 session에 저장하기
                 Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
