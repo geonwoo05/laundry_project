@@ -2,9 +2,8 @@ package aug.laundry.service;
 
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.login.LoginDao;
-import aug.laundry.dao.login.LoginMapper;
 import aug.laundry.dao.member.MemberDao;
-import aug.laundry.dao.member.MemberMapper;
+import aug.laundry.dao.point.PointDao;
 import aug.laundry.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -36,6 +35,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     private final MemberDao memberDao;
     private final MemberDto memberDto;
     private final BCryptService_kgw bc;
+    private final PointDao pointDao;
 
     public static final String NAVER_REDIRECT_URL = "http://localhost:8080/login/naver_callback";
     public static final String KAKAO_REDIRECT_URL = "http://localhost:8080/login/kakaoLogin";
@@ -80,14 +80,16 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 int registerUserInfoRes = loginDao.registerSocialUser(memberDto);
                 int registerSocialNumRes = loginDao.registerSocialNumber(response.get("id"));
 
-                // 웰컴쿠폰 지급
-                Long welcomeCoupon = 1L;
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon);
-
-
                 // memberId를 받아 session에 저장하기
                 Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
+
+                // 웰컴쿠폰 지급
+                Long welcomeCoupon = 1L;
+                memberDao.giveCoupon(memberId, welcomeCoupon);
+
+                //포인트 적립
+                pointDao.registerPoint(memberId);
 
             }else{
                 // 한 번 이상 소셜로그인 -> 세션에 저장하고 로그인 처리
@@ -272,18 +274,16 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 int registerUserInfoRes = loginDao.registerSocialUser(memberDto);
                 int registerSocialNumRes = loginDao.registerSocialNumber(memberSocialId);
 
-//                System.out.println(registerUserInfoRes);
-//                System.out.println(registerSocialNumRes);
-
-                // 웰컴쿠폰 지급
-                Long welcomeCoupon1 = 1L;
-                Long welcomeCoupon2 = 2L;
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
-
                 // memberId를 가져와서 session에 저장하기
                 Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
+
+                // 웰컴쿠폰 지급
+                Long welcomeCoupon = 1L;
+                memberDao.giveCoupon(memberId, welcomeCoupon);
+
+                //포인트 적립
+                pointDao.registerPoint(memberId);
             }else{
                 // memberId를 가져와서 session에 저장하기
                 Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();

@@ -11,7 +11,6 @@
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <title>Document</title>
 </head>
-<header th:replace="~{/common/project_header :: header}"></header>
 <body>
 <div class='container'>
     <form action="/login/social/address" method="post" name="addressChangeForm">
@@ -28,10 +27,9 @@
                 <input type="submit" id="button_addressChange" value="저장하기">
             </div>
         </div>
-        <input type="text" th:value="${memberId}" name="memberId">
+        <input type="hidden" th:value="${memberId}" name="memberId">
     </form>
     <input type="hidden" value='0' id="addressCheckRes">
 </div>
 </body>
-<footer th:replace="~{/common/project_footer :: footer}"> </footer>
 </html>

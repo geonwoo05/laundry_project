@@ -123,3 +123,7 @@ input:focus{
     background: no-repeat;
     background-size: cover;
 }
+
+.errorMsg{
+    color: red;
+}

@@ -67,6 +67,9 @@
                     <button type="button" class='textCheck phonenumber-check-button' >확인</button>
 
                 </div>
+                <th:block th:if="${msg != null}">
+                    <span class="errorMsg" th:text="${msg}"></span>
+                </th:block>
                 <div id="phonenumber-check-warn"></div>
                 <input type="text" class="validation-input validation-phonenumber">
             </div>
