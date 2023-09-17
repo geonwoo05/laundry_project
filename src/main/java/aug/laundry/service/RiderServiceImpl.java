@@ -50,8 +50,8 @@ public class RiderServiceImpl implements RiderService{
     }
 
     @Override
-    public int updateOrderStatus(Orders orders) {
-        return riderMapper.updateOrderStatus(orders);
+    public int updateOrderStatus(Long ordersId) {
+        return riderMapper.updateOrderStatus(ordersId);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class RiderServiceImpl implements RiderService{
     }
 
     @Override
-    public int isRoutineDelivery(Long riderId) {
+    public Integer isRoutineDelivery(Long riderId) {
         return riderMapper.isRoutineDelivery(riderId);
     }
 

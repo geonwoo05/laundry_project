@@ -22,7 +22,7 @@ public interface RiderService {
 
     int updateOrderRider(Orders orders);
 
-    int updateOrderStatus(Orders orders);
+    int updateOrderStatus(Long ordersId);
 
     Rider riderInfo(Long riderId);
 
@@ -44,7 +44,7 @@ public interface RiderService {
 
     int updateStatus(Long riderId);
 
-    int isRoutineDelivery(Long riderId);
+    Integer isRoutineDelivery(Long riderId);
 
     int updateRoutineOrdersRiderId(Long ordersId);
 }

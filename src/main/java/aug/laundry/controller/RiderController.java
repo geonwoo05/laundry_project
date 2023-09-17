@@ -169,7 +169,7 @@ public class RiderController {
             orders.setRiderId(memberId);
 
             int res = riderService.updateOrderRider(orders);
-            int res2 = riderService.updateOrderStatus(orders);
+            int res2 = riderService.updateOrderStatus(ordersId);
 
             System.out.println(res);
             System.out.println(res2);
@@ -189,7 +189,7 @@ public class RiderController {
         orders.setOrdersId(ordersId);
         orders.setRiderId(memberId);
 
-        int res2 = riderService.updateOrderStatus(orders);
+        int res2 = riderService.updateOrderStatus(ordersId);
 
         System.out.println(res2);
 
@@ -212,7 +212,7 @@ public class RiderController {
             System.out.println("fileRes : " + fileRes);
             Orders orders = new Orders();
             orders.setOrdersId(ordersId);
-            int res2 = riderService.updateOrderStatus(orders);
+            int res2 = riderService.updateOrderStatus(ordersId);
             return "redirect:/ride/routine/"+ordersId;
         }else{
             // 빠른배송
@@ -224,7 +224,7 @@ public class RiderController {
             orders.setOrdersId(ordersId);
 
             int res = riderService.updateOrderRider(orders);
-            int res2 = riderService.updateOrderStatus(orders);
+            int res2 = riderService.updateOrderStatus(ordersId);
             return "redirect:/ride/finish";
         }
     }
@@ -298,11 +298,11 @@ public class RiderController {
 
     @GetMapping("/gogo/{ordersId}")
     public String gogo(@PathVariable("ordersId") Long ordersId){
-        int res = riderService.isRoutineDelivery(ordersId);
+        Integer res = riderService.isRoutineDelivery(ordersId);
         if(res != 0){
             Orders orders = new Orders();
             orders.setOrdersId(ordersId);
-            int updateStatus = riderService.updateOrderStatus(orders);
+            int updateStatus = riderService.updateOrderStatus(ordersId);
             int updateRoutineOrdersRiderId = riderService.updateRoutineOrdersRiderId(ordersId);
             return "project_order_complete";
         }else{

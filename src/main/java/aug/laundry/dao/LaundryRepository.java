@@ -70,8 +70,8 @@ public class LaundryRepository {
         return true;
     }
 
-    public Integer useCoupon(Long memberId, Long couponListId) {
-        return laundryMapper.useCoupon(memberId, couponListId);
+    public Integer useCoupon(Long memberId, Long couponListId, Long ordersId) {
+        return laundryMapper.useCoupon(memberId, couponListId, ordersId);
     }
 
 
