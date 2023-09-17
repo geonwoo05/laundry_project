@@ -134,15 +134,19 @@
 
         <!-- 사진 -->
         <h4>검수사진</h4>
-        <input type='file' id='btnUpload' multiple='multiple' name="files"/>
+        <label class="input-file-button" for="btnUpload">
+            검수 이미지 추가
+        </label>
+        <input type="file" id="btnUpload" multiple='multiple' name="files" style="display: none;"/>
+
         <div id="imagePreview">
         </div>
 
         <div id="imagePreview1" th:if="${info['imageList'] != null}" th:each="imageList, imageListIndex : ${info['imageList']}">
-            <div class='imageGroup' >
+            <div class='imageGroup image-container' >
                 <img class='imgSize' th:src="@{'/images/inspection_images/'+${imageList.inspectionImageStoreName}}" th:id="|img${imageListIndex.index}|">
                 <span class="hidden" th:text="${imageList.inspectionImageStoreName}" th:id="|imgName${imageListIndex.index}|"></span>
-                <button onclick="deleteImg(this)">X</button>
+                <button class="preview-de" onclick="deleteImg(this)">X</button>
             </div>
         </div>
 
@@ -216,7 +220,7 @@
                             selectedFiles.splice(index, 1);
                         }
                         container.remove();
-                        console.log("selectedFiles=", selectedFiles);
+                        input.value = null;
                     });
 
                     // 이미지와 삭제버튼을 div에 추가

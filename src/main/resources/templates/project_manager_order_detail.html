@@ -121,7 +121,11 @@
             </table>
 
             <!-- 사진 -->
-            <input type='file' id='btnUpload' multiple='multiple' name="files"/>
+            <label class="input-file-button" for="btnUpload">
+                검수 이미지 추가
+            </label>
+            <input type="file" id="btnUpload" multiple='multiple' name="files" style="display: none;"/>
+
             <div id="imagePreview">
             </div>
 
@@ -172,7 +176,8 @@
                             selectedFiles.splice(index, 1);
                         }
                         container.remove();
-                        console.log("selectedFiles=", selectedFiles);
+                        // 파일 초기화
+                        input.value = null;
                     });
 
                     // 이미지와 삭제버튼을 div에 추가
