@@ -167,6 +167,7 @@ public class LaundryServiceImpl implements LaundryService{
         Long check = laundryRepository.check(memberId, ordersDetailId);
         if (check == null || check == 0L) return false;
 
+        // 사진을 하나하나 넣는거라서 기존 장바구니 삭제 못함
 //        laundryRepository.removeRepair(ordersDetailId); // 기존에 존재하던 수선 장바구니 삭제
 
         if (repairData.isEmpty()){ // 기존에 있던 수선 목록을 다 지우고 빈 장바구니일경우 resultMap에 empty값 추가 후 true 반환
@@ -213,6 +214,26 @@ public class LaundryServiceImpl implements LaundryService{
             }
         }
         return orderInfo;
+    }
+
+    @Override
+    public List<Long> findByRepairId(Long ordersDetailId) {
+        return laundryRepository.findByRepairId(ordersDetailId);
+    }
+
+    @Override
+    public void removeRepair(Long ordersDetailId) {
+        laundryRepository.removeRepair(ordersDetailId);
+    }
+
+    @Override
+    public void removeRepairImages(Long repairId) {
+        laundryRepository.removeRepairImages(repairId);
+    }
+
+    @Override
+    public void removeRepairImagesFile(Long repairId) {
+        laundryRepository.removeRepairImagesFile(repairId);
     }
 
     @NotNull

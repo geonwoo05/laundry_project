@@ -184,4 +184,18 @@ public class LaundryRepository {
     public void insertInspection(Long ordersId) {
         laundryMapper.insertInspection(ordersId);
     }
+
+    public List<Long> findByRepairId(Long ordersDetailId) {
+        return laundryMapper.findByRepairId(ordersDetailId);
+    }
+
+    public void removeRepairImages(Long repairId) {
+        laundryMapper.removeRepairImages(repairId);
+    }
+
+    public void removeRepairImagesFile(Long repairId) {
+        List<String> repairImageStoreNames = laundryMapper.getRepairImageStoreName(repairId); // 실제 이미지 파일 삭제
+        System.out.println("repairImageStoreNames = " + repairImageStoreNames);
+        removeRepairImageFile(repairImageStoreNames);
+    }
 }

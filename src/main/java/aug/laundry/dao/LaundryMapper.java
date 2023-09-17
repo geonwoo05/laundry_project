@@ -61,7 +61,7 @@ public interface LaundryMapper {
     List<Long> getRepairId(Long ordersDetailId);
 
 
-    void removeRepairImages(Long ordersDetailId);
+    void removeRepairImages(Long repairId);
 
 
     List<String> getRepairImageStoreName(Long repairId);
@@ -75,4 +75,6 @@ public interface LaundryMapper {
     void updateOrdersDetail(@Param("ordersId") Long ordersId, @Param("ordersDetailId") Long ordersDetailId);
 
     void insertInspection(Long ordersId);
+
+    List<Long> findByRepairId(Long ordersDetailId);
 }
