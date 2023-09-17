@@ -77,11 +77,11 @@ public class LaundryServiceImpl implements LaundryService{
         System.out.println("최종 orders = " + orders);
         System.out.println("ordersId = " + orders.getOrdersId());
 
+        orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100); // 예상금액 계산
+        laundryRepository.insert(orders); // orders에 값을 넣고 ordersId 가져오기
         if (validCoupon) {
             laundryRepository.useCoupon(memberId, couponListId, orders.getOrdersId()); // 쿠폰 업데이트 (status +1, ordersId 주입)
         }
-        orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100); // 예상금액 계산
-        laundryRepository.insert(orders); // orders에 값을 넣고 ordersId 가져오기
         laundryRepository.updateOrdersDetail(orders.getOrdersId(), ordersDetailId); // ORDERS_DETAIL 안에 ORDERS_ID 업데이트
         laundryRepository.insertInspection(orders.getOrdersId());
 

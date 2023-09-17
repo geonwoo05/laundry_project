@@ -56,6 +56,11 @@ span, .location{
     width: 90%;
 }
 
+footer span{
+    display: initial;
+    margin: initial;
+}
+
 .coupon{
     width: 100%;
     height: 2.5rem;
