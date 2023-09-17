@@ -177,3 +177,7 @@ div[class^=register_box] input{
     display: none;
 }
 
+.errorMsg{
+    color: red;
+}
+

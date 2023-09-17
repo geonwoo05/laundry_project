@@ -41,9 +41,19 @@ public class LoginController {
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
         Long memberId = (Long)session.getAttribute("memberId");
         MemberDto memberDto = memberService.selectOne(memberId);
-
-        System.out.println("우편번호 : " + memberDto.getMemberZipcode());
-
+        
+        // 탈퇴한 회원인지 확인
+        try {
+            char isDelete = memberService.selectOne(memberId).getMemberDeleteStatus();
+            if(isDelete == 'Y'){
+                model.addAttribute("errorMsg", "이미 탈퇴한 회원입니다.");
+                return "project_login";
+            }
+        }catch (NullPointerException e){
+            return "project_login";
+        }
+        
+        // 만약 주소가 저장되어 있지 않으면 주소를 등록하는 페이지로 이동
         if(memberDto.getMemberZipcode() == null){
             return "redirect:/login/social/address";
         }
@@ -59,8 +69,16 @@ public class LoginController {
         service.kakaoProcess(code, session);
         Long memberId = (Long)session.getAttribute("memberId");
         MemberDto memberDto = memberService.selectOne(memberId);
-
-        System.out.println("우편번호 : " + memberDto.getMemberZipcode());
+        // 탈퇴한 회원인지 확인
+        try {
+            char isDelete = memberService.selectOne(memberId).getMemberDeleteStatus();
+            if(isDelete == 'Y'){
+                model.addAttribute("errorMsg", "이미 탈퇴한 회원입니다.");
+                return "project_login";
+            }
+        }catch (NullPointerException e){
+            return "project_login";
+        }
 
         if(memberDto.getMemberZipcode() == null){
             return "redirect:/login/social/address";

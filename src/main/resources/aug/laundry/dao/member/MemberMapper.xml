@@ -72,6 +72,10 @@
         WHERE MEMBER_ID = #{memberId}
     </update>
 
+    <select id="getPhoneCnt" resultType="int">
+        select COUNT(MEMBER_PHONE) FROM MEMBER WHERE MEMBER_PHONE = #{memberPhone} AND MEMBER_SOCIAL IS NULL
+    </select>
+
 
 
 

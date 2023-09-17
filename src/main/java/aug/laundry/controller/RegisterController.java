@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +43,14 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/registerAction", method = {RequestMethod.POST})
-    public String registerUser(@Valid MemberDto memberDto, BindingResult bindingResult) {
+    public String registerUser(@Valid MemberDto memberDto, BindingResult bindingResult, Model model) {
         System.out.println(memberDto.toString());
         Map<String, String> validation = new HashMap<>();
+        String phonenumber = memberDto.getMemberPhone().replace("-","");
+        if(memberService.getPhoneCnt(phonenumber) > 0){
+            model.addAttribute("msg", "이미 등록된 휴대폰 번호입니다.");
+            return "project_register";
+        }
         if (bindingResult.hasErrors()) {
             //throw new IllegalArgumentException("validation 실패");
 
