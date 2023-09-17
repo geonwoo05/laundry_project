@@ -24,6 +24,5 @@ public interface SubscribeService_ksh {
     SubscriptionPayDto getSubscribeInfo(Long memberId);
     SubscriptionPayDto validationPay(String imp_uid) throws IOException;
     int updateFailReason(String merchantUid,String failReason);
-
     int getPrice(int selectMonth);
 }

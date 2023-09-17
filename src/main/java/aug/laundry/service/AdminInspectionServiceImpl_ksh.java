@@ -160,4 +160,10 @@ public class AdminInspectionServiceImpl_ksh implements AdminInspectionService_ks
 
         return map;
     }
+
+    @Override
+    public Long getMemberId(Long ordersId) {
+        return adminInspectionDao.getMemberId(ordersId);
+    }
+
 }
