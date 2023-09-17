@@ -59,4 +59,10 @@ public class MainController {
         model.addAttribute("repair", repair);
         return "project_price_tag";
     }
+
+    @GetMapping("info")
+    public String info() {
+
+        return "project_info";
+    }
 }
