@@ -18,7 +18,7 @@
 
     <insert id="registerPoint">
         INSERT INTO POINT (POINT_ID, MEMBER_ID, POINT_STACK,POINT_STACK_REASON, POINT_STACK_DATE, POINT_NOW)
-        VALUES (SEQ_POINT_ID.NEXTVAL, #{memberId},0,'회원가입', SYSDATE, 1000)
+        VALUES (SEQ_POINT_ID.NEXTVAL, #{memberId},1000,'회원가입', SYSDATE, 1000)
     </insert>
 
     <insert id="addRecommandPoint">
