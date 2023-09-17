@@ -23,7 +23,7 @@
         </th:block>
     </div>
     <ul>
-        <a href='#'>
+        <a th:href='@{/subscription/{memberId}(memberId=${session.memberId})}'>
             <li class='mypagePass'>PASS
                 <p>세탁패스 구매하기</p><br>
                 <p>무제한 세탁 할인, 무제한 포인트 적립</p>
@@ -31,19 +31,19 @@
             <span>▶</span>
 
         </a>
-        <a href='/members/{memberId}/coupons'>
+        <a href='./coupons'>
             <li>쿠폰</li>
             <span>▶</span>
         </a>
-        <a href='/members/{memberId}/points'>
+        <a href='./points'>
             <li>포인트</li>
             <span>▶</span>
         </a>
-        <a href='/members/{memberId}/update'>
+        <a href='./update'>
             <li>내정보 설정</li>
             <span>▶</span>
         </a>
-        <a href='/members/{memberId}/invite'>
+        <a href='./invite'>
             <li>친구초대</li>
             <span>▶</span>
         </a>
@@ -51,7 +51,7 @@
             <li>이용안내</li>
             <span>▶</span>
         </a>
-        <a href=''>
+        <a href='/logout'>
             <li>로그아웃</li>
             <span>▶</span>
         </a>

@@ -20,11 +20,12 @@ public class Orders {
     private String ordersPickup;
     private Integer ordersExpectedPrice;
     private Integer ordersFinalPrice;
-    private Integer ordersPayStatus;
+    private Integer ordersStatus;
     private Long riderId;
     private Long quickRiderId;
     private String ordersPickupDate;
     private String ordersReturnDate;
+    private Long pointId;
 
     public Orders() {
     }

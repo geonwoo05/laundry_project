@@ -1,31 +1,40 @@
 window.addEventListener('load', function(){
-    // 공동현관 비밀번호 radio 버튼 연동
-    function toogleRadio(element) {
-        const radio = element.previousElementSibling;
-        if (!radio.checked){
-            radio.checked = !radio.checked;
+
+    let form = document.querySelector('form');
+    let error = document.querySelector('.error');
+
+    form.addEventListener('submit', function(event){
+        let radioPw = document.querySelector('input[name=isPw]:checked');
+        if (radioPw == null) {
+            event.preventDefault();
+            document.querySelector('input[name=isPw]').parentElement.scrollIntoView({ behavior : 'smooth'});
+            error.innerHTML = '공동현관 비밀번호 유무를 선택해주세요.'
+            error.classList.remove('disabled');
+            return;
         }
-    }
+        if (radioPw.id == 'O'){
+            let pw = document.querySelector('input[name=password]').value;
+            if (pw == '') {
+                event.preventDefault();
+                document.querySelector('input[name=isPw]').parentElement.scrollIntoView({ behavior : 'smooth'});
+                error.innerHTML = '현관 비밀번호를 입력해주세요';
+                error.classList.remove('disabled');
+            }
 
-    let couponBtn = document.querySelector('#selectCoupon');
+        }
 
-    couponBtn.addEventListener('click', function(){
-//        var param = '?'
-//        + 'takeDate=' + document.querySelector('input[name=takeDate]').value + '&'
-//        + 'deliveryDate=' + document.querySelector('input[name=deliveryDate]').value + '&'
-//        + 'zipcode=' + document.querySelector('input[name=zipcode]').value + '&'
-//        + 'address=' + document.querySelector('input[name=address]').value + '&'
-//        + 'coupon=' + document.querySelector('input[name=coupon]').value + '&'
-//        + 'address=' + document.querySelector('input[name=address]').value + '&'
-//        + 'isPw=' + document.querySelector('input[name=isPw]').value + '&'
-//        + 'password=' + document.querySelector('input[name=password]').value + '&'
-//
-//
-//        location.href = '/members/1/coupons/select' + param;
+
+    })
+
+    document.querySelector('#changeLocation').addEventListener('click', function(){
         var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
-//        var newWindow = window.open('', '_blank');
-//        newWindow.location.href = '/members/1/coupons/select'
-        window.open('/members/1/coupons/select', '_blank')
+        window.open('/laundry/order/pickup', '_blank')
+    })
+
+
+    document.querySelector('#selectCoupon').addEventListener('click', function(){
+        var options = 'width=600, height=400, top=100, left=100, resizable=yes, scrollbars=yes';
+        window.open('/laundry/order/coupons/select', '_blank')
     })
 
     let changeAddress = document.querySelector('#changeAddress');
@@ -38,9 +47,33 @@ window.addEventListener('load', function(){
     couponInput.addEventListener('change', function(e){
         console.log('onInput', e.target.value);
     })
+
+
 })
 
-function coupon(){
+// 공동현관 비밀번호 radio 버튼 연동
+function toogleRadio(element) {
+    const radio = element.previousElementSibling;
+    if (!radio.checked){
+        radio.checked = !radio.checked;
+    }
+    if (element.id == 'pwX'){
+        document.querySelector('input[name=password]').disabled = true;
+    } else {
+        document.querySelector('input[name=password]').disabled = false;
+    }
+}
+
+
+
+// MutationObserver 콜백 함수
+function handleMutation(mutationsList, observer) {
+    mutationsList.forEach(function (mutation) {
+        if (mutation.type === 'childList' && mutation.target.nodeName === 'INPUT' && mutation.target.type === 'text') {
+            // input:text 요소의 내용이 변경되었을 때 실행할 코드를 여기에 작성
+            console.log('input:text 값이 변경되었습니다.');
+        }
+    });
 }
 
 function searchAddress(){

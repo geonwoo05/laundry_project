@@ -1,9 +1,11 @@
 package aug.laundry.service;
 
-import aug.laundry.dao.LoginMapper;
-import aug.laundry.dto.KakaoOauthToken;
-import aug.laundry.dto.KakaoProfile;
-import aug.laundry.dto.MemberDto;
+import aug.laundry.commom.SessionConstant;
+import aug.laundry.dao.login.LoginDao;
+import aug.laundry.dao.login.LoginMapper;
+import aug.laundry.dao.member.MemberDao;
+import aug.laundry.dao.member.MemberMapper;
+import aug.laundry.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -11,31 +13,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class LoginServiceImpl_kgw implements LoginService_kgw{
-
-
     private final ApiExamMemberProfile apiExam;
-    private final LoginMapper loginMapper;
+    private final LoginDao loginDao;
+    private final MemberDao memberDao;
     private final MemberDto memberDto;
+    private final BCryptService_kgw bc;
+
+    public static final String NAVER_REDIRECT_URL = "http://localhost:8080/login/naver_callback";
+    public static final String KAKAO_REDIRECT_URL = "http://localhost:8080/login/kakaoLogin";
+
 
     @Override
-    public void naverLogin(HttpServletRequest request, Model model) {
+    public void naverLogin(HttpServletRequest request, Model model, HttpSession session) {
+        System.out.println("==================네이버 로그인 시작 ===========================");
         try {
             // callback처리 -> access_token
             Map<String, String> callbackRes = callback(request);
@@ -52,10 +60,13 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             System.out.println(response.get("name"));
             System.out.println(response.get("email"));
             System.out.println(response.get("mobile"));
+            String memberAccount = response.get("email");
+            System.out.println(memberAccount);
             System.out.println("=============================");
 
-            int checkRes = loginMapper.checkSocialId(response.get("id"));
+            int checkRes = loginDao.checkSocialId(response.get("id"));
 
+            // 첫 소셜로그인 -> 회원정보 DB에 저장
             if(checkRes <= 0){
                 System.out.println("naver 유저정보 db에 저장");
                 // memberDto에 담기
@@ -65,35 +76,42 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 String formattedPhoneNumber = formatPhoneNumber(response.get("mobile"));
                 memberDto.setMemberPhone(formattedPhoneNumber);
 
+                // DB에 등록
                 int registerUserInfoRes = registerSocialUser(memberDto);
                 int registerSocialNumRes = registerSocialNumber(response.get("id"));
 
-                System.out.println(registerUserInfoRes);
-                System.out.println(registerSocialNumRes);
+                // 웰컴쿠폰 지급
+                Long welcomeCoupon1 = 1L;
+                Long welcomeCoupon2 = 2L;
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
 
+                // memberId를 받아 session에 저장하기
+                Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
+                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
 
-
+            }else{
+                // 한 번 이상 소셜로그인 -> 세션에 저장하고 로그인 처리
+                // memberId를 받아 session에 저장하기
+                Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
+                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
             }
 
-            // 세션에 저장
-            model.addAttribute("id", response.get("id"));
-            model.addAttribute("name", response.get("name"));
-            model.addAttribute("genter", response.get("gender"));
-
         } catch (Exception e) {
-
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     public Map<String, String > callback(HttpServletRequest request) throws Exception{
+        System.out.println("==================네이버 callback ===========================");
         String clientId = "1zyMGeTLflNJkh2bmICN";//애플리케이션 클라이언트 아이디값";
         String clientSecret = "6DzM78FFO9";//애플리케이션 클라이언트 시크릿값";
         String code = request.getParameter("code");
         String state = request.getParameter("state");
+
         try {
-            String redirectURI = URLEncoder.encode("http://localhost:8080/login/naver_callback", "UTF-8");
+            String redirectURI = URLEncoder.encode(NAVER_REDIRECT_URL, "UTF-8");
             String apiURL;
             apiURL = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&";
             apiURL += "client_id=" + clientId;
@@ -137,11 +155,11 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         }
     }
 
-    public void kakaoLogin(String code){
+    public void kakaoProcess(String code, HttpSession session){
         String accessToken = getAccessToken(code);
         ObjectMapper obMapper = new ObjectMapper();
 
-        //json 문자열에 있는 키값이 DTO등 객체에는 없어서 문제가 생기므로 이 코드로 해결
+        // json 문자열에 있는 키값이 DTO 등 객체에는 없어서 문제가 생기므로 이 코드로 해결
         obMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 
@@ -149,7 +167,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
         try {
             kOauthToken = obMapper.readValue(accessToken, KakaoOauthToken.class);
-            getKakaoUserInfo(accessToken, kOauthToken);
+            kakaoLogin(accessToken, kOauthToken, session);
         }catch(JsonMappingException e){
             e.printStackTrace();
 
@@ -172,7 +190,7 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("grant_type", "authorization_code");
             jsonBody.put("client_id", "6ceec1b5aece169e4582fd82601abd44");
-            jsonBody.put("redirect_uri", "http://localhost:8080/kakaoLogin");
+            jsonBody.put("redirect_uri", KAKAO_REDIRECT_URL);
             jsonBody.put("code",code);
 
             String queryString = encodeParameters(jsonBody);
@@ -196,14 +214,15 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     }
 
     public String encodeParameters(JSONObject params) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("http://localhost:8080/kakaoLogin").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(KAKAO_REDIRECT_URL).newBuilder();
         for (String key : params.keySet()) {
             urlBuilder.addQueryParameter(key, params.getString(key));
         }
         return urlBuilder.build().encodedQuery();
     }
 
-    public void getKakaoUserInfo(String accessToken, KakaoOauthToken kOauthToken){
+    public void kakaoLogin(String accessToken, KakaoOauthToken kOauthToken,HttpSession session){
+
         OkHttpClient client = new OkHttpClient();
 
         MediaType jsonMediaType = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
@@ -224,7 +243,6 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
             KakaoProfile kakaoProfile = null;
             try {
                 kakaoProfile = obMapper.readValue(body.string(), KakaoProfile.class);
-
             }catch(JsonMappingException e){
                 e.printStackTrace();
 
@@ -238,12 +256,10 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
 
             // Long타입을 String타입으로 바꾸기
-            Long SocalId = kakaoProfile.getId();
-            String memberSocalId = String.valueOf(SocalId);
+            Long SocialId = kakaoProfile.getId();
+            String memberSocialId = String.valueOf(SocialId);
 
-
-
-            int checkRes = loginMapper.checkSocialId(memberSocalId);
+            int checkRes = loginDao.checkSocialId(memberSocialId);
 
             if(checkRes <= 0){
                 System.out.println("kakao 유저정보 db에 저장");
@@ -255,12 +271,24 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 memberDto.setMemberPhone(formattedPhoneNumber);
 
                 int registerUserInfoRes = registerSocialUser(memberDto);
-                int registerSocialNumRes = registerSocialNumber(memberSocalId);
+                int registerSocialNumRes = registerSocialNumber(memberSocialId);
 
-                System.out.println(registerUserInfoRes);
-                System.out.println(registerSocialNumRes);
+//                System.out.println(registerUserInfoRes);
+//                System.out.println(registerSocialNumRes);
 
+                // 웰컴쿠폰 지급
+                Long welcomeCoupon1 = 1L;
+                Long welcomeCoupon2 = 2L;
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
 
+                // memberId를 가져와서 session에 저장하기
+                Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
+                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
+            }else{
+                // memberId를 가져와서 session에 저장하기
+                Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
+                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
 
             }
 
@@ -268,18 +296,16 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
     public int registerSocialUser(MemberDto memberDto){
-        int res = loginMapper.registerSocialUser(memberDto);
+        int res = loginDao.registerSocialUser(memberDto);
 
 
         return res;
     }
 
     public int registerSocialNumber(String id){
-        int res = loginMapper.registerSocialNumber(id);
+        int res = loginDao.registerSocialNumber(id);
 
         return res;
     }
@@ -299,9 +325,55 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
         return formattedNumber;
     }
 
-    public MemberDto login(String memberAccount){
-        MemberDto memberDto = loginMapper.login(memberAccount);
-        return memberDto;
+    public MemberDto login(MemberDto memberDto){
+        String password = memberDto.getMemberPassword();
+
+        MemberDto member = loginDao.login(memberDto.getMemberAccount());
+
+        if(member != null){
+            String encodedPassword = member.getMemberPassword();
+            boolean isLogin = bc.matchBCrypt(password, encodedPassword);
+            if(isLogin){
+                return member;
+            }
+            return null;
+        }else{
+            return null;
+        }
+    }
+
+    @Override
+    public AdminDto adminLogin(String adminEmail, String adminPassword) {
+        AdminDto adminDto = loginDao.adminLogin(adminEmail, adminPassword);
+        return adminDto;
+    }
+
+    @Override
+    public RiderDto riderLogin(String riderEmail , String riderPassword) {
+        RiderDto riderDto = loginDao.riderLogin(riderEmail, riderPassword);
+        return riderDto;
+    }
+
+    @Override
+    public QuickRiderDto quickRiderLogin(String quickRiderEmail, String quickRiderPassword) {
+        QuickRiderDto quickRiderDto = loginDao.quickRiderLogin(quickRiderEmail, quickRiderPassword);
+        return quickRiderDto;
+    }
+
+    @Override
+    public int keepLogin(String sessionId, Date limit, Long memberId) {
+        int res = loginDao.keepLogin(sessionId, limit, memberId);
+        return res;
+    }
+
+    @Override
+    public MemberDto checkUserWithSessionId(String sessionId) {
+        return loginDao.checkUserWithSessionId(sessionId);
+    }
+
+    @Override
+    public int renewLoginTime(Long memberId) {
+        return loginDao.renewLoginTime(memberId);
     }
 
 }

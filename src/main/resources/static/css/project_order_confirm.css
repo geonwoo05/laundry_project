@@ -60,8 +60,15 @@ span, .location{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    margin: 0.5rem 1rem;
     width: 90%;
+}
+
+.content_name{
+    display: initial;
+    text-overflow: initial;
+    overflow: initial;
+    white-space: initial;
+    width: initial;
 }
 
 .coupon{
@@ -97,11 +104,12 @@ span, .location{
     height: 3rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin: 0;
 }
 .radioBox .box input[type=text]{
-    width: calc(100% - 32px - 4px - 21px);
+    margin: 0;
+    width: calc(100% - 4rem);
     height: 2rem;
     padding: 1rem;
     border-radius: var(--border-radius);
@@ -109,7 +117,7 @@ span, .location{
     outline: none;
 }
 .box label{
-    width: calc(100% - 32px - 4px - 21px);
+    margin: 0;
 }
 
 input[type=radio] {
@@ -128,6 +136,7 @@ input[type=radio]:checked + .custom-radio {
     background-color: white;
     border: 2px solid #ccc;
     border-radius: 50%;
+    margin: 0 1rem;
 }
 
 .additional{
@@ -172,8 +181,13 @@ input[type=submit]{
     left: 0rem;
     width: 100%;
     position: fixed;
-    background-color: white;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    border:none;
+    background-color: var(--container-color);
 }
 
 .address{
@@ -205,9 +219,17 @@ input[type=text]{
     outline: none;
     margin: 0.5rem 1rem;
     font-size: 1rem;
-
+    background-color: white;
 }
 
 .addressDetails{
     margin: 0;
+}
+
+.error{
+    color: red;
+    margin: 0.5rem 0 0 1rem;
+}
+.disabled{
+    display: none;
 }

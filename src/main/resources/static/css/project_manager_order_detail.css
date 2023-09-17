@@ -54,6 +54,7 @@ span, .location{
     white-space: nowrap;
     margin: 0.5rem 1rem;
     width: 90%;
+    text-align: left;
 }
 
 
@@ -173,7 +174,8 @@ input[type=submit]{
     margin-bottom: 1rem;
 }
 
-#reason{
+
+.reason1{
     width: 100%;
     height: 2rem;
     outline: none;
@@ -181,7 +183,11 @@ input[type=submit]{
     border: none;
     box-shadow: 2px 2px 5px #dadada;
     padding: 1rem;
+}
 
+.reason2{
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .hidden{
@@ -192,4 +198,40 @@ input[type=submit]{
 }
 .selectD {
     display: none;
+}
+.btnEdit {
+    width: 100%;
+    height: 4rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background-color: var(--main-color);
+    color: white;
+    font-size: 1.35rem;
+}
+
+.imgSize {
+    width: 100%;
+}
+
+.image-container {
+    position: relative;
+    margin-top: 0.5rem;
+}
+
+.preview-de {
+    position: absolute;
+    width: 3rem;
+    height: 3rem;
+    top: 0;
+    right: 0;
+    font-size: 1.5rem;
+}
+
+.input-file-button{
+    padding: 6px 25px;
+    background-color: var(--main-color);
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
 }
