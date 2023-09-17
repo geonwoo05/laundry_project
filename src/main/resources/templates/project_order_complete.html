@@ -30,7 +30,7 @@
             }
                 stompClient.send("/message/order-complete-message/" + orderId, {}, JSON.stringify(message));
                 stompClient.disconnect();
-                location.href = "/login";
+                location.href = "/";
             });
           });
         }

@@ -111,16 +111,16 @@ public class RiderController {
 //        orders.setOrdersAddressDetails("108동 505호");
 
         System.out.println(orders.getOrdersAddress());
-        System.out.println(riderService.riderInfo(5L).getWorkingArea());
-        System.out.println(orders.getOrdersAddress().split(" ")[1]);
-        if(riderService.riderInfo(5L).getWorkingArea().equals(orders.getOrdersAddress().split(" ")[1])
-        ){
+//        System.out.println(riderService.riderInfo(5L).getWorkingArea());
+//        System.out.println(orders.getOrdersAddress().split(" ")[1]);
+//        if(riderService.riderInfo(5L).getWorkingArea().equals(orders.getOrdersAddress().split(" ")[1])
+//        ){
             map.put("a",orders);
             map.put("ordersId", ordersId);
             return map;
-        }else{
-            return null;
-        }
+//        }else{
+//            return null;
+//        }
     }
 
     @GetMapping("/oo/63/{ordersId}")
