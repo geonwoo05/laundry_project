@@ -15,8 +15,8 @@
 <body>
 <div class='container'>
     <div class='menu'>
-        <button type='button' th:onclick="|location.href='@{/orders}'|" class='leftBtn selected'>진행중인 주문</button>
-        <button type='button' th:onclick="|location.href='@{/orders/complete}'|" class='rightBtn'>완료된 주문</button>
+        <button type='button' th:onclick="|location.href='@{/orders}'|" class='leftBtn'>진행중인 주문</button>
+        <button type='button' th:onclick="|location.href='@{/orders/complete}'|" class='rightBtn selected'>완료된 주문</button>
     </div>
 <!--    <div th:each="category, stat : ${categories}" class='orderList' id='now'>-->
 <!--        <a th:href="@{/orders/{ordersId}/payment(ordersId=${category.ordersId})}" class='order'>-->
