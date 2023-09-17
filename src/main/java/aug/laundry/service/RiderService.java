@@ -43,4 +43,8 @@ public interface RiderService {
     int acceptCheck(Long ordersId);
 
     int updateStatus(Long riderId);
+
+    int isRoutineDelivery(Long riderId);
+
+    int updateRoutineOrdersRiderId(Long ordersId);
 }

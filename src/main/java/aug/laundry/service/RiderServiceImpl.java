@@ -111,6 +111,16 @@ public class RiderServiceImpl implements RiderService{
         return riderMapper.updateStatus(riderId);
     }
 
+    @Override
+    public int isRoutineDelivery(Long riderId) {
+        return riderMapper.isRoutineDelivery(riderId);
+    }
+
+    @Override
+    public int updateRoutineOrdersRiderId(Long ordersId) {
+        return riderMapper.updateRoutineOrdersRiderId(ordersId);
+    }
+
 
 //    @Override
 //    public List<Map<String, Integer>> dongCnt(String ordersAddress) {
