@@ -45,6 +45,18 @@ public class FooterAspect {
         }
     }
 
+    @Before("execution(* aug.laundry.controller.OrdersController_kdh.*(..))")
+    public void orderListAspect(JoinPoint joinPoint) {
+        log.info("OrdersController Aspect Befor 실행 : {}", joinPoint.getSignature().getName());
+
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            if (arg instanceof Model) {
+                ((Model) arg).addAttribute("footer", "orderList");
+            }
+        }
+    }
+
     @Before("execution(* aug.laundry.controller.RiderController.*routine*(..))")
     public void rider(JoinPoint joinPoint) {
         System.out.println("RiderController실행----------------------------------");

@@ -233,3 +233,10 @@ input[type=text]{
 .disabled{
     display: none;
 }
+
+.info .content{
+    text-overflow: initial;
+    white-space: initial;
+    overflow: initial;
+    line-height: 1.5rem;
+}

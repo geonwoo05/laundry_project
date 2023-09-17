@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>주문정보 :: 세탁해조</title>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/project_footer.css">
     <link rel="stylesheet" href="/css/project_header.css">
@@ -20,13 +20,13 @@
     <form action="" method="post">
         <h2>주문정보</h2>
         <div class='info'>
-            <span class='content'>주의사항에 대한 내용</span>
+            <span class='content'>세탁패스는 실제 결제일 기준으로 적용되므로, <br> 실제 결제금액고 차이가 있을 수 있습니다.</span>
         </div>
         <h4>주문내용</h4>
         <table class='orderOption'>
             <tr>
                 <th class='content' >선택사항</th>
-                <td class='content' th:text="${quickLaundry ? '빠른세탁' : '일반세탁'}">일반세탁</td>
+                <td class='content' th:text="${quickLaundry ? '빠른세탁' : '일반세탁'}"></td>
             </tr>
             <tr>
                 <th class='content'>세탁옵션</th>

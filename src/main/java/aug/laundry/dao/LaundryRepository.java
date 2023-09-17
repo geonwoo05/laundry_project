@@ -64,7 +64,7 @@ public class LaundryRepository {
     public boolean validCoupon(Long memberId, Long couponListId) {
         if (couponListId == null) return false;
         CouponList couponList = laundryMapper.validCoupon(memberId, couponListId);
-        if (couponList == null || couponList.getMemberId() != memberId || couponList.getCouponListId() != couponListId || couponList.getCouponListStatus() != 1) {
+        if (couponList == null || !couponList.getMemberId().equals(memberId) || !couponList.getCouponListId().equals(couponListId) || couponList.getCouponListStatus() != 1L) {
             return false;
         }
         return true;
