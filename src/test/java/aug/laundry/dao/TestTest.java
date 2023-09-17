@@ -65,4 +65,11 @@ class TestTest {
         System.out.println(member);
 
     }
+
+    @Test
+    void addressTest(){
+        Long memberId = 3L;
+        String isAddress = memberMapper.isAddrss(memberId);
+        System.out.println(isAddress);
+    }
 }

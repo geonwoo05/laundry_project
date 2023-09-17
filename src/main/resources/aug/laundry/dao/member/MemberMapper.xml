@@ -66,6 +66,13 @@
         (SEQ_COUPON_LIST_ID.NEXTVAL, #{memberId}, #{couponId}, SYSDATE, 1, null,ADD_MONTHS(SYSDATE, 1))
     </insert>
 
+    <update id="updateAddress">
+        UPDATE MEMBER
+        SET MEMBER_ZIPCODE = #{memberZipcode}, MEMBER_ADDRESS=#{memberAddress}, MEMBER_ADDRESS_DETAILS=#{memberAddressDetails}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+
+
 
 
 </mapper>
