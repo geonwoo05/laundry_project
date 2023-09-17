@@ -32,21 +32,22 @@
 <!--            </div>-->
 <!--        </a>-->
 <!--    </div>-->
-
-    <div th:each="category, stat : ${categoriesFinished}" class='orderList' id='now'>
-        <a th:href="@{/orders/{ordersId}/payment(ordersId=${category.ordersId})}" class='order'>
-            <div class='orderTop'>
-                <div class='orderBox'>
-                    <span th:text="${ordersFinished[stat.index].ordersDate}" class='orderDate'>9월 15일(금)</span>
-                    <div class='option'>빠른세탁</div>
+    <th:block th:if="${!ordersFinished.isEmpty()}">
+        <div th:each="category, stat : ${categoriesFinished}" class='orderList' id='now'>
+            <a th:href="@{/orders/{ordersId}/payment(ordersId=${category.ordersId})}" class='order'>
+                <div class='orderTop'>
+                    <div class='orderBox'>
+                        <span th:text="${ordersFinished[stat.index].ordersDate}" class='orderDate'>9월 15일(금)</span>
+                        <div class='option'>빠른세탁</div>
+                    </div>
+                    <span th:text="${ordersFinished[stat.index].orderStatus.title}" class='orderStatus'>종료</span>
                 </div>
-                <span th:text="${ordersFinished[stat.index].orderStatus.title}" class='orderStatus'>종료</span>
-            </div>
-            <div class='orderCenter'>
-                <span th:text="${category.category}" class='orderContent'>OOOO 수선 외 5건</span>
-            </div>
-        </a>
-    </div>
+                <div class='orderCenter'>
+                    <span th:text="${category.category}" class='orderContent'>OOOO 수선 외 5건</span>
+                </div>
+            </a>
+        </div>
+    </th:block>
 </div>
 </body>
 <footer th:replace="~{/common/project_footer :: footer}"> </footer>

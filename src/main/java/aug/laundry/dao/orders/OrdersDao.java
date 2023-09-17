@@ -137,7 +137,7 @@ public class OrdersDao {
         List<CategoryForOrdersListDto> category = ordersMapper.findCategoryByMemberId(
                 memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
         if(category == null || category.isEmpty()){
-            throw new IllegalArgumentException("카테고리 리스트를 찾을 수 없습니다.");
+            return Collections.EMPTY_LIST;
         }
         return category;
     }
@@ -146,7 +146,7 @@ public class OrdersDao {
         List<CategoryForOrdersListDto> categoryFinished = ordersMapper.findCategoryFinishedByMemberId(
                 memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
         if(categoryFinished == null || categoryFinished.isEmpty()){
-            throw new IllegalArgumentException("카테고리 리스트를 찾을 수 없습니다.");
+            return Collections.EMPTY_LIST;
         }
         return categoryFinished;
     }
@@ -155,7 +155,7 @@ public class OrdersDao {
         List<OrdersForOrdersListDto> orders = ordersMapper.findOrders(
                 memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
         if(orders == null || orders.isEmpty()){
-            throw new IllegalArgumentException("주문리스트를 찾을 수 없습니다.");
+            return Collections.EMPTY_LIST;
         }
         return orders;
     }
@@ -164,7 +164,7 @@ public class OrdersDao {
         List<OrdersForOrdersListDto> ordersFinished = ordersMapper.findOrdersFinished(
                 memberId, ConstOrderStatus.ORDERS_CANCEL, ConstOrderStatus.DELIVERY_SUCCESS);
         if(ordersFinished == null || ordersFinished.isEmpty()){
-            throw new IllegalArgumentException("주문리스트를 찾을 수 없습니다.");
+            return Collections.EMPTY_LIST;
         }
         return ordersFinished;
     }
