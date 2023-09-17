@@ -39,6 +39,7 @@ public class PathInterceptor implements HandlerInterceptor {
                 // 응답 커밋을 방지하기 위해 다음 두 줄을 추가
                 response.reset(); // 응답 리셋
                 response.sendRedirect(requestURI);
+                return false;
 
             }
         }
