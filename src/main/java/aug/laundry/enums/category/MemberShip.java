@@ -25,7 +25,7 @@ public class MemberShip {
         if (this.check == Pass.PASS) {
             return PointCalculator.PASS.calculate(price);
         } else {
-            return CategoryPriceCalculator.COMMON.calculate(price);
+            return PointCalculator.COMMON.calculate(price);
         }
     }
 }
