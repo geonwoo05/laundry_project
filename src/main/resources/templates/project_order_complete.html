@@ -18,22 +18,33 @@
       window.addEventListener('load', function() {
           const orderId = $('#ordersId').val();
 
-          if(orderId != null && orderId != ""){
-            swal('주문 성공!',"세탁을 말끔히 해줄게~",'success').then((result)=>{
-            let socket = new SockJS('/websocket');
+            fetch('/check/'+ orderId)
+            .then(response => response.json())
+            .then(map => {
 
-            let stompClient = Stomp.over(socket);
+            if(map.res != 0){
+                  if(orderId != null && orderId != ""){
+                    swal('주문 성공!',"세탁을 말끔히 해줄게~",'success').then((result)=>{
+                    let socket = new SockJS('/websocket');
 
-            stompClient.connect({}, function() {
-                const message = {
-                    message : "새 주문이 들어왔습니다"
+                    let stompClient = Stomp.over(socket);
+
+                    stompClient.connect({}, function() {
+                        const message = {
+                            message : "새 주문이 들어왔습니다"
+                    }
+                        stompClient.send("/message/order-complete-message/" + orderId, {}, JSON.stringify(message));
+                        stompClient.disconnect();
+                        location.href = "/";
+                    });
+                  });
+                }
+            }else{
+                swal('주문 성공!',"세탁을 말끔히 해줄게~",'success').then((result)=>{
+                    location.href = "/";
+                });
             }
-                stompClient.send("/message/order-complete-message/" + orderId, {}, JSON.stringify(message));
-                stompClient.disconnect();
-                location.href = "/";
-            });
-          });
-        }
+        });
       });
     </script>
 <body>

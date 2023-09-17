@@ -29,4 +29,6 @@ public interface MypageMapper {
   public PointNowDto getPointNow(Long memberId);
 
   public int someCoupon(Long memberId);
+
+  public MySubscribeMonthsDto findMySubscribeMonths(Long memberId);
 }

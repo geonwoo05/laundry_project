@@ -43,4 +43,6 @@ public class MypageDao {
   public PointNowDto getPointNow(Long memberId){ return mypageMapper.getPointNow(memberId); }
 
   public int someCoupon(Long memberId){ return mypageMapper.someCoupon(memberId); }
+
+  public MySubscribeMonthsDto findMySubscribeMonths(Long memberId){return mypageMapper.findMySubscribeMonths(memberId); }
 }

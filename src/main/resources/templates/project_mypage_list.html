@@ -24,10 +24,18 @@
     </div>
     <ul>
         <a th:href='@{/subscription/{memberId}(memberId=${session.memberId})}'>
-            <li class='mypagePass'>PASS
-                <p>세탁패스 구매하기</p><br>
-                <p>무제한 세탁 할인, 무제한 포인트 적립</p>
-            </li>
+            <th:block th:if="${month == null && expireDate == null}">
+                <li class='mypagePass'>PASS
+                    <p>세탁패스 구매하기</p><br>
+                    <p>무제한 세탁 할인, 무제한 포인트 적립</p>
+                </li>
+            </th:block>
+            <th:block th:if="${month != null && expireDate != null}">
+                <li class='mypagePass'>PASS
+                    <p th:text="${month}+'구독중'">세탁패스 구매하기</p><br>
+                    <p th:text="${expireDate}">무제한 세탁 할인, 무제한 포인트 적립</p>
+                </li>
+            </th:block>
             <span>▶</span>
 
         </a>

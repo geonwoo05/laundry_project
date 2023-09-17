@@ -61,4 +61,15 @@ public class RiderRestController {
         map.put("orders",orders);
         return map;
     }
+
+    @GetMapping("/check/{ordersId}")
+    public Map<String, Object> isQuickCheck(@PathVariable("ordersId")Long ordersId){
+        Map<String, Object> map = new HashMap<>();
+
+        int res = riderService.isRoutineDelivery(ordersId);
+        System.out.println("주문성공 페이지 res : " + res);
+
+        map.put("res",res);
+        return map;
+    }
 }
