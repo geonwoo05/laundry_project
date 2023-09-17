@@ -52,6 +52,7 @@ public class MypageController_osc {
 
     String month = "";
     String expireDate = "";
+
     if(mySubscribeMonthsDto == null){
       month = null;
       expireDate=null;

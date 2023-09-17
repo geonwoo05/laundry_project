@@ -72,7 +72,7 @@
     </select>
 
     <select id="findMySubscribeMonths" resultType="aug.laundry.dto.MySubscribeMonthsDto">
-        SELECT SUBSCRIPTION_ID, SUBSCRIPTION_EXPIRE_DATE
+        SELECT SUBSCRIPTION_ID, TO_CHAR(SUBSCRIPTION_EXPIRE_DATE, 'YY/MM/DD HH24:MI') AS SUBSCRIPTION_EXPIRE_DATE
         FROM MEMBER
         WHERE MEMBER_ID = #{memberId}
     </select>
