@@ -136,7 +136,7 @@ public class OrdersController_kdh {
         Integer ordersStatus = ordersResponseDto.getOrdersStatus();
 
         if(ordersStatus==PAY_SUCCESS || ordersStatus==WASH_ING ||
-                ordersStatus==BEFORE_TAKE_WHEN_WASH_SUCCESS || ordersStatus==BEFORE_TAKE_WHEN_WASH_SUCCESS ||
+                ordersStatus==WASH_SUCCESS || ordersStatus==BEFORE_TAKE_WHEN_WASH_SUCCESS ||
                 ordersStatus==TAKE_SUCCESS_AFTER_WASH_SUCCESS || ordersStatus==DELIVERY_SUCCESS){
             PriceResponseDto price = ordersServiceKdh.findPricesByOrdersId(ordersId);
             log.info("price={}",price);
