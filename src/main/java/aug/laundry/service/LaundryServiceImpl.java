@@ -2,6 +2,7 @@ package aug.laundry.service;
 
 import aug.laundry.commom.SessionConstant;
 import aug.laundry.dao.LaundryRepository;
+import aug.laundry.dao.member.MemberMapper;
 import aug.laundry.domain.Orders;
 import aug.laundry.dto.*;
 import aug.laundry.enums.category.Category;
@@ -31,6 +32,7 @@ public class LaundryServiceImpl implements LaundryService{
 
     private final LaundryRepository laundryRepository;
     private final FileUploadService_ksh fileUploadService;
+    private final MemberMapper memberMapper;
 
     @Override
     public List<MyCoupon> getCoupon(Long memberId) {
@@ -236,6 +238,16 @@ public class LaundryServiceImpl implements LaundryService{
     public void removeRepairImagesFile(Long repairId) {
         laundryRepository.removeRepairImagesFile(repairId);
     }
+
+    @Override
+    public boolean checkAddress(Long memberId) {
+        MemberDto memberDto = memberMapper.selectOne(memberId);
+        if (memberDto != null && memberDto.getMemberAddress() != null) {
+            return true;
+        }
+        return false;
+    }
+
 
     @NotNull
     private Orders getOrders(Long memberId, OrderPost orderPost) {
