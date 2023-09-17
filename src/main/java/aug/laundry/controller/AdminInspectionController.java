@@ -145,6 +145,11 @@ public class AdminInspectionController {
 
         try {
             adminInspectionService_ksh.updateInspectionResult(adminId, ordersId, inspectionDataDto, files);
+
+            //검수후 주문 예상금액 업데이트
+            Map<String, Long> prices = paymentService.makePrices(ordersId, adminInspectionService_ksh.getMemberId(ordersId));
+            ordersServiceKdh.updateExpectedPriceByOrdersId(ordersId, prices.get("totalPriceWithDeliveryPrice"));
+
             data.put("result", "success");
         } catch (RuntimeException e) {
             data.put("result", "fail");
