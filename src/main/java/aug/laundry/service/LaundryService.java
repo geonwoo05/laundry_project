@@ -52,4 +52,6 @@ public interface LaundryService {
     void removeRepairImages(Long repairId);
 
     void removeRepairImagesFile(Long repairId);
+
+    boolean checkAddress(Long memberId);
 }

@@ -73,7 +73,10 @@ public class LaundryOrderController {
 
     @GetMapping
     public String first(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId, HttpSession session, Model model) {
-
+        boolean isAddress = laundryService.checkAddress(memberId);
+        if (!isAddress) {
+            return "redirect:/members/" + memberId + "/address/update"; // 주소값이 없으면 주소 변경으로 리다이렉트
+        }
         laundryService.check(memberId, session); // 이전에 존재하던 장바구니 테이블이 있으면 삭제하고 새로 생성 , 없으면 그냥 생성, 생성후에 session 발급
 
         DateForm dateForm = new DateForm(); // 수거, 배송에 대한 정보
