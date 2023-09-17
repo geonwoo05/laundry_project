@@ -81,10 +81,9 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 int registerSocialNumRes = registerSocialNumber(response.get("id"));
 
                 // 웰컴쿠폰 지급
-                Long welcomeCoupon1 = 1L;
-                Long welcomeCoupon2 = 2L;
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
+                Long welcomeCoupon = 1L;
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon);
+
 
                 // memberId를 받아 session에 저장하기
                 Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
