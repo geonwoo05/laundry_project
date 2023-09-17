@@ -27,6 +27,10 @@ public interface OrdersMapper {
                                       @Param("expectedPrice") Long expectedPrice,
                                       @Param("subscriptionDiscountPrice") Long subscriptionDiscountPrice);
 
+    int updateExpectedPriceByOrdersId(@Param("ordersId") Long ordersId,
+                                               @Param("expectedPrice") Long expectedPrice);
+
+
     Optional<Long> findExpectedPriceByOrdersId(Long ordersId);
 
     int updateOrdersStatusToCompletePayment(Long ordersId, int constPaySuccess);
@@ -71,4 +75,6 @@ public interface OrdersMapper {
     Long findCouponListIdByOrdersId(Long ordersId);
 
     int updateCouponList(@Param("notUsed") int notUsed, @Param("couponListId") Long couponListId);
+
+
 }
