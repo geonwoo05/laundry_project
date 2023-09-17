@@ -86,7 +86,7 @@
 
     <update id="useCoupon">
         UPDATE COUPON_LIST
-        SET COUPON_LIST_STATUS = COUPON_LIST_STATUS + 1
+        SET COUPON_LIST_STATUS = COUPON_LIST_STATUS + 1 , ORDERS_ID = #{ordersId}
         WHERE MEMBER_ID = #{memberId} AND COUPON_LIST_ID = #{couponListId} AND (COUPON_END_DATE IS NULL OR COUPON_END_DATE > SYSDATE)
     </update>
 

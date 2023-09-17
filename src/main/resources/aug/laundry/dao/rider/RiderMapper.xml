@@ -155,7 +155,7 @@
         update orders set orders_status = orders_status+1 where rider_id = (rider_id)
     </update>
 
-    <select id="isRoutineDelivery" resultType="Integer">
+    <select id="isRoutineDelivery">
         SELECT count(*) FROM QUICK_LAUNDRY WHERE ORDERS_DETAIL_ID = (SELECT ORDERS_DETAIL_ID FROM ORDERS_DETAIL WHERE ORDERS_ID = #{ordersId})
     </select>
 

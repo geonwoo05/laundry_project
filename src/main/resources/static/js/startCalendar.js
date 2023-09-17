@@ -63,6 +63,9 @@ window.addEventListener('load', function(){
 
         if (event.target.className == 'subDay'){
             classClearStart();
+            radioBox.forEach(radio => {
+                radio.checked  = false;
+            })
             event.target.classList.add('select');
             inputStartDate.value = nowYear + '-' + String(nowMonth).padStart(2, '0') + '-' +   String(event.target.textContent).padStart(2,'0');
             timeCheckStart(nowYear, nowMonth, Number(event.target.textContent), fixYear, fixMonth, fixDay);

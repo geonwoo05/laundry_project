@@ -130,7 +130,7 @@ input[type=submit]{
     width: calc(100% - 2rem);
 }
 
-.error{
+.error, .error-cal{
     color: red;
     text-align: center;
     margin: 0.5rem 0 0 1rem;
