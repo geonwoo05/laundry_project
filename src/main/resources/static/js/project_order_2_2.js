@@ -30,6 +30,15 @@ window.addEventListener('load', function(){
     submitBtn.addEventListener('submit', function(event){
         event.preventDefault();
 
+        // 이전 장바구니가 있는지 확인
+        	try{
+        		fetch('./repair/check')
+        			.then(response => response.json())
+        			.then(map => callback(map));
+        	}catch(e){
+        		console.log('fetchGet',e);
+        	}
+
         var formData = new FormData(this);
         var newFormData = new FormData();
 
@@ -56,13 +65,26 @@ window.addEventListener('load', function(){
             let fileData = document.querySelectorAll('input[type=file]');
             let newForm = new FormData();
 
+            let isError = [];
             for (let j = 0; j< fileData.length; j++){
                 let num = fileData[j].name.split('-')[1];
+                if (fileData[j].value == null || fileData[j].value == ''){
+                    let errorDiv = findByErrorDiv(fileData[j]);
+                    isError.push(errorDiv);
+                } else {
+                    let errorDiv = findByErrorDiv(fileData[j]);
+                    errorDiv.innerHTML = '';
+                }
                 if (Number(key) == Number(num)) {
                     for (let i =0; i < fileData[j].files.length; i++){
                         newForm.append('files', fileData[j].files[i], fileData[j].files[i].name);
                     }
                 }
+            }
+
+            if (isError.length != 0){
+                errorResult(isError);
+                return;
             }
             newForm.append('repairData', newJson);
 
@@ -72,6 +94,27 @@ window.addEventListener('load', function(){
 
     })
 })
+
+
+
+function errorResult(errorArray){
+    for (let i = 0; i < errorArray.length; i++){
+        if (errorArray != null) {
+            errorArray[i].innerHTML = '사진을 첨부해주세요';
+        }
+    }
+    errorArray[0].scrollIntoView({ behavior : 'smooth'});
+}
+
+// input[type=file] 태그를 넣으면 error태그 반환
+function findByErrorDiv(fileInputTag){
+    let boxChildNodes = fileInputTag.parentElement.parentElement.parentElement.children;
+    for (let i = 0; i < boxChildNodes.length; i++){
+        if (boxChildNodes[i].classList.contains('error')){
+            return boxChildNodes[i];
+        }
+    }
+}
 
 function apiFetchFile(url, params) {
 
@@ -95,7 +138,7 @@ function apiFetchFile(url, params) {
         })
         .catch((error) => {
             console.log(error);
-            alert("에러가 발생했습니다. \r\n관리자에게 문의해주십시오.");
+//            alert("에러가 발생했습니다. \r\n관리자에게 문의해주십시오.");
             reject();
         });
 
@@ -229,6 +272,12 @@ function createBox(name, price, title, count) {
         let imgTop = document.createElement('span');
         imgTop.classList.add('imgTop');
         imgTop.innerText = '사진 최대 3장이내';
+
+        let message = document.createElement('span');
+        message.classList.add('message')
+        message.innerHTML = '1장 이상 필수'
+        imgTop.appendChild(message);
+
         box.appendChild(imgTop);
 
         let imglist = document.createElement('div')
@@ -257,6 +306,10 @@ function createBox(name, price, title, count) {
             imglist.appendChild(imgbox);
 
         box.appendChild(imglist);
+
+        let error = document.createElement('div')
+        error.classList.add('error')
+        box.appendChild(error);
 
         let required = document.createElement('div');
         required.classList.add('required');

@@ -12,6 +12,8 @@ import aug.laundry.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.boot.web.servlet.server.Session;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -134,14 +136,30 @@ public class LaundryOrderController {
         return resultMap;
     }
 
+    @GetMapping("/repair/check")
+    public @ResponseBody String repairCheck(@SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId) {
+        log.info("repair check [ ordersDetailId = {} ]", ordersDetailId);
+        List<Long> repairIdList = laundryService.findByRepairId(ordersDetailId);
+        if (repairIdList != null) {
+            for (Long repairId : repairIdList) {
+                laundryService.removeRepairImagesFile(repairId);
+                laundryService.removeRepairImages(repairId);
+            }
+                laundryService.removeRepair(ordersDetailId);
+        }
+
+        return "";
+
+    }
+
     @Transactional
     @PostMapping(value = "/repair/order")
     public @ResponseBody Map<String, Boolean> repairOrder(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
                                                           @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId,
                                                           @RequestPart("repairData") Map<String, RepairFormData> repairData,
-                                                          @RequestParam List<MultipartFile> files) {
+                                                          @RequestParam(name = "files", required = false) List<MultipartFile> files) {
         HashMap<String, Boolean> resultMap = new HashMap<>();
-
+        System.out.println("files = " + files);
         boolean status = laundryService.insertRepair(memberId, ordersDetailId, resultMap, repairData, files);
 
 

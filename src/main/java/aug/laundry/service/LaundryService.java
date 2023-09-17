@@ -44,4 +44,12 @@ public interface LaundryService {
     void insertQuickLaundry(Long ordersDetailId);
 
     OrderInfo orderInfo(Model model);
+
+    List<Long> findByRepairId(Long ordersDetailId);
+
+    void removeRepair(Long ordersDetailId);
+
+    void removeRepairImages(Long repairId);
+
+    void removeRepairImagesFile(Long repairId);
 }

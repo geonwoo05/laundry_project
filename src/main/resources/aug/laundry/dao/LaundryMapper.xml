@@ -168,8 +168,16 @@
             SELECT SEQ_REPAIR_ID.NEXTVAL
             FROM DUAL
         </selectKey>
-        INSERT INTO REPAIR (REPAIR_ID, ORDERS_DETAIL_ID, REPAIR_REQUEST, REPAIR_CATEGORY)
-        VALUES (#{repairId}, #{ordersDetailId}, #{request}, #{category})
+        INSERT INTO REPAIR (REPAIR_ID, ORDERS_DETAIL_ID,
+        <if test="request != null">
+            REPAIR_REQUEST,
+        </if>
+        REPAIR_CATEGORY)
+        VALUES (#{repairId}, #{ordersDetailId},
+        <if test="request != null">
+            #{request},
+        </if>
+        #{category})
     </insert>
     <select id="getRepairId">
         SELECT DISTINCT REPAIR_ID
@@ -197,4 +205,10 @@
         SET ORDERS_ID = #{ordersId}
         WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
     </update>
+
+    <select id="findByRepairId">
+        SELECT DISTINCT REPAIR_ID
+        FROM REPAIR
+        WHERE ORDERS_DETAIL_ID = #{ordersDetailId}
+    </select>
 </mapper>
