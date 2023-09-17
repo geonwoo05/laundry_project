@@ -40,7 +40,7 @@
                             <span class='couponExpireDate' th:text="${item.couponEndDate}">2023.08.31 23:59까지</span>
                         </div>
                     </li>
-                <li class='coupon noncoupon'>
+                <li th:if="${coupon.isEmpty()}" class='coupon noncoupon'>
                     <span>등록된 쿠폰이 없습니다.</span>
                 </li>
             </ul>
