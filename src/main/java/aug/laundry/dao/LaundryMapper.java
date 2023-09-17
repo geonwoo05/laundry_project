@@ -75,4 +75,7 @@ public interface LaundryMapper {
     void updateOrdersDetail(@Param("ordersId") Long ordersId, @Param("ordersDetailId") Long ordersDetailId);
 
     void insertInspection(Long ordersId);
+
+    List<MyCoupon> getCoupon2(Long memberId);
+
 }

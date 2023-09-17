@@ -151,6 +151,13 @@ public class PaymentController {
             ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId, ConstOrderStatus.TAKE_SUCCESS_AFTER_WASH_SUCCESS);
         }
 
+        Long couponListIdFromDB = ordersServiceKdh.findCouponListIdByOrdersId(ordersId);
+
+        if(couponListIdFromDB != null && couponListId == null){
+            //쿠폰리스트 상태 1로 바꾸고 쿠폰리스트의 오더아이디 null처리
+            ordersServiceKdh.updateCouponList(couponListIdFromDB);
+        }
+
         if(couponListId != null){
             ordersServiceKdh.updateCouponStatusNOrdersId(ordersId, couponListId);
         }

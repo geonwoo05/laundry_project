@@ -184,4 +184,11 @@ public class LaundryRepository {
     public void insertInspection(Long ordersId) {
         laundryMapper.insertInspection(ordersId);
     }
+
+    public List<MyCoupon> getCoupon2(Long memberId) {
+        List<MyCoupon> coupon = laundryMapper.getCoupon2(memberId);
+        log.info("getCoupon2={}", coupon);
+        return coupon;
+    }
+
 }

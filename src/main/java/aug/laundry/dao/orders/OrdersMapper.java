@@ -68,4 +68,7 @@ public interface OrdersMapper {
 
     List<OrdersForOrdersListDto> findOrdersFinished(@Param("memberId") Long memberId, @Param("orderCancel") int orderCancel, @Param("deliverySuccess") int deliverySuccess);
 
+    Long findCouponListIdByOrdersId(Long ordersId);
+
+    int updateCouponList(@Param("notUsed") int notUsed, @Param("couponListId") Long couponListId);
 }

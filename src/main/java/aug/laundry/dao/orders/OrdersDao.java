@@ -169,6 +169,13 @@ public class OrdersDao {
         return ordersFinished;
     }
 
+    public Long findCouponListIdByOrdersId(Long ordersId){
+        return ordersMapper.findCouponListIdByOrdersId(ordersId);
+    }
+
+    public int updateCouponList(Long couponListId){
+        return ordersMapper.updateCouponList(ConstCouponListStatus.NOT_USED, couponListId);
+    }
 
 
 
