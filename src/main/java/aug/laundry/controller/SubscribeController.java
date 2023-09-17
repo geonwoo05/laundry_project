@@ -240,17 +240,27 @@ public class SubscribeController {
             SubscriptionPayDto info = subscribeService_ksh.getScheduleInfo(memberId);
             String cancelUrl =  "https://api.iamport.kr/subscribe/payments/unschedule";
             String jsonBody = String.format("{\"customer_uid\": \"%s\", \"merchant_uid\": \"%s\"}", info.getCustomerUid(), info.getMerchantUidRe());
-            JsonObject scheduleStatus = subscribeService_ksh.postData(cancelUrl, jsonBody).getAsJsonArray("response").get(0).getAsJsonObject();
 
-            if("revoked".equals(scheduleStatus.get("schedule_status").getAsString())) {
-                subscribeService_ksh.updateCancel(info.getMerchantUid());
-                map.put("result", "success");
+            JsonObject scheduleStatus = subscribeService_ksh.postData(cancelUrl, jsonBody);
+
+            if(scheduleStatus.get("response").isJsonNull()) {
+                map.put("result", "none");
+                map.put("reason", scheduleStatus.get("message").getAsString());
+                return map;
             } else {
-                if(!scheduleStatus.get("fail_reason").isJsonNull()) {
-                    subscribeService_ksh.updateFailReason(info.getMerchantUid(),scheduleStatus.get("fail_reason").getAsString());
+                scheduleStatus = scheduleStatus.getAsJsonArray("response").get(0).getAsJsonObject();
+
+                if("revoked".equals(scheduleStatus.get("schedule_status").getAsString())) {
+                    subscribeService_ksh.updateCancel(info.getMerchantUid());
+                    map.put("result", "success");
+                } else {
+                    if(!scheduleStatus.get("fail_reason").isJsonNull()) {
+                        subscribeService_ksh.updateFailReason(info.getMerchantUid(),scheduleStatus.get("fail_reason").getAsString());
+                    }
+                    map.put("result", "fail");
+                    map.put("reason", scheduleStatus.get("fail_reason").getAsString());
                 }
-                map.put("result", "fail");
-                map.put("reason", scheduleStatus.get("fail_reason").getAsString());
+                map.put("result", "test");
             }
 
         } catch (IOException e) {
