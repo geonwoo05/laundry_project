@@ -27,4 +27,5 @@ public interface AdminInspectionService_ksh {
                                List<MultipartFile> files);
 
     Map<String, String> deleteImageFile(List<String> fileNames);
+    Long getMemberId(Long ordersId);
 }

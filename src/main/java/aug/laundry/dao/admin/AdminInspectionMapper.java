@@ -29,4 +29,5 @@ public interface AdminInspectionMapper {
     int updateInspectionStatus(@Param("ordersId") Long ordersId, @Param("adminId")Long adminId);
     int updateOrderStatus(Long ordersId);
     int deleteImage(String inspectionImageStoreName);
+    Long getMemberId(Long ordersId);
 }

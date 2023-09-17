@@ -4,6 +4,8 @@ import aug.laundry.dto.AdminInspectionDto;
 import aug.laundry.dto.Criteria;
 import aug.laundry.dto.InspectionDataDto;
 import aug.laundry.service.AdminInspectionService_ksh;
+import aug.laundry.service.OrdersService_kdh;
+import aug.laundry.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,8 @@ public class AdminInspectionController {
 
 
     private final AdminInspectionService_ksh adminInspectionService_ksh;
+    private final PaymentService paymentService;
+    private final OrdersService_kdh ordersServiceKdh;
 
     @GetMapping("/admin/{adminId}")
     public String getInspectionView(@PathVariable("adminId") Long adminId) {
@@ -92,8 +96,16 @@ public class AdminInspectionController {
         }
 
         try {
+            log.info("memberId={}", adminInspectionService_ksh.getMemberId(ordersId));
+
             adminInspectionService_ksh.updateInspectionResult(adminId, ordersId, inspectionDataDto, files);
+
+            //검수후 주문 예상금액 업데이트
+            Map<String, Long> prices = paymentService.makePrices(ordersId, adminInspectionService_ksh.getMemberId(ordersId));
+            ordersServiceKdh.updateExpectedPriceByOrdersId(ordersId, prices.get("totalPriceWithDeliveryPrice"));
+
             data.put("result", "success");
+
         } catch (RuntimeException e) {
             data.put("result", "fail");
             data.put("error", e.getMessage());
