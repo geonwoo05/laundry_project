@@ -173,14 +173,13 @@ public class LoginController {
         HttpSession session = request.getSession();
         Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
         if(loginCookie != null){
-            if(loginCookie != null){
-                String sessionId = loginCookie.getValue();
-                MemberDto memberDto = service.checkUserWithSessionId(sessionId);
-                if(memberDto != null){
-                    session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
-                    return "redirect:/";
-                }
+            String sessionId = loginCookie.getValue();
+            MemberDto memberDto = service.checkUserWithSessionId(sessionId);
+            if(memberDto != null){
+                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
+                return "redirect:/";
             }
+
         }
         return "project_login";
     }

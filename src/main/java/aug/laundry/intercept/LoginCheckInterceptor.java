@@ -28,10 +28,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("=================인터셉터 실행=================================");
         String requestURI = request.getRequestURI();
         log.info("인증 체크 인터셉터 실행 {}", requestURI);
-        HttpSession session = request.getSession();
-
+        HttpSession session = request.getSession(true);
 
         if (session == null || session.getAttribute(SessionConstant.LOGIN_MEMBER) == null) {
             Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
@@ -47,12 +47,11 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
                 response.sendRedirect("/login?redirectURL=" + requestURI);
                 return false;
             }
-            log.info("인증되지않은 사용자 요청");
-            response.sendRedirect("/login?redirectURL=" + requestURI);
-            return false;
         }
         log.info("인증된 사용자");
         return true;
+
+
     }
 
 }
