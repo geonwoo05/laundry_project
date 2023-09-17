@@ -21,7 +21,7 @@ public class LoginDao {
 
     public int registerSocialUser(MemberDto memberDto) {return loginMapper.registerSocialUser(memberDto);}
 
-    public int registerSocialNumber(String id){return loginMapper.registerSocialNumber(id);};
+    public int registerSocialNumber(String id){return loginMapper.registerSocialNumber(id);}
 
     public MemberDto socialLogin(@Param("memberAccount") String memberAccount, @Param("memberSocial") String memberSocial){
         return loginMapper.socialLogin(memberAccount, memberSocial);

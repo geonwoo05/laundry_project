@@ -18,4 +18,7 @@ public interface MemberMapper {
     public List<MemberDto> confirmId(@Param("memberName") String memberName, @Param("memberPhone") String memberPhone, @Param("memberAccount") String memberAccount);
     public int updatePassword(MemberDto memberDto);
     public int giveCoupon(@Param("memberId")Long memberId, @Param("couponId")Long couponId);
+    public String isAddrss(Long memberId);
+
+    public int updateAddress(@Param("memberId")Long memberId , @Param("memberZipcode")Integer memberZipcode,@Param("memberAddress")String memberAddress, @Param("memberAddressDetails") String memberAddressDetails);
 }

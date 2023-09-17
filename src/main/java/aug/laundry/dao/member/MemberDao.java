@@ -24,4 +24,6 @@ public class MemberDao {
     };
     public int updatePassword(MemberDto memberDto){return memberMapper.updatePassword(memberDto);}
     public int giveCoupon(@Param("memberId")Long memberId, @Param("couponId")Long couponId){return memberMapper.giveCoupon(memberId,couponId);}
+    public String isAddress(Long memberId){return memberMapper.isAddrss(memberId);}
+    public int updateAddress(Long memberId, Integer memberZipcode, String memberAddress, String memberAddressDetails){return  memberMapper.updateAddress(memberId, memberZipcode, memberAddress, memberAddressDetails);}
 }

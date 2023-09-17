@@ -28,6 +28,8 @@ public interface MemberService_kgw {
 
     public int updatePassword(MemberDto memberDto);
     public int giveCoupon(Long memberId,Long couponId);
+    public String isAddress(Long memberId);
+    public int updateAddress(Long memberId, Integer memberZipcode, String memberAddress, String memberAddressDetails);
 
 
 

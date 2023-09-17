@@ -75,10 +75,10 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 memberDto.setMemberSocial("naver");
                 String formattedPhoneNumber = formatPhoneNumber(response.get("mobile"));
                 memberDto.setMemberPhone(formattedPhoneNumber);
-
+                
                 // DB에 등록
-                int registerUserInfoRes = registerSocialUser(memberDto);
-                int registerSocialNumRes = registerSocialNumber(response.get("id"));
+                int registerUserInfoRes = loginDao.registerSocialUser(memberDto);
+                int registerSocialNumRes = loginDao.registerSocialNumber(response.get("id"));
 
                 // 웰컴쿠폰 지급
                 Long welcomeCoupon = 1L;
@@ -269,15 +269,17 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 String formattedPhoneNumber = formatPhoneNumber(kakaoProfile.getKakao_account().getPhone_number());
                 memberDto.setMemberPhone(formattedPhoneNumber);
 
-                int registerUserInfoRes = registerSocialUser(memberDto);
-                int registerSocialNumRes = registerSocialNumber(memberSocialId);
+                int registerUserInfoRes = loginDao.registerSocialUser(memberDto);
+                int registerSocialNumRes = loginDao.registerSocialNumber(memberSocialId);
 
 //                System.out.println(registerUserInfoRes);
 //                System.out.println(registerSocialNumRes);
 
                 // 웰컴쿠폰 지급
-                Long welcomeCoupon = 1L;
-                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon);
+                Long welcomeCoupon1 = 1L;
+                Long welcomeCoupon2 = 2L;
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon1);
+                memberDao.giveCoupon(memberDto.getMemberId(), welcomeCoupon2);
 
                 // memberId를 가져와서 session에 저장하기
                 Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();

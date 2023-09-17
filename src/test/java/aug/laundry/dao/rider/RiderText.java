@@ -27,17 +27,17 @@ public class RiderText {
         System.out.println("title = " + title);
     }
 
-    @Test
-    void test1(String name){
-        List<String> list = routineOrder.남구.getDongName();
-        routineOrder order = routineOrder.valueOf("남구");
-        List<String> dongNam = order.getDongName();
-        System.out.println(dongNam);
-
-        for(String a : list){
-            System.out.println(a);
-        }
-    }
+//    @Test
+//    void test1(String name){
+//        List<String> list = routineOrder.남구.getDongName();
+//        routineOrder order = routineOrder.valueOf("남구");
+//        List<String> dongNam = order.getDongName();
+//        System.out.println(dongNam);
+//
+//        for(String a : list){
+//            System.out.println(a);
+//        }
+//    }
 
 //    @Test
 //    void test11(){

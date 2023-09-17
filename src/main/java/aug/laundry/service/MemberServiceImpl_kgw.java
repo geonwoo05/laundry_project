@@ -134,5 +134,9 @@ public class MemberServiceImpl_kgw implements MemberService_kgw{
         return memberDao.giveCoupon(memberId, couponId);
     }
 
+    public String isAddress(Long memberId){return memberDao.isAddress(memberId);}
+    public int updateAddress(Long memberId, Integer memberZipcode, String memberAddress, String memberAddressDetails){
+        return memberDao.updateAddress(memberId, memberZipcode,memberAddress, memberAddressDetails);
+    }
 
 }

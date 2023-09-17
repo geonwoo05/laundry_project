@@ -39,6 +39,15 @@ public class LoginController {
         service.naverLogin(request, model, session);
         System.out.println("naverLogin =======");
         System.out.println("naver sessionId : " + session.getAttribute("memberId"));
+        Long memberId = (Long)session.getAttribute("memberId");
+        MemberDto memberDto = memberService.selectOne(memberId);
+
+        System.out.println("우편번호 : " + memberDto.getMemberZipcode());
+
+        if(memberDto.getMemberZipcode() == null){
+            return "redirect:/login/social/address";
+        }
+
         if(state != null && !"null".equals(state)){
             return "redirect:" + state;
         }
@@ -48,15 +57,49 @@ public class LoginController {
     @GetMapping("/kakaoLogin")
     public String kakaoLogin_Redirect(String code, Model model, HttpSession session, String state){
         service.kakaoProcess(code, session);
+        Long memberId = (Long)session.getAttribute("memberId");
+        MemberDto memberDto = memberService.selectOne(memberId);
+
+        System.out.println("우편번호 : " + memberDto.getMemberZipcode());
+
+        if(memberDto.getMemberZipcode() == null){
+            return "redirect:/login/social/address";
+        }
 
         // 인터셉터에서 온 redirectURL이 있다면 로그인 후 redirectURL의 경로로 이동
         String redirectURL = state;
         if(redirectURL != null && !redirectURL.isEmpty()){
+            model.addAttribute("msg", "주소를 등록해주세요!");
             return "redirect:" + redirectURL;
         }
 
         return "redirect:/";
     }
+
+    @GetMapping("/social/address")
+    public String socialRegisterAddress(MemberDto memberDto, HttpSession session, Model model){
+        Long memberId = (Long)session.getAttribute("memberId");
+
+        model.addAttribute("memberId", memberId);
+        return "project_social_address";
+    }
+
+    @PostMapping("/social/address")
+    public String socialUpdateAddress(MemberDto memberDto){
+        int res = memberService.updateAddress(memberDto.getMemberId(), memberDto.getMemberZipcode(), memberDto.getMemberAddress(), memberDto.getMemberAddressDetails());
+        System.out.println("소셜 멤버 주소 업데이트 : " + res);
+        return "redirect:/";
+    }
+
+
+
+
+    @PostMapping("/update/address")
+    public String updateAddress(){
+
+        return "redirect:/";
+    }
+
 
     @PostMapping("/loginAction")
     public  String login(MemberDto memberDto, HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response) {
