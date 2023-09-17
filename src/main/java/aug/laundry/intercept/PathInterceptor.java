@@ -22,27 +22,20 @@ public class PathInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        HttpSession session = request.getSession(false);
         String requestURI = request.getRequestURI();
-        Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
-        if (loginCookie == null & session == null) {
-            String sessionId = loginCookie.getValue();
-            MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
-            if(memberDto != null){
-
-                log.info("자동로그인 회원입니다.");
-                session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
-                StringBuilder sb = new StringBuilder(requestURI);
-                sb.insert(sb.indexOf("//")+1, session.getAttribute(SessionConstant.LOGIN_MEMBER));
-                requestURI = sb.toString();
-                //log.info("경로 변경 = {}", sb.toString());
-                // 응답 커밋을 방지하기 위해 다음 두 줄을 추가
-                response.reset(); // 응답 리셋
-                response.sendRedirect(requestURI);
-                return false;
-
+        log.info("인증 체크 인터셉터 실행 {}", requestURI);
+        HttpSession session = request.getSession(true);
+        if (session == null || session.getAttribute(SessionConstant.LOGIN_MEMBER) == null) {
+            Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
+            if(loginCookie != null){
+                String sessionId = loginCookie.getValue();
+                MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
+                if(memberDto != null){
+                    session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
+                    return true;
+                }
             }
         }
-        return false;
+        return true;
     }
 }
