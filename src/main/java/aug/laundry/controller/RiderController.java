@@ -296,9 +296,18 @@ public class RiderController {
         return "project_rider_routine_read_more";
     }
 
-    @GetMapping("/gogo")
-    public String gogo(){
-        return "project_order_complete";
+    @GetMapping("/gogo/{ordersId}")
+    public String gogo(@PathVariable("ordersId") Long ordersId){
+        int res = riderService.isRoutineDelivery(ordersId);
+        if(res != 0){
+            Orders orders = new Orders();
+            orders.setOrdersId(ordersId);
+            int updateStatus = riderService.updateOrderStatus(orders);
+            int updateRoutineOrdersRiderId = riderService.updateRoutineOrdersRiderId(ordersId);
+            return "project_order_complete";
+        }else{
+            return "project_order_complete";
+        }
     }
 
     @PostMapping("/ride/update")
