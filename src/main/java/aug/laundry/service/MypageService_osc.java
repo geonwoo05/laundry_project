@@ -26,4 +26,6 @@ public interface MypageService_osc {
   public PointNowDto getPointNow(Long memberId);
 
   public int someCoupon(Long memberId);
+
+  public MySubscribeMonthsDto findMySubscribeMonths(Long memberId);
 }

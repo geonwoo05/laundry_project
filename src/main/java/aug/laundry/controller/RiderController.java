@@ -111,16 +111,16 @@ public class RiderController {
 //        orders.setOrdersAddressDetails("108동 505호");
 
         System.out.println(orders.getOrdersAddress());
-        System.out.println(riderService.riderInfo(5L).getWorkingArea());
-        System.out.println(orders.getOrdersAddress().split(" ")[1]);
-        if(riderService.riderInfo(5L).getWorkingArea().equals(orders.getOrdersAddress().split(" ")[1])
-        ){
+//        System.out.println(riderService.riderInfo(5L).getWorkingArea());
+//        System.out.println(orders.getOrdersAddress().split(" ")[1]);
+//        if(riderService.riderInfo(5L).getWorkingArea().equals(orders.getOrdersAddress().split(" ")[1])
+//        ){
             map.put("a",orders);
             map.put("ordersId", ordersId);
             return map;
-        }else{
-            return null;
-        }
+//        }else{
+//            return null;
+//        }
     }
 
     @GetMapping("/oo/63/{ordersId}")
@@ -169,7 +169,7 @@ public class RiderController {
             orders.setRiderId(memberId);
 
             int res = riderService.updateOrderRider(orders);
-            int res2 = riderService.updateOrderStatus(orders);
+            int res2 = riderService.updateOrderStatus(ordersId);
 
             System.out.println(res);
             System.out.println(res2);
@@ -189,7 +189,7 @@ public class RiderController {
         orders.setOrdersId(ordersId);
         orders.setRiderId(memberId);
 
-        int res2 = riderService.updateOrderStatus(orders);
+        int res2 = riderService.updateOrderStatus(ordersId);
 
         System.out.println(res2);
 
@@ -212,7 +212,7 @@ public class RiderController {
             System.out.println("fileRes : " + fileRes);
             Orders orders = new Orders();
             orders.setOrdersId(ordersId);
-            int res2 = riderService.updateOrderStatus(orders);
+            int res2 = riderService.updateOrderStatus(ordersId);
             return "redirect:/ride/routine/"+ordersId;
         }else{
             // 빠른배송
@@ -224,7 +224,7 @@ public class RiderController {
             orders.setOrdersId(ordersId);
 
             int res = riderService.updateOrderRider(orders);
-            int res2 = riderService.updateOrderStatus(orders);
+            int res2 = riderService.updateOrderStatus(ordersId);
             return "redirect:/ride/finish";
         }
     }
@@ -296,9 +296,18 @@ public class RiderController {
         return "project_rider_routine_read_more";
     }
 
-    @GetMapping("/gogo")
-    public String gogo(){
-        return "project_order_complete";
+    @GetMapping("/gogo/{ordersId}")
+    public String gogo(@PathVariable("ordersId") Long ordersId){
+        Integer res = riderService.isRoutineDelivery(ordersId);
+        if(res != 0){
+            Orders orders = new Orders();
+            orders.setOrdersId(ordersId);
+            int updateStatus = riderService.updateOrderStatus(ordersId);
+            int updateRoutineOrdersRiderId = riderService.updateRoutineOrdersRiderId(ordersId);
+            return "project_order_complete";
+        }else{
+            return "project_order_complete";
+        }
     }
 
     @PostMapping("/ride/update")

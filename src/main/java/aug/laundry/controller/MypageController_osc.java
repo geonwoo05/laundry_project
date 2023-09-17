@@ -39,6 +39,7 @@ public class MypageController_osc {
 
     System.out.println("MypageMain");
     MypageDto mypageDto = mypageService.findByNameAndPass(memberId);
+    MySubscribeMonthsDto mySubscribeMonthsDto = mypageService.findMySubscribeMonths(memberId);
 
     // 패스 기간 비교를 위해 날짜 형식 변경
     LocalDate day = LocalDate.now();
@@ -48,6 +49,25 @@ public class MypageController_osc {
 
     String name = mypageDto.getMemberName();
     String pass = mypageDto.getSubscriptionExpireDate();
+
+    String month = "";
+    String expireDate = "";
+    if(mySubscribeMonthsDto == null){
+      month = null;
+      expireDate=null;
+    } else if(mySubscribeMonthsDto.getSubscriptionId() == 1 && mySubscribeMonthsDto.getSubscriptionExpireDate()!=null){
+      month = "1개월권";
+      expireDate=mySubscribeMonthsDto.getSubscriptionExpireDate();
+    } else if(mySubscribeMonthsDto.getSubscriptionId() == 2 && mySubscribeMonthsDto.getSubscriptionExpireDate()!=null){
+      month = "3개월권";
+      expireDate=mySubscribeMonthsDto.getSubscriptionExpireDate();
+    } else if(mySubscribeMonthsDto.getSubscriptionId() == 3 && mySubscribeMonthsDto.getSubscriptionExpireDate()!=null){
+      month = "6개월권";
+      expireDate=mySubscribeMonthsDto.getSubscriptionExpireDate();
+    } else if(mySubscribeMonthsDto.getSubscriptionId() == 4 && mySubscribeMonthsDto.getSubscriptionExpireDate()!=null){
+      month = "12개월";
+      expireDate=mySubscribeMonthsDto.getSubscriptionExpireDate();
+    }
 
     // 패스 기간이 null일 경우
     if(pass==null){
@@ -62,10 +82,14 @@ public class MypageController_osc {
       model.addAttribute("userName", name);
       pass="PASS";
       model.addAttribute("userPass", pass);
+      model.addAttribute("month", month);
+      model.addAttribute("expireDate", expireDate);
     } else { // 오늘이 종료일인 경우
       model.addAttribute("userName", name);
       pass="PASS";
       model.addAttribute("userPass", pass);
+      model.addAttribute("month", month);
+      model.addAttribute("expireDate", expireDate);
     }
 
     return "project_mypage_list";

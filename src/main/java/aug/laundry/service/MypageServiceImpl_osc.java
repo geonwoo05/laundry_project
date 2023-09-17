@@ -71,5 +71,10 @@ public class MypageServiceImpl_osc implements MypageService_osc {
     return mypageDao.someCoupon(memberId);
   }
 
+  @Override
+  public MySubscribeMonthsDto findMySubscribeMonths(Long memberId) {
+    return mypageDao.findMySubscribeMonths(memberId);
+  }
+
 
 }

@@ -6,6 +6,7 @@ import aug.laundry.dto.*;
 import aug.laundry.enums.category.*;
 import aug.laundry.enums.repair.RepairCategory;
 import aug.laundry.service.LaundryService;
+import aug.laundry.service.RiderService;
 import aug.laundry.validator.OrderPostValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class LaundryController {
 
     private final LaundryService laundryService;
     private final OrderPostValidator orderPostValidator;
+    private final RiderService riderService;
 
     @InitBinder("orderPost")
     public void init(WebDataBinder dataBinder) {
@@ -97,10 +99,11 @@ public class LaundryController {
     }
 
     @PostMapping("/order")
-    public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult, Model model,
+    public String orderPost(@Validated @ModelAttribute OrderPost orderPost, BindingResult bindingResult,
                             @SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
                             @SessionAttribute(name = SessionConstant.ORDERS_CONFIRM, required = false) Long ordersDetailId,
-                            RedirectAttributes redirectAttributes) {
+                            RedirectAttributes redirectAttributes,
+                            HttpSession session) {
 
         System.out.println("orderPost = " + orderPost);
         if (bindingResult.hasErrors()) {
@@ -110,6 +113,11 @@ public class LaundryController {
         }
         Long ordersId = laundryService.update(memberId, orderPost.getCoupon(), orderPost, ordersDetailId);// 쿠폰 유효성 검사
 
+        // 주문 완료 후 ordersDetailId를 세션에서 제거
+        if (session.getAttribute(SessionConstant.ORDERS_CONFIRM) != null) {
+            log.info("SESSION [{}] REMOVE", SessionConstant.ORDERS_CONFIRM);
+            session.removeAttribute(SessionConstant.ORDERS_CONFIRM);
+        }
 
         redirectAttributes.addFlashAttribute("ordersId", ordersId);
         return "redirect:/laundry/complete";
@@ -119,7 +127,17 @@ public class LaundryController {
     public String complete(Model model) {
         Long ordersId = (Long) model.getAttribute("ordersId");
         System.out.println("ordersId = " + ordersId);
-        return "project_order_complete";
+
+        Integer res = riderService.isRoutineDelivery(ordersId);
+        if(res == 0){ // 일반세탁
+            int updateStatus = riderService.updateOrderStatus(ordersId);
+            int updateRoutineOrdersRiderId = riderService.updateRoutineOrdersRiderId(ordersId);
+            return "project_order_complete";
+        }else{ // 빠른세탁
+            model.addAttribute("ordersId", ordersId);
+            return "project_order_complete";
+        }
+
     }
 
     @GetMapping("/order/pickup")

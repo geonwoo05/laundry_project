@@ -65,7 +65,6 @@ public class LaundryServiceImpl implements LaundryService{
         Long expectedPrice = 0L;
         if (validCoupon) {
             expectedPrice -= laundryRepository.getCouponDiscount(memberId, couponListId);
-            laundryRepository.useCoupon(memberId, couponListId); // 쿠폰 업데이트
         }
         System.out.println("orderPost = " + orderPost);
         Orders orders = getOrders(memberId, orderPost);
@@ -74,17 +73,19 @@ public class LaundryServiceImpl implements LaundryService{
         OrderInfo orderInfo = laundryRepository.firstInfo(memberId, ordersDetailId); // 빠른세탁, 드라이클리닝, 생활빨래, 수선
         System.out.println("orderInfo = " + orderInfo);
         expectedPrice = getExpectedPrice(memberId, ordersDetailId, expectedPrice, orderInfo, memberShip);
-
-
-        orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100);
         orders.setOrdersStatus(2);
         System.out.println("최종 orders = " + orders);
-        laundryRepository.insert(orders); // orders에 값을 넣고 ordersId 가져오기
         System.out.println("ordersId = " + orders.getOrdersId());
+
+        if (validCoupon) {
+            laundryRepository.useCoupon(memberId, couponListId, orders.getOrdersId()); // 쿠폰 업데이트 (status +1, ordersId 주입)
+        }
+        orders.setOrdersExpectedPrice(Math.round(expectedPrice / 100) * 100); // 예상금액 계산
+        laundryRepository.insert(orders); // orders에 값을 넣고 ordersId 가져오기
         laundryRepository.updateOrdersDetail(orders.getOrdersId(), ordersDetailId); // ORDERS_DETAIL 안에 ORDERS_ID 업데이트
-        System.out.println("성공!");
         laundryRepository.insertInspection(orders.getOrdersId());
 
+        System.out.println("성공!");
         return orders.getOrdersId();
     }
 
@@ -167,6 +168,7 @@ public class LaundryServiceImpl implements LaundryService{
         Long check = laundryRepository.check(memberId, ordersDetailId);
         if (check == null || check == 0L) return false;
 
+        // 사진을 하나하나 넣는거라서 기존 장바구니 삭제 못함
 //        laundryRepository.removeRepair(ordersDetailId); // 기존에 존재하던 수선 장바구니 삭제
 
         if (repairData.isEmpty()){ // 기존에 있던 수선 목록을 다 지우고 빈 장바구니일경우 resultMap에 empty값 추가 후 true 반환
@@ -213,6 +215,26 @@ public class LaundryServiceImpl implements LaundryService{
             }
         }
         return orderInfo;
+    }
+
+    @Override
+    public List<Long> findByRepairId(Long ordersDetailId) {
+        return laundryRepository.findByRepairId(ordersDetailId);
+    }
+
+    @Override
+    public void removeRepair(Long ordersDetailId) {
+        laundryRepository.removeRepair(ordersDetailId);
+    }
+
+    @Override
+    public void removeRepairImages(Long repairId) {
+        laundryRepository.removeRepairImages(repairId);
+    }
+
+    @Override
+    public void removeRepairImagesFile(Long repairId) {
+        laundryRepository.removeRepairImagesFile(repairId);
     }
 
     @NotNull

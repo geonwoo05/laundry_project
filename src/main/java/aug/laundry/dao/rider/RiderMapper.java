@@ -21,7 +21,7 @@ public interface RiderMapper {
 
     int updateOrderRider(Orders orders);
 
-    int updateOrderStatus(Orders orders);
+    int updateOrderStatus(Long orders);
 
     Rider riderInfo(Long riderId);
 
@@ -42,4 +42,8 @@ public interface RiderMapper {
     int acceptCheck(Long ordersId);
 
     int updateStatus(Long riderId);
+
+    Integer isRoutineDelivery(Long riderId);
+
+    int updateRoutineOrdersRiderId(Long ordersId);
 }

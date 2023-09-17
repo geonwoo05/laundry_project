@@ -38,7 +38,6 @@ public class SubscribeController {
     @GetMapping("/subscription/order/{memberId}")
     public String subscribeOrder(@RequestParam(name = "result", required = false) String result,
                                  @PathVariable("memberId") Long memberId, Model model) {
-        // 세션에 저장된 memberId와 PathVariable의 memberId가 다르면 로그인페이지로 리다이렉트
         if(memberId != null) {
             SubscriptionPayDto data = subscribeService_ksh.getSubscribeInfo(memberId);
             model.addAttribute("data", data);
@@ -85,7 +84,6 @@ public class SubscribeController {
     @GetMapping("/payments/mobile")
     public String subscribeOrderConfirm(String imp_uid, String merchant_uid, String imp_success) {
         // 모바일 결제
-        // 웹훅 사용
         String result = "";
         int payPrice = 0;
         try {
@@ -121,11 +119,6 @@ public class SubscribeController {
         // 결제 전 검증
         String result = "fail";
 
-        log.info("prepare");
-        log.info("subData={}", subData); //1 3 6 12 들어오는거 확인 완료
-
-        log.info("subscribeService_ksh.getPrice(subData.getSelectMonth())={}", subscribeService_ksh.getPrice(subData.getSelectMonth()));
-        // 세션에 저장된 memberId와 PathVariable의 memberId가 다르면 fail메세지보내고 return;
         SubscriptionPayDto getInfo = subscribeService_ksh.getSubscribeInfo(subData.getCustomerUid());
         if(getInfo==null) {
             // 신규
@@ -142,7 +135,6 @@ public class SubscribeController {
     @PostMapping("/payments/pc")
     public @ResponseBody Map<String, String> paymentsComplete(@RequestBody SubscriptionPayDto subData) {
         // pc결제
-        // 웹훅 사용
         String result = "";
         Map<String, String> map = new HashMap<>();
         int payPrice = 0;
@@ -173,7 +165,7 @@ public class SubscribeController {
 
     @PostMapping("/repayments/webhook")
     public @ResponseBody String webhookUse(@RequestBody String webhook){
-        // webhook={"imp_uid":"imp_1234567890","merchant_uid":"merchant_1234567890","status":"paid"}
+        // 포트원에서 받은 결제 정보처리 & 다음 결제 예약
         JsonObject data = new Gson().fromJson(webhook, JsonObject.class);
         String imp_uid = data.get("imp_uid").getAsString();
         String result = "";
@@ -240,17 +232,28 @@ public class SubscribeController {
             SubscriptionPayDto info = subscribeService_ksh.getScheduleInfo(memberId);
             String cancelUrl =  "https://api.iamport.kr/subscribe/payments/unschedule";
             String jsonBody = String.format("{\"customer_uid\": \"%s\", \"merchant_uid\": \"%s\"}", info.getCustomerUid(), info.getMerchantUidRe());
-            JsonObject scheduleStatus = subscribeService_ksh.postData(cancelUrl, jsonBody).getAsJsonArray("response").get(0).getAsJsonObject();
 
-            if("revoked".equals(scheduleStatus.get("schedule_status").getAsString())) {
-                subscribeService_ksh.updateCancel(info.getMerchantUid());
-                map.put("result", "success");
+            JsonObject scheduleStatus = subscribeService_ksh.postData(cancelUrl, jsonBody);
+
+            if(scheduleStatus.get("response").isJsonNull()) {
+                // 이미 구독이 해지된 경우
+                map.put("result", "none");
+                map.put("reason", scheduleStatus.get("message").getAsString());
+                return map;
             } else {
-                if(!scheduleStatus.get("fail_reason").isJsonNull()) {
-                    subscribeService_ksh.updateFailReason(info.getMerchantUid(),scheduleStatus.get("fail_reason").getAsString());
+                scheduleStatus = scheduleStatus.getAsJsonArray("response").get(0).getAsJsonObject();
+
+                if("revoked".equals(scheduleStatus.get("schedule_status").getAsString())) {
+                    subscribeService_ksh.updateCancel(info.getMerchantUid());
+                    map.put("result", "success");
+                } else {
+                    if(!scheduleStatus.get("fail_reason").isJsonNull()) {
+                        subscribeService_ksh.updateFailReason(info.getMerchantUid(),scheduleStatus.get("fail_reason").getAsString());
+                    }
+                    map.put("result", "fail");
+                    map.put("reason", scheduleStatus.get("fail_reason").getAsString());
                 }
-                map.put("result", "fail");
-                map.put("reason", scheduleStatus.get("fail_reason").getAsString());
+                map.put("result", "test");
             }
 
         } catch (IOException e) {

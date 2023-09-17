@@ -62,11 +62,22 @@ window.addEventListener('load', function(){
     let submitBtn = document.querySelector('#laundryForm');
     submitBtn.addEventListener('submit', function(event){
 
+        let radioBox = document.querySelectorAll('input[name=takeDateTime]');
+        let errorCal = document.querySelector('.error-cal');
+        if (!radioBox[0].checked && !radioBox[1].checked){
+            errorCal.innerHTML = '시간을 선택해주세요.'
+            errorCal.scrollIntoView({ behavior : 'smooth'});
+            event.preventDefault();
+            return;
+        }
+        errorCal.innerHTML = '';
 
         let service = document.querySelectorAll('input[name=service]');
+        let error = document.querySelector('.error');
         let cnt = 0;
         for (let i=0;i<service.length;i++){
            if (service[i].checked){
+                error.innerHTML = '';
                 submitBtn.submit();
                 resolve();
            } else {
@@ -75,7 +86,6 @@ window.addEventListener('load', function(){
         }
 
         if (cnt != 0){
-            let error = document.querySelector('.error');
             error.innerHTML = '한가지 이상 선택해주세요.';
             error.scrollIntoView({ behavior : 'smooth'});
             event.preventDefault();

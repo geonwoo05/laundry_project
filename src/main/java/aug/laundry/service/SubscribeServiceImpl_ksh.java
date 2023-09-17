@@ -32,10 +32,10 @@ public class SubscribeServiceImpl_ksh implements SubscribeService_ksh{
 
     private final SubscribeDao subscribeDao;
 
-    @Value("${import.rest-api}")
+    @Value("${import.rest-api-s}")
     private String restApi;
 
-    @Value("${import.rest-api-secret}")
+    @Value("${import.rest-api-secret-s}")
     private String restApiSecret;
 
     @Transactional

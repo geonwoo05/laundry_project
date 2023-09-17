@@ -74,6 +74,7 @@
                     <input type="radio" name="takeDateTime" id="T10" value='10'><label for="T10">10:00</label>
                     <input type="radio" name="takeDateTime" id="T23" value='23'><label for="T23">23:00</label>
                 </nav>
+
                 <nav class="subCal_location end">
                     <div class='modal endModal'>
                         <span class='content subCal_span' th:text="'배송 ' + ${dateTime.returns} + ' ' + ${dateTime.returnsTime} + '시 까지'" id='returns'>asdf</span>
@@ -85,6 +86,7 @@
                     <span>빠른세탁은 주문이 완료되는대로 기사님이 배정됩니다.</span>
                 </div>
             </div>
+            <div class="error-cal"></div>
             <h2>종류</h2>
             <div class='option'>
                 <button class='optionbox' type='button' id="dryBtn">

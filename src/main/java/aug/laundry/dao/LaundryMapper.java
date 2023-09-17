@@ -30,7 +30,7 @@ public interface LaundryMapper {
 
     CouponList validCoupon(@Param("memberId") Long memberId, @Param("couponListId") Long couponListId);
 
-    Integer useCoupon(@Param("memberId") Long memberId, @Param("couponListId") Long couponListId);
+    Integer useCoupon(@Param("memberId") Long memberId, @Param("couponListId") Long couponListId, @Param("ordersId") Long ordersId);
 
     void insert(Orders orders);
 
@@ -61,7 +61,7 @@ public interface LaundryMapper {
     List<Long> getRepairId(Long ordersDetailId);
 
 
-    void removeRepairImages(Long ordersDetailId);
+    void removeRepairImages(Long repairId);
 
 
     List<String> getRepairImageStoreName(Long repairId);
@@ -76,6 +76,8 @@ public interface LaundryMapper {
 
     void insertInspection(Long ordersId);
 
+    List<Long> findByRepairId(Long ordersDetailId);
+  
     List<MyCoupon> getCoupon2(Long memberId);
-
+  
 }

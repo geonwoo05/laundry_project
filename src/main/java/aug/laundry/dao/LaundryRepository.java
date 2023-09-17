@@ -70,8 +70,8 @@ public class LaundryRepository {
         return true;
     }
 
-    public Integer useCoupon(Long memberId, Long couponListId) {
-        return laundryMapper.useCoupon(memberId, couponListId);
+    public Integer useCoupon(Long memberId, Long couponListId, Long ordersId) {
+        return laundryMapper.useCoupon(memberId, couponListId, ordersId);
     }
 
 
@@ -185,10 +185,23 @@ public class LaundryRepository {
         laundryMapper.insertInspection(ordersId);
     }
 
-    public List<MyCoupon> getCoupon2(Long memberId) {
+    public List<Long> findByRepairId(Long ordersDetailId) {
+        return laundryMapper.findByRepairId(ordersDetailId);
+    }
+
+    public void removeRepairImages(Long repairId) {
+        laundryMapper.removeRepairImages(repairId);
+    }
+
+    public void removeRepairImagesFile(Long repairId) {
+        List<String> repairImageStoreNames = laundryMapper.getRepairImageStoreName(repairId); // 실제 이미지 파일 삭제
+        System.out.println("repairImageStoreNames = " + repairImageStoreNames);
+        removeRepairImageFile(repairImageStoreNames);
+    }
+  
+   public List<MyCoupon> getCoupon2(Long memberId) {
         List<MyCoupon> coupon = laundryMapper.getCoupon2(memberId);
         log.info("getCoupon2={}", coupon);
         return coupon;
     }
-
 }
