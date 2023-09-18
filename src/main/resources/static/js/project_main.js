@@ -1,3 +1,15 @@
+window.addEventListener('load', function(){
+    const modal = document.querySelector('.modal');
+    const cancelBtn = document.querySelector('.modalBox .cancel');
+
+    cancelBtn.addEventListener('click', function(){
+        modal.classList.add('hidden');
+    })
+})
+
+
+
+
 let currentSlide = 0;
 const slides = document.querySelectorAll('.slide');
 const slideCount = slides.length;

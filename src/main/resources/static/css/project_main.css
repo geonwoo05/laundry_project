@@ -345,3 +345,85 @@
     left: 0.5rem;
     transform: rotate(180deg);
 }
+
+
+.modal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #b3b3b3b1;
+    width: 100%;
+    height: 100%;
+}
+
+.modalBox{
+    width: calc(100% - 5rem);
+    height: 20rem;
+    border-radius: var(--border-radius);
+    background-color: white;
+    padding: 2rem;
+    position: relative;
+}
+
+
+.modalBox .cancel{
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+}
+.modalBox .cancel svg{
+    transform: rotate(45deg);
+    width: 100%;
+    height: 100%;
+    fill: #8f8f8f;
+}
+
+.modalCoupon{
+    width: 10rem;
+    height: 5rem;
+    margin-top: 1rem;
+}
+.modalCoupon .couponTitle{
+    font-size: 1.1rem;
+}
+
+.modalCoupon .couponPrice span{
+    font-size: 2rem;
+}
+
+.modalCoupon .couponPrice .priceBox{
+    font-size: 1.2rem;
+}
+.modalBox .infoBox{
+    text-align: center;
+}
+
+.modalBox .infoBox h2{
+    margin: 1.5rem 0 1rem 0;
+}
+.modalBox .infoBox span{
+    color: #585858;
+}
+
+.modalBox .moveToCoupon{
+    display: flex;
+    height: 3rem;
+    background-color: var(--main-font-color);
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: var(--border-radius);
+    color: white;
+    font-size: 1.2rem;
+}
+
+.hidden{
+    display: none;
+}

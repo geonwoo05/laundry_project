@@ -141,6 +141,26 @@
             </a>
         </div>
     </th:block>
+    <div class='modal' th:if="${firstLogin == 'Y'}">
+        <div class='modalBox'>
+            <button type='button' class='cancel'>
+                <svg xmlns="http://www.w3.org/2000/svg" class="addImg" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
+            </button>
+            <div class='inviteCoupon modalCoupon'>
+                <span class='couponTitle'>POINT</span>
+                <span class='couponPrice'>
+                        <span>5,000</span>
+                        <div class='priceBox'>P</div>
+                    </span>
+            </div>
+            <div class='infoBox'>
+                <h2>신규회원쿠폰 발급</h2>
+                <span>5,000원 신규회원쿠폰이 발급되었습니다.</span>
+                <span>쿠폰함에서 확인해보세요.</span>
+            </div>
+            <a th:href="@{'/members/' + ${session.memberId} + '/coupons'}" class='moveToCoupon'>쿠폰함</a>
+        </div>
+    </div>
 </div>
 <script src="/js/project_main.js"></script>
 </body>
