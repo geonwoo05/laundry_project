@@ -103,15 +103,13 @@ public class LoginController {
     }
 
     @PostMapping("/social/address")
-    public String socialUpdateAddress(MemberDto memberDto, Model model){
+    public String socialUpdateAddress(MemberDto memberDto, Model model, RedirectAttributes redirectAttributes){
         int res = memberService.updateAddress(memberDto.getMemberId(), memberDto.getMemberZipcode(), memberDto.getMemberAddress(), memberDto.getMemberAddressDetails());
         System.out.println("소셜 멤버 주소 업데이트 : " + res);
 
-        if(memberDto.getMemberRecentlyDate() == null){
-            model.addAttribute("firstLogin", true);
-        }else{
-            model.addAttribute("firstLogin", false);
-        }
+        // 최근 로그인 기록이 있으면 true 없으면 false
+        redirectAttributes.addFlashAttribute("firstLogin", memberDto.getMemberRecentlyDate() == null ? "Y" : "N");
+
         service.renewLoginTime(memberDto.getMemberId());
         return "redirect:/";
     }
