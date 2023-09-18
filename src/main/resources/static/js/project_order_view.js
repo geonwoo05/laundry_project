@@ -199,12 +199,12 @@ function requestPay() {
         amount: totalPrice,
         buyer_name: memberName,
         buyer_tel: memberPhone,
-        m_redirect_url: "https://40f7-61-38-152-131.ngrok-free.app/orders/" + ordersId
+        m_redirect_url: "https://1cbc-183-96-143-101.ngrok-free.app/orders/" + ordersId
                         + "/payment/complete?"
                         + "couponListId=" + couponListId
                         + "&couponPrice=" + couponPrice
                         + "&pointPrice=" + pointPrice,
-        notice_url : "https://40f7-61-38-152-131.ngrok-free.app/orders/"
+        notice_url : "https://1cbc-183-96-143-101.ngrok-free.app/orders/"
                      + ordersId + "/payment/webhook?memberId=" + memberId + "&couponListId=" + couponListId + "&couponPrice=" + couponPrice + "&pointPrice=" + pointPrice
 
       },
