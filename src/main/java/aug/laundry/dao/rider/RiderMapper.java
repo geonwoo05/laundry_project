@@ -46,4 +46,6 @@ public interface RiderMapper {
     Integer isRoutineDelivery(Long riderId);
 
     int updateRoutineOrdersRiderId(Long ordersId);
+
+    int deleteOrderId(Long ordersId);
 }
