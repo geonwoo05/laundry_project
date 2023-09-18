@@ -136,6 +136,9 @@ public class LoginController {
 
                 memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon);
             }
+            if(userDto.getMemberRecentlyDate() == null){
+                model.addAttribute("newbieMsg","신규회원입니다.");
+            }
 
             // 최근 로그인 시간 갱신
             service.renewLoginTime(userDto.getMemberId());

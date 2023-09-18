@@ -90,12 +90,17 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
                 //포인트 적립
                 pointDao.registerPoint(memberId);
+                
+                //로그인 시간 갱신
+                loginDao.renewLoginTime(memberId);
 
             }else{
                 // 한 번 이상 소셜로그인 -> 세션에 저장하고 로그인 처리
                 // memberId를 받아 session에 저장하기
                 Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
+                //로그인 시간 갱신
+                loginDao.renewLoginTime(memberId);
             }
 
         } catch (Exception e) {
@@ -284,10 +289,16 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
 
                 //포인트 적립
                 pointDao.registerPoint(memberId);
+
+                //로그인 시간 갱신
+                loginDao.renewLoginTime(memberId);
             }else{
                 // memberId를 가져와서 session에 저장하기
                 Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
+
+                //로그인 시간 갱신
+                loginDao.renewLoginTime(memberId);
 
             }
 
