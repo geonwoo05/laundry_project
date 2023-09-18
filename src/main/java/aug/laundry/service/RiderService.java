@@ -47,4 +47,6 @@ public interface RiderService {
     Integer isRoutineDelivery(Long riderId);
 
     int updateRoutineOrdersRiderId(Long ordersId);
+
+    int deleteOrderId(Long ordersId);
 }

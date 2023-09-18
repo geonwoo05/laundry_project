@@ -314,7 +314,9 @@ public class RiderController {
     @PostMapping("/ride/update")
     public String update(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId){
         int res = riderService.updateStatus(memberId);
+        int res2 = riderService.deleteOrderId(memberId);
         System.out.println(res);
+        System.out.println(res2);
         return "redirect:/ride/routine";
     }
 }
