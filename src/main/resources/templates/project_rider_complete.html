@@ -13,7 +13,7 @@
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1"></script>
+    <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2"></script>
     <script>
 window.addEventListener('load', function() {
     var riderId = $('#quickRiderId').val();
@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
             var tDistance;
 
             var headers = {};
-            headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+            headers["appKey"]="5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2";
 
             $.ajax({
             method: "GET",
@@ -65,12 +65,12 @@ window.addEventListener('load', function() {
                                         var trafficInfochk = "N";
 
                                         var headers = {};
-                                        headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+                                        headers["appKey"]="5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2";
 
                                         $.ajax({
                                         type : "POST",
                                         headers : headers,
-                                        url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1",
+                                        url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2",
                                         async : false,
                                         data : {
                                              "startX" : position.coords.longitude,

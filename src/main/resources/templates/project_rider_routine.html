@@ -170,7 +170,19 @@
             let cnt = map.cnt;
             console.log(cnt);
 
-            console.log(regionList);
+           const firstRegion = regionList[0];
+            const rideNum  = parseInt(document.querySelector('.ride_num').textContent);
+
+            const completeCntText = document.querySelector('.completeCnt').textContent; // '완료(4)'를 가져옴
+            const completeCntMatch = completeCntText.match(/\d+/); // 정규식으로 숫자 추출
+            const completeCnt = completeCntMatch ? parseInt(completeCntMatch[0]) : 0; // 숫자로 변환
+
+
+            if (firstRegion && firstRegion.ordersStatus === '세탁 수거완료' && rideNum === completeCnt) {
+              const orderCheckElement = document.querySelector('#orderCheck');
+
+              orderCheckElement.style.width = '100%';
+            }
 
             let pageBlock = '';
             if(regionList.length != 0){
@@ -205,7 +217,7 @@
                         });
                         console.log(addresses);
                         var headers = {};
-                        headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+                        headers["appKey"]="5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2";
 
                     var endX = '';
                     var endY = '';
@@ -259,12 +271,12 @@
                     var trafficInfochk = "N";
 
                     var headers = {};
-                    headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+                    headers["appKey"]="5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2";
 
                     $.ajax({
                     type : "POST",
                     headers : headers,
-                    url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1",
+                    url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2",
                     async : false,
                     data : {
                          "startX" : position.coords.longitude,

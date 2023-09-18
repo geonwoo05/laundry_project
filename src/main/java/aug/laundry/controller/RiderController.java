@@ -277,6 +277,7 @@ public class RiderController {
         model.addAttribute("cnt", cnt);
         model.addAttribute("regionCntWait",regionCntWait);
         model.addAttribute("regionCntComplete",regionCntComplete);
+//        model.addAttribute("status", "3");
         return "project_rider_routine";
     }
 
