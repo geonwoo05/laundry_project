@@ -56,7 +56,9 @@ window.addEventListener('load', function(){
         var jsonObject = {};
 
         formData.forEach(function(value, key){
-            jsonObject[key] = value;
+            if (key != 'dry'){
+                jsonObject[key] = value;
+            }
         })
 
         try{

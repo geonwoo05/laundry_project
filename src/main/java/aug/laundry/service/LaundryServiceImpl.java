@@ -200,21 +200,16 @@ public class LaundryServiceImpl implements LaundryService{
     @Override
     public OrderInfo orderInfo(Model model) {
         OrderInfo orderInfo = new OrderInfo();
+
         String quick = (String) model.getAttribute("quick");
-        if ("fast".equals(quick)){
-            orderInfo.setQuick(true);
-        }
+        orderInfo.setQuick("fast".equals(quick));
 
         List<String> service = (List<String>) model.getAttribute("service");
         if (service == null) return orderInfo;
         for (String s : service) {
-            if ("dry".equals(s)){
-                orderInfo.setDry(true);
-            } else if ("common".equals(s)){
-                orderInfo.setCommon(true);
-            } else if ("repair".equals(s)){
-                orderInfo.setRepair(true);
-            }
+            orderInfo.setDry("dry".equals(s));
+            orderInfo.setCommon("common".equals(s));
+            orderInfo.setRepair("repair".equals(s));
         }
         return orderInfo;
     }
@@ -242,10 +237,7 @@ public class LaundryServiceImpl implements LaundryService{
     @Override
     public boolean checkAddress(Long memberId) {
         MemberDto memberDto = memberMapper.selectOne(memberId);
-        if (memberDto != null && memberDto.getMemberAddress() != null) {
-            return true;
-        }
-        return false;
+        return ( memberDto != null && memberDto.getMemberAddress() != null );
     }
 
 

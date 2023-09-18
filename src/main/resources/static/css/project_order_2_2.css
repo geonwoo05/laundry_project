@@ -10,6 +10,9 @@ h2, h3{
     background-color: white;
     box-shadow: 2px 2px 5px #dadada;
 }
+.explain span{
+    line-height: 2rem;
+}
 .imglist{
     display: flex;
     flex-wrap: wrap;
