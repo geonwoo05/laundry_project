@@ -103,9 +103,16 @@ public class LoginController {
     }
 
     @PostMapping("/social/address")
-    public String socialUpdateAddress(MemberDto memberDto){
+    public String socialUpdateAddress(MemberDto memberDto, Model model){
         int res = memberService.updateAddress(memberDto.getMemberId(), memberDto.getMemberZipcode(), memberDto.getMemberAddress(), memberDto.getMemberAddressDetails());
         System.out.println("소셜 멤버 주소 업데이트 : " + res);
+
+        if(memberDto.getMemberRecentlyDate() == null){
+            model.addAttribute("firstLogin", true);
+        }else{
+            model.addAttribute("firstLogin", false);
+        }
+        service.renewLoginTime(memberDto.getMemberId());
         return "redirect:/";
     }
 
@@ -137,7 +144,9 @@ public class LoginController {
                 memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon);
             }
             if(userDto.getMemberRecentlyDate() == null){
-                model.addAttribute("newbieMsg","신규회원입니다.");
+                model.addAttribute("firstLogin",true);
+            }else{
+                model.addAttribute("firstLogin",false);
             }
 
             // 최근 로그인 시간 갱신

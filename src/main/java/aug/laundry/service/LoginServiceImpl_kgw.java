@@ -99,8 +99,6 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 // memberId를 받아 session에 저장하기
                 Long memberId = loginDao.socialLogin(memberAccount, "naver").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
-                //로그인 시간 갱신
-                loginDao.renewLoginTime(memberId);
             }
 
         } catch (Exception e) {
@@ -297,8 +295,6 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
                 Long memberId = loginDao.socialLogin(kakaoProfile.getKakao_account().getEmail(), "kakao").getMemberId();
                 session.setAttribute(SessionConstant.LOGIN_MEMBER, memberId);
 
-                //로그인 시간 갱신
-                loginDao.renewLoginTime(memberId);
 
             }
 
