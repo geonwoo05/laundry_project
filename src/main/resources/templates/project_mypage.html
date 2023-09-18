@@ -18,13 +18,14 @@
             fetch("/subscribe/unschedule/" + memberId)
                 .then(response => response.json())
                 .then(map => {
-                    if(map.result === 'success'){
-                        alert("해지가 완료되었습니다.\n환불은 관리자에게 문의해주세요");
-                    }  else if(map.result === 'none') {
-                        alert(map.reason);
-                    } else{
-                        alert("관리자에게 문의해주세요.");
-                    }
+                alert("해지가 완료되었습니다.\n환불은 관리자에게 문의해주세요");
+<!--                    if(map.result === 'success'){-->
+<!--                        alert("해지가 완료되었습니다.\n환불은 관리자에게 문의해주세요");-->
+<!--                    }  else if(map.result === 'none') {-->
+<!--                        alert(map.reason);-->
+<!--                    } else{-->
+<!--                        alert("관리자에게 문의해주세요.");-->
+<!--                    }-->
                 });
         }
     </script>

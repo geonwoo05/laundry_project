@@ -169,12 +169,14 @@ public class SubscribeController {
         JsonObject data = new Gson().fromJson(webhook, JsonObject.class);
         String imp_uid = data.get("imp_uid").getAsString();
         String result = "";
+        log.info("웹훅 호출");
         try {
             SubscriptionPayDto subDto = subscribeService_ksh.validationPay(imp_uid);
             int payPrice = subDto.getAmount(); // amount
             // 결제금액 일치. 결제 된 금액 === 결제 되어야 하는 금액
             if (payPrice == subDto.getAmountToBepay()) {
                 if ("paid".equals(subDto.getPayStatus())) {
+                    log.info("paid 호출");
                     // DB저장
                     log.info("subDto={}", subDto);
                     subscribeService_ksh.saveSubscribe(subDto);
@@ -242,6 +244,7 @@ public class SubscribeController {
                 return map;
             } else {
                 scheduleStatus = scheduleStatus.getAsJsonArray("response").get(0).getAsJsonObject();
+
 
                 if("revoked".equals(scheduleStatus.get("schedule_status").getAsString())) {
                     subscribeService_ksh.updateCancel(info.getMerchantUid());
