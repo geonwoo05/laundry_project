@@ -104,7 +104,7 @@ window.onload = function() {
            var trafficInfochk = "N";
 
            var headers = {};
-              headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+              headers["appKey"]="5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2";
 
             <!-- ----------------------------------------------------------------------------------------------- -->
 
@@ -185,7 +185,7 @@ window.onload = function() {
                                        $.ajax({
                                           type : "POST",
                                           headers : headers,
-                                          url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1",
+                                          url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result&appKey=5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2",
                                           async : false,
                                           data : {
                                              "startX" : startX,
@@ -552,7 +552,7 @@ window.onload = function() {
                           var trafficInfochk = "N";
 
                           var headers = {};
-                          headers["appKey"]="4jevlbxAGy2TQzNvpdD2B3eAfmkUdXQr8uWsi1A1";
+                          headers["appKey"]="5xEXKwOOBa1ZkF3EBC9nc6DcYaOAwO858xW0ZDd2";
 
 
                           $.ajax({
