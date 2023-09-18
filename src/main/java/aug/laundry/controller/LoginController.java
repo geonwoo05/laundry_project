@@ -127,7 +127,7 @@ public class LoginController {
 
 
     @PostMapping("/loginAction")
-    public  String login(MemberDto memberDto, HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response) {
+    public  String login(MemberDto memberDto, HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         MemberDto userDto = service.login(memberDto);
 
         AdminDto adminDto = service.adminLogin(memberDto.getMemberAccount(), memberDto.getMemberPassword());
@@ -143,11 +143,9 @@ public class LoginController {
 
                 memberService.giveCoupon(userDto.getMemberId(), welcomeCoupon);
             }
-            if(userDto.getMemberRecentlyDate() == null){
-                model.addAttribute("firstLogin",true);
-            }else{
-                model.addAttribute("firstLogin",false);
-            }
+
+            // 최근 로그인 기록이 있으면 true 없으면 false
+            redirectAttributes.addFlashAttribute("firstLogin", userDto.getMemberRecentlyDate() == null ? "Y" : "N");
 
             // 최근 로그인 시간 갱신
             service.renewLoginTime(userDto.getMemberId());
