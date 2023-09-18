@@ -39,10 +39,59 @@
                              let lili = li.innerHTML.split('(')[0];
                             let presentStatus = encodeURIComponent(lili);
                             let ordersAddress = encodeURIComponent($('.category_btn').html().split('(')[0]);
-
+console.log('aaaa');
                             fetch('/region/list/'+ ordersAddress + '/' + presentStatus)
                             .then(response => response.json())
-                            .then(map => keywordList(map));
+<!--                            .then(map => keywordList(map));-->
+                            .then(map => {
+
+
+                                                let regionList = map.list;
+                                                let cnt = map.cnt;
+                                                console.log(cnt);
+
+                                               const firstRegion = regionList[0];
+                                                const rideNum  = parseInt(document.querySelector('.ride_num').textContent);
+
+                                                const completeCntText = document.querySelector('.completeCnt').textContent; // '완료(4)'를 가져옴
+                                                const completeCntMatch = completeCntText.match(/\d+/); // 정규식으로 숫자 추출
+                                                const completeCnt = completeCntMatch ? parseInt(completeCntMatch[0]) : 0; // 숫자로 변환
+
+
+                                                if (firstRegion && firstRegion.ordersStatus === '세탁 수거완료' && rideNum === completeCnt) {
+                                                  const orderCheckElement = document.querySelector('#orderCheck');
+
+                                                  orderCheckElement.style.width = '100%';
+                                                }
+
+                                                let pageBlock = '';
+                                                console.log("aaaaa : " + regionList.length);
+                                                if(regionList.length != 0){
+                                                    regionList.forEach((list, index)=>{
+                                                    pageBlock += `
+                                                        <a href='/ride/routine/${list.ordersId}'>
+                                                            <li>
+                                                                <div class='order_num'>주문번호 : ${list.ordersId}</div><br>
+                                                                <div class='delivery_address'>${list.ordersAddress}&nbsp${list.ordersAddressDetails}</div><br>
+                                                                <div class='delivery_time'>${list.ordersStatus == '업체 수거완료' ? '배송예정' : list.ordersStatus}</div>
+                                                                <div class='delivery_dis'>거리 : 1.2km</div>
+                                                            </li>
+                                                        </a>`;
+                                                    });
+                                                    $('.delivery_list ul').html(pageBlock);
+                                                }else{
+                                                    pageBlock =
+                                                    `<li class='drive_none'>현재 진행중인 배달이 없습니다!</li>`;
+                                                    $('.delivery_list ul').html(pageBlock);
+                                                }
+
+
+                                                innerDistance();
+
+
+
+                            });
+
                         }
                     }
 
@@ -83,9 +132,9 @@
                     let ordersAddress = encodeURIComponent($('.category_btn').html());
                     console.log('a');
 
-                    fetch('/region/list/'+ ordersAddress + '/' + presentStatus)
-                    .then(response => response.json())
-                    .then(map => keywordList(map));
+<!--                    fetch('/region/list/'+ ordersAddress + '/' + presentStatus)-->
+<!--                    .then(response => response.json())-->
+<!--                    .then(map => keywordList(map));-->
                 });
             });
 
@@ -185,6 +234,7 @@
             }
 
             let pageBlock = '';
+            console.log('aaaaaaaaaaaaaaa : '+regionList.length);
             if(regionList.length != 0){
                 regionList.forEach((list, index)=>{
                 pageBlock += `
@@ -370,7 +420,7 @@
                     </li>
                 </a>
             </th:block>
-            <li class='drive_none' th:if="${#lists.isEmpty(list)}">현재 완료된 배달이 없습니다!</li>
+            <li class='drive_none' th:if="${#lists.isEmpty(list)}">현재 완료된 배달이 없습니다~</li>
         </ul>
     </div>
 </div>
