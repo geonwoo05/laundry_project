@@ -37,8 +37,8 @@ public class LoginServiceImpl_kgw implements LoginService_kgw{
     private final BCryptService_kgw bc;
     private final PointDao pointDao;
 
-    public static final String NAVER_REDIRECT_URL = "http://localhost:8080/login/naver_callback";
-    public static final String KAKAO_REDIRECT_URL = "http://localhost:8080/login/kakaoLogin";
+    public static final String NAVER_REDIRECT_URL = "https://1cbc-183-96-143-101.ngrok-free.app/login/naver_callback";
+    public static final String KAKAO_REDIRECT_URL = "https://1cbc-183-96-143-101.ngrok-free.app/login/kakaoLogin";
 
 
     @Override
