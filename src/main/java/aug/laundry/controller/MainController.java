@@ -32,6 +32,7 @@ public class MainController {
     @GetMapping
     public String mainPage(@SessionAttribute(name = SessionConstant.LOGIN_MEMBER, required = false) Long memberId,
                            Model model) {
+        model.addAttribute("firstLogin", model.getAttribute("firstLogin"));
 
 
         if (memberId != null){
