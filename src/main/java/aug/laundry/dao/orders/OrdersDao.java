@@ -110,6 +110,13 @@ public class OrdersDao {
                 ordersId, constOrderStatus);
     }
 
+    public int updatePriceNStatusNPaymentinfoForCommonDelivery(Long ordersFinalPrice, Long paymentinfoId, Long ordersId, int constOrderStatus){
+        return ordersMapper.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId,
+                ordersId, constOrderStatus);
+    }
+
+
+
     public PriceResponseDto findPricesByOrdersId(Long ordersId){
         PriceResponseDto priceResponseDto = ordersMapper.findPricesByOrdersId(ordersId)
                 .orElseThrow(() -> new IllegalArgumentException("결제금액, 포인트, 쿠폰가격을 찾을 수 없습니다."));
@@ -180,6 +187,12 @@ public class OrdersDao {
     public int updateCouponList(Long couponListId){
         return ordersMapper.updateCouponList(ConstCouponListStatus.NOT_USED, couponListId);
     }
+
+    public int updateRiderId(Long ordersId){
+        return ordersMapper.updateRiderId(ordersId);
+    }
+
+
 
 
 

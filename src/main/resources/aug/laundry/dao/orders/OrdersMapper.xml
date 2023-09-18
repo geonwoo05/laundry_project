@@ -81,6 +81,15 @@
         UPDATE ORDERS
         SET ORDERS_FINAL_PRICE = #{ordersFinalPrice},
         ORDERS_STATUS = #{constPaySuccess},
+        PAYMENTINFO_ID = #{paymentinfoId},
+        QUICK_RIDER_ID = NULL
+        WHERE ORDERS_ID = #{ordersId}
+    </update>
+    
+    <update id="updatePriceNStatusNPaymentinfoForCommonDelivery">
+        UPDATE ORDERS
+        SET ORDERS_FINAL_PRICE = #{ordersFinalPrice},
+        ORDERS_STATUS = #{constPaySuccess},
         PAYMENTINFO_ID = #{paymentinfoId}
         WHERE ORDERS_ID = #{ordersId}
     </update>
@@ -317,6 +326,12 @@
         SET COUPON_LIST_STATUS = #{notUsed},
         ORDERS_ID = NULL
         WHERE COUPON_LIST_ID = #{couponListId}
+    </update>
+
+    <update id="updateRiderId">
+        UPDATE orders
+        SET rider_id = (select rider_id from rider where rider_possible_zipcode = (SELECT REGEXP_SUBSTR(orders_address, '\w+구') AS extracted_dong from orders where orders_id = #{ordersId}))
+        WHERE orders_id = #{ordersId}
     </update>
 
 

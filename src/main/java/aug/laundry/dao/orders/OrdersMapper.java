@@ -52,6 +52,11 @@ public interface OrdersMapper {
             @Param("ordersFinalPrice") Long ordersFinalPrice, @Param("paymentinfoId") Long paymentinfoId,
             @Param("ordersId") Long ordersId, @Param("constPaySuccess") int constPaySuccess);
 
+    int updatePriceNStatusNPaymentinfoForCommonDelivery(
+            @Param("ordersFinalPrice") Long ordersFinalPrice, @Param("paymentinfoId") Long paymentinfoId,
+            @Param("ordersId") Long ordersId, @Param("constPaySuccess") int constPaySuccess
+    );
+
     Optional<PriceResponseDto> findPricesByOrdersId(Long ordersId);
 
     int updatePointIdByOrdersId(@Param("pointId") Long pointId, @Param("ordersId") Long ordersId);
@@ -75,6 +80,10 @@ public interface OrdersMapper {
     Long findCouponListIdByOrdersId(Long ordersId);
 
     int updateCouponList(@Param("notUsed") int notUsed, @Param("couponListId") Long couponListId);
+
+    int updateRiderId(Long ordersId);
+
+
 
 
 }

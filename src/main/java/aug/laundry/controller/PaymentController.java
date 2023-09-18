@@ -149,6 +149,7 @@ public class PaymentController {
         }
         else { //일반배송
             ordersServiceKdh.updatePriceNStatusNPaymentinfo(finalPrice, paymentinfoId, ordersId, ConstOrderStatus.TAKE_SUCCESS_AFTER_WASH_SUCCESS);
+            ordersServiceKdh.updateRiderId(ordersId);
         }
 
         Long couponListIdFromDB = ordersServiceKdh.findCouponListIdByOrdersId(ordersId);

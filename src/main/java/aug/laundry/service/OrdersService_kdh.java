@@ -238,9 +238,18 @@ public class OrdersService_kdh {
     public void updatePriceNStatusNPaymentinfo(Long ordersFinalPrice, Long paymentinfoId, Long ordersId, int constOrderStatus){
         int result = ordersDao.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId, constOrderStatus);
         if(result==0) {
-            throw new IllegalArgumentException("주문테이블의 최종결제금액, 주문상태, 결제정보Id가 업데이트 되지 않았습니다.");
+            throw new IllegalArgumentException("주문테이블의 최종결제금액, 주문상태, 결제정보Id, QuickRiderId가 업데이트 되지 않았습니다.");
         }
     }
+
+    @Transactional
+    public void updatePriceNStatusNPaymentinfoForCommonDelivery(Long ordersFinalPrice, Long paymentinfoId, Long ordersId, int constOrderStatus){
+        int result = ordersDao.updatePriceNStatusNPaymentinfo(ordersFinalPrice, paymentinfoId, ordersId, constOrderStatus);
+        if(result==0) {
+            throw new IllegalArgumentException("주문테이블의 최종결제금액, 주문상태, 결제정보Id, RiderId가 업데이트 되지 않았습니다.");
+        }
+    }
+
 
     public PriceResponseDto findPricesByOrdersId(Long ordersId){
         return ordersDao.findPricesByOrdersId(ordersId);
@@ -377,6 +386,13 @@ public class OrdersService_kdh {
         int result = ordersDao.updateCouponList(couponListId);
         if(result==0) {
             throw new IllegalArgumentException("CouponList테이블의 쿠폰상태와 주문아이디가 업데이트 되지 않았습니다.");
+        }
+    }
+
+    public void updateRiderId(Long ordersId){
+        int result = ordersDao.updateRiderId(ordersId);
+        if(result==0) {
+            throw new IllegalArgumentException("Orders테이블의 riderId가 업데이트 되지 않았습니다.");
         }
     }
 }
