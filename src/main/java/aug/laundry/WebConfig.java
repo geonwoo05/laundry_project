@@ -34,10 +34,8 @@ public class WebConfig implements WebMvcConfigurer {
         //        로그인 체크 인터셉터
         registry.addInterceptor(new LoginCheckInterceptor(loginService))
                 .order(1)
-                .addPathPatterns("/laundry/**")
-                .addPathPatterns("/orders/**")
-                .addPathPatterns("/members/**")
-                .excludePathPatterns("/css/**", "/images/**", "/js/**", "/", "/font/**", "/members//**");
+                .addPathPatterns("/laundry/**", "/orders/**", "/members/**")
+                .excludePathPatterns("/css/**", "/images/**", "/js/**", "/", "/font/**", "/members//**","/orders/*/payment/webhook");
 
 //        로그인 체크 인터셉터
 //        registry.addInterceptor(new LoginCheckInterceptor(loginService))
