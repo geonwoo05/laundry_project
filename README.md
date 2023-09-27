@@ -1,14 +1,13 @@
-# :pushpin: goQuality
+# :pushpin: 세탁해조
 
 > 세탁 서비스 플랫폼
-> https://go-quality.dev
 
 </br>
 
 ## 1. 제작 기간 & 참여 인원
 
--   2019년 2월 18일 ~ 4월 5일
--   팀 프로젝트(5인)
+-   2023년 08월 21일 ~ 09월 15일
+-   팀 프로젝트(7인)
 
 </br>
 
@@ -33,7 +32,7 @@
 
 ## 3. ERD 설계
 
-![](https://zuminternet.github.io/images/portal/post/2019-04-22-ZUM-Pilot-integer/final_erd.png)
+![](https://private-user-images.githubusercontent.com/140701897/270906158-458434d6-77a5-433f-9278-095c5f6ccc52.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE2OTU4MDE4ODcsIm5iZiI6MTY5NTgwMTU4NywicGF0aCI6Ii8xNDA3MDE4OTcvMjcwOTA2MTU4LTQ1ODQzNGQ2LTc3YTUtNDMzZi05Mjc4LTA5NWM1ZjZjY2M1Mi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBSVdOSllBWDRDU1ZFSDUzQSUyRjIwMjMwOTI3JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDIzMDkyN1QwNzU5NDdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0xOWMxZDA4NGI1OGZiZmUyZGRiN2RlYzQzMDlmYzJjYmI4Y2UwN2FjNDc4MzdiNmE2MTIyZDNhN2RlYWQ3MzA3JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.c8m8Or9RPKdmQ1Ti0ApOD72CUEou9nSb3NdHmIeC5DI)
 
 ## 4. 핵심 기능
 
@@ -113,90 +112,175 @@
 
 -   이 서비스는 모바일 앱 기반으로 만들어졌습니다. 모바일 앱은 한 번 로그인하면 서비스를 종료해도 일정 기간동안 로그인 상태가 유지됩니다. 그래서 저도 이 자동로그인을 구현해보고 싶었습니다.
 
--   하지만 [무한스크롤, 페이징 혹은 “더보기” 버튼? 어떤 걸 써야할까](https://cyberx.tistory.com/82) 라는 글을 읽고 무한 스크롤의 단점들을 알게 되었고,  
-    다양한 기준(카테고리, 사용자, 등록일, 인기도)의 게시물 필터 기능을 넣어서 이를 보완하고자 했습니다.
+-   이 과정에서 쿠키와 세션에 대한 이해가 필요했고 인터셉터에 걸리는 경로를 신중하게 설정해야 하는 어려움이 있었습니다.
 
--   그런데 게시물이 필터링 된 상태에서 무한 스크롤이 동작하면,  
-    필터링 된 게시물들만 DB에 요청해야 하기 때문에 아래의 **기존 코드** 처럼 각 필터별로 다른 Query를 날려야 했습니다.
+-   자동로그인 구현: User가 로그인 한 경우 세션에 memberId를 저장함과 동시에 쿠키(loginCookie)도 생성하여 세션의 ID를 저장합니다. 그리고 이 세션의 ID값과 쿠키 유효시간을 DB에 저장합니다. 그 후 사용자가 서비스를 종료 후 다시 돌아오면 세션은 만료되고 쿠키는 아직 남아있으면 쿠키에 등록된 새션의 ID를 이용하여 memberId를 가져와 세션에 저장하여 로그인 상태를 유지하도록 합니다.(**기존코드** 참고)
 
 <details>
 <summary><b>기존 코드</b></summary>
 <div markdown="1">
 
+`loginController.java`
+
 ```java
-/**
- * 게시물 Top10 (기준: 댓글 수 + 좋아요 수)
- * @return 인기순 상위 10개 게시물
- */
-public Page<PostResponseDto> listTopTen() {
+session.setAttribute(SessionConstant.LOGIN_MEMBER, userDto.getMemberId());
+Cookie cookie = new Cookie("loginCookie", session.getId());
+cookie.setPath("/");
+int amount = 60 * 60 * 24 * 7;
+// 단위는 (초)임으로 7일정도로 유효시간을 설정해 준다.
+cookie.setMaxAge(amount);
+// 쿠키를 적용해 준다.
+response.addCookie(cookie);
+Date limit = new Date(System.currentTimeMillis() + (1000*amount));
+// 현재 세션 id와 유효시간을 사용자 테이블에 저장한다.
+service.keepLogin(session.getId(), limit, userDto.getMemberId());
 
-    PageRequest pageRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "rankPoint", "likeCnt");
-    return postRepository.findAll(pageRequest).map(PostResponseDto::new);
-}
+```
 
-/**
- * 게시물 필터 (Tag Name)
- * @param tagName 게시물 박스에서 클릭한 태그 이름
- * @param pageable 페이징 처리를 위한 객체
- * @return 해당 태그가 포함된 게시물 목록
- */
-public Page<PostResponseDto> listFilteredByTagName(String tagName, Pageable pageable) {
+`WebConfig.java`
 
-    return postRepository.findAllByTagName(tagName, pageable).map(PostResponseDto::new);
-}
+```java
+registry.addInterceptor(new LoginCheckInterceptor(loginService))
+.order(1)
+.addPathPatterns("/laundry/**")
+.excludePathPatterns("/css/**", "/images/**", "/js/**", "/font/**", "/","/members//**",
+"/login/**", "/price/**", "/subscription/**","/register", "/check/**");
+```
 
-// ... 게시물 필터 (Member) 생략
+`LoginCheckInterceptor.java`
 
-/**
- * 게시물 필터 (Date)
- * @param createdDate 게시물 박스에서 클릭한 날짜
- * @return 해당 날짜에 등록된 게시물 목록
- */
-public List<PostResponseDto> listFilteredByDate(String createdDate) {
+```java
+@Override
+public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    String requestURI = request.getRequestURI();
+    log.info("인증 체크 인터셉터 실행 {}", requestURI);
+    HttpSession session = request.getSession(true);
 
-    // 등록일 00시부터 24시까지
-    LocalDateTime start = LocalDateTime.of(LocalDate.parse(createdDate), LocalTime.MIN);
-    LocalDateTime end = LocalDateTime.of(LocalDate.parse(createdDate), LocalTime.MAX);
+    // 세션이 없거나 세션에 저장된 memberId가 없는 경우
+    if (session == null || session.getAttribute(SessionConstant.LOGIN_MEMBER) == null) {
+    // 웹에 있는 쿠키를 가져온다.
+    Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
 
-    return postRepository
-                    .findAllByCreatedAtBetween(start, end)
-                    .stream()
-                    .map(PostResponseDto::new)
-                    .collect(Collectors.toList());
+    // loginCookie가 있는 경우 쿠키에 저장된 세션ID값을 이용해 memberId를 가져와 세션에 저장
+    if(loginCookie != null){
+        String sessionId = loginCookie.getValue();
+        MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
+        if(memberDto != null){
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
+            return true;
+        }
+    }else{
+        log.info("인증되지않은 사용자 요청");
+        response.sendRedirect("/login?redirectURL=" + requestURI);
+        return false;
+        }
     }
+    log.info("인증된 사용자");
+    return true;
+}
 ```
 
 </div>
 </details>
 
--   이 때 카테고리(tag)로 게시물을 필터링 하는 경우,  
-    각 게시물은 최대 3개까지의 카테고리(tag)를 가질 수 있어 해당 카테고리를 포함하는 모든 게시물을 질의해야 했기 때문에
--   아래 **개선된 코드**와 같이 QueryDSL을 사용하여 다소 복잡한 Query를 작성하면서도 페이징 처리를 할 수 있었습니다.
-
+-   **문제1**: 사용자가 임의로 세션을 지우고 '마이페이지'나 '주문내역'에 들어갈 경우 쿠키가 있음에도 세션이 생성되지 않았습니다.
+-   그 이유는 '주문내역'에 접속하려면 세션에 있는 memberId가 필요한데 세션을 지웠기 때문에 오류가 발생하고 '마이페이지'의 접속은 매핑된 주소에 memberId가 포함되어 있어 memberId가 존재하지 않아 컨트롤러에 접근이 되지 않아 404 오류가 발생하게 되는 문제가 발생하였습니다.
+-   **문제2**: 쿠키, 세션 모두 존재하지 않은 상태에서 '마이페이지'에 접속하는 경우 '로그인 페이지'로 이동하고 마이페이지의 redirect 경로도 전달됩니다. 이 때 로그인 하는 경우 redirect 경로가 올바르지 않아 오류가 발생하게 됩니다.
+-   그래서 아래 **개선된 코드1**와 같이 필터를 활용해서 컨트롤러에 진입하기 전에 memberId가 저장된 세션을 생성하도록 유도했습니다.
 <details>
-<summary><b>개선된 코드</b></summary>
+<summary><b>개선된 코드1</b></summary>
 <div markdown="1">
 
 ```java
-/**
- * 게시물 필터 (Tag Name)
- */
 @Override
-public Page<Post> findAllByTagName(String tagName, Pageable pageable) {
+public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    HttpServletRequest req = (HttpServletRequest) request;
+    Cookie loginCookie = WebUtils.getCookie(req,"loginCookie");
+    if(loginCookie != null){
+        HttpSession session = req.getSession();
+        String sessionId = loginCookie.getValue();
+        MemberDto memberDto = loginService.checkUserWithSessionId(sessionId);
+        if(memberDto != null){
+            session.setAttribute(SessionConstant.LOGIN_MEMBER, memberDto.getMemberId());
+        }else{
+            return;
+        }
+    }
+    chain.doFilter(request, response);
+}
+```
 
-    QueryResults<Post> results = queryFactory
-            .selectFrom(post)
-            .innerJoin(postTag)
-                .on(post.idx.eq(postTag.post.idx))
-            .innerJoin(tag)
-                .on(tag.idx.eq(postTag.tag.idx))
-            .where(tag.name.eq(tagName))
-            .orderBy(post.idx.desc())
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-            .fetchResults();
+</div>
+</details>
 
-    return new PageImpl<>(results.getResults(), pageable, results.getTotal());
+-   **개선된 코드1**을 추가함으로써 **문제1**을 해결했지만 **문제2**는 여전히 해결되지 않았습니다.
+-   '마이페이지'의 접속은 footer에서 마이페이지를 클릭하여 이루어지고, **개선된 코드2**를 보시면 thymeleaf를 이용해서 세션이 없으면 로그인 페이지로 이동하도록 했습니다.
+-   또한 인터셉터가 발동되어야 하는 경로와 발동되면 안되는 경로를 더욱 구체화 시켰습니다.
+
+<details>
+<summary><b>개선된 코드2</b></summary> 
+<div markdown="1">
+
+`project_footer.html` :pushpin: [코드확인](https://github.com/geonwoo05/laundry_project/blob/develop/src/main/resources/templates/common/project_footer.html#L29)
+
+```html
+<th:block th:if="${session.memberId != null}">
+    <a th:href="@{/members/{memberId}/mypage(memberId=${session.memberId})}">
+        <button type="button" class="mypage">
+            <!-- 선택된 버튼 -->
+            <svg xmlns="http://www.w3.org/2000/svg" th:if="${footer == 'mypage'}" viewBox="0 0 448 512">
+                <path
+                    id="mypageButton1"
+                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+                />
+            </svg>
+            <!-- 선택되지 않은 버튼 -->
+            <svg xmlns="http://www.w3.org/2000/svg" th:if="${footer != 'mypage'}" viewBox="0 0 448 512">
+                <path
+                    id="mypageButton2"
+                    d="M336 128a112 112 0 1 0 -224 0 112 112 0 1 0 224 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM16 482.3c0 7.6 6.1 13.7 13.7 13.7H418.3c7.6 0 13.7-6.1 13.7-13.7C432 392.7 359.3 320 269.7 320H178.3C88.7 320 16 392.7 16 482.3zm-16 0C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"
+                />
+            </svg>
+            <span>마이페이지</span>
+        </button>
+    </a>
+</th:block>
+<th:block th:if="${session.memberId == null}">
+    <a th:href="@{/login}">
+        <button type="button" class="mypage">
+            <!-- 선택된 버튼 -->
+            <svg xmlns="http://www.w3.org/2000/svg" th:if="${footer == 'mypage'}" viewBox="0 0 448 512">
+                <path
+                    id="mypageButton1"
+                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+                />
+            </svg>
+            <!-- 선택되지 않은 버튼 -->
+            <svg xmlns="http://www.w3.org/2000/svg" th:if="${footer != 'mypage'}" viewBox="0 0 448 512">
+                <path
+                    id="mypageButton2"
+                    d="M336 128a112 112 0 1 0 -224 0 112 112 0 1 0 224 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM16 482.3c0 7.6 6.1 13.7 13.7 13.7H418.3c7.6 0 13.7-6.1 13.7-13.7C432 392.7 359.3 320 269.7 320H178.3C88.7 320 16 392.7 16 482.3zm-16 0C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"
+                />
+            </svg>
+            <span>마이페이지</span>
+        </button>
+    </a>
+</th:block>
+```
+
+<br/>
+
+`WebConfig.java`
+
+```java
+@Override
+public void addInterceptors(InterceptorRegistry registry) {
+    // 로그인 체크 인터셉터
+    registry.addInterceptor(new LoginCheckInterceptor(loginService))
+                .order(1)
+                .addPathPatterns("/laundry/**", "/orders/**", "/members/**")
+                .excludePathPatterns("/css/**", "/images/**", "/js/**", "/", "/font/**", "/members//**","/orders/*/payment/webhook");
+
 }
 ```
 
@@ -208,198 +292,51 @@ public Page<Post> findAllByTagName(String tagName, Pageable pageable) {
 ## 6. 그 외 트러블 슈팅
 
 <details>
-<summary>npm run dev 실행 오류</summary>
+<summary>RequestBody를 생성할 때 JSON파라미터를 쿼리 문자열로 변경해야하는 문제</summary>
 <div markdown="1">
 
--   Webpack-dev-server 버전을 3.0.0으로 다운그레이드로 해결
--   `$ npm install —save-dev webpack-dev-server@3.0.0`
+-   okHttp에서 제공하는 HttpUrl.Builder를 이용하여 URL의 쿼리 문자열을 반환하는 'encodeParameters'메서드를 만들어서 해결
+
+```java
+public String encodeParameters(JSONObject params) {
+    HttpUrl.Builder urlBuilder = HttpUrl.parse(KAKAO_REDIRECT_URL).newBuilder();
+    for (String key : params.keySet()) {
+        urlBuilder.addQueryParameter(key, params.getString(key));
+    }
+    return urlBuilder.build().encodedQuery();
+}
+
+```
 
 </div>
 </details>
 
 <details>
-<summary>vue-devtools 크롬익스텐션 인식 오류 문제</summary>
-<div markdown="1">
-  
-  - main.js 파일에 `Vue.config.devtools = true` 추가로 해결
-  - [https://github.com/vuejs/vue-devtools/issues/190](https://github.com/vuejs/vue-devtools/issues/190)
-  
-</div>
-</details>
-
-<details>
-<summary>ElementUI input 박스에서 `v-on:keyup.enter="메소드명"`이 정상 작동 안하는 문제</summary>
-<div markdown="1">
-  
-  - `v-on:keyup.enter.native=""` 와 같이 .native 추가로 해결
-  
-</div>
-</details>
-
-<details>
-<summary> Post 목록 출력시에 Member 객체 출력 에러 </summary>
-<div markdown="1">
-  
-  - 에러 메세지(500에러)
-    - No serializer found for class org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationConfig.SerializationFeature.FAIL_ON_EMPTY_BEANS)
-  - 해결
-    - Post 엔티티에 @ManyToOne 연관관계 매핑을 LAZY 옵션에서 기본(EAGER)옵션으로 수정
-  
-</div>
-</details>
-    
-<details>
-<summary> 프로젝트를 git init으로 생성 후 발생하는 npm run dev/build 오류 문제 </summary>
-<div markdown="1">
-  
-  ```jsx
-    $ npm run dev
-    npm ERR! path C:\Users\integer\IdeaProjects\pilot\package.json
-    npm ERR! code ENOENT
-    npm ERR! errno -4058
-    npm ERR! syscall open
-    npm ERR! enoent ENOENT: no such file or directory, open 'C:\Users\integer\IdeaProjects\pilot\package.json'
-    npm ERR! enoent This is related to npm not being able to find a file.
-    npm ERR! enoent
-
-    npm ERR! A complete log of this run can be found in:
-    npm ERR!     C:\Users\integer\AppData\Roaming\npm-cache\_logs\2019-02-25T01_23_19_131Z-debug.log
-
-````
-
-- 단순히 npm run dev/build 명령을 입력한 경로가 문제였다.
-
-</div>
-</details>
-
-<details>
-<summary> 태그 선택후 등록하기 누를 때 `object references an unsaved transient instance - save the transient instance before flushing` 오류</summary>
+<summary>카카오 로그인 시 사용자의 정보를 DTO에 담아야하는 문제</summary>
 <div markdown="1">
 
-- Post 엔티티의 @ManyToMany에 영속성 전이(cascade=CascadeType.ALL) 추가
-  - JPA에서 Entity를 저장할 때 연관된 모든 Entity는 영속상태여야 한다.
-  - CascadeType.PERSIST 옵션으로 부모와 자식 Enitity를 한 번에 영속화할 수 있다.
-  - 참고
-      - [https://stackoverflow.com/questions/2302802/object-references-an-unsaved-transient-instance-save-the-transient-instance-be/10680218](https://stackoverflow.com/questions/2302802/object-references-an-unsaved-transient-instance-save-the-transient-instance-be/10680218)
+-   ObjectMapper 객체를 이용하여 JSON데이터를 java객체에 저장하면 된다.
+-   DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 설정은 JSON데이터에 java 클래스에 없는 속성이 있어도 예외를 던지지 않게 하는 설정이다.
 
-</div>
-</details>
+```java
+ObjectMapper obMapper = new ObjectMapper();
+obMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+KakaoProfile kakaoProfile = null;
+try {
+    kakaoProfile = obMapper.readValue(body.string(), KakaoProfile.class);
+}catch(JsonMappingException e){
+    e.printStackTrace();
 
-<details>
-<summary> JSON: Infinite recursion (StackOverflowError)</summary>
-<div markdown="1">
-
-- @JsonIgnoreProperties 사용으로 해결
-  - 참고
-      - [http://springquay.blogspot.com/2016/01/new-approach-to-solve-json-recursive.html](http://springquay.blogspot.com/2016/01/new-approach-to-solve-json-recursive.html)
-      - [https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue](https://stackoverflow.com/questions/3325387/infinite-recursion-with-jackson-json-and-hibernate-jpa-issue)
-
-</div>
-</details>
-
-<details>
-<summary> H2 접속문제</summary>
-<div markdown="1">
-
-- H2의 JDBC URL이 jdbc:h2:~/test 으로 되어있으면 jdbc:h2:mem:testdb 으로 변경해서 접속해야 한다.
-
-</div>
-</details>
-
-<details>
-<summary> 컨텐츠수정 모달창에서 태그 셀렉트박스 드랍다운이 뒤쪽에 보이는 문제</summary>
-<div markdown="1">
-
- - ElementUI의 Global Config에 옵션 추가하면 해결
-   - main.js 파일에 `Vue.us(ElementUI, { zIndex: 9999 });` 옵션 추가(9999 이하면 안됌)
- - 참고
-   - [https://element.eleme.io/#/en-US/component/quickstart#global-config](https://element.eleme.io/#/en-US/component/quickstart#global-config)
-
-</div>
-</details>
-
-<details>
-<summary> HTTP delete Request시 개발자도구의 XHR(XMLHttpRequest )에서 delete요청이 2번씩 찍히는 이유</summary>
-<div markdown="1">
-
-- When you try to send a XMLHttpRequest to a different domain than the page is hosted, you are violating the same-origin policy. However, this situation became somewhat common, many technics are introduced. CORS is one of them.
-
-      In short, server that you are sending the DELETE request allows cross domain requests. In the process, there should be a **preflight** call and that is the **HTTP OPTION** call.
-
-      So, you are having two responses for the **OPTION** and **DELETE** call.
-
-      see [MDN page for CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS).
-
-  - 출처 : [https://stackoverflow.com/questions/35808655/why-do-i-get-back-2-responses-of-200-and-204-when-using-an-ajax-call-to-delete-o](https://stackoverflow.com/questions/35808655/why-do-i-get-back-2-responses-of-200-and-204-when-using-an-ajax-call-to-delete-o)
-
-</div>
-</details>
-
-<details>
-<summary> 이미지 파싱 시 og:image 경로가 달라서 제대로 파싱이 안되는 경우</summary>
-<div markdown="1">
-
-- UserAgent 설정으로 해결
-      - [https://www.javacodeexamples.com/jsoup-set-user-agent-example/760](https://www.javacodeexamples.com/jsoup-set-user-agent-example/760)
-      - [http://www.useragentstring.com/](http://www.useragentstring.com/)
-
-</div>
-</details>
-
-<details>
-<summary> 구글 로그인으로 로그인한 사용자의 정보를 가져오는 방법이 스프링 2.0대 버전에서 달라진 것</summary>
-<div markdown="1">
-
-- 1.5대 버전에서는 Controller의 인자로 Principal을 넘기면 principal.getName(0에서 바로 꺼내서 쓸 수 있었는데, 2.0대 버전에서는 principal.getName()의 경우 principal 객체.toString()을 반환한다.
-  - 1.5대 버전에서 principal을 사용하는 경우
-  - 아래와 같이 사용했다면,
-
-  ```jsx
-  @RequestMapping("/sso/user")
-  @SuppressWarnings("unchecked")
-  public Map<String, String> user(Principal principal) {
-      if (principal != null) {
-          OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) principal;
-          Authentication authentication = oAuth2Authentication.getUserAuthentication();
-          Map<String, String> details = new LinkedHashMap<>();
-          details = (Map<String, String>) authentication.getDetails();
-          logger.info("details = " + details);  // id, email, name, link etc.
-          Map<String, String> map = new LinkedHashMap<>();
-          map.put("email", details.get("email"));
-          return map;
-      }
-      return null;
-  }
-  ```
-
-  - 2.0대 버전에서는
-  - 아래와 같이 principal 객체의 내용을 꺼내 쓸 수 있다.
-
-  ```jsx
-  UsernamePasswordAuthenticationToken token =
-                  (UsernamePasswordAuthenticationToken) SecurityContextHolder
-                          .getContext().getAuthentication();
-          Map<String, Object> map = (Map<String, Object>) token.getPrincipal();
-
-          String email = String.valueOf(map.get("email"));
-          post.setMember(memberRepository.findByEmail(email));
-  ```
-
-</div>
-</details>
-
-<details>
-<summary> 랭킹 동점자 처리 문제</summary>
-<div markdown="1">
-
-- PageRequest의 Sort부분에서 properties를 "rankPoint"를 주고 "likeCnt"를 줘서 댓글수보다 좋아요수가 우선순위 갖도록 설정.
-- 좋아요 수도 똑같다면..........
+}catch (JsonProcessingException e){
+    e.printStackTrace();
+}
+```
 
 </div>
 </details>
 
 </br>
 
-## 6. 회고 / 느낀점
->프로젝트 개발 회고 글: https://zuminternet.github.io/ZUM-Pilot-integer/
-````
+## 7. 회고 / 느낀점
+
+>
